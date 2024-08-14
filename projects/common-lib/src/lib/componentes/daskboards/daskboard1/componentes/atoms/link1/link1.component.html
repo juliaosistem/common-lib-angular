@@ -1,0 +1,6 @@
+
+@for (i of menu; track i.itemName) {
+<li class="nav-item">
+  <a class="nav-link" [routerLink]="i.url">{{i.itemName}} </a>
+</li>
+}

@@ -1,0 +1,39 @@
+.header_section {
+    background: #ffffff;
+  }
+  
+  .container-fluid {
+    padding: 0;
+  }
+  
+  .spacer {
+    flex: 1 1 auto;
+  }
+  
+  .example-container {
+    height: 100%;
+    width: 100%;
+  }
+  
+  .example-icon {
+    display: none;
+  }
+  
+  @media (max-width: 600px) {
+    .example-icon {
+      display: block;
+    }
+  
+    mat-toolbar {
+      flex-direction: row;
+    }
+  
+    .spacer {
+      display: none;
+    }
+  
+    mat-sidenav {
+      width: 250px;
+    }
+  }
+  

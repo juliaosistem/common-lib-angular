@@ -1,0 +1,30 @@
+<header class="header_section">
+    <div class="container-fluid">
+      <mat-toolbar color="primary">
+        <a mat-button routerLink="/index">
+          <img src="assets/images/logo.png" alt="" style="height: 40px;">
+          <span style="color: #F25D27; margin-left: 10px;">
+            Dog Paradice
+          </span>
+        </a>
+        <span class="spacer"></span>
+        <button mat-icon-button class="example-icon" aria-label="Toggle sidenav" (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </mat-toolbar>
+  
+      <mat-sidenav-container class="example-container">
+        <mat-sidenav #sidenav mode="side" opened>
+          <mat-nav-list>
+            <a mat-list-item routerLink="/index">Lare</a>
+            <a mat-list-item routerLink="/service">Serviços</a>
+            <a mat-list-item href="https://w.app/DOGPARADICE" target="_blank">Contato</a>
+          </mat-nav-list>
+        </mat-sidenav>
+        <mat-sidenav-content>
+          <!-- This is where your main content goes -->
+        </mat-sidenav-content>
+      </mat-sidenav-container>
+    </div>
+  </header>
+  
