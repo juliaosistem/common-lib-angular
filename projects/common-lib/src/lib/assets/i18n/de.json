@@ -1,0 +1,30 @@
+{
+    "lenguage": "Sprache",
+    "index": "Startseite",
+  
+    "menu": {
+        "start": "Startseite",
+        "list_user": "Benutzerliste",
+        "register": "Registrierung",
+        "login": "Anmelden",
+        "log_out": "Abmelden"
+    },
+    "auth": {
+        "write_your_data": "Geben Sie Ihre Daten ein",
+        "firtsName": "Vorname",
+        "secondName": "Nachname",
+        "phone": "Telefon",
+        "Nickname": "Spitzname"
+    },
+    "works": {
+        "work_in_progress": "Laufende Arbeiten",
+        "create-work": "Arbeit Erstellen"
+    },
+    "meta_key_words": {
+        "title": "ZIGMA INFLATABLES - Hersteller von aufblasbaren Produkten",
+        "keywords": "zigma inflatables, Hersteller von aufblasbaren Produkten, Verkauf aufblasbarer Produkte, aufblasbare Produkte, Verleih von aufblasbaren Produkten, Hersteller aufblasbarer Produkte, aufblasbare Produkte, Hüpfburgen, aufblasbare Rutschen, aufblasbare Zelte, Werbeaufsteller",
+        "description": "Wir stellen alle Arten von aufblasbaren Produkten her, innovative und aktuelle Designs, wettbewerbsfähige Preise und Qualität an einem Ort."
+    },
+    "footer_properties": "Alle Rechte vorbehalten von Juliao Sistem"
+
+}

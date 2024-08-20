@@ -1,43 +1,34 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
-import { MenuDTO } from '../../../models/MenuDTO';
 import { Link1Component } from '../../atoms/link1/link1.component';
 import { BussinesDTO } from '../../../models/BussinesDTO'
-import { ColoresDTO } from '../../../models/ColoresDTO';
+import { Footer1Component } from '../footer1/footer1.component';
+import { SelectInput1Component } from '../../../../../../shared/select-input1/select-input1.component';
+import { PlantillaDTO } from '../../../models/PlantillaDTO';
 
 @Component({
   selector: 'app-contenido-nav',
   templateUrl: './contenido-nav.component.html',
   styleUrls: ['./contenido-nav.component.scss'],
   standalone: true,
-  imports:[IonicModule,Link1Component]
+  imports:[IonicModule,Link1Component,Footer1Component, SelectInput1Component]
 })
 export class ContenidoNavComponent  implements OnInit {
   
+ 
   @Input()
-  colores : ColoresDTO = {
-    primaryColor: '',
-    secundaryColor: ''
-  }
-
+   lenguages :string[]=[]
   @Input()
- menu: MenuDTO [] = []
-
-@Input()
-negocio :BussinesDTO = {
-  idBussines: 0,
-  nombreNegocio: '',
-  numeroIdentificacionNegocio: 0,
-  telofono: '',
-  codigoPais: 0,
-  colores: this.colores,
-  logo: '',
-  urlWhatssapp: ''
-}
-  
+   negocio : PlantillaDTO  = {
+     id: '',
+     bussinesDTO: undefined,
+     slider: [],
+     menu: undefined
+   }  
 
   constructor() {
-    this.negocio.urlWhatssapp = this.generarUrlWhatsapp(this.negocio);
+   if(this.negocio.bussinesDTO)
+     this.negocio.bussinesDTO.urlWhatssapp = this.generarUrlWhatsapp(this.negocio?.bussinesDTO);
    }
   
   ngOnInit(): void {

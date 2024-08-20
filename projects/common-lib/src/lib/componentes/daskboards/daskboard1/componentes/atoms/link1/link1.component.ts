@@ -1,7 +1,6 @@
 import { MenuDTO } from './../../../models/MenuDTO';
 import { IonicModule } from '@ionic/angular';
-import { Component, input, Input, OnInit } from '@angular/core';
-import { IonRouterOutlet } from '@ionic/angular/standalone';
+import { Component, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 @Component({
@@ -14,7 +13,7 @@ import { RouterLink } from '@angular/router';
 export class Link1Component  implements OnInit {
 
   @Input()
-  menu: MenuDTO [] = []
+  menu: MenuDTO []  | undefined
 
   constructor() { }
 

@@ -1,0 +1,11 @@
+<div class="input-group mb-3">
+   
+  <select class="custom-select" id="inputGroupSelect01">
+    <option selected>{{'lenguage' | translate}}</option>
+  @for (item of lenguages; track $index) {
+    <option [value]="item">{{item}}</option>
+  }
+  
+    
+    </select>
+  </div>

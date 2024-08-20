@@ -1,0 +1,52 @@
+    <!-- slider section -->
+    <section class=" slider_section position-relative">
+    
+      <swiper-container
+       autoplay="true"  pagination="true"
+       navigation="true"  slides-per-view="1" 
+       speed="300" loop="true" css-mode="true">
+       @for(slide of negocio?.slider; track slide.id){
+        <swiper-slide lazy="true">
+
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-md-4 offset-md-2">
+                <div class="slider_detail-box">
+                  <h1>
+                    {{slide?.titulo}}
+                    @if(slide.subTitulo){
+                    <span>
+                      {{slide.subTitulo | translate}}
+                    </span>
+                  }
+                  </h1>
+                  <p>
+                    {{slide.descripcion}}
+                  </p>
+                  <div class="btn-box">
+                    <a [href]="negocio?.bussinesDTO?.urlWhatssapp" target="_blank" class="btn-2">
+                      {{'Contact' | translate}}
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="slider_img-box">
+                  
+                  <img [src]="slide?.imagen ? slide.imagen?.url : '../../../imagenes/slider-img.png'"
+                   loading="lazy" 
+                  [alt]="slide?.imagen?.alt ? slide.imagen?.alt : ''">
+                </div>
+              </div>
+            </div>
+          </div>
+      
+      </swiper-slide>
+       }
+  
+  
+      </swiper-container>
+      </section>
+      <!-- end slider section -->
+     

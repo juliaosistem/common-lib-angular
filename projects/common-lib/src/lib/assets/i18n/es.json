@@ -1,0 +1,33 @@
+{
+    
+    "lenguage": "Idioma",
+    "index":"Inicio",
+    
+   "menu":{
+     "start":"Inicio",
+     "list_user":" Lista Usuarios",
+     "register":"Registro",
+     "login":"Iniciar Session",
+     "log_out":"Cerrar Session"
+   },
+   "auth":{
+     "write_your_data":"Escriba sus Datos",
+     "firtsName":"Nombre",
+     "secondName":"Apellidos",
+     "phone":"Telefono",
+     "Nickname":"Apodo"
+ },
+ "works":{
+   "work_in_progress":"Trabajos En Curso",
+   "create-work":"Crear Trabajo"
+ },
+    "meta_key_words":{
+       "title":"ZIGMA INFLABLES - Fabrica De Inflables",
+       "keywords":"zigma inflables , fabrica de inflables , venta inflables, inflables , alquiler de inflables,Fabrica inflables, inflables, castillos inflables, toboganes inflables, carpas inflables , inflables publicitarios",
+       "description":"Fabricamos todo tipo de inflables, diseños novedosos y actualizados, precios competitivos y calidad en un solo lugar."
+   },
+   
+   "footer_properties": "Todos los Derechos Reservados por Juliao Sistem"
+
+
+}

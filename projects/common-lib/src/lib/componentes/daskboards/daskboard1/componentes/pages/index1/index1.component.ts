@@ -1,43 +1,40 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, Input } from '@angular/core';
-import { BussinesDTO } from '../../../models/BussinesDTO';
-import { MenuDTO } from '../../../models/MenuDTO';
-import { ColoresDTO } from '../../../models/ColoresDTO';
 import { IonicModule, Platform } from '@ionic/angular';
-import { ContenidoNavComponent } from '../../molecules/contenido-nav/contenido-nav.component';
+import { Nav1Component } from '../../molecules/nav1/nav1.component';
+import { Footer1Component } from '../../molecules/footer1/footer1.component';
+import { Slider1Component } from '../../molecules/slider1/slider1.component';
+import { TranslateService } from '@ngx-translate/core';
+import { PlantillaDTO } from '../../../models/PlantillaDTO';
 
 @Component({
   selector: 'lib-index1',
   standalone: true,
-  imports: [IonicModule, ContenidoNavComponent],
+  imports: [IonicModule, Nav1Component,Footer1Component,Slider1Component],
   templateUrl: './index1.component.html',
   styleUrl: './index1.component.css'
 })
 export class Index1Component {
   isMovile = false;
+  langs:string[]=[];
+
+
 
   @Input()
-  menu: MenuDTO [] = [];
- 
-  @Input ()
-   colores :ColoresDTO ={
-     primaryColor: '',
-     secundaryColor: ''
-   }
-   
-  @Input()
-  negocio: BussinesDTO ={
-    idBussines: 0,
-    nombreNegocio: '',
-    numeroIdentificacionNegocio: 0,
-    telofono: '',
-    codigoPais: 0,
-    colores: this.colores,
-    logo: '',
-    urlWhatssapp: ''
-  }
+  negocio: PlantillaDTO ={
+    id: ''
+  };
+
   alertButtons = ['Action'];
- constructor(private platform: Platform, private breakpointObserver: BreakpointObserver) {
+ constructor(private platform: Platform, 
+  private breakpointObserver: BreakpointObserver,
+  private translate: TranslateService,
+) {
+    this.langs= this.translate.getLangs();
+    this.translate.addLangs(["es","en","de","pt"]);
+    if(this.negocio?.bussinesDTO?.lenguaje)
+    this.translate.use(this.negocio.bussinesDTO.lenguaje);
+  console.log("langs", this.langs);
  }
 
  ngOnInit(): void {

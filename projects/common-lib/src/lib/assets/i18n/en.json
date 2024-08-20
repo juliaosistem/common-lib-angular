@@ -1,0 +1,31 @@
+{
+   
+    "lenguage": "Lenguage",
+    "index":"Start",
+    "menu":{
+        "start":"Start",
+        "list_user":"List Users",
+        "register":"Register",
+        "login":"Login",
+        "log_out":"Close Session"
+      },
+
+    "auth":{
+        "write_your_data":"write your data",
+        "firtsName":"Firts Name",
+        "secondName":"Last Name",
+        "phone":"Phone",
+        "Nickname":"Nickname"
+    },
+    "works":{
+      "work_in_progress":"Work In Progress",
+      "create-work":"Create work"
+    },
+    "meta_key_words":{
+        "title":"Application -Administrative Ecommerce",
+        "keywords":"administrative application, creator of ecommerse, how to create ecommerse application, how to sell online, platforms to manage my business,e-commerce",
+        "description":"Application to create your virtual store we are the best option on the market and at the best price manage and publish your business with us"
+    },
+  
+    "footer_properties":"All Rights Reserved By Juliao Sistem "
+}

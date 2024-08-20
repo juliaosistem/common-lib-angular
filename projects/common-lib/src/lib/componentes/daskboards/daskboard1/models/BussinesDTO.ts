@@ -6,9 +6,12 @@ export interface BussinesDTO{
     numeroIdentificacionNegocio: number;
     telofono : string;
     codigoPais: number;
-    colores : ColoresDTO;
+    colores?: ColoresDTO;
     logo: string
     keyWords?: string[]
     descripcion?: string[]
     urlWhatssapp :string
+    email? :string 
+    direccion? :string
+    lenguaje?:string;
 }

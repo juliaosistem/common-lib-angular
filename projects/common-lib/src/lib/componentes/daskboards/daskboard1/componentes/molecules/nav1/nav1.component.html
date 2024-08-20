@@ -1,0 +1,23 @@
+  
+  @if(isMovile){
+    <ng-container>
+      <ion-menu side="end" contentId="main-content">
+    <ion-content class="ion-padding">This is the menu content
+     
+    </ion-content>
+  </ion-menu>
+  <div class="ion-page" id="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="end">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+  </div>
+</ng-container>
+  }@else{
+    
+    <app-contenido-nav  [negocio]="negocio" [lenguages]="lenguages" ></app-contenido-nav>
+     
+}

@@ -1,6 +1,15 @@
-export interface MenuDTO {
-      url:string,
-      icon: string,
-      itemName:string,
-      subItemName:string,
-}
+export interface MenuDTO{
+      id:string,
+      icon?: string,
+      url: string,
+      itemName: string,
+      subItemName: string
+      nameRol:string[],
+      
+  }
+  
+  export interface MenuActive{
+      
+      rolActive:string,
+      menuModel:MenuDTO[];
+  }

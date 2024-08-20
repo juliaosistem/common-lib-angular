@@ -1,25 +1,25 @@
-<div class="hero_area">
+
   <!-- header section strats -->
   <header class="header_section">
     <div class="container-fluid">
       <nav class="navbar navbar-expand-lg custom_nav-container ">
         <a class="navbar-brand" routerLink="inicio">
-          <img [src]="negocio.logo" alt="">
+          <img [src]="negocio.bussinesDTO?.logo" alt="">
           <span style="color: #F25D27;">
-           {{negocio.nombreNegocio}} 
+           {{negocio.bussinesDTO?.nombreNegocio}} 
           </span>
         </a>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <div class="d-flex mx-auto flex-column flex-lg-row align-items-center">
             <ul class="navbar-nav  ">
-               
+              <lib-select-input1 [lenguages]="lenguages" class="nav-item"> </lib-select-input1>
+
               <li class="nav-item active">
-                <a class="nav-link " [href]="negocio.urlWhatssapp" target="_blank"> contato</a>
+                <a class="nav-link " [href]="negocio.bussinesDTO?.urlWhatssapp" target="_blank"> contato</a>
               </li>
-              <app-link1 class="d-flex" [menu]="menu"></app-link1>
+              <app-link1 class="d-flex" [menu]="negocio.menu?.menuModel"></app-link1>
             </ul>
             <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
-            
               <button class="btn  my-2 my-sm-0 nav" type="submit">
                 <i class="bi bi-cart4"></i>
                 <span class="badge badge-danger">0</span>
@@ -27,8 +27,8 @@
             </form>
           </div>
           <div class="quote_btn-container  d-flex justify-content-center">
-            <a [href]="negocio.urlWhatssapp" target="_blank">
-              Call: + {{negocio.codigoPais}} {{negocio.telofono}}
+            <a [href]="negocio.bussinesDTO?.urlWhatssapp" target="_blank">
+              Call: + {{negocio.bussinesDTO?.codigoPais}} {{negocio.bussinesDTO?.telofono}}
             </a>
           </div>
         </div>
@@ -36,8 +36,10 @@
     </div>
   </header>
 
-  <ion-content class="ion-padding">
-    probado 
-    
-  </ion-content>
-</div>
+       <!-- <ion-router-outlet></ion-router-outlet> -->
+
+
+ 
+
+
+

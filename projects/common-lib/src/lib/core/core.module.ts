@@ -14,17 +14,42 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 
 import { MatCardModule } from '@angular/material/card';
+import { NgxsModule } from '@ngxs/store';
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { BussinesStateState } from '../assets/state/bussines-state.state';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { HttpClient } from "@angular/common/http";
 
 
-
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule
+    CommonModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader,
+        deps: [HttpClient]
+      }
+    }),
+
+    NgxsModule.forRoot([BussinesStateState],{}),
+     NgxsReduxDevtoolsPluginModule.forRoot(),
+     NgxsLoggerPluginModule.forRoot(),
+
   ],exports:[
     ReactiveFormsModule,
+    TranslateModule,
+    NgxsModule,
+    NgxsReduxDevtoolsPluginModule,
+    NgxsLoggerPluginModule,
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
@@ -38,5 +63,6 @@ import { MatCardModule } from '@angular/material/card';
     MatListModule,
     MatCardModule,
   ]
+ 
 })
 export class CoreModule { }

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { FooterComponent } from '../footer/footer.component';
 import { CoreModule } from '../../../../core/core.module';
 import { BodyComponent } from '../body/body.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'lib-menu',

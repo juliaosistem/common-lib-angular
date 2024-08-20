@@ -1,0 +1,30 @@
+{
+    "lenguage": "Idioma",
+    "index": "Início",
+  
+    "menu": {
+        "start": "Início",
+        "list_user": "Lista de Usuários",
+        "register": "Registro",
+        "login": "Iniciar Sessão",
+        "log_out": "Encerrar Sessão"
+    },
+    "auth": {
+        "write_your_data": "Insira seus Dados",
+        "firtsName": "Nome",
+        "secondName": "Sobrenome",
+        "phone": "Telefone",
+        "Nickname": "Apelido"
+    },
+    "works": {
+        "work_in_progress": "Trabalhos em Andamento",
+        "create-work": "Criar Trabalho"
+    },
+    "meta_key_words": {
+        "title": "ZIGMA INFLÁVEIS - Fábrica de Infláveis",
+        "keywords": "zigma infláveis, fábrica de infláveis, venda infláveis, infláveis, aluguel de infláveis, fábrica de infláveis, infláveis, castelos infláveis, escorregadores infláveis, tendas infláveis, infláveis publicitários",
+        "description": "Fabricamos todo tipo de infláveis, designs inovadores e atualizados, preços competitivos e qualidade em um só lugar."
+    },
+    "footer_properties": "Todos os Direitos Reservados por Juliao Sistem"
+
+}
