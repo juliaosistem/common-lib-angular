@@ -13,19 +13,19 @@
               <div class="col-md-4 offset-md-2">
                 <div class="slider_detail-box">
                   <h1>
-                    {{slide?.titulo}}
-                    @if(slide.subTitulo){
+                    {{slide.titulo | translate}}
+                    @if(slide.subTitulo ){
                     <span>
                       {{slide.subTitulo | translate}}
                     </span>
                   }
                   </h1>
                   <p>
-                    {{slide.descripcion}}
+                    {{slide.descripcion | translate}}
                   </p>
                   <div class="btn-box">
                     <a [href]="negocio?.bussinesDTO?.urlWhatssapp" target="_blank" class="btn-2">
-                      {{'Contact' | translate}}
+                      {{'menu.contact' | translate}}
                     </a>
                   </div>
                 </div>

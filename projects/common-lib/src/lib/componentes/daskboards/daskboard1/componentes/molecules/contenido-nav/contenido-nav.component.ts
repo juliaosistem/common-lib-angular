@@ -5,13 +5,16 @@ import { BussinesDTO } from '../../../models/BussinesDTO'
 import { Footer1Component } from '../footer1/footer1.component';
 import { SelectInput1Component } from '../../../../../../shared/select-input1/select-input1.component';
 import { PlantillaDTO } from '../../../models/PlantillaDTO';
+import { TranslateModule } from '@ngx-translate/core';
+import { ButtonCall1Component } from '../../atoms/button-call1/button-call1.component';
 
 @Component({
   selector: 'app-contenido-nav',
   templateUrl: './contenido-nav.component.html',
   styleUrls: ['./contenido-nav.component.scss'],
   standalone: true,
-  imports:[IonicModule,Link1Component,Footer1Component, SelectInput1Component]
+  imports:[IonicModule,Link1Component,Footer1Component, ButtonCall1Component,
+    SelectInput1Component,TranslateModule]
 })
 export class ContenidoNavComponent  implements OnInit {
   
@@ -32,8 +35,6 @@ export class ContenidoNavComponent  implements OnInit {
    }
   
   ngOnInit(): void {
-
-    console.log("prueba" , this.negocio)
   }
 
   generarUrlWhatsapp(bussines: BussinesDTO): string {

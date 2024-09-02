@@ -26,6 +26,7 @@
     "@ngxs/devtools-plugin": "^18.1.1",
     "@ngxs/logger-plugin": "^18.1.1",
     "@ngxs/store": "^18.0.0",
+    "flag-icons": "^7.2.3",
     "jquery": "^3.7.1",
     "juliaositembackenexpress": "^1.0.8",
     "popper.js": "^1.16.1",

@@ -2,13 +2,29 @@
    
     "lenguage": "Lenguage",
     "index":"Start",
+     "Our": "Nuestros",
     "menu":{
         "start":"Start",
         "list_user":"List Users",
         "register":"Register",
         "login":"Login",
-        "log_out":"Close Session"
+        "log_out":"Close Session",
+        "contact": "Contact",
+        "servicios": "Services"
+      
       },
+       
+    "slider-index-paradiceDog": {
+      "subTitulo-1": "Home Service",
+      "subTitulo-2": "Cats and Dogs",
+      "subTitulo-3": "Boarding or Home Service",
+      "titulo-1": "Pet Grooming",
+      "titulo-2": "Pet Daycare",
+      "titulo-3": "Dog Training",
+      "description-1": "In our pet grooming service, we dedicate ourselves to caring for and beautifying your pet with the utmost care and professionalism. We know that your dog is part of your family, so we offer personalized care tailored to their specific needs. Our services include a stylish haircut that adapts to the breed and individual characteristics of your pet.",
+      "description-2": "Our daycare is the perfect place for your best friend to spend the day in a safe, fun, and loving environment. In our daycare, pets enjoy large play areas where they can socialize with other animals, exercise, and explore under the constant supervision of our professional caregivers.",
+      "description-3": "Our dog training service is designed to help you build a strong and harmonious relationship with your dog, based on trust, respect, and effective communication. With positive and personalized training methods, we focus on developing the skills and behaviors your dog needs to become an obedient, happy, and well-balanced companion. We offer a variety of training programs tailored to the individual needs and characteristics of each dog."
+    },
 
     "auth":{
         "write_your_data":"write your data",

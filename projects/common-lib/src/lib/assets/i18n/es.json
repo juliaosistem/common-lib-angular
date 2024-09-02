@@ -3,13 +3,29 @@
     "lenguage": "Idioma",
     "index":"Inicio",
     
+    
    "menu":{
      "start":"Inicio",
      "list_user":" Lista Usuarios",
      "register":"Registro",
      "login":"Iniciar Session",
-     "log_out":"Cerrar Session"
+     "log_out":"Cerrar Session",
+      "contact": "Contacto",
+      "servicios": "Servicios"
    },
+
+   "slider-index-paradiceDog":{
+      "subTitulo-1":"Servicio a domicilio",
+      "subTitulo-2":"Gatos y Perros",
+      "subTitulo-3":"Servicio de internado o a Domicilio",
+      "titulo-1":"Peluquería  para mascotas",
+      "titulo-2":"Guarderia para mascotas",
+      "titulo-3":"Entrenamiento Canino",
+      "descripcion-1":"En nuestro servicio de peluquería canina, nos dedicamos a cuidar y embellecer a tu mascota con el máximo cariño y profesionalismo. Sabemos que tu perro es parte de tu familia, y por eso ofrecemos un cuidado personalizado y adaptado a sus necesidades específicas. Nuestros servicios incluyen un corte de pelo estilizado que se adapta a la raza y características individuales de tu mascota",
+      "descripcion-2":"Nuestra guardería  es el lugar ideal para que tu mejor amigo pase el día en un ambiente seguro, divertido y lleno de amor. En nuestra guardería, las mascotas disfrutan de amplias áreas de juego donde pueden socializar con otros animales, ejercitarse y explorar bajo la supervisión constante de nuestro equipo de cuidadores profesionales",
+      "descripcion-3":"Nuestro servicio de entrenamiento canino está diseñado para ayudarte a construir una relación fuerte y armoniosa con tu perro, basada en la confianza, el respeto y la comunicación efectiva. Con métodos de entrenamiento positivos y personalizados, nos enfocamos en desarrollar las habilidades y comportamientos que tu perro necesita para convertirse en un compañero obediente, feliz y bien equilibrado. Ofrecemos una variedad de programas de entrenamiento adaptados a las necesidades y características individuales de cada perro"
+   },
+
    "auth":{
      "write_your_data":"Escriba sus Datos",
      "firtsName":"Nombre",

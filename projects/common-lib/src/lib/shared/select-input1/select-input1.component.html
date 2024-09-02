@@ -1,11 +1,10 @@
 <div class="input-group mb-3">
-   
-  <select class="custom-select" id="inputGroupSelect01">
-    <option selected>{{'lenguage' | translate}}</option>
-  @for (item of lenguages; track $index) {
-    <option [value]="item">{{item}}</option>
-  }
-  
-    
-    </select>
-  </div>
+  <ion-select placeholder="{{'lenguage'| translate}}"   [(ngModel)]="seleccionada" (ionChange)=cambiaLang(seleccionada) >
+    <ion-select-option  *ngFor="let i of lenguages"  [value]="i">{{i}}
+
+      <span class="fi fi-us language-flag"></span>
+    </ion-select-option>
+  </ion-select>
+
+</div>
+

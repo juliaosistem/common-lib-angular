@@ -1,7 +1,9 @@
 import { ColoresDTO } from "./ColoresDTO";
+import { ModuloDTO } from "./ModuloDTO";
 
 export interface BussinesDTO{
-    idBussines: number ;
+
+    idBussines: number;
     nombreNegocio: string;
     numeroIdentificacionNegocio: number;
     telofono : string;
@@ -14,4 +16,6 @@ export interface BussinesDTO{
     email? :string 
     direccion? :string
     lenguaje?:string;
+    modulos:ModuloDTO[];
+
 }

@@ -1,3 +1,4 @@
+import { ModuloDTO } from './ModuloDTO';
 export interface MenuDTO{
       id:string,
       icon?: string,
@@ -5,6 +6,7 @@ export interface MenuDTO{
       itemName: string,
       subItemName: string
       nameRol:string[],
+      moduloDTO:ModuloDTO,
       
   }
   

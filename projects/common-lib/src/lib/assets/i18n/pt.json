@@ -4,11 +4,25 @@
   
     "menu": {
         "start": "Início",
-        "list_user": "Lista de Usuários",
-        "register": "Registro",
+        "list_user": "Listar Usuários",
+        "register": "Registrar",
         "login": "Iniciar Sessão",
-        "log_out": "Encerrar Sessão"
-    },
+        "log_out": "Encerrar Sessão",
+        "contact": "Contato",
+        "servicios": "Serviços"
+      },
+      "slider-index-paradiceDog": {
+        "subTitulo-1": "Serviço a domicílio",
+        "subTitulo-2": "Gatos e Cães",
+        "subTitulo-3": "Serviço de internamento ou a Domicílio",
+        "titulo-1": "Tosa e Banho para Animais",
+        "titulo-2": "Creche para Animais",
+        "titulo-3": "Treinamento Canino",
+        "descricao-1": "No nosso serviço de tosa e banho para cães, nos dedicamos a cuidar e embelezar seu pet com o máximo de carinho e profissionalismo. Sabemos que seu cão é parte da sua família, por isso oferecemos um cuidado personalizado e adaptado às suas necessidades específicas. Nossos serviços incluem um corte de pelo estilizado que se adapta à raça e características individuais do seu pet.",
+        "descricao-2": "Nossa creche é o lugar ideal para que seu melhor amigo passe o dia em um ambiente seguro, divertido e cheio de amor. Na nossa creche, os animais desfrutam de amplas áreas de lazer onde podem socializar com outros animais, se exercitar e explorar sob a supervisão constante da nossa equipe de cuidadores profissionais.",
+        "descricao-3": "Nosso serviço de treinamento canino foi projetado para ajudá-lo a construir uma relação forte e harmoniosa com seu cão, baseada na confiança, respeito e comunicação eficaz. Com métodos de treinamento positivos e personalizados, nos concentramos em desenvolver as habilidades e comportamentos que seu cão precisa para se tornar um companheiro obediente, feliz e equilibrado. Oferecemos uma variedade de programas de treinamento adaptados às necessidades e características individuais de cada cão."
+     },
+
     "auth": {
         "write_your_data": "Insira seus Dados",
         "firtsName": "Nome",

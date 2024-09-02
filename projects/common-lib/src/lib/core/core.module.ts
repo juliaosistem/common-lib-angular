@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
@@ -21,6 +21,7 @@ import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { HttpClient } from "@angular/common/http";
+import { BrowserModule } from '@angular/platform-browser';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -31,7 +32,9 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [],
   imports: [
+   
     CommonModule,
+    FormsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -45,6 +48,8 @@ export function createTranslateLoader(http: HttpClient) {
      NgxsLoggerPluginModule.forRoot(),
 
   ],exports:[
+    FormsModule,
+    CommonModule,
     ReactiveFormsModule,
     TranslateModule,
     NgxsModule,

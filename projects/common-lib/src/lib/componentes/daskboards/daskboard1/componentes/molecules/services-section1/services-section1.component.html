@@ -1,0 +1,23 @@
+ <!-- service section -->
+ <section class="service_section layout_padding">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-6 offset-md-2">
+          <h2 class="custom_heading">
+           {{'Our  ' | translate}}<span>{{'menu.servicios' | translate}}</span>
+          </h2>
+          <lib-layout-services1 [negocio] = "negocio"></lib-layout-services1>
+          <div>
+            <a [href]=negocio.bussinesDTO?.urlWhatssapp target="_blank">
+              {{'menu.contact' | translate}}
+            </a>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <img src="images/tool.png" alt="" class="w-100">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- end service section -->

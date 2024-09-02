@@ -1,14 +1,29 @@
 {
     "lenguage": "Sprache",
     "index": "Startseite",
-  
+   
     "menu": {
-        "start": "Startseite",
-        "list_user": "Benutzerliste",
-        "register": "Registrierung",
-        "login": "Anmelden",
-        "log_out": "Abmelden"
-    },
+    "start": "Start",
+    "list_user": "Benutzer auflisten",
+    "register": "Registrieren",
+    "login": "Anmelden",
+    "log_out": "Abmelden",
+    "contact": "Kontakt",
+    "servicios": "Dienstleistungen"
+     },
+
+     "slider-index-paradiceDog": {
+        "subTitulo-1": "Service nach Hause",
+        "subTitulo-2": "Katzen und Hunde",
+        "subTitulo-3": "Internats- oder Heimdienst",
+        "titulo-1": "Hundesalon für Haustiere",
+        "titulo-2": "Tierpension",
+        "titulo-3": "Hundetraining",
+        "beschreibung-1": "In unserem Hundesalon-Service kümmern wir uns mit größter Sorgfalt und Professionalität um das Wohlbefinden und die Schönheit Ihres Haustieres. Wir wissen, dass Ihr Hund ein Teil Ihrer Familie ist, und deshalb bieten wir eine persönliche Pflege, die auf die individuellen Bedürfnisse Ihres Haustieres zugeschnitten ist. Unsere Dienstleistungen umfassen einen stilisierten Haarschnitt, der sich an die Rasse und die individuellen Eigenschaften Ihres Haustieres anpasst.",
+        "beschreibung-2": "Unsere Tierpension ist der ideale Ort, an dem Ihr bester Freund den Tag in einer sicheren, unterhaltsamen und liebevollen Umgebung verbringen kann. In unserer Tierpension genießen die Tiere großzügige Spielbereiche, in denen sie mit anderen Tieren in Kontakt treten, sich bewegen und unter ständiger Aufsicht unseres professionellen Pflegeteams erkunden können.",
+        "beschreibung-3": "Unser Hundetrainingsservice wurde entwickelt, um Ihnen zu helfen, eine starke und harmonische Beziehung zu Ihrem Hund aufzubauen, die auf Vertrauen, Respekt und effektiver Kommunikation basiert. Mit positiven und personalisierten Trainingsmethoden konzentrieren wir uns darauf, die Fähigkeiten und Verhaltensweisen zu entwickeln, die Ihr Hund benötigt, um ein gehorsamer, glücklicher und gut ausgeglichener Begleiter zu werden. Wir bieten eine Vielzahl von Trainingsprogrammen an, die an die individuellen Bedürfnisse und Eigenschaften jedes Hundes angepasst sind."
+     },
+
     "auth": {
         "write_your_data": "Geben Sie Ihre Daten ein",
         "firtsName": "Vorname",

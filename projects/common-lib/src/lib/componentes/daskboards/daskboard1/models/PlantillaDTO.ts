@@ -1,4 +1,5 @@
 import { BussinesDTO } from './BussinesDTO';
+import { ImagenDTO } from './ImagenDTO';
 import { MenuActive } from './MenuDTO';
 import { SliderDTO } from './SliderDTO';
 
@@ -7,4 +8,5 @@ export interface PlantillaDTO{
     bussinesDTO?:BussinesDTO,
     slider?:SliderDTO[],
     menu?:MenuActive,
+    imagenes?:ImagenDTO[]
 }
