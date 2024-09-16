@@ -5,7 +5,7 @@
        autoplay="true"  pagination="true"
        navigation="true"  slides-per-view="1" 
        speed="300" loop="true" css-mode="true">
-       @for(slide of negocio?.slider; track slide.id){
+       @for(slide of slides; track slide.id){
         <swiper-slide lazy="true">
 
           <div class="container-fluid">
@@ -35,7 +35,6 @@
                 <div class="slider_img-box">
                   
                   <img [src]="slide?.imagen ? slide.imagen?.url : '../../../imagenes/slider-img.png'"
-                   loading="lazy" 
                   [alt]="slide?.imagen?.alt ? slide.imagen?.alt : ''">
                 </div>
               </div>
@@ -43,6 +42,8 @@
           </div>
       
       </swiper-slide>
+       }@empty {
+<h1>no hay imagnes {{this.slides | json}}</h1>
        }
   
   

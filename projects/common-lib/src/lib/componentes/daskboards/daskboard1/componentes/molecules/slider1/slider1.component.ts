@@ -1,8 +1,10 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, Input } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit } from '@angular/core';
 import { register } from 'swiper/element/bundle';
 import { PlantillaDTO } from '../../../models/PlantillaDTO';
 import { TranslateService } from '@ngx-translate/core';
 import { CoreModule } from '../../../../../../core/core.module';
+import { SliderDTO } from '../../../models/SliderDTO';
+import { ComponentesDTO } from '../../../models/componentesDTO';
 
 
  register();
@@ -15,11 +17,37 @@ import { CoreModule } from '../../../../../../core/core.module';
   styleUrl: './slider1.component.css',
   schemas:[CUSTOM_ELEMENTS_SCHEMA]
 })
-export class Slider1Component {
+export class Slider1Component implements OnInit {
 
   @Input()
   negocio :PlantillaDTO | undefined;
-  
-  constructor( private translate: TranslateService,){}
 
+  componente:ComponentesDTO = {
+    id: 'ebe0ee23-f71e-4f43-8a77-a2a5028a976d',
+    nombreComponente: 'lib-slider1',
+    version: '1.0',
+  }
+
+  slides: SliderDTO[]=[];
+  
+  constructor( private translate: TranslateService,){
+
+  }
+  ngOnInit(): void {
+    this.validarComponente();
+  
+  }
+
+
+  validarComponente() {
+    if (this.negocio != undefined) {
+      this.negocio.bussinesDTO?.modulos.forEach(modulo => {
+        modulo.componentes.forEach(componente => {
+          if (componente.sliderDTO && componente.id === this.componente.id) {
+            this.slides =componente.sliderDTO;
+          }
+        });
+      });
+    }
+  }
 }

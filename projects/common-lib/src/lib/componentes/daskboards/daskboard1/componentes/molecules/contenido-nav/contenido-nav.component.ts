@@ -7,6 +7,7 @@ import { SelectInput1Component } from '../../../../../../shared/select-input1/se
 import { PlantillaDTO } from '../../../models/PlantillaDTO';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonCall1Component } from '../../atoms/button-call1/button-call1.component';
+import { ComponentesDTO } from '../../../models/componentesDTO';
 
 @Component({
   selector: 'app-contenido-nav',
@@ -17,15 +18,24 @@ import { ButtonCall1Component } from '../../atoms/button-call1/button-call1.comp
     SelectInput1Component,TranslateModule]
 })
 export class ContenidoNavComponent  implements OnInit {
+
+
+  componente:ComponentesDTO = {
+    id: '2da5cdea-096d-4147-b6f0-9c427e5b67d6',
+    nombreComponente: 'app-contenido-nav',
+    version: '1.0',
+  }
+  
   
  
   @Input()
    lenguages :string[]=[]
+
+  
   @Input()
    negocio : PlantillaDTO  = {
      id: '',
      bussinesDTO: undefined,
-     slider: [],
      menu: undefined
    }  
 

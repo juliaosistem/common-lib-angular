@@ -4,6 +4,7 @@ import { ContenidoNavComponent } from '../contenido-nav/contenido-nav.component'
 
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { PlantillaDTO } from '../../../models/PlantillaDTO';
+import { ComponentesDTO } from '../../../models/componentesDTO';
 
 @Component({
   selector: 'lib-nav1',
@@ -24,9 +25,12 @@ export class Nav1Component implements OnInit {
    } 
 
   
- 
- 
-  alertButtons = ['Action'];
+   componente:ComponentesDTO = {
+    id: 'fb2616bf-ace7-4252-b8d2-ea7d83ccd24c',
+    nombreComponente: 'lib-nav1',
+    version: '1.0',
+  }
+  
  constructor(private platform: Platform, private breakpointObserver: BreakpointObserver) {
  }
 

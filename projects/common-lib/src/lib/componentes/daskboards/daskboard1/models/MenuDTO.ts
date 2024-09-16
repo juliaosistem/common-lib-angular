@@ -6,7 +6,7 @@ export interface MenuDTO{
       itemName: string,
       subItemName: string
       nameRol:string[],
-      moduloDTO:ModuloDTO,
+      moduloDTO?:ModuloDTO,
       
   }
   

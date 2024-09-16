@@ -28,7 +28,6 @@ export class Index1Component {
     id: ''
   };
 
-  alertButtons = ['Action'];
  constructor(private platform: Platform, 
   private breakpointObserver: BreakpointObserver,
   private translate: TranslateService,

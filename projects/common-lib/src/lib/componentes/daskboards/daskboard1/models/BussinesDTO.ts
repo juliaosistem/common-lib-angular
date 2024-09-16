@@ -1,5 +1,7 @@
+import { MenuActive } from './MenuDTO';
 import { ColoresDTO } from "./ColoresDTO";
 import { ModuloDTO } from "./ModuloDTO";
+import { ProductoDTO } from './ProductoDTO';
 
 export interface BussinesDTO{
 
@@ -17,5 +19,6 @@ export interface BussinesDTO{
     direccion? :string
     lenguaje?:string;
     modulos:ModuloDTO[];
-
+    menu?:MenuActive[];
+    productos?:ProductoDTO[];
 }

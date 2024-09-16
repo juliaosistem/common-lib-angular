@@ -14,7 +14,6 @@ export class ButtonCall1Component {
   negocio : PlantillaDTO  = {
     id: '',
     bussinesDTO: undefined,
-    slider: [],
     menu: undefined
   }  
 }

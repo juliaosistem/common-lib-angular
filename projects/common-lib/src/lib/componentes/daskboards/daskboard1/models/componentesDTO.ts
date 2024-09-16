@@ -1,10 +1,14 @@
+import { SliderDTO } from './SliderDTO';
+import { ImagenDTO } from "./ImagenDTO"
+
 export interface ComponentesDTO{
     id:string
     nombreComponente:string
     descripcion?:string
-    tipo?:string
     ruta?:string
     parenId?:string
-    rolesConPermiso?:[]
+    rolesConPermiso?:String[]
+    imagenes?:ImagenDTO[]
+    sliderDTO?:SliderDTO[]
     version:string
 }
