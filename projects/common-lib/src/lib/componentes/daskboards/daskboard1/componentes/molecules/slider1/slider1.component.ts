@@ -2,7 +2,7 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit } from '@angular/core'
 import { register } from 'swiper/element/bundle';
 import { PlantillaDTO } from '../../../models/PlantillaDTO';
 import { TranslateService } from '@ngx-translate/core';
-import { CoreModule } from '../../../../../../core/core.module';
+import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { SliderDTO } from '../../../models/SliderDTO';
 import { ComponentesDTO } from '../../../models/componentesDTO';
 
@@ -12,7 +12,7 @@ import { ComponentesDTO } from '../../../models/componentesDTO';
 @Component({
   selector: 'lib-slider1',
   standalone: true,
-  imports: [CoreModule],
+  imports: [CoreModuleLib],
   templateUrl: './slider1.component.html',
   styleUrl: './slider1.component.css',
   schemas:[CUSTOM_ELEMENTS_SCHEMA]

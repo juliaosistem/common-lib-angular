@@ -1,13 +1,13 @@
-import { ComponentServicesService } from './../../../../../../core/component-services.service';
+import { ComponentServicesService } from '../../../../../../core/component-services.service';
 import { ComponentesDTO } from '../../../models/componentesDTO';
 import { ImagenDTO } from '../../../models/ImagenDTO';
-import { CoreModule } from './../../../../../../core/core.module';
+import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'lib-gallery-section1',
   standalone: true,
-  imports: [CoreModule],
+  imports: [CoreModuleLib],
   templateUrl: './gallery-section1.component.html',
   styleUrl: './gallery-section1.component.css'
 })

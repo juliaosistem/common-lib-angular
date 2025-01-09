@@ -3,11 +3,11 @@ import { IonicModule } from '@ionic/angular';
 import { Link1Component } from '../../atoms/link1/link1.component';
 import { BussinesDTO } from '../../../models/BussinesDTO'
 import { Footer1Component } from '../footer1/footer1.component';
-import { SelectInput1Component } from '../../../../../../shared/select-input1/select-input1.component';
 import { PlantillaDTO } from '../../../models/PlantillaDTO';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonCall1Component } from '../../atoms/button-call1/button-call1.component';
 import { ComponentesDTO } from '../../../models/componentesDTO';
+import { SelectInput1Component } from '../../../../../shared/atoms/select-input1/select-input1.component';
 
 @Component({
   selector: 'app-contenido-nav',

@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { CoreModule } from '../../core/core.module';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicModule } from '@ionic/angular';
+import { CoreModuleLib } from '../../../../modulos/core.lib.module';
 
 @Component({
   selector: 'lib-select-input1',
   standalone: true,
-  imports: [CoreModule,IonicModule],
+  imports: [CoreModuleLib,IonicModule],
   templateUrl: './select-input1.component.html',
   styleUrl: './select-input1.component.css'
 })

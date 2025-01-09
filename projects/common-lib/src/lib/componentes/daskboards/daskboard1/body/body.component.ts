@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { CoreModule } from '../../../../core/core.module';
+import { CoreModuleLib } from '../../../../modulos/core.lib.module';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'lib-body',
   standalone: true,
-  imports: [CoreModule,RouterOutlet],
+  imports: [CoreModuleLib,RouterOutlet],
   templateUrl: './body.component.html',
   styleUrl: './body.component.css'
 })

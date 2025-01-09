@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { CoreModule } from '../../../../core/core.module';
+import { CoreModuleLib } from '../../../../modulos/core.lib.module';
 import { BodyComponent } from '../body/body.component';
 import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'lib-menu',
   standalone: true,
-  imports: [CoreModule,BodyComponent,FooterComponent],
+  imports: [CoreModuleLib,BodyComponent,FooterComponent],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.css'
 })

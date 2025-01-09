@@ -1,5 +1,5 @@
-import { ProductoDTO } from './../componentes/daskboards/daskboard1/models/ProductoDTO';
-import { ImagenDTO } from './../componentes/daskboards/daskboard1/models/ImagenDTO';
+import { ProductoDTO } from '../componentes/daskboards/daskboard1/models/ProductoDTO';
+import { ImagenDTO } from '../componentes/daskboards/daskboard1/models/ImagenDTO';
 import { Injectable } from '@angular/core';
 
 @Injectable({
