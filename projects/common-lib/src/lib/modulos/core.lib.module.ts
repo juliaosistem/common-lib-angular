@@ -23,6 +23,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { HttpClient } from "@angular/common/http";
 import { BrowserModule } from '@angular/platform-browser';
 import { Tabla1Component } from '../componentes/shared/molecules/tabla1/tabla1.component';
+import { MatCommonModule } from '@angular/material/core';
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -33,7 +34,6 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   declarations: [Tabla1Component],
   imports: [
-   
     CommonModule,
     FormsModule,
     TranslateModule.forRoot({
@@ -43,11 +43,6 @@ export function createTranslateLoader(http: HttpClient) {
         deps: [HttpClient]
       }
     }),
-
-    NgxsModule.forRoot([BussinesStateState],{}),
-     NgxsReduxDevtoolsPluginModule.forRoot(),
-     NgxsLoggerPluginModule.forRoot(),
-
   ],exports:[
     Tabla1Component,
     FormsModule,
