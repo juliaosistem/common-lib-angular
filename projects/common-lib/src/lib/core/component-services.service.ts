@@ -1,6 +1,6 @@
-import { ProductoDTO } from '../componentes/daskboards/daskboard1/models/ProductoDTO';
-import { ImagenDTO } from '../componentes/daskboards/daskboard1/models/ImagenDTO';
 import { Injectable } from '@angular/core';
+import{ImagenDTO} from 'juliaositembackenexpress/dist/api/dtos/bussines/ImagenDTO';
+import { ProductoDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/productoDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class ComponentServicesService {
   }
   
   findProductosByIdCategori(productoDTO:ProductoDTO[],idCategoria :string):ProductoDTO[]{
-    return productoDTO.filter(p=> p.idCategorie == idCategoria);
+    return productoDTO.filter(p=> p.idCategoria == idCategoria);
   }
   
 

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { PlantillaDTO } from '../../../models/PlantillaDTO';
+import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
+
 
 @Component({
   selector: 'lib-button-call1',

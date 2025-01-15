@@ -1,9 +1,9 @@
 import { ComponentServicesService } from '../../../../../../core/component-services.service';
-import { ComponentesDTO } from '../../../models/componentesDTO';
-import { ImagenDTO } from '../../../models/ImagenDTO';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import{ImagenDTO} from 'juliaositembackenexpress/dist/api/dtos/bussines/ImagenDTO';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-gallery-section1',
@@ -29,13 +29,9 @@ export class GallerySection1Component implements OnInit {
   ngOnInit(): void {
     var imgs
      if(this.imagenes != undefined && this.imagenes.length !=0 ){
-      debugger;
+
       imgs= this.compSvc.findImagenesByIdComponent(this.imagenes ,this.componente.id);
      }
-
-     console.log("images" , imgs)
-     console.log("im-", this.imagenes)
-     
   }
   
 

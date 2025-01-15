@@ -1,9 +1,9 @@
-import { MenuDTO } from './../../../models/MenuDTO';
 import { IonicModule } from '@ionic/angular';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { MenuDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/menuDTO';
 
 @Component({
   selector: 'app-link1',

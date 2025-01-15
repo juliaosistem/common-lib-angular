@@ -30,17 +30,17 @@
     "flag-icons": "^7.2.3",
     "ionicons": "^7.0.0",
     "jquery": "^3.7.1",
-    "juliaositembackenexpress": "^1.0.8",
+    "juliaositembackenexpress": "^1.1.9",
     "ng-packagr": "^19.0.1",
     "popper.js": "^1.16.1",
     "primeclt": "^0.1.5",
+    "primeicons": "^7.0.0",
     "primeng": "^19.0.5",
     "rxjs": "~7.8.0",
     "swiper": "^11.1.9",
     "tailwindcss-primeui": "^0.4.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0",
-    "primeicons": "^7.0.0"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.0.7",
@@ -75,5 +75,4 @@
     "README.md",
     "LICENSE"
   ]
-  
 }

@@ -1,12 +1,11 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, Input, OnInit } from '@angular/core';
 import { register } from 'swiper/element/bundle';
-import { PlantillaDTO } from '../../../models/PlantillaDTO';
 import { TranslateService } from '@ngx-translate/core';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
-import { SliderDTO } from '../../../models/SliderDTO';
-import { ComponentesDTO } from '../../../models/componentesDTO';
 import { CommonModule } from '@angular/common';
-
+import { SliderDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/sliderDTO';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
 
  register();
 
