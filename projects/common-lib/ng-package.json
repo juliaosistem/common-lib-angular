@@ -6,6 +6,8 @@
   },
   "assets": [
     "src/lib/assets"
+  ],
+"allowedNonPeerDependencies": [
+    "primeicons"
   ]
-
 }

@@ -3,11 +3,12 @@ import { ComponentesDTO } from '../../../models/componentesDTO';
 import { ImagenDTO } from '../../../models/ImagenDTO';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-gallery-section1',
   standalone: true,
-  imports: [CoreModuleLib],
+  imports: [CoreModuleLib,CommonModule],
   templateUrl: './gallery-section1.component.html',
   styleUrl: './gallery-section1.component.css'
 })
