@@ -1,12 +1,14 @@
 import { Component, Input } from '@angular/core';
-import { CoreModule } from '../../core/core.module';
 import { TranslateService } from '@ngx-translate/core';
 import { IonicModule } from '@ionic/angular';
+import { CoreModuleLib } from '../../../../modulos/core.lib.module';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'lib-select-input1',
   standalone: true,
-  imports: [CoreModule,IonicModule],
+  imports: [CoreModuleLib,IonicModule,FormsModule,CommonModule],
   templateUrl: './select-input1.component.html',
   styleUrl: './select-input1.component.css'
 })

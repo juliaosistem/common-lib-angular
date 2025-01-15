@@ -3,12 +3,12 @@ import { PlantillaDTO } from '../../../models/PlantillaDTO';
 import { ComponentesDTO } from '../../../models/componentesDTO';
 
 import { ComponentServicesService } from '../../../../../../core/component-services.service';
-import { CoreModule } from '../../../../../../core/core.module';
+import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 
 @Component({
   selector: 'lib-layout-services1',
   standalone: true,
-  imports: [CoreModule],
+  imports: [CoreModuleLib],
   templateUrl: './layout-services1.component.html',
   styleUrl: './layout-services1.component.css'
 })

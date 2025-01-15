@@ -1,0 +1,38 @@
+name: Publicar en npm con Node.js v20.9.0
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código fuente
+        uses: actions/checkout@v2
+
+      - name: Configura Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22.12.0'  # Cambia esto a una versión válida de Node.js
+
+      - name: Comprueba la versión de Node.js
+        run: node -v
+
+      - name: Configura Git
+        run: |
+          git config --global user.email "zigmainflables@gmail.com"
+          git config --global user.name "Daniel Juliao"
+
+      - name: Instala las dependencias
+        run: npm install
+
+      - name: Construye el paquete
+        run: npm run build
+
+      - name: Publica en npm
+        run: |
+          npm config set '//registry.npmjs.org/:_authToken' ${{ secrets.NPM_AUTH_TOKEN }}
+          npm publish
