@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit,Renderer2, ViewChild } from '@angular/core';
+
 import { IonicModule } from '@ionic/angular';
 import { Link1Component } from '../../atoms/link1/link1.component';
 import { TranslateModule } from '@ngx-translate/core';

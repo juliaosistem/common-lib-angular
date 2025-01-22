@@ -27,6 +27,7 @@
     "@ngxs/logger-plugin": "^19.0.0",
     "@ngxs/store": "^19.0.0",
     "@primeng/themes": "^19.0.5",
+    "bootstrap": "^5.3.3",
     "flag-icons": "^7.2.3",
     "ionicons": "^7.0.0",
     "jquery": "^3.7.1",
@@ -70,15 +71,13 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.6.3"
   },
-
-  "main": "dist/common-lib/bundles/common-lib-angular.umd.js", 
-  "module": "dist/common-lib/fesm2015/common-lib-angular.js", 
+  "main": "fesm2022/common-lib.mjs",
+  "module": "fesm2022/common-lib.mjs",
+  "types": "index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/common-lib/fesm2015/common-lib-angular.js",
-      "require": "./dist/common-lib/bundles/common-lib-angular.umd.js"
+      "import": "./fesm2022/common-lib.mjs",
+      "require": "./fesm2022/common-lib.mjs"
     }
   }
-
-
 }

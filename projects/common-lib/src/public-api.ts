@@ -6,7 +6,8 @@ export * from './lib/common-lib.service';
 export * from './lib/common-lib.component';
 export * from './lib/modulos/core.lib.module';
 export * from './lib/componentes/daskboards/daskboard1/componentes/pages/index1/index1.component';
-export * from './lib/assets/state/bussines-state.state'
+export * from './lib/assets/state/bussines-state.state';
+export * from './lib/componentes/daskboards/daskboard3/componentes/daskboard3';
 
 
 // componentes 
