@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { PlantillaDTO } from '../../../models/PlantillaDTO';
-import { ComponentesDTO } from '../../../models/componentesDTO';
+
 
 import { ComponentServicesService } from '../../../../../../core/component-services.service';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
 
 @Component({
   selector: 'lib-layout-services1',

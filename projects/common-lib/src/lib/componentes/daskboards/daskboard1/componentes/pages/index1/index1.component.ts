@@ -6,14 +6,13 @@ import { Nav1Component } from '../../molecules/nav1/nav1.component';
 import { Footer1Component } from '../../molecules/footer1/footer1.component';
 import { Slider1Component } from '../../molecules/slider1/slider1.component';
 import { TranslateService } from '@ngx-translate/core';
-import { PlantillaDTO } from '../../../models/PlantillaDTO';
+import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
 import { ServicesSection1Component } from '../../molecules/services-section1/services-section1.component';
 
 @Component({
   selector: 'lib-index1',
   standalone: true,
-  imports: [IonicModule, Nav1Component, ServicesSection1Component
-    ,Footer1Component,Slider1Component,GallerySection1Component],
+  imports: [IonicModule, Nav1Component, ServicesSection1Component,Footer1Component,Slider1Component,GallerySection1Component],
   templateUrl: './index1.component.html',
   styleUrl: './index1.component.css'
 })

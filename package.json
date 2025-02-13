@@ -1,6 +1,6 @@
 {
   "name": "common-lib-angular",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
-  "private": true,
+  "private": false,
   "dependencies": {
     "@angular/animations": "^19.0.6",
     "@angular/cdk": "^19.0.5",
@@ -27,20 +27,19 @@
     "@ngxs/logger-plugin": "^19.0.0",
     "@ngxs/store": "^19.0.0",
     "@primeng/themes": "^19.0.5",
+    "bootstrap": "^5.3.3",
     "flag-icons": "^7.2.3",
     "ionicons": "^7.0.0",
     "jquery": "^3.7.1",
-    "juliaositembackenexpress": "^1.0.8",
+    "juliaositembackenexpress": "^1.1.9",
     "ng-packagr": "^19.0.1",
     "popper.js": "^1.16.1",
-    "primeclt": "^0.1.5",
+    "primeicons": "^7.0.0",
     "primeng": "^19.0.5",
     "rxjs": "~7.8.0",
     "swiper": "^11.1.9",
-    "tailwindcss-primeui": "^0.4.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.15.0",
-    "primeicons": "^7.0.0"
+    "zone.js": "~0.15.0"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^19.0.7",
@@ -69,6 +68,14 @@
     "karma-jasmine": "~5.1.0",
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.6.3"
+  },
+  "main": "fesm2022/common-lib.mjs",
+  "module": "fesm2022/common-lib.mjs",
+  "types": "index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./fesm2022/common-lib.mjs",
+      "require": "./fesm2022/common-lib.mjs"
+    }
   }
-  
 }

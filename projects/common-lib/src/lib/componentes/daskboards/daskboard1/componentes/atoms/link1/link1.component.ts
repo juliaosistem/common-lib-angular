@@ -1,9 +1,9 @@
-import { MenuDTO } from './../../../models/MenuDTO';
 import { IonicModule } from '@ionic/angular';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
+import { MenuDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/menuDTO';
 
 @Component({
   selector: 'app-link1',
@@ -23,16 +23,21 @@ export class Link1Component  implements OnInit {
   constructor(private translate:TranslateService) { }
 
   ngOnInit() {
+    console.log("menu antes de cargarlo",this.menu)
     console.log("funciona")
     this.loadMenu()
     this.langChangeSubscription = this.translate.onLangChange.subscribe(() => {
       this.updateMenuTranslations();
     });
+    
+    console.log("menu Despues de loadMenu " , this.menu)
   }
 
   loadMenu() {
+    debugger;
     this.translate.get(['index', 'menu.servicios']).subscribe(translations => {
-      console.log("index" ,translations['index'] )
+     console.log("index" ,translations['index'] )
+     console.log("Servicios" ,translations['menu.servicios'] );
      let defualtMenu: MenuDTO [] = [
         {  
           id: '1',
@@ -52,13 +57,17 @@ export class Link1Component  implements OnInit {
         }
       ];
 
-      defualtMenu.forEach(e => this.menu?.push(e));
+     defualtMenu.forEach(e =>{ 
+      if(this.menu?.findIndex(i => e.id === i.id) === -1 )
+      this.menu?.push(e)
+       });
     });
   }
 
   updateMenuTranslations(): void {
-  
+  debugger;
     this.translate.get(['index', 'menu.servicios']).subscribe(translations => {
+      debugger;
       this.menu?.forEach(item => {
         if (item.id === '1') {
           item.itemName = translations['index'];

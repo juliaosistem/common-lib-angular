@@ -1,6 +1,6 @@
 <div class="container layout_padding2">
     <div class="row">
-      @for (producto of negocio.bussinesDTO?.productos ; track producto.idProduct) {
+      @for (producto of negocio.bussinesDTO?.productos ; track producto.id) {
         <div class="col-md-4">
           <div class="img_box">
             <img [src]="producto.icono?producto.icono:'../../../../../../assets/images/s-1.png'" alt="">
@@ -10,7 +10,7 @@
              {{producto.name | translate}}
             </h6>
             <p>
-              {{producto.description | translate}}
+              {{producto.descripcion | translate}}
             </p>
           </div>
         </div>
