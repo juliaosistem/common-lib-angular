@@ -1,4 +1,4 @@
-import { GallerySection1Component } from './../../molecules/gallery-section1/gallery-section1.component';
+import { GallerySection1Component } from '../../molecules/gallery-section1/gallery-section1.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, Input } from '@angular/core';
 import { IonicModule, Platform } from '@ionic/angular';
