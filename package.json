@@ -1,5 +1,5 @@
 {
-  "name": "common-lib-angular",
+  "name": "lib-common-angular",
   "version": "0.0.4",
   "scripts": {
     "ng": "ng",
@@ -76,12 +76,12 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.6.3"
   },
-  "main": "dist/common-lib/bundles/common-lib-angular.umd.js",
-  "module": "dist/common-lib/fesm2015/common-lib-angular.js",
+  "main": "dist/lib-common-angular/bundles/lib-common-angular.umd.js",
+  "module": "dist/lib-common-angular/fesm2015/lib-common-angular.js",
   "exports": {
     ".": {
-      "import": "./dist/common-lib/fesm2015/common-lib-angular.js",
-      "require": "./dist/common-lib/bundles/common-lib-angular.umd.js"
+      "import": "./dist/lib-common-angular/fesm2015/lib-common-angular.js",
+      "require": "./dist/lib-common-angular/bundles/lib-common-angular.umd.js"
     }
   }
 }
