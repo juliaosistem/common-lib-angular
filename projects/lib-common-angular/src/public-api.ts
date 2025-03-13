@@ -6,11 +6,14 @@ export * from './lib/common-lib.service';
 export * from './lib/common-lib.component';
 export * from './lib/modulos/core.lib.module';
 export * from './lib/componentes/daskboards/daskboard1/componentes/pages/index1/index1.component';
-export * from './lib/assets/state/bussines-state.state'
+export * from './lib/assets/state/bussines-state.state';
+export * from './lib/componentes/daskboards/daskboard3/componentes/daskboard3';
 
 
 // componentes 
 
 export * from './lib/componentes/shared/atoms/select-input1/select-input1.component'
 export * from './lib/componentes/daskboards/daskboard2/index2/index2.component';
-export * from './lib/componentes/shared/molecules/tabla1/tabla1.component'
+export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
+export * from './lib/componentes/shared/pages/crud/crud';
+export * from './lib/componentes/shared/pages/notfound/notfound';

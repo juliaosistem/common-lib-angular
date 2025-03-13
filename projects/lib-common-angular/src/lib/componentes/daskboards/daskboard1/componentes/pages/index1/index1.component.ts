@@ -12,8 +12,7 @@ import { ServicesSection1Component } from '../../molecules/services-section1/ser
 @Component({
   selector: 'lib-index1',
   standalone: true,
-  imports: [IonicModule, Nav1Component, ServicesSection1Component
-    ,Footer1Component,Slider1Component,GallerySection1Component],
+  imports: [IonicModule, Nav1Component, ServicesSection1Component,Footer1Component,Slider1Component,GallerySection1Component],
   templateUrl: './index1.component.html',
   styleUrl: './index1.component.css'
 })

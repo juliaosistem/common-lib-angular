@@ -16,15 +16,13 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { NgxsModule } from '@ngxs/store';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import { BussinesStateState } from '../assets/state/bussines-state.state';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { HttpClient } from "@angular/common/http";
-import { BrowserModule } from '@angular/platform-browser';
 import { Tabla1Component } from '../componentes/shared/molecules/tabla1/tabla1.component';
-import { MatCommonModule } from '@angular/material/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { IonicModule } from '@ionic/angular';
+
 
 
 export function createTranslateLoader(http: HttpClient) {
@@ -33,8 +31,9 @@ export function createTranslateLoader(http: HttpClient) {
 
 
 @NgModule({
-  declarations: [Tabla1Component],
+  declarations: [],
   imports: [
+    CommonModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -43,7 +42,7 @@ export function createTranslateLoader(http: HttpClient) {
       }
     }),
   ],exports:[
-    Tabla1Component,
+    
     //FormsModule,
   //  CommonModule,
     ReactiveFormsModule,

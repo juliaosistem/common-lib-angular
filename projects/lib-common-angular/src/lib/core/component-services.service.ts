@@ -17,5 +17,6 @@ export class ComponentServicesService {
     return productoDTO.filter(p=> p.idCategoria == idCategoria);
   }
   
+  
 
 }
