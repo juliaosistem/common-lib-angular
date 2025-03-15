@@ -4,8 +4,8 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "common-lib": [
-        "./dist/common-lib"
+      "lib-common-angular": [
+        "./dist/lib-common-angular"
       ]
     },
     "outDir": "./dist/out-tsc",
