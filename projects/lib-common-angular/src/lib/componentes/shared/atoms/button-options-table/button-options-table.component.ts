@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
@@ -7,34 +7,33 @@ import { MenuItem } from 'primeng/api';
   selector: 'lib-button-options-table',
   imports: [PrimegModule, FormsModule],
   templateUrl: './button-options-table.component.html',
-  styleUrl: './button-options-table.component.scss'
+  styleUrl: './button-options-table.component.scss',
 })
 export class ButtonOptionsTableComponent implements OnInit {
-      items: MenuItem[] | undefined;
+  @Input() isAdd: boolean = true; 
+  @Input() isEdit: boolean = true;
+  @Input() isDelete: boolean = true;
+  @Input() isWhatsapp: boolean = true;
+  @Input() isExportExcel: boolean = true;
+  @Input() isExportPdf: boolean = true;
+  
+  items: MenuItem[] | undefined;
 
-ngOnInit() {
-        this.items = [
-            {
-                label: 'Search',
-                icon: 'pi pi-search'
-            },
-            {
-                separator: true
-            },
-            {
-                label: 'Share',
-                icon: 'pi pi-share-alt',
-                items: [
-                    {
-                        label: 'Slack',
-                        icon: 'pi pi-slack'
-                    },
-                    {
-                        label: 'Whatsapp',
-                        icon: 'pi pi-whatsapp'
-                    }
-                ]
-            }
+  ngOnInit() {
+    this.items = [
+      (this.isAdd ? { label: 'Add', icon: 'pi pi-plus' } : []),
+      ...(this.isEdit ? [{ label: 'Edit', icon: 'pi pi-pencil' }] : []),
+      ...(this.isDelete ? [{ label: 'Delete', icon: 'pi pi-trash' }] : []),
+      ...(this.isWhatsapp ? [{ label: 'WhatsApp', icon: 'pi pi-whatsapp' }] : []),
+      ...(this.isExportExcel || this.isExportPdf ? [{ separator: true }] : []),
+      ...(this.isExportExcel || this.isExportPdf ? [{
+        label: 'Export',
+        icon: 'pi pi-download',
+        items: [
+          ...(this.isExportPdf ? [{ label: 'Export to PDF', icon: 'pi pi-file-pdf' }] : []),
+          ...(this.isExportExcel ? [{ label: 'Export to Excel', icon: 'pi pi-file-excel' }] : [])
         ]
-    }
+      }] : [])
+    ];
+  }
 }

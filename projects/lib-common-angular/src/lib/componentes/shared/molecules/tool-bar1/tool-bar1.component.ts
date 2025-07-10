@@ -8,9 +8,6 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
 @Component({
   selector: 'lib-tool-bar1',
   imports: [
-    CommonModule,
-    TableModule,
-    FormsModule,
     ButtonOptionsTableComponent,
     PrimegModule,
   ],
