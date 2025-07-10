@@ -23,7 +23,7 @@ import { TagModule } from 'primeng/tag';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-
+import { TieredMenuModule } from 'primeng/tieredmenu';
 
 @NgModule({
   declarations: [],
@@ -51,8 +51,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
    TagModule,
    InputIconModule,
    IconFieldModule,
-   ConfirmDialogModule
-
+   ConfirmDialogModule,
+   TieredMenuModule,
   ],
   exports:[
     ButtonModule,
@@ -77,7 +77,8 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
    TagModule,
    InputIconModule,
    IconFieldModule,
-   ConfirmDialogModule
+   ConfirmDialogModule,
+  TieredMenuModule,
   ]
 })
 export class PrimegModule { }

@@ -7,7 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { Product, ProductService } from '../../../../core/product.service';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { Tabla1Component } from '../../molecules/tabla1/tabla1.component';
-
+import { ButtonOptionsTableComponent } from '../../atoms/button-options-table/button-options-table.component';
+import { ToolBar1Component } from '../../molecules/tool-bar1/tool-bar1.component';
 
 interface Column {
     field: string;
@@ -28,7 +29,8 @@ interface ExportColumn {
         TableModule,
         FormsModule,
         PrimegModule,
-        Tabla1Component
+        ToolBar1Component,
+        Tabla1Component,
     ],
      templateUrl: './crud.component.html',
      providers: [MessageService, ProductService, ConfirmationService]
