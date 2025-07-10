@@ -20,20 +20,20 @@ export class ButtonOptionsTableComponent implements OnInit {
   items: MenuItem[] | undefined;
 
   ngOnInit() {
-    this.items = [
-      (this.isAdd ? { label: 'Add', icon: 'pi pi-plus' } : []),
-      ...(this.isEdit ? [{ label: 'Edit', icon: 'pi pi-pencil' }] : []),
-      ...(this.isDelete ? [{ label: 'Delete', icon: 'pi pi-trash' }] : []),
-      ...(this.isWhatsapp ? [{ label: 'WhatsApp', icon: 'pi pi-whatsapp' }] : []),
-      ...(this.isExportExcel || this.isExportPdf ? [{ separator: true }] : []),
-      ...(this.isExportExcel || this.isExportPdf ? [{
-        label: 'Export',
-        icon: 'pi pi-download',
-        items: [
-          ...(this.isExportPdf ? [{ label: 'Export to PDF', icon: 'pi pi-file-pdf' }] : []),
-          ...(this.isExportExcel ? [{ label: 'Export to Excel', icon: 'pi pi-file-excel' }] : [])
-        ]
-      }] : [])
-    ];
+
+    this.items = [];
+    this.isAdd && this.items.push({ label: 'Add', icon: 'pi pi-plus' });
+    this.isEdit && this.items.push({ label: 'Edit', icon: 'pi pi-pencil' });
+    this.isDelete && this.items.push({ label: 'Delete', icon: 'pi pi-trash' });
+    this.isWhatsapp && this.items.push({ label: 'WhatsApp', icon: 'pi pi-whatsapp' });
+    (this.isExportExcel || this.isExportPdf) && this.items.push({ separator: true });
+    (this.isExportExcel || this.isExportPdf) && this.items.push({
+      label: 'Export',
+      icon: 'pi pi-download',
+      items: [
+        ...(this.isExportPdf ? [{ label: 'Export to PDF', icon: 'pi pi-file-pdf' }] : []),
+        ...(this.isExportExcel ? [{ label: 'Export to Excel', icon: 'pi pi-file-excel' }] : [])
+      ].filter(Boolean)
+    });
   }
 }
