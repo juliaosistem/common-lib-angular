@@ -87,7 +87,10 @@ export class Crud implements OnInit {
             { id: 2, field: 'name', header: 'Name' },
             { id: 3, field: 'image', header: 'Image' },
             { id: 4, field: 'price', header: 'Price' },
-            { id: 5, field: 'category', header: 'Category' }
+            { id: 5, field: 'category', header: 'Category' },
+            { id: 6, field: 'rating', header: 'Reviews' },
+            { id: 7, field: 'status', header: 'Status' },
+            { id: 8, field: 'edition', header: 'Edition' }
         ];
 
         this.exportColumns = this.cols.map((col) => ({ title: col.header, dataKey: col.field }));
