@@ -5,6 +5,7 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 interface Column {
+  id: number;
   field: string;
   header: string;
   customExportHeader?: string;
@@ -31,7 +32,7 @@ export class Tabla1Component {
 
   ngOnInit() {
     // Aquí puedes realizar acciones adicionales al inicializar el componente
-    console.log('Tabla1Component ngOnInit:', this.data);
+    // console.log('Tabla1Component ngOnInit:', this.data);
   }
 
   getSeverity(status: string) {

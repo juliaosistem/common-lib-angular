@@ -17,7 +17,7 @@ export class LayoutServices1Component implements OnInit{
   
   
   componente:ComponentesDTO = {
-    id: 'a2827619-dd9e-44ad-a014-201355756328',
+    id: 6,
     nombreComponente: 'lib-layout-services1',
     version: '1.0',
   }

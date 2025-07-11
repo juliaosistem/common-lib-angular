@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
 
 @Component({
@@ -10,11 +11,14 @@ import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/Pl
 })
 export class Footer1Component {
 
-  idComponent = 1 
-  tipoComponente ="footer"
-
   @Input()
   negocio: PlantillaDTO | undefined  ;
   Year:string =  new Date().getFullYear().toString()
+
+  componente:ComponentesDTO = {
+      id: 7,
+      nombreComponente: 'lib-footer1',
+      version: '1.0',
+    }
 
 }

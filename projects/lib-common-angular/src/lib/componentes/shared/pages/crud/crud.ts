@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, ViewChild } from '@angular/core';
+import { Component, OnInit,  ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -7,10 +7,10 @@ import { FormsModule } from '@angular/forms';
 import { Product, ProductService } from '../../../../core/product.service';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { Tabla1Component } from '../../molecules/tabla1/tabla1.component';
-import { ButtonOptionsTableComponent } from '../../atoms/button-options-table/button-options-table.component';
 import { ToolBar1Component } from '../../molecules/tool-bar1/tool-bar1.component';
 
 interface Column {
+    id: number;
     field: string;
     header: string;
     customExportHeader?: string;
@@ -238,11 +238,11 @@ export class Crud implements OnInit {
         ];
 
         this.cols = [
-            { field: 'code', header: 'Code', customExportHeader: 'Product Code' },
-            { field: 'name', header: 'Name' },
-            { field: 'image', header: 'Image' },
-            { field: 'price', header: 'Price' },
-            { field: 'category', header: 'Category' }
+            { id: 1, field: 'code', header: 'Code', customExportHeader: 'Product Code' },
+            { id: 2, field: 'name', header: 'Name' },
+            { id: 3, field: 'image', header: 'Image' },
+            { id: 4, field: 'price', header: 'Price' },
+            { id: 5, field: 'category', header: 'Category' }
         ];
 
         this.exportColumns = this.cols.map((col) => ({ title: col.header, dataKey: col.field }));
@@ -304,8 +304,8 @@ export class Crud implements OnInit {
 
     createId(): string {
         let id = '';
-        var chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (var i = 0; i < 5; i++) {
+        const chars:string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        for (let i = 0; i < 5; i++) {
             id += chars.charAt(Math.floor(Math.random() * chars.length));
         }
         return id;
