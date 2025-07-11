@@ -24,6 +24,7 @@ export class Tabla1Component {
   @Input() rSelectedProducts!: Product[] | null;
   product!: Product;
   productDialog: boolean = false;
+  
   constructor(
     private productService: ProductService,
     private messageService: MessageService,
@@ -47,6 +48,10 @@ export class Tabla1Component {
         return 'info';
     }
   }
+
+  
+
+  
   editProduct(product: Product) {
     this.product = { ...product };
     this.productDialog = true;

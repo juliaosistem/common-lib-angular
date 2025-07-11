@@ -43,7 +43,6 @@ export class ButtonOptionsTableComponent implements OnInit {
 
   addButtons() {
      this.addAddButton();
-     this.addEditButton();
      this.addDeleteButton();
      this.addWhatsappButton();
      this.addButtonImportExcelOrPdf();
@@ -84,14 +83,6 @@ export class ButtonOptionsTableComponent implements OnInit {
       label: 'Add', 
       icon: 'pi pi-plus',
       command: () => this.onAdd.emit() 
-    });}
-  }
-
-  addEditButton(){
-      if(this.isEdit) { this.items.push({ 
-      label: 'Edit', 
-      icon: 'pi pi-pencil',
-      command: () => this.onEdit.emit() 
     });}
   }
 
