@@ -1,8 +1,7 @@
 <lib-product-dialog1
   [productDialog]="productDialog"
   [product]="product"
-
-  ></lib-product-dialog1>
+></lib-product-dialog1>
 
 <p-table
   #dt
@@ -22,8 +21,8 @@
   dataKey="id"
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
   [showCurrentPageReport]="true"
-  [rowsPerPageOptions]="[10, 20, 30]"  
-  >
+  [rowsPerPageOptions]="[10, 20, 30]"
+>
   <ng-template #caption>
     <div class="flex items-center justify-between">
       <h5 class="m-0">Manage Products</h5>
@@ -34,20 +33,17 @@
     </div>
   </ng-template>
   <ng-template #header>
-    
     <tr>
       <th style="width: 3rem">
         <p-tableHeaderCheckbox />
       </th>
       @for (col of rCols; track $index) {
-    <th style="min-width: 16rem">{{col.field}}</th>
-      <th pSortableColumn="col." style="min-width: 16rem">
-       {{col.field}}
-        <p-sortIcon field="{{col.field}}" />
-      </th>
+        <th style="min-width: 16rem">{{ col.field }}</th>
+        <!-- <th pSortableColumn="col." style="min-width: 16rem">
+          {{ col.field }}
+          <p-sortIcon field="{{ col.field }}" />
+        </th> -->
       }
-      
-    
     </tr>
   </ng-template>
   <ng-template #body let-product>
