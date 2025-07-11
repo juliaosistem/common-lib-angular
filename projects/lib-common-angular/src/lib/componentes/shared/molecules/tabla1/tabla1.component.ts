@@ -4,6 +4,7 @@ import { Product, ProductService } from '../../../../core/product.service';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { ProductDialog1Component } from '../product-dialog1/product-dialog1.component';
 interface Column {
   id: number;
   field: string;
@@ -15,8 +16,8 @@ interface Column {
   selector: 'lib-tabla1',
   standalone: true,
   templateUrl: './tabla1.component.html',
-  styleUrl: './tabla1.component.css',
-  imports: [TableModule, PrimegModule, FormsModule],
+  styleUrl: './tabla1.component.scss',
+  imports: [TableModule, PrimegModule, FormsModule, ProductDialog1Component],
 })
 export class Tabla1Component {
   @Input() data: Product[] = [];
@@ -56,6 +57,7 @@ export class Tabla1Component {
     this.product = { ...product };
     this.productDialog = true;
   }
+  
   deleteProduct(product: Product) {
     this.confirmationService.confirm({
       message: 'Are you sure you want to delete ' + product.name + '?',
