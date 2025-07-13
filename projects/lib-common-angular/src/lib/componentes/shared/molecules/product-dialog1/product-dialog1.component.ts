@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { PrimegModule } from '../../../../modulos/primeg.module';
-import { Product } from '../../../../core/product.service';
+import { Product } from '../../../../../../../lib-common-angular-demo/src/app/core/services/product.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 

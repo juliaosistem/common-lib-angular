@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-i
 import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/TablaDataSharedDTO';
-
 
 
 export class Tabla1StateModel<M = unknown, RES = unknown> {
@@ -16,13 +14,16 @@ export class Tabla1StateModel<M = unknown, RES = unknown> {
       isWhatsapp: false,
       isExportExcel: false,
       isExportPdf: false,
-      selectedItem: undefined,
       isImportExcel: false,
       isImportPdf: false,
       isPersonalizedButton: false,
       isCheck: false,
       itemsPersonalized: [],
+      selectedItem:  null,
       data: null,
+      statuses: [],
+      exportColumns: [],
+      cols: [],
       ...init
     };
   }

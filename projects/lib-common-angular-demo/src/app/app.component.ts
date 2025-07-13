@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { DaskBoard3 } from 'lib-common-angular';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet],

@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { Product, ProductService } from '../../../../core/product.service';
+import { Product, ProductService } from '../../../../../../../lib-common-angular-demo/src/app/core/services/product.service';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -23,6 +23,10 @@ export class Tabla1Component {
   @Input() data: Product[] = [];
   @Input() rCols: Column[] = [];
   @Input() rSelectedProducts!: Product[] | null;
+
+  // 
+
+
   product!: Product;
   productDialog: boolean = false;
   

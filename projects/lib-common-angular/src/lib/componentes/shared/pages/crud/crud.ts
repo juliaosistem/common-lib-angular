@@ -1,25 +1,16 @@
-import { Component, OnInit,  ViewChild } from '@angular/core';
+import { Component, Input, OnInit,  ViewChild } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table, TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { Product, ProductService } from '../../../../core/product.service';
+import { Product, ProductService } from '../../../../../../../lib-common-angular-demo/src/app/core/services/product.service';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { Tabla1Component } from '../../molecules/tabla1/tabla1.component';
 import { ToolBar1Component } from '../../molecules/tool-bar1/tool-bar1.component';
+import { Menu } from 'primeng/menu';
+import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
 
-interface Column {
-    id: number;
-    field: string;
-    header: string;
-    customExportHeader?: string;
-}
-
-interface ExportColumn {
-    title: string;
-    dataKey: string;
-}
 
 @Component({
     selector: 'lib-crud',
@@ -39,26 +30,18 @@ interface ExportColumn {
 export class Crud implements OnInit {
     productDialog: boolean = false;
 
-    products : Product[]=[];
-
-    product!: Product;
-
-    selectedProducts: Product[] =[];
-
     submitted: boolean = false;
 
-    statuses!: any[];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Input()  tablaDataSharedDTO: TablaDataSharedDTO<Menu, any> = new TablaDataSharedDTO<Menu, Product>();
 
     @ViewChild('dt') dt!: Table;
 
-    exportColumns!: ExportColumn[];
-
-    cols!: Column[];
+    
 
     public cargado :boolean = false;
 
     constructor(
-        private productService: ProductService,
         private messageService: MessageService,
         private confirmationService: ConfirmationService
     ) {}
@@ -73,16 +56,16 @@ export class Crud implements OnInit {
 
     loadDemoData() {
        
-            this.products=this.productService.getProducts();
+            this.tablaDataSharedDTO.data.data=this.productService.getProducts();
             
 
-        this.statuses = [
+        this.tablaDataSharedDTO.statuses = [
             { label: 'INSTOCK', value: 'instock' },
             { label: 'LOWSTOCK', value: 'lowstock' },
             { label: 'OUTOFSTOCK', value: 'outofstock' }
         ];
 
-        this.cols = [
+        this.tablaDataSharedDTO.cols = [
             { id: 1, field: 'code', header: 'Code', customExportHeader: 'Product Code' },
             { id: 2, field: 'name', header: 'Name' },
             { id: 3, field: 'image', header: 'Image' },
@@ -93,7 +76,7 @@ export class Crud implements OnInit {
             { id: 8, field: 'edition', header: 'Edition' }
         ];
 
-        this.exportColumns = this.cols.map((col) => ({ title: col.header, dataKey: col.field }));
+        this.tablaDataSharedDTO.exportColumns = this.tablaDataSharedDTO.cols.map((col) => ({ title: col.header, dataKey: col.field }));
     this.cargado = false;
     }
 
@@ -102,13 +85,14 @@ export class Crud implements OnInit {
     }
 
     openNew() {
-        this.product = {};
+        this.tablaDataSharedDTO.data = {};
         this.submitted = false;
         this.productDialog = true;
     }
 
-    editProduct(product: Product) {
-        this.product = { ...product };
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+    editProduct(product: any) {
+        this.tablaDataSharedDTO.data.data = { ...product };
         this.productDialog = true;
     }
 
@@ -118,9 +102,10 @@ export class Crud implements OnInit {
             header: 'Confirm',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.products =this.products
-              .filter((val) => !this.selectedProducts?.includes(val));
-                this.selectedProducts = [];
+                this.tablaDataSharedDTO.data.dataList =this.tablaDataSharedDTO.data.dataList
+             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                .filter((val:any) => !this.tablaDataSharedDTO.selectedItems.includes(val));
+                this.tablaDataSharedDTO.selectedItems = [];
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Successful',
@@ -140,8 +125,8 @@ export class Crud implements OnInit {
 
     findIndexById(id: string): number {
         let index = -1;
-        for (let i = 0; i < this.products.length; i++) {
-            if (this.products[i].id === id) {
+        for (let i = 0; i < this.tablaDataSharedDTO?.data.dataList.length; i++) {
+            if (this.tablaDataSharedDTO?.data.dataList[i].id === id) {
                 index = i;
                 break;
             }
@@ -159,34 +144,35 @@ export class Crud implements OnInit {
         return id;
     }
 
+    // esto Toca implementarlo genericamente con estados se hace el dispacth de la accion
 
-    saveProduct() {
-        this.submitted = true;
-        let _products = this.products;
-        if (this.product.name?.trim()) {
-            if (this.product.id) {
-                _products[this.findIndexById(this.product.id)] = this.product;
-                this.products =([..._products]);
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Product Updated',
-                    life: 3000
-                });
-            } else {
-                this.product.id = this.createId();
-                this.product.image = 'product-placeholder.svg';
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Product Created',
-                    life: 3000
-                });
-                this.products=([..._products, this.product]);
-            }
+    // saveProduct() {
+    //     this.submitted = true;
+    //     let _products = this.this.tablaDataSharedDTO?.data.dataList;
+    //     if (this.this.tablaDataSharedDTO?.data.name?.trim()) {
+    //         if (this.product.id) {
+    //             _products[this.findIndexById(this.product.id)] = this.product;
+    //             this.products =([..._products]);
+    //             this.messageService.add({
+    //                 severity: 'success',
+    //                 summary: 'Successful',
+    //                 detail: 'Product Updated',
+    //                 life: 3000
+    //             });
+    //         } else {
+    //             this.product.id = this.createId();
+    //             this.product.image = 'product-placeholder.svg';
+    //             this.messageService.add({
+    //                 severity: 'success',
+    //                 summary: 'Successful',
+    //                 detail: 'Product Created',
+    //                 life: 3000
+    //             });
+    //             this.products=([..._products, this.product]);
+    //         }
 
-            this.productDialog = false;
-            this.product = {};
-        }
-    }
+    //         this.productDialog = false;
+    //         this.product = {};
+    //     }
+    // }
 }
