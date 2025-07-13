@@ -26,7 +26,7 @@ export class Nav1Component implements OnInit {
 
   
    componente:ComponentesDTO = {
-    id: 'fb2616bf-ace7-4252-b8d2-ea7d83ccd24c',
+    id: 3,
     nombreComponente: 'lib-nav1',
     version: '1.0',
   }

@@ -23,7 +23,7 @@ export class Slider1Component implements OnInit {
   negocio :PlantillaDTO | undefined;
 
   componente:ComponentesDTO = {
-    id: 'ebe0ee23-f71e-4f43-8a77-a2a5028a976d',
+    id: 1,
     nombreComponente: 'lib-slider1',
     version: '1.0',
   }
@@ -41,10 +41,10 @@ export class Slider1Component implements OnInit {
 
   validarComponente() {
     if (this.negocio != undefined) {
-      this.negocio.bussinesDTO?.modulos.forEach(modulo => {
-        modulo.componentes.forEach(componente => {
-          if (componente.sliderDTO && componente.id === this.componente.id) {
-            this.slides =componente.sliderDTO;
+      this.negocio.bussinesDTO?.businessModule.forEach(modulo => {
+        modulo.modulosComponentes.forEach(componente => {
+          if (componente.componente.sliderDTO && componente.id === this.componente.id) {
+            this.slides =componente.componente.sliderDTO;
           }
         });
       });

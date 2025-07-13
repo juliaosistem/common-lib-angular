@@ -17,7 +17,7 @@ export class GallerySection1Component implements OnInit {
   imagenes :ImagenDTO[] | undefined
 
   componente:ComponentesDTO = {
-    id: '325c5d25-a7bd-4e35-a2f7-a74550b78b43',
+    id: 5,
     nombreComponente: 'lib-gallery-section1',
     version: '1.0',
   }
@@ -27,11 +27,11 @@ export class GallerySection1Component implements OnInit {
     
   }
   ngOnInit(): void {
-    var imgs
+    /* let imgs
      if(this.imagenes != undefined && this.imagenes.length !=0 ){
 
-      imgs= this.compSvc.findImagenesByIdComponent(this.imagenes ,this.componente.id);
-     }
+      imgs = this.compSvc.findImagenesByIdComponent(this.imagenes ,this.componente.id);
+     } */
   }
   
 

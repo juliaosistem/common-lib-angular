@@ -1,0 +1,11 @@
+<lib-tool-bar1/>
+
+@if (!cargado) {
+  <lib-tabla1
+    [data]="tablaDataSharedDTO.data.dataList"
+    [rCols]="tablaDataSharedDTO.cols"
+    [rSelectedProducts]="tablaDataSharedDTO.selectedItems"
+  ></lib-tabla1>
+}
+
+<p-confirmdialog [style]="{ width: '450px' }" />

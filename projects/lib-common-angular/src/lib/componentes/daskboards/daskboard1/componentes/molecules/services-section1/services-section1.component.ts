@@ -14,7 +14,7 @@ import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/Pl
 export class ServicesSection1Component {
 
   componente:ComponentesDTO = {
-    id: '0434a895-51a7-488f-8d10-f3c07429c126',
+    id: 2,
     nombreComponente: 'lib-services-section1',
     version: '1.0',
   }
