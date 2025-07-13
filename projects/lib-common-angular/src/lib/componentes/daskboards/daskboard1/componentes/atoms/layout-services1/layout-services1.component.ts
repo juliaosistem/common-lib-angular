@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 
-import { ComponentServicesService } from '../../../../../../core/component-services.service';
+import { ComponentServicesService } from '../../../../../../../../../lib-common-angular-demo/src/app/core/services/component-services.service';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';

@@ -9,6 +9,9 @@ export * from './lib/componentes/daskboards/daskboard1/componentes/pages/index1/
 export * from './lib/assets/state/bussines-state.state';
 export * from './lib/componentes/daskboards/daskboard3/componentes/daskboard3';
 
+// Estados y acciones
+export * from './lib/assets/state/tabla1.state';
+export * from './lib/assets/state/tabla1.actions';
 
 // componentes 
 

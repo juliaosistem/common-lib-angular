@@ -5,7 +5,7 @@ import { filter, Subscription } from 'rxjs';
 import { AppTopbar } from './app.topbar';
 import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
-import { LayoutService } from '../../../../core/layout.service';
+import { LayoutService } from '../../../../../../../lib-common-angular-demo/src/app/core/services/layout.service';
 
 
 @Component({
