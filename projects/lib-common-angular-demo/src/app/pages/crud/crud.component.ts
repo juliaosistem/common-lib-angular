@@ -8,16 +8,22 @@ import { Menu } from 'primeng/menu';
 
 @Component({
   selector: 'app-crud',
-  imports: [Crud],
+  imports: [Crud], 
   templateUrl: './crud.component.html',
   styleUrl: './crud.component.scss'
+
 })
 export class CrudComponent implements  OnInit {
+
+    productDialog: boolean = false;
+
+    submitted: boolean = false;
 
 // aqui tienes q implementar la logica para el crud 
 // traerte los servicios de la libreria
 // y el crud.ts solo debe entender lo generico
  @ViewChild('dt') dt!: Table;
+ cargado :boolean = false;
 
  tablaDataSharedDTO: TablaDataSharedDTO<Menu, Product> = new TablaDataSharedDTO<Menu, Product>();
   
@@ -36,9 +42,8 @@ export class CrudComponent implements  OnInit {
     }
 
     loadDemoData() {
-       
-            this.tablaDataSharedDTO.data.data=this.productService.getProducts();
-            
+
+        this.tablaDataSharedDTO.data.dataList = this.productService.getProducts();
 
         this.tablaDataSharedDTO.statuses = [
             { label: 'INSTOCK', value: 'instock' },
@@ -83,9 +88,7 @@ export class CrudComponent implements  OnInit {
             header: 'Confirm',
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
-                this.tablaDataSharedDTO.data.dataList =this.tablaDataSharedDTO.data.dataList
-             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .filter((val:any) => !this.tablaDataSharedDTO.selectedItems.includes(val));
+                this.tablaDataSharedDTO.data.dataList = this.tablaDataSharedDTO.data.dataList?.filter((val: Product) => !this.tablaDataSharedDTO.selectedItems.includes(val));
                 this.tablaDataSharedDTO.selectedItems = [];
                 this.messageService.add({
                     severity: 'success',
@@ -102,18 +105,12 @@ export class CrudComponent implements  OnInit {
         this.submitted = false;
     }
 
-   
-
     findIndexById(id: string): number {
-        let index = -1;
-        for (let i = 0; i < this.tablaDataSharedDTO?.data.dataList.length; i++) {
-            if (this.tablaDataSharedDTO?.data.dataList[i].id === id) {
-                index = i;
-                break;
-            }
-        }
-
-        return index;
+        return (
+        this.tablaDataSharedDTO?.data.dataList?.findIndex(
+            (item) => item.id === id,
+        ) ?? -1
+        );
     }
 
     createId(): string {

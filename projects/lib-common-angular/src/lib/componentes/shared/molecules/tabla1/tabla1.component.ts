@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { TableModule } from 'primeng/table';
-import { Product, ProductService } from '../../../../../../../lib-common-angular-demo/src/app/core/services/product.service';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ProductDialog1Component } from '../product-dialog1/product-dialog1.component';
+import { Product, ProductService } from '../../services/product.service';
 interface Column {
   id: number;
   field: string;

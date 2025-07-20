@@ -2,7 +2,7 @@
 
 @if (!cargado) {
   <lib-tabla1
-    [data]="tablaDataSharedDTO.data.dataList"
+    [data]="tablaDataSharedDTO.data.dataList ?? []"
     [rCols]="tablaDataSharedDTO.cols"
     [rSelectedProducts]="tablaDataSharedDTO.selectedItems"
   ></lib-tabla1>

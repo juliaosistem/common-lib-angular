@@ -1,4 +1,4 @@
-import { ComponentServicesService } from '../../../../../../../../../lib-common-angular-demo/src/app/core/services/component-services.service';
+import { ComponentServicesService } from '../../../../../shared/services/component-services.service'
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';

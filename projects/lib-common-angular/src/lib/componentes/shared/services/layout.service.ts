@@ -48,7 +48,7 @@ export class LayoutService {
 
     private configUpdate = new Subject<layoutConfig>();
 
-    private overlayOpen = new Subject<unknown>();
+    private overlayOpen = new Subject<any>();
 
     private menuSource = new Subject<MenuChangeEvent>();
 
@@ -99,7 +99,6 @@ export class LayoutService {
     }
 
     private handleDarkModeTransition(config: layoutConfig): void {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((document as any).startViewTransition) {
             this.startViewTransition(config);
         } else {
@@ -109,7 +108,6 @@ export class LayoutService {
     }
 
     private startViewTransition(config: layoutConfig): void {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const transition = (document as any).startViewTransition(() => {
             this.toggleDarkMode(config);
         });

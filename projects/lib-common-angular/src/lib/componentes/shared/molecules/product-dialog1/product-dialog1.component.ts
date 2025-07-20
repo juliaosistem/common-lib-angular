@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { PrimegModule } from '../../../../modulos/primeg.module';
-import { Product } from '../../../../../../../lib-common-angular-demo/src/app/core/services/product.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Product } from '../../services/product.service';
 
 @Component({
   selector: 'lib-product-dialog1',
