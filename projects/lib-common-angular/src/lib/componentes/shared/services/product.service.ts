@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+// import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
 
 export interface Product {
     id?: string;
@@ -19,7 +19,10 @@ export interface Product {
 @Injectable({
     providedIn: 'root'
 })
-export class ProductService {
+export class ProductService  /* extends JuliaoSystemCrudHttpService<Product, Product> */ {
+   
+  
+   
     getProductsData() {
         return [
             {
@@ -1254,7 +1257,10 @@ export class ProductService {
         'Yoga Set'
     ];
 
-    constructor(private http: HttpClient) {}
+    constructor( http: HttpClient) {
+        // super(http);
+        // this.basePathUrl = 'http://localhost:3000/api/products';
+    }
 
     getProductsMini() {
         return Promise.resolve(this.getProductsData().slice(0, 5));

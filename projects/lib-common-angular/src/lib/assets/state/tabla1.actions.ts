@@ -11,7 +11,7 @@ export class LoadTabla1Data<T = unknown> extends Tabla1Action<T> {
 
 export class AddTabla1Item<T = unknown> extends Tabla1Action<T> {
   static readonly type = '[Tabla1] Add Item';
-  constructor(public override payload: T) {
+  constructor(public override payload: T,) {
     super(payload);
   }
 }

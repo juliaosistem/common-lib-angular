@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { State, Action, StateContext, Selector } from '@ngxs/store';
-import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/TablaDataSharedDTO';
+import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
 import { 
   UpdateTableData, 
   LoadTabla1Data, 
@@ -10,6 +10,7 @@ import {
   SetTableLoading,
   SetSelectedItems
 } from './tabla1.actions';
+import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 
 
 export class Tabla1StateModel<M = unknown, RES = unknown> {
@@ -31,7 +32,7 @@ export class Tabla1StateModel<M = unknown, RES = unknown> {
       isCheck: false,
       itemsPersonalized: [],
       selectedItems: [],
-      data: null,
+      data: new PlantillaResponse<RES>(),
       statuses: [],
       exportColumns: [],
       cols: [],
@@ -90,7 +91,7 @@ export class Tabla1State {
   addItem({ getState, patchState }: StateContext<Tabla1StateModel>, { payload }: AddTabla1Item) {
     const state = getState();
     const currentData = state.tableData.data?.dataList || [];
-    
+
     patchState({
       tableData: {
         ...state.tableData,
