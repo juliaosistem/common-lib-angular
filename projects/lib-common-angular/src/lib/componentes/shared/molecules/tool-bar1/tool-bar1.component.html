@@ -4,8 +4,9 @@
   </ng-template>
 
   <ng-template #end>
-    
-    <lib-view-buttons-container1 />
+    <lib-view-buttons-container1 
+      [currentView]="currentView" 
+      (viewChange)="onViewChange($event)" />
   </ng-template>
 </p-toolbar>
 

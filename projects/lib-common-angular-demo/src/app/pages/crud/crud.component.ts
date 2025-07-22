@@ -25,6 +25,9 @@ export class CrudComponent implements  OnInit {
  @ViewChild('dt') dt!: Table;
  cargado :boolean = false;
 
+ // ✅ Propiedad para controlar el tipo de vista
+ tableType: 'table' | 'grid' = 'table';
+
  tablaDataSharedDTO: TablaDataSharedDTO<Menu, Product> = new TablaDataSharedDTO<Menu, Product>();
   
  constructor(
@@ -64,6 +67,16 @@ export class CrudComponent implements  OnInit {
 
         this.tablaDataSharedDTO.exportColumns = this.tablaDataSharedDTO.cols.map((col) => ({ title: col.header, dataKey: col.field }));
     this.cargado = false;
+    }
+
+    // ✅ Método para cambiar entre tabla y grid
+    toggleViewType(): void {
+        this.tableType = this.tableType === 'table' ? 'grid' : 'table';
+    }
+
+    // ✅ Método para establecer el tipo de vista específico
+    setViewType(type: 'table' | 'grid'): void {
+        this.tableType = type;
     }
 
     onGlobalFilter(table: Table, event: Event) {

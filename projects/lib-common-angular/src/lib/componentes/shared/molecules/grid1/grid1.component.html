@@ -1,0 +1,66 @@
+<p-dataview #dv [value]="data" [layout]="layout">
+  <ng-template #grid let-items>
+    <div class="grid-container">
+      <div class="product-card" *ngFor="let item of items">
+        <div class="p-4 border-1 surface-border surface-card border-round flex flex-col h-full">
+          <!-- Imagen que ocupa todo el ancho -->
+          <div class="w-full mb-4 relative">
+            <img
+              class="w-full h-48 object-cover border-round"
+              [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + item.image"
+              [alt]="item.name"
+            />
+            <p-tag 
+              [value]="item.inventoryStatus" 
+              [severity]="getSeverity(item)" 
+              class="absolute top-2 left-2"
+            />
+          </div>
+          
+          <!-- Contenido en columna vertical -->
+          <div class="flex flex-col gap-3 flex-1">
+            <!-- Categoría -->
+            <div class="flex items-center gap-2">
+              <i class="pi pi-tag text-primary"></i>
+              <span class="font-medium text-surface-500 dark:text-surface-400">{{ item.category }}</span>
+            </div>
+            
+            <!-- Nombre del producto -->
+            <div class="text-xl font-bold text-surface-900 dark:text-surface-0">{{ item.name }}</div>
+            
+            <!-- Código del producto -->
+            <div class="text-sm text-surface-600 dark:text-surface-300">
+              <span class="font-medium">Código:</span> {{ item.code }}
+            </div>
+            
+            <!-- Descripción -->
+            <div class="text-sm text-surface-600 dark:text-surface-300">
+              {{ item.description }}
+            </div>
+            
+            <!-- Cantidad disponible -->
+            <div class="text-sm text-surface-600 dark:text-surface-300">
+              <span class="font-medium">Cantidad:</span> {{ item.quantity }} unidades
+            </div>
+            
+            <!-- Rating -->
+            <div class="flex items-center gap-2">
+              <span class="font-medium text-surface-700 dark:text-surface-200">Rating:</span>
+              <div class="flex items-center gap-1">
+                <span class="text-surface-900 font-medium">{{ item.rating }}</span>
+                <i class="pi pi-star-fill text-yellow-500"></i>
+              </div>
+            </div>
+            
+            <!-- Precio -->
+            <div class="text-2xl font-bold text-primary mb-2">
+              {{ item.price | currency: "USD" }}
+            </div>
+            
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</p-dataview>

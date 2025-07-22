@@ -1,11 +1,25 @@
-<lib-tool-bar1/>
+<lib-tool-bar1 
+  [currentView]="tableType" 
+  (viewChange)="onViewChange($event)"/>
 
 @if (!cargado) {
-  <lib-tabla1
-    [data]="tablaDataSharedDTO.data.dataList ?? []"
-    [rCols]="tablaDataSharedDTO.cols"
-    [rSelectedProducts]="tablaDataSharedDTO.selectedItems"
-  ></lib-tabla1>
+  <!-- Renderizar tabla o grid basado en tableType -->
+  @if (tableType === 'table') {
+    <lib-tabla1
+      [data]="tablaDataSharedDTO.data.dataList ?? []"
+      [rCols]="tablaDataSharedDTO.cols"
+      [rSelectedProducts]="tablaDataSharedDTO.selectedItems"
+    ></lib-tabla1>
+  }
+  
+  @if (tableType === 'grid') {
+    <div>aksdjkdfhlsiulwyiasfhsdkjlfgsdjkfghksdjfsdf</div>
+    <lib-grid1
+      [data]="tablaDataSharedDTO.data.dataList ?? []"
+      [rCols]="tablaDataSharedDTO.cols"
+      [rSelectedProducts]="tablaDataSharedDTO.selectedItems"
+    ></lib-grid1>
+  }
 }
 
 <p-confirmdialog [style]="{ width: '450px' }" />
