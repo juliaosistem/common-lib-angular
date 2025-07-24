@@ -1,25 +1,24 @@
-<lib-tool-bar1 
-  [currentView]="tableType" 
-  (viewChange)="onViewChange($event)"/>
+<!-- En crud.component.html -->
+<div class="card">
+    <!-- Toolbar para cambiar vista -->
+    <lib-tool-bar1 
+        (viewChange)="onViewChange($event)"
+        [currentView]="tableType">
+    </lib-tool-bar1>
 
-@if (!cargado) {
-  <!-- Renderizar tabla o grid basado en tableType -->
-  @if (tableType === 'table') {
-    <lib-tabla1
-      [data]="tablaDataSharedDTO.data.dataList ?? []"
-      [rCols]="tablaDataSharedDTO.cols"
-      [rSelectedProducts]="tablaDataSharedDTO.selectedItems"
-    ></lib-tabla1>
-  }
-  
-  @if (tableType === 'grid') {
-    <div>aksdjkdfhlsiulwyiasfhsdkjlfgsdjkfghksdjfsdf</div>
-    <lib-grid1
-      [data]="tablaDataSharedDTO.data.dataList ?? []"
-      [rCols]="tablaDataSharedDTO.cols"
-      [rSelectedProducts]="tablaDataSharedDTO.selectedItems"
-    ></lib-grid1>
-  }
-}
+    <!-- Vista de tabla con sistema dinámico -->
+    <lib-tabla1 
+        *ngIf="tableType === 'table'"
+        [data]="misDatos"
+        [fieldTypeConfig]="fieldTypeConfig"
+        [fieldLabels]="fieldLabels"
+        [fieldOrder]="fieldOrder"
+        [excludeFields]="excludeFields">
+    </lib-tabla1>
 
-<p-confirmdialog [style]="{ width: '450px' }" />
+    <!-- Vista de grid -->
+    <lib-grid1 
+        *ngIf="tableType === 'grid'"
+        [data]="misDatos">
+    </lib-grid1>
+</div>

@@ -1,95 +1,97 @@
-<lib-product-dialog1
-  [productDialog]="productDialog"
-  [product]="product"
-></lib-product-dialog1>
+<!-- Diálogo de edición -->
+<p-dialog
+  [(visible)]="itemDialog"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  header="Item Details"
+  styleClass="p-fluid"
+>
+  <ng-template #content>
+    @for (field of displayFields; track field.key) {
+      <div class="field">
+        <label [for]="field.key">{{ field.label }}</label>
+        @switch (field.type) {
+          @case ('text') {
+            <input pInputText [id]="field.key" [(ngModel)]="currentItem[field.key]" />
+          }
+          @case ('number') {
+            <p-inputNumber [id]="field.key" [(ngModel)]="currentItem[field.key]" mode="decimal" />
+          }
+          @case ('checkbox') {
+            <p-checkbox [id]="field.key" [(ngModel)]="currentItem[field.key]" [binary]="true" />
+          }
+          @default {
+            <input pInputText [id]="field.key" [(ngModel)]="currentItem[field.key]" />
+          }
+        }
+      </div>
+    }
+  </ng-template>
+  <ng-template #footer>
+    <p-button label="Cancel" icon="pi pi-times" [text]="true" (click)="hideDialog()" />
+    <p-button label="Save" icon="pi pi-check" [text]="true" (click)="saveItem()" />
+  </ng-template>
+</p-dialog>
 
+<!-- Tabla -->
 <p-table
   #dt
   [value]="data"
   [rows]="10"
-  [columns]="rCols"
   [paginator]="true"
-  [globalFilterFields]="[
-    'name',
-    'country.name',
-    'representative.name',
-    'status',
-  ]"
+  [globalFilterFields]="['name']"
   [tableStyle]="{ 'min-width': '75rem' }"
-  [(selection)]="rSelectedProducts"
+  [(selection)]="selectedItems"
   [rowHover]="true"
   dataKey="id"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
   [showCurrentPageReport]="true"
   [rowsPerPageOptions]="[10, 20, 30]"
 >
   <ng-template #caption>
     <div class="flex items-center justify-between">
-      <h5 class="m-0">Manage Products</h5>
-      <!-- <p-iconfield>
-                        <p-inputicon styleClass="pi pi-search" />
-                        <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..." />
-                    </p-iconfield> -->
+      <h5 class="m-0">Manage Items</h5>
+      <p-button label="New" icon="pi pi-plus" severity="success" (click)="editItem({})" />
     </div>
   </ng-template>
+  
   <ng-template #header>
     <tr>
-      <th style="width: 3rem">
-        <p-tableHeaderCheckbox />
-      </th>
-      @for (col of rCols; track $index) {
-        <th style="min-width: 16rem">{{ col.field }}</th>
-        <!-- <th pSortableColumn="col." style="min-width: 16rem">
-          {{ col.field }}
-          <p-sortIcon field="{{ col.field }}" />
-        </th> -->
+      <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
+      @for (field of displayFields; track field.key) {
+        <th style="min-width: 12rem">{{ field.label }}</th>
       }
+      <th style="min-width: 12rem">Actions</th>
     </tr>
   </ng-template>
-  <ng-template #body let-product>
+  
+  <ng-template #body let-item>
     <tr>
-      <td style="width: 3rem">
-        <p-tableCheckbox [value]="product" />
-      </td>
-      <td style="min-width: 12rem">{{ product.code }}</td>
-      <td style="min-width: 16rem">{{ product.name }}</td>
+      <td style="width: 3rem"><p-tableCheckbox [value]="item" /></td>
+      @for (field of displayFields; track field.key) {
+        <td>
+          @switch (field.type) {
+            @case ('img') {
+              <img [src]="getImageUrl(field, item[field.key])" [alt]="getImageAltText(field, item)" style="width: 64px" class="rounded" />
+            }
+            @case ('tag') {
+              <p-tag [value]="item[field.key]" [severity]="getFieldSeverity()" />
+            }
+            @case ('checkbox') {
+               <span class="flex items-center gap-2">
+                  <i [class]="item[field.key] ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+                  <span>{{ item[field.key] ? 'Yes' : 'No' }}</span>
+                </span>
+            }
+            @default {
+              <span>{{ formatDynamicFieldValue(field, item[field.key]) }}</span>
+            }
+          }
+        </td>
+      }
       <td>
-        <img
-          [src]="
-            'https://primefaces.org/cdn/primeng/images/demo/product/' +
-            product.image
-          "
-          [alt]="product.name"
-          style="width: 64px"
-          class="rounded"
-        />
-      </td>
-      <td>{{ product.price }}</td>
-      <td>{{ product.category }}</td>
-      <td>
-        <p-rating [(ngModel)]="product.rating" [readonly]="true" />
-      </td>
-      <td>
-        <p-tag
-          [value]="product.inventoryStatus"
-          [severity]="getSeverity(product.inventoryStatus)"
-        />
-      </td>
-      <td>
-        <p-button
-          icon="pi pi-pencil"
-          class="mr-2"
-          [rounded]="true"
-          [outlined]="true"
-          (click)="editProduct(product)"
-        />
-        <p-button
-          icon="pi pi-trash"
-          severity="danger"
-          [rounded]="true"
-          [outlined]="true"
-          (click)="deleteProduct(product)"
-        />
+        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="info" (click)="editItem(item)" />
+        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="deleteItem(item)" />
       </td>
     </tr>
   </ng-template>
