@@ -5,6 +5,7 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interface';
+import { DynamicFieldService } from '../../services/dynamic-field.service';
 
 @Component({
   selector: 'lib-tabla1',
@@ -14,6 +15,7 @@ import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interfac
   imports: [CommonModule, TableModule, PrimegModule, FormsModule],
 })
 export class Tabla1Component implements OnInit {
+  @Input() tableTitle: string = 'Table Title'; 
   @Input() data: Record<string, unknown>[] = [];
   @Input() selectedItems!: Record<string, unknown>[] | null;
   
@@ -32,111 +34,42 @@ export class Tabla1Component implements OnInit {
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
+    private dynamicFieldService: DynamicFieldService
   ) {}
 
   ngOnInit() {
-    // Generar campos dinámicos basados en los datos de entrada
-    if (this.data && this.data.length > 0) {
-      this.fields = this.generateFieldsFromData(this.data);
+    this.initFields();
+  }
+
+  initFields() {
+    // Inicializar campos dinámicos si no se han generado
+    if (this.fields.length === 0) {
+      this.fields = this.dynamicFieldService.generateFieldsFromData({
+        data: this.data,
+        fieldTypeConfig: this.fieldTypeConfig,
+        fieldLabels: this.fieldLabels,
+        fieldOrder: this.fieldOrder,
+        excludeFields: this.excludeFields
+      });
       this.displayFields = [...this.fields];
     }
   }
 
-  // ✅ Método principal para generar campos dinámicos
-  private generateFieldsFromData(data: Record<string, unknown>[]): DynamicField[] {
-    if (!data || data.length === 0) return [];
-
-    // Obtener todas las claves únicas de los objetos
-    const allKeys = this.getAllUniqueKeys(data);
-    
-    // Filtrar campos excluidos y determinar orden
-    const orderedKeys = this.getOrderedKeys(allKeys);
-
-    // Generar campos dinámicos
-    return orderedKeys.map((key, index) => this.createDynamicField(key, index, data));
-  }
-
-  private getAllUniqueKeys(data: Record<string, unknown>[]): string[] {
-    const allKeys = new Set<string>();
-    data.forEach(item => {
-      Object.keys(item).forEach(key => allKeys.add(key));
-    });
-    return Array.from(allKeys).filter(key => !this.excludeFields.includes(key));
-  }
-
-  private getOrderedKeys(availableKeys: string[]): string[] {
-    return this.fieldOrder.length > 0 
-      ? this.fieldOrder.filter(key => availableKeys.includes(key))
-      : availableKeys.sort();
-  }
-
-  private createDynamicField(key: string, index: number, data: Record<string, unknown>[]): DynamicField {
-    const fieldType = this.fieldTypeConfig[key] || this.detectFieldType(data, key);
-    const label = this.fieldLabels[key] || this.formatLabel(key);
-
-    return {
-      key,
-      label,
-      type: fieldType,
-      value: null, // Se asignará dinámicamente por cada fila
-      order: index
-    };
-  }
-
-  // ✅ Auto-detectar tipo de campo basado en los datos
-  private detectFieldType(data: Record<string, unknown>[], key: string): FieldType {
-    const sampleValue = data.find(item => item[key] !== null && item[key] !== undefined)?.[key];
-    
-    if (sampleValue === undefined || sampleValue === null) {
-      return 'text';
-    }
-
-    if (typeof sampleValue === 'boolean') {
-      return 'checkbox';
-    }
-
-    if (typeof sampleValue === 'number') {
-      return 'number';
-    }
-
-    if (typeof sampleValue === 'string') {
-      // Detectar si es una URL de imagen
-      if (sampleValue.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
-        return 'img';
-      }
-      
-      // Por defecto, text
-      return 'text';
-    }
-
-    return 'text';
-  }
-
-  // ✅ Formatear etiqueta desde el nombre del campo
-  private formatLabel(key: string): string {
-    return key
-      .replace(/([A-Z])/g, ' $1') // Separar camelCase
-      .replace(/[_-]/g, ' ') // Reemplazar guiones y guiones bajos
-      .replace(/\b\w/g, l => l.toUpperCase()) // Capitalizar palabras
-      .trim();
-  }
-
+  // ✅ Métodos de renderizado - delegan al servicio
   formatDynamicFieldValue(field: DynamicField, value: unknown): string {
-    if (value == null) return '-';
-    return String(value);
+    return this.dynamicFieldService.formatDynamicFieldValue(field, value);
   }
 
   getImageUrl(field: DynamicField, value: unknown): string {
-    return String(value || '');
+    return this.dynamicFieldService.getImageUrl(field, value);
   }
 
   getImageAltText(field: DynamicField, item: Record<string, unknown>): string {
-    return String(item['name'] || 'Image');
+    return this.dynamicFieldService.getImageAltText(field, item);
   }
 
   getFieldSeverity(): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-    // Severidad por defecto para tags
-    return 'info';
+    return this.dynamicFieldService.getFieldSeverity();
   }
 
   editItem(item: Record<string, unknown>) {
@@ -184,7 +117,7 @@ export class Tabla1Component implements OnInit {
   private updateExistingItem() {
     if (!this.currentItem['id']) return;
     
-    const index = this.findIndexById(String(this.currentItem['id']));
+    const index = this.dynamicFieldService.findIndexById(this.data, String(this.currentItem['id']));
     if (index !== -1) {
       this.data[index] = { ...this.currentItem };
 
@@ -198,7 +131,7 @@ export class Tabla1Component implements OnInit {
   }
 
   private createNewItem() {
-    this.currentItem['id'] = this.createId();
+    this.currentItem['id'] = this.dynamicFieldService.generateId();
     this.data.push({ ...this.currentItem });
 
     this.messageService.add({
@@ -213,18 +146,5 @@ export class Tabla1Component implements OnInit {
     this.data = [...this.data];
     this.itemDialog = false;
     this.currentItem = {};
-  }
-
-  private findIndexById(id: string): number {
-    return this.data.findIndex((item) => item['id'] === id);
-  }
-
-  private createId(): string {
-    let id = '';
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (let i = 0; i < 5; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
   }
 }

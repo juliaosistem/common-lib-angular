@@ -19,5 +19,6 @@ export * from './lib/componentes/shared/atoms/select-input1/select-input1.compon
 export * from './lib/componentes/daskboards/daskboard2/index2/index2.component';
 export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
 export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
+export * from './lib/componentes/shared/services/dynamic-field.service';
 export * from './lib/componentes/shared/pages/crud/crud';
 export * from './lib/componentes/shared/pages/notfound/notfound';

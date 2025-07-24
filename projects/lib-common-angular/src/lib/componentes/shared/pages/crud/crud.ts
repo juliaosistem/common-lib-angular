@@ -117,6 +117,7 @@ export class Crud {
     // ✅ Orden personalizado de columnas
     fieldOrder: string[] = [
         'name',
+        'description',
         'image', 
         'price',
         'brand',
@@ -126,8 +127,11 @@ export class Crud {
         'rating',
         'weight',
         'color',
-        'description'
+        
     ];
+
+    // Título de la tabla
+    tableTitle: string = 'Product List';
 
     // ✅ Campos a excluir de la vista
     excludeFields: string[] = ['id'];

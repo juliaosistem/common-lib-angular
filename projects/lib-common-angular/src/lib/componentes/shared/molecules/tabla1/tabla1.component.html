@@ -7,6 +7,7 @@
   styleClass="p-fluid"
 >
   <ng-template #content>
+
     @for (field of displayFields; track field.key) {
       <div class="field">
         <label [for]="field.key">{{ field.label }}</label>
@@ -50,7 +51,7 @@
 >
   <ng-template #caption>
     <div class="flex items-center justify-between">
-      <h5 class="m-0">Manage Items</h5>
+      <h5 class="m-0">{{tableTitle}}</h5>
       <p-button label="New" icon="pi pi-plus" severity="success" (click)="editItem({})" />
     </div>
   </ng-template>
