@@ -1,19 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
-import { ConfirmationService, MessageService } from 'primeng/api';
 import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interface';
 import { DynamicFieldService } from '../../services/dynamic-field.service';
-import { CrudDialog1Component } from '../crud-dialog1/crud-dialog1.component';
 
 @Component({
   selector: 'lib-tabla1',
   standalone: true,
   templateUrl: './tabla1.component.html',
   styleUrl: './tabla1.component.scss',
-  imports: [CommonModule, TableModule, PrimegModule, FormsModule, CrudDialog1Component],
+  imports: [CommonModule, TableModule, PrimegModule, FormsModule],
 })
 export class Tabla1Component implements OnInit {
   @Input() tableTitle: string = 'Table Title'; 
@@ -25,15 +23,14 @@ export class Tabla1Component implements OnInit {
   @Input() fieldOrder: string[] = [];                       // Orden de columnas
   @Input() excludeFields: string[] = ['id'];                // Campos a excluir
   @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
+  @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
+
+  @Output() editItem = new EventEmitter<Record<string, unknown>>();
+  @Output() deleteItem = new EventEmitter<Record<string, unknown>>();
   
   fields: DynamicField[] = []; // Campos dinámicos generados
-  displayFields: DynamicField[] = [];
-  itemDialog: boolean = false;
-  currentItem: Record<string, unknown> = {};
   
   constructor(
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
     private dynamicFieldService: DynamicFieldService
   ) {}
 
@@ -42,8 +39,8 @@ export class Tabla1Component implements OnInit {
   }
 
   initFields() {
-    // Inicializar campos dinámicos si no se han generado
-    if (this.fields.length === 0) {
+    // Inicializar campos dinámicos si no se han generado y no se pasan desde el padre
+    if (this.fields.length === 0 && this.displayFields.length === 0) {
       this.fields = this.dynamicFieldService.generateFieldsFromData({
         data: this.data,
         fieldTypeConfig: this.fieldTypeConfig,
@@ -72,77 +69,12 @@ export class Tabla1Component implements OnInit {
     return this.dynamicFieldService.getFieldSeverity();
   }
 
-  editItem(item: Record<string, unknown>) {
-    this.currentItem = { ...item };
-    this.itemDialog = true;
+  // ✅ Eventos que se emiten al componente padre
+  onEditItem(item: Record<string, unknown>) {
+    this.editItem.emit(item);
   }
 
-  onItemSaved(savedItem: Record<string, unknown>) {
-    this.currentItem = { ...savedItem };
-
-    if (this.currentItem['id']) {
-      this.updateExistingItem();
-    } else {
-      this.createNewItem();
-    }
-    this.finalizeItemSave();
-  }
-
-  onDialogCanceled() {
-    this.itemDialog = false;
-    this.currentItem = {};
-  }
-
-  private updateExistingItem() {
-    if (!this.currentItem['id']) return;
-    
-    const index = this.dynamicFieldService.findIndexById(this.data, String(this.currentItem['id']));
-    if (index !== -1) {
-      this.data[index] = { ...this.currentItem };
-
-      this.messageService.add({
-        severity: 'success',
-        summary: 'Successful',
-        detail: 'Item Updated',
-        life: 3000,
-      });
-    }
-  }
-
-  private createNewItem() {
-    this.currentItem['id'] = this.dynamicFieldService.generateId();
-    this.data.push({ ...this.currentItem });
-
-    this.messageService.add({
-      severity: 'success',
-      summary: 'Successful',
-      detail: 'Item Created',
-      life: 3000,
-    });
-  }
-
-  deleteItem(item: Record<string, unknown>) {
-    const itemName = String(item['name'] || 'this item');
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete ' + itemName + '?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.data = this.data.filter((val) => val['id'] !== item['id']);
-        this.currentItem = {};
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Successful',
-          detail: 'Item Deleted',
-          life: 3000,
-        });
-      },
-    });
-  }
-
-  private finalizeItemSave() {
-    this.data = [...this.data];
-    this.itemDialog = false;
-    this.currentItem = {};
+  onDeleteItem(item: Record<string, unknown>) {
+    this.deleteItem.emit(item);
   }
 }
