@@ -65,10 +65,6 @@ export class Tabla1Component implements OnInit {
     return this.dynamicFieldService.getImageAltText(field, item);
   }
 
-  getFieldSeverity(): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-    return this.dynamicFieldService.getFieldSeverity();
-  }
-
   // ✅ Eventos que se emiten al componente padre
   onEditItem(item: Record<string, unknown>) {
     this.editItem.emit(item);

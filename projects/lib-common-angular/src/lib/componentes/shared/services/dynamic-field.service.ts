@@ -156,13 +156,6 @@ export class DynamicFieldService {
   }
 
   /**
-   * Obtiene la severidad por defecto para tags
-   */
-  getFieldSeverity(): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
-    return 'info';
-  }
-
-  /**
    * Genera un ID único para nuevos elementos
    */
   generateId(): string {
