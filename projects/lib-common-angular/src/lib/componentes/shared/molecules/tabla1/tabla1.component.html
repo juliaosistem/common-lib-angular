@@ -1,49 +1,12 @@
-<!-- Diálogo de edición -->
-<p-dialog
+<!-- Diálogo de edición usando componente separado -->
+<lib-crud-dialog1
   [(visible)]="itemDialog"
-  [modal]="true"
-  [style]="{ width: '450px' }"
-  header="Item Details"
-  styleClass="p-fluid"
->
-  <ng-template #content>
-
-    @for (field of displayFields; track field.key) {
-      <div class="field">
-        <label [for]="field.key">{{ field.label }}</label>
-        @switch (field.type) {
-          @case ('text') {
-            <input pInputText [id]="field.key" [(ngModel)]="currentItem[field.key]" />
-          }
-          @case ('number') {
-            <p-inputNumber [id]="field.key" [(ngModel)]="currentItem[field.key]" mode="decimal" />
-          }
-          @case ('checkbox') {
-            <p-checkbox [id]="field.key" [(ngModel)]="currentItem[field.key]" [binary]="true" />
-          }
-          @case ('select') {
-            <p-select 
-              [id]="field.key" 
-              [(ngModel)]="currentItem[field.key]" 
-              [options]="getSelectOptions(field.key)"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Select {{field.label}}"
-              [showClear]="true"
-            />
-          }
-          @default {
-            <input pInputText [id]="field.key" [(ngModel)]="currentItem[field.key]" />
-          }
-        }
-      </div>
-    }
-  </ng-template>
-  <ng-template #footer>
-    <p-button label="Cancel" icon="pi pi-times" [text]="true" (click)="hideDialog()" />
-    <p-button label="Save" icon="pi pi-check" [text]="true" (click)="saveItem()" />
-  </ng-template>
-</p-dialog>
+  [displayFields]="displayFields"
+  [currentItem]="currentItem"
+  [fieldSelectOptions]="fieldSelectOptions"
+  (save)="onItemSaved($event)"
+  (cancel)="onDialogCanceled()">
+</lib-crud-dialog1>
 
 <!-- Tabla -->
 <p-table
