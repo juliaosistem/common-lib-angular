@@ -13,13 +13,6 @@
   [showCurrentPageReport]="true"
   [rowsPerPageOptions]="[10, 20, 30]"
 >
-  <ng-template #caption>
-    <div class="flex items-center justify-between">
-      <h5 class="m-0">{{tableTitle}}</h5>
-      <p-button label="New" icon="pi pi-plus" severity="success" (click)="onEditItem({})" />
-    </div>
-  </ng-template>
-  
   <ng-template #header>
     <tr>
       <th style="width: 3rem"><p-tableHeaderCheckbox /></th>

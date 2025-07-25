@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ButtonOptionsTableComponent } from '../../atoms/button-options-table/button-options-table.component';
+import { ButtonAdd1Component } from '../../atoms/button-add1/button-add1.component';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { ViewButtonsContainer1Component } from '../view-buttons-container1/view-buttons-container1.component';
 
@@ -7,6 +8,7 @@ import { ViewButtonsContainer1Component } from '../view-buttons-container1/view-
   selector: 'lib-tool-bar1',
   imports: [
     ButtonOptionsTableComponent,
+    ButtonAdd1Component,
     PrimegModule,
     ViewButtonsContainer1Component
   ],
@@ -19,9 +21,17 @@ export class ToolBar1Component {
   
   // ✅ Output para emitir cambios de vista
   @Output() viewChange = new EventEmitter<'table' | 'grid'>();
+  
+  // ✅ Output para emitir eventos de nuevo item
+  @Output() newItem = new EventEmitter<void>();
 
   // ✅ Método para manejar el cambio desde el ViewButtonsContainer1
   onViewChange(newView: 'table' | 'grid'): void {
     this.viewChange.emit(newView);
+  }
+  
+  // ✅ Método para manejar el evento de agregar nuevo item
+  onNewItem(): void {
+    this.newItem.emit();
   }
 }

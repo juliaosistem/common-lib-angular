@@ -18,6 +18,7 @@ export * from './lib/assets/state/tabla1.actions'; */
 export * from './lib/componentes/shared/atoms/select-input1/select-input1.component'
 export * from './lib/componentes/shared/atoms/button-action-edit1/button-action-edit1.component'
 export * from './lib/componentes/shared/atoms/button-action-delete1/button-action-delete1.component'
+export * from './lib/componentes/shared/atoms/button-add1/button-add1.component'
 export * from './lib/componentes/daskboards/daskboard2/index2/index2.component';
 export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
 export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.component';

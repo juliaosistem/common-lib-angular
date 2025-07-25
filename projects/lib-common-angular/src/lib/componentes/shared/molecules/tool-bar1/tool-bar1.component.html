@@ -1,6 +1,9 @@
 <p-toolbar styleClass="mb-6">
   <ng-template #start>
-    <lib-button-options-table />
+    <div class="flex items-center gap-2">
+      <lib-button-options-table />
+      <lib-button-add1 (add)="onNewItem()"></lib-button-add1>
+    </div>
   </ng-template>
 
   <ng-template #end>
