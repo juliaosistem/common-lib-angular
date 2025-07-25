@@ -2,16 +2,16 @@
 <p-table
   #dt
   [value]="data"
-  [rows]="10"
-  [paginator]="true"
+  [rows]="rows"
+  [paginator]="paginator"
   [globalFilterFields]="['name']"
   [tableStyle]="{ 'min-width': '75rem' }"
   [(selection)]="selectedItems"
   [rowHover]="true"
   dataKey="id"
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
-  [showCurrentPageReport]="true"
-  [rowsPerPageOptions]="[10, 20, 30]"
+  [showCurrentPageReport]="showCurrentPageReport"
+  [rowsPerPageOptions]="rowsPerPageOptions"
 >
   <ng-template #header>
     <tr>

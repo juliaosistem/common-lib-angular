@@ -26,6 +26,12 @@ export class Tabla1Component implements OnInit {
   @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
   @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
 
+  // Propiedades del paginador
+  @Input() rows: number = 10;                               // Filas por página
+  @Input() paginator: boolean = true;                       // Habilitar paginador
+  @Input() rowsPerPageOptions: number[] = [10, 20, 30];     // Opciones de filas por página
+  @Input() showCurrentPageReport: boolean = true;           // Mostrar reporte de página
+
   @Output() editItem = new EventEmitter<Record<string, unknown>>();
   @Output() deleteItem = new EventEmitter<Record<string, unknown>>();
   

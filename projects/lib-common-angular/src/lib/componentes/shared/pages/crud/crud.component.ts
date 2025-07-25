@@ -44,6 +44,12 @@ export class Crud implements OnInit {
     @Input() excludeFields: string[] = ['id'];                // Campos a excluir
     @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
 
+    // Propiedades del paginador
+    @Input() rows: number = 10;                               // Filas por página
+    @Input() paginator: boolean = true;                       // Habilitar paginador
+    @Input() rowsPerPageOptions: number[] = [10, 20, 30];     // Opciones de filas por página
+    @Input() showCurrentPageReport: boolean = true;           // Mostrar reporte de página
+
     // ✅ Propiedades para el manejo del CRUD
     itemDialog: boolean = false;
     currentItem: Record<string, unknown> = {};
