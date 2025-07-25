@@ -19,7 +19,6 @@ export class Tabla1Component implements OnInit {
   @Input() data: Record<string, unknown>[] = [];
   @Input() selectedItems!: Record<string, unknown>[] | null;
   
-  // ✅ Nueva configuración flexible
   @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Tipos por campo
   @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas
   @Input() fieldOrder: string[] = [];                       // Orden de columnas

@@ -1,5 +1,5 @@
 import { Component,OnInit, ViewChild } from '@angular/core';
-import { Crud } from 'lib-common-angular';
+import { Crud, FieldType } from 'lib-common-angular';
 import { Product, ProductService } from '../../core/services/product.service';
 import { Table } from 'primeng/table';
 import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
@@ -69,102 +69,108 @@ export class CrudComponent implements  OnInit {
     this.cargado = false;
     }
 
-    // ✅ Método para cambiar entre tabla y grid
-    toggleViewType(): void {
-        this.tableType = this.tableType === 'table' ? 'grid' : 'table';
-    }
-
-    // ✅ Método para establecer el tipo de vista específico
-    setViewType(type: 'table' | 'grid'): void {
-        this.tableType = type;
-    }
-
-    onGlobalFilter(table: Table, event: Event) {
-        table.filterGlobal((event.target as HTMLInputElement).value, 'contains');
-    }
-
-    openNew() {
-        this.tablaDataSharedDTO.data = {};
-        this.submitted = false;
-        this.productDialog = true;
-    }
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-    editProduct(product: any) {
-        this.tablaDataSharedDTO.data.data = { ...product };
-        this.productDialog = true;
-    }
-
-    deleteSelectedProducts() {
-        this.confirmationService.confirm({
-            message: 'Are you sure you want to delete the selected products?',
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.tablaDataSharedDTO.data.dataList = this.tablaDataSharedDTO.data.dataList?.filter((val: Product) => !this.tablaDataSharedDTO.selectedItems.includes(val));
-                this.tablaDataSharedDTO.selectedItems = [];
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Products Deleted',
-                    life: 3000
-                });
-            }
-        });
-    }
-
-    hideDialog() {
-        this.productDialog = false;
-        this.submitted = false;
-    }
-
-    findIndexById(id: string): number {
-        return (
-        this.tablaDataSharedDTO?.data.dataList?.findIndex(
-            (item) => item.id === id,
-        ) ?? -1
-        );
-    }
-
-    createId(): string {
-        let id = '';
-        const chars:string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        for (let i = 0; i < 5; i++) {
-            id += chars.charAt(Math.floor(Math.random() * chars.length));
+    // ✅ Datos dinámicos de ejemplo
+    data: Record<string, unknown>[] = [
+        {
+            id: '1',
+            name: 'Laptop Gaming Asus',
+            price: 1299.99,
+            category: 'Gaming',
+            available: true,
+            image: 'laptop.jpg',
+            description: 'Powerful gaming laptop with RTX 4060',
+            rating: 4.5,
+            brand: 'Asus',
+            warranty: true,
+            weight: 2.3,
+            color: 'Black'
+        },
+        {
+            id: '2',
+            name: 'Mouse Logitech G502',
+            price: 79.99,
+            category: 'Accessories',
+            available: false,
+            image: 'mouse.jpg',
+            description: 'High precision gaming mouse',
+            rating: 4.8,
+            brand: 'Logitech',
+            warranty: true,
+            weight: 0.12,
+            color: 'Black'
+        },
+        {
+            id: '3',
+            name: 'Mechanical Keyboard',
+            price: 159.99,
+            category: 'Gaming',
+            available: true,
+            image: 'keyboard.jpg',
+            description: 'RGB mechanical keyboard with cherry switches',
+            rating: 4.3,
+            brand: 'Corsair',
+            warranty: false,
+            weight: 1.2,
+            color: 'RGB'
         }
-        return id;
-    }
+    ];
 
-    // esto Toca implementarlo genericamente con estados se hace el dispacth de la accion
+    // ✅ Configuración de tipos para cada campo
+    fieldTypeConfig: Record<string, FieldType> = {
+        name: 'text',
+        price: 'number',
+        category: 'select',
+        available: 'checkbox',
+        image: 'img',
+        description: 'text',
+        rating: 'number',
+        brand: 'select',
+        warranty: 'checkbox',
+        weight: 'number',
+        color: 'select'
+    };
 
-    // saveProduct() {
-    //     this.submitted = true;
-    //     let _products = this.this.tablaDataSharedDTO?.data.dataList;
-    //     if (this.this.tablaDataSharedDTO?.data.name?.trim()) {
-    //         if (this.product.id) {
-    //             _products[this.findIndexById(this.product.id)] = this.product;
-    //             this.products =([..._products]);
-    //             this.messageService.add({
-    //                 severity: 'success',
-    //                 summary: 'Successful',
-    //                 detail: 'Product Updated',
-    //                 life: 3000
-    //             });
-    //         } else {
-    //             this.product.id = this.createId();
-    //             this.product.image = 'product-placeholder.svg';
-    //             this.messageService.add({
-    //                 severity: 'success',
-    //                 summary: 'Successful',
-    //                 detail: 'Product Created',
-    //                 life: 3000
-    //             });
-    //             this.products=([..._products, this.product]);
-    //         }
+    // ✅ Configuración de opciones para campos de tipo select
+    fieldSelectOptions: Record<string, string[]> = {
+        category: ['Electronics', 'Accessories', 'Gaming', 'Office', 'Software'],
+        brand: ['Asus', 'Logitech', 'Corsair', 'Razer', 'HP', 'Dell', 'Apple'],
+        color: ['Black', 'White', 'Silver', 'Red', 'Blue', 'RGB', 'Multi-color']
+    };
 
-    //         this.productDialog = false;
-    //         this.product = {};
-    //     }
-    // }
-      
+    // ✅ Etiquetas personalizadas
+    fieldLabels: Record<string, string> = {
+        name: 'Product Name',
+        price: 'Price ($)',
+        category: 'Category',
+        available: 'In Stock',
+        image: 'Product Image',
+        description: 'Description',
+        rating: 'Rating (⭐)',
+        brand: 'Brand',
+        warranty: 'Has Warranty',
+        weight: 'Weight (kg)',
+        color: 'Color'
+    };
+
+    // ✅ Orden personalizado de columnas
+    fieldOrder: string[] = [
+        'name',
+        'description',
+        'image', 
+        'price',
+        'brand',
+        'category',
+        'available',
+        'warranty',
+        'rating',
+        'weight',
+        'color',
+        
+    ];
+
+    // Título de la tabla
+    tableTitle: string = 'Product List';
+
+    // ✅ Campos a excluir de la vista
+    excludeFields: string[] = ['id'];
 }

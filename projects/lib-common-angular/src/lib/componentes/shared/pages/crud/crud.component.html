@@ -9,7 +9,7 @@
     <!-- Vista de tabla con sistema dinámico -->
     <lib-tabla1 
         *ngIf="tableType === 'table'"
-        [data]="misDatos"
+        [data]="data"
         [tableTitle]="tableTitle"
         [fieldTypeConfig]="fieldTypeConfig"
         [fieldLabels]="fieldLabels"
@@ -21,6 +21,6 @@
     <!-- Vista de grid -->
     <lib-grid1 
         *ngIf="tableType === 'grid'"
-        [data]="misDatos">
+        [data]="data">
     </lib-grid1>
 </div>

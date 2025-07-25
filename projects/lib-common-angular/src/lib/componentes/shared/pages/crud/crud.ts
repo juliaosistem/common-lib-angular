@@ -4,14 +4,11 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Menu } from 'primeng/menu';
 
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { Tabla1Component } from '../../molecules/tabla1/tabla1.component';
 import { Grid1Component } from '../../molecules/grid1/grid1.component';
 import { ToolBar1Component } from '../../molecules/tool-bar1/tool-bar1.component';
-import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
-import { Product } from '../../services/product.service';
 
 // ✅ Importar los tipos del sistema dinámico
 import { FieldType } from '../../interfaces/dynamic-field.interface';
@@ -32,116 +29,20 @@ import { FieldType } from '../../interfaces/dynamic-field.interface';
     providers: [MessageService, ConfirmationService]
 })
 export class Crud {
-    @Input() productDialog: boolean = false;
+    @Input() showDialog: boolean = false;
+
     @Input() submitted: boolean = false;
-    @Input() tablaDataSharedDTO: TablaDataSharedDTO<Menu, Product> = new TablaDataSharedDTO<Menu, Product>();
-    @Input() cargado: boolean = false;
+    @Input() loaded: boolean = false;
     @Input() tableType: 'table' | 'grid' = 'table';
 
-    // ✅ Datos dinámicos de ejemplo
-    misDatos: Record<string, unknown>[] = [
-        {
-            id: '1',
-            name: 'Laptop Gaming Asus',
-            price: 1299.99,
-            category: 'Gaming',
-            available: true,
-            image: 'laptop.jpg',
-            description: 'Powerful gaming laptop with RTX 4060',
-            rating: 4.5,
-            brand: 'Asus',
-            warranty: true,
-            weight: 2.3,
-            color: 'Black'
-        },
-        {
-            id: '2',
-            name: 'Mouse Logitech G502',
-            price: 79.99,
-            category: 'Accessories',
-            available: false,
-            image: 'mouse.jpg',
-            description: 'High precision gaming mouse',
-            rating: 4.8,
-            brand: 'Logitech',
-            warranty: true,
-            weight: 0.12,
-            color: 'Black'
-        },
-        {
-            id: '3',
-            name: 'Mechanical Keyboard',
-            price: 159.99,
-            category: 'Gaming',
-            available: true,
-            image: 'keyboard.jpg',
-            description: 'RGB mechanical keyboard with cherry switches',
-            rating: 4.3,
-            brand: 'Corsair',
-            warranty: false,
-            weight: 1.2,
-            color: 'RGB'
-        }
-    ];
+    @Input() tableTitle: string = 'Table Title'; 
 
-    // ✅ Configuración de tipos para cada campo
-    fieldTypeConfig: Record<string, FieldType> = {
-        name: 'text',
-        price: 'number',
-        category: 'select',
-        available: 'checkbox',
-        image: 'img',
-        description: 'text',
-        rating: 'number',
-        brand: 'select',
-        warranty: 'checkbox',
-        weight: 'number',
-        color: 'select'
-    };
-
-    // ✅ Configuración de opciones para campos de tipo select
-    fieldSelectOptions: Record<string, string[]> = {
-        category: ['Electronics', 'Accessories', 'Gaming', 'Office', 'Software'],
-        brand: ['Asus', 'Logitech', 'Corsair', 'Razer', 'HP', 'Dell', 'Apple'],
-        color: ['Black', 'White', 'Silver', 'Red', 'Blue', 'RGB', 'Multi-color']
-    };
-
-    // ✅ Etiquetas personalizadas
-    fieldLabels: Record<string, string> = {
-        name: 'Product Name',
-        price: 'Price ($)',
-        category: 'Category',
-        available: 'In Stock',
-        image: 'Product Image',
-        description: 'Description',
-        rating: 'Rating (⭐)',
-        brand: 'Brand',
-        warranty: 'Has Warranty',
-        weight: 'Weight (kg)',
-        color: 'Color'
-    };
-
-    // ✅ Orden personalizado de columnas
-    fieldOrder: string[] = [
-        'name',
-        'description',
-        'image', 
-        'price',
-        'brand',
-        'category',
-        'available',
-        'warranty',
-        'rating',
-        'weight',
-        'color',
-        
-    ];
-
-    // Título de la tabla
-    tableTitle: string = 'Product List';
-
-    // ✅ Campos a excluir de la vista
-    excludeFields: string[] = ['id'];
+    @Input() data: Record<string, unknown>[] = [];
+    @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Configuración de tipos de campo
+    @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personal
+    @Input() fieldOrder: string[] = [];                       // Orden de columnas
+    @Input() excludeFields: string[] = ['id'];                // Campos a excluir
+    @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para
 
     constructor(
         private messageService: MessageService,
