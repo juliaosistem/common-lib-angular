@@ -52,8 +52,17 @@
         </td>
       }
       <td>
-        <p-button icon="pi pi-pencil" class="mr-2" [rounded]="true" [outlined]="true" severity="info" (click)="onEditItem(item)" />
-        <p-button icon="pi pi-trash" severity="danger" [rounded]="true" [outlined]="true" (click)="onDeleteItem(item)" />
+        <div class="flex gap-2 items-center">
+          <lib-button-action-edit1 
+            [item]="item" 
+            (edit)="onEditItem($event)">
+          </lib-button-action-edit1>
+          
+          <lib-button-action-delete1 
+            [item]="item"
+            (delete)="onDeleteItem($event)">
+          </lib-button-action-delete1>
+        </div>
       </td>
     </tr>
   </ng-template>

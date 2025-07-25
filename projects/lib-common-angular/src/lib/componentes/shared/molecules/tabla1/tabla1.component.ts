@@ -5,13 +5,15 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interface';
 import { DynamicFieldService } from '../../services/dynamic-field.service';
+import { ButtonActionEdit1Component } from '../../atoms/button-action-edit1/button-action-edit1.component';
+import { ButtonActionDelete1Component } from '../../atoms/button-action-delete1/button-action-delete1.component';
 
 @Component({
   selector: 'lib-tabla1',
   standalone: true,
   templateUrl: './tabla1.component.html',
   styleUrl: './tabla1.component.scss',
-  imports: [CommonModule, TableModule, PrimegModule, FormsModule],
+  imports: [CommonModule, TableModule, PrimegModule, FormsModule, ButtonActionEdit1Component, ButtonActionDelete1Component],
 })
 export class Tabla1Component implements OnInit {
   @Input() tableTitle: string = 'Table Title'; 
