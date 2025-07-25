@@ -3,7 +3,8 @@
     <!-- Toolbar para cambiar vista -->
     <lib-tool-bar1 
         (viewChange)="onViewChange($event)"
-        [currentView]="tableType">
+        [currentView]="tableType"
+        (newItem)="openNew()">
     </lib-tool-bar1>
 
     <!-- Vista de tabla con sistema dinámico -->
@@ -15,7 +16,10 @@
         [fieldLabels]="fieldLabels"
         [fieldOrder]="fieldOrder"
         [excludeFields]="excludeFields"
-        [fieldSelectOptions]="fieldSelectOptions">
+        [fieldSelectOptions]="fieldSelectOptions"
+        [displayFields]="displayFields"
+        (editItem)="editItem($event)"
+        (deleteItem)="deleteItem($event)">
     </lib-tabla1>
 
     <!-- Vista de grid -->
@@ -23,4 +27,14 @@
         *ngIf="tableType === 'grid'"
         [data]="data">
     </lib-grid1>
+
+    <!-- Diálogo CRUD -->
+    <lib-crud-dialog1
+        [(visible)]="itemDialog"
+        [displayFields]="displayFields"
+        [currentItem]="currentItem"
+        [fieldSelectOptions]="fieldSelectOptions"
+        (save)="onItemSaved($event)"
+        (cancel)="onDialogCanceled()">
+    </lib-crud-dialog1>
 </div>

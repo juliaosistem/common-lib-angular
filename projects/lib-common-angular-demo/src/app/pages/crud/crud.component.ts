@@ -23,7 +23,7 @@ export class CrudComponent implements  OnInit {
 // traerte los servicios de la libreria
 // y el crud.ts solo debe entender lo generico
  @ViewChild('dt') dt!: Table;
- cargado :boolean = false;
+ loaded :boolean = false;
 
  // ✅ Propiedad para controlar el tipo de vista
  tableType: 'table' | 'grid' = 'table';
@@ -45,7 +45,7 @@ export class CrudComponent implements  OnInit {
     }
 
     loadDemoData() {
-
+/* 
         this.tablaDataSharedDTO.data.dataList = this.productService.getProducts();
 
         this.tablaDataSharedDTO.statuses = [
@@ -66,7 +66,7 @@ export class CrudComponent implements  OnInit {
         ];
 
         this.tablaDataSharedDTO.exportColumns = this.tablaDataSharedDTO.cols.map((col) => ({ title: col.header, dataKey: col.field }));
-    this.cargado = false;
+     */this.loaded = false;
     }
 
     // ✅ Datos dinámicos de ejemplo
