@@ -18,6 +18,7 @@ import { ButtonActionDelete1Component } from '../../atoms/button-action-delete1/
 export class Tabla1Component implements OnInit {
   @Input() data: Record<string, unknown>[] = [];
   @Input() selectedItems!: Record<string, unknown>[] | null;
+  @Output() selectedItemsChange = new EventEmitter<Record<string, unknown>[] | null>();
   @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Tipos por campo
   @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas
   @Input() fieldOrder: string[] = [];                       // Orden de columnas

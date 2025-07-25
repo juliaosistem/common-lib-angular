@@ -47,6 +47,7 @@ export class Crud implements OnInit {
     // ✅ Propiedades para el manejo del CRUD
     itemDialog: boolean = false;
     currentItem: Record<string, unknown> = {};
+    selectedItems: Record<string, unknown>[] = [];
     fields: DynamicField[] = [];
     displayFields: DynamicField[] = [];
 

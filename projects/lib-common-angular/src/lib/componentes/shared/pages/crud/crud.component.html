@@ -11,6 +11,7 @@
     <lib-tabla1 
         *ngIf="tableType === 'table'"
         [data]="data"
+        [(selectedItems)]="selectedItems"
         [fieldTypeConfig]="fieldTypeConfig"
         [fieldLabels]="fieldLabels"
         [fieldOrder]="fieldOrder"
@@ -24,7 +25,16 @@
     <!-- Vista de grid -->
     <lib-grid1 
         *ngIf="tableType === 'grid'"
-        [data]="data">
+        [data]="data"
+        [(selectedItems)]="selectedItems"
+        [fieldTypeConfig]="fieldTypeConfig"
+        [fieldLabels]="fieldLabels"
+        [fieldOrder]="fieldOrder"
+        [excludeFields]="excludeFields"
+        [fieldSelectOptions]="fieldSelectOptions"
+        [displayFields]="displayFields"
+        (editItem)="editItem($event)"
+        (deleteItem)="deleteItem($event)">
     </lib-grid1>
 
     <!-- Diálogo CRUD -->

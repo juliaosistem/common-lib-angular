@@ -1,56 +1,107 @@
-import { Component, signal, Input, OnInit } from '@angular/core';
-import { Tag } from 'primeng/tag';
-import { ButtonModule } from 'primeng/button';
-import { DataView } from 'primeng/dataview';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { Product, ProductService } from '../../services/product.service';
+import { PrimegModule } from '../../../../modulos/primeg.module';
+import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interface';
+import { DynamicFieldService } from '../../services/dynamic-field.service';
+import { ButtonActionEdit1Component } from '../../atoms/button-action-edit1/button-action-edit1.component';
+import { ButtonActionDelete1Component } from '../../atoms/button-action-delete1/button-action-delete1.component';
 
 @Component({
   selector: 'lib-grid1',
   standalone: true,
-  imports: [Tag, ButtonModule, DataView, CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, PrimegModule, ButtonActionEdit1Component, ButtonActionDelete1Component],
   templateUrl: './grid1.component.html',
   styleUrl: './grid1.component.scss',
 })
 export class Grid1Component implements OnInit {
   layout: 'list' | 'grid' = 'grid';
 
-  // ✅ Propiedades de entrada para compatibilidad con el CRUD
-  @Input() data: Product[] = [];
-  @Input() rCols: Array<{ id: number; field: string; header: string }> = [];
-  @Input() rSelectedProducts: Product[] = [];
+  @Input() data: Record<string, unknown>[] = [];
+  @Input() selectedItems!: Record<string, unknown>[] | null;
+  @Output() selectedItemsChange = new EventEmitter<Record<string, unknown>[] | null>();
+  @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Tipos por campo
+  @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas
+  @Input() fieldOrder: string[] = [];                       // Orden de columnas
+  @Input() excludeFields: string[] = ['id'];                // Campos a excluir
+  @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
+  @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
 
-  products = signal<Product[]>([]);
+  @Output() editItem = new EventEmitter<Record<string, unknown>>();
+  @Output() deleteItem = new EventEmitter<Record<string, unknown>>();
+  
+  fields: DynamicField[] = []; // Campos dinámicos generados
 
-  options = ['list', 'grid'];
-
-  constructor(private productService: ProductService) {}
+  constructor(
+    private dynamicFieldService: DynamicFieldService
+  ) {}
 
   ngOnInit() {
-    // ✅ Usar los datos recibidos por @Input en lugar del servicio
-    if (this.data && this.data.length > 0) {
-      this.products.set([...this.data]);
-    } else {
-      // Fallback al servicio si no hay datos por input
-      this.products.set(this.productService.getProducts().slice(0, 12));
+    this.initFields();
+  }
+
+  initFields() {
+    // Inicializar campos dinámicos si no se han generado y no se pasan desde el padre
+    if (this.fields.length === 0 && this.displayFields.length === 0) {
+      this.fields = this.dynamicFieldService.generateFieldsFromData({
+        data: this.data,
+        fieldTypeConfig: this.fieldTypeConfig,
+        fieldLabels: this.fieldLabels,
+        fieldOrder: this.fieldOrder,
+        excludeFields: this.excludeFields
+      });
+      this.displayFields = [...this.fields];
     }
   }
 
-  getSeverity(product: Product) {
-    switch (product.inventoryStatus) {
-      case 'INSTOCK':
-        return 'success';
+  // ✅ Métodos de renderizado - delegan al servicio
+  formatDynamicFieldValue(field: DynamicField, value: unknown): string {
+    return this.dynamicFieldService.formatDynamicFieldValue(field, value);
+  }
 
-      case 'LOWSTOCK':
-        return 'warn';
+  getImageUrl(field: DynamicField, value: unknown): string {
+    return this.dynamicFieldService.getImageUrl(field, value);
+  }
 
-      case 'OUTOFSTOCK':
-        return 'danger';
+  getImageAltText(field: DynamicField, item: Record<string, unknown>): string {
+    return this.dynamicFieldService.getImageAltText(field, item);
+  }
 
-      default:
-        return null;
+  // ✅ Eventos que se emiten al componente padre
+  onEditItem(item: Record<string, unknown>) {
+    this.editItem.emit(item);
+  }
+
+  onDeleteItem(item: Record<string, unknown>) {
+    this.deleteItem.emit(item);
+  }
+
+  // ✅ Métodos para manejo de selección
+  onSelectionChange(selectedItems: Record<string, unknown>[] | null) {
+    this.selectedItems = selectedItems;
+    this.selectedItemsChange.emit(selectedItems);
+  }
+
+  isItemSelected(item: Record<string, unknown>): boolean {
+    if (!this.selectedItems) return false;
+    return this.selectedItems.some(selected => selected['id'] === item['id']);
+  }
+
+  toggleItemSelection(item: Record<string, unknown>, event: { checked: boolean }) {
+    if (!this.selectedItems) {
+      this.selectedItems = [];
     }
+
+    const isSelected = this.isItemSelected(item);
+    
+    if (event.checked && !isSelected) {
+      // Agregar item a la selección
+      this.selectedItems = [...this.selectedItems, item];
+    } else if (!event.checked && isSelected) {
+      // Remover item de la selección
+      this.selectedItems = this.selectedItems.filter(selected => selected['id'] !== item['id']);
+    }
+
+    this.selectedItemsChange.emit(this.selectedItems);
   }
 }
