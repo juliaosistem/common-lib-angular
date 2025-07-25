@@ -173,4 +173,9 @@ export class CrudComponent implements  OnInit {
 
     // ✅ Campos a excluir de la vista
     excludeFields: string[] = ['id'];
+
+    // ✅ Método para recibir cambios de datos del componente CRUD
+    onDataChanged(updatedData: Record<string, unknown>[]) {
+        this.data = [...updatedData]; // Actualizar la data local
+    }
 }

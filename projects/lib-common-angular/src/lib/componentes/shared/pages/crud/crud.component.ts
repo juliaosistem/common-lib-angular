@@ -1,5 +1,5 @@
 // En crud.ts - Agregar las propiedades para el sistema dinámico
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -49,6 +49,9 @@ export class Crud implements OnInit {
     @Input() paginator: boolean = true;                       // Habilitar paginador
     @Input() rowsPerPageOptions: number[] = [10, 20, 30];     // Opciones de filas por página
     @Input() showCurrentPageReport: boolean = true;           // Mostrar reporte de página
+
+    // ✅ EVENTOS PARA COMUNICACIÓN CON EL PADRE
+    @Output() dataChange = new EventEmitter<Record<string, unknown>[]>();
 
     // ✅ Propiedades para el manejo del CRUD
     itemDialog: boolean = false;
@@ -120,6 +123,7 @@ export class Crud implements OnInit {
             icon: 'pi pi-exclamation-triangle',
             accept: () => {
                 this.data = this.data.filter((val) => val['id'] !== item['id']);
+                this.dataChange.emit([...this.data]); // ✅ Emitir cambios
                 this.messageService.add({
                     severity: 'success',
                     summary: 'Successful',
@@ -161,6 +165,7 @@ export class Crud implements OnInit {
 
     private finalizeItemSave() {
         this.data = [...this.data];
+        this.dataChange.emit([...this.data]); // ✅ Emitir cambios
         this.itemDialog = false;
         this.currentItem = {};
     }
