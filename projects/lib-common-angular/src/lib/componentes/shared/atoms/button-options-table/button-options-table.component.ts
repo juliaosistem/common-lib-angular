@@ -23,9 +23,9 @@ export class ButtonOptionsTableComponent implements OnInit {
   @Input() isImportPdf: boolean = true;
   @Input() selectedItem: unknown; // Producto seleccionado
   
-  @Output() onAdd = new EventEmitter<unknown>();
+  @Output() onAdd = new EventEmitter<void>();
   @Output() onEdit = new EventEmitter<unknown>();
-  @Output() onDelete = new EventEmitter<unknown>();
+  @Output() onDelete = new EventEmitter<void>(); // Sin parámetros - solo señal de eliminar seleccionados
   @Output() onWhatsapp = new EventEmitter<unknown>();
   @Output() onExportPdf = new EventEmitter<unknown>();
   @Output() onExportExcel = new EventEmitter<unknown>();
@@ -89,10 +89,10 @@ export class ButtonOptionsTableComponent implements OnInit {
   addDeleteButton() {
   if (this.isDelete){
   this.items.push({ 
-    label: 'Delete', 
+    label: 'Delete Selected', 
     icon: 'pi pi-trash',
-    command: () => { if (this.selectedItem)
-       {this.onDelete.emit(this.selectedItem);}
+    command: () => { 
+      this.onDelete.emit(); // Solo emitir el evento, sin parámetros
     } });
   }
 }

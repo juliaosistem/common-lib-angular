@@ -4,14 +4,16 @@
     <lib-tool-bar1 
         (viewChange)="onViewChange($event)"
         [currentView]="tableType"
-        (newItem)="openNew()">
+        (newItem)="openNew()"
+        (deleteSelected)="deleteSelectedItems()">
     </lib-tool-bar1>
 
     <!-- Vista de tabla con sistema dinámico -->
     <lib-tabla1 
         *ngIf="tableType === 'table'"
         [data]="data"
-        [(selectedItems)]="selectedItems"
+        [selectedItems]="selectedItems"
+        (selectedItemsChange)="onSelectedItemsChange($event)"
         [fieldTypeConfig]="fieldTypeConfig"
         [fieldLabels]="fieldLabels"
         [fieldOrder]="fieldOrder"
@@ -30,7 +32,8 @@
     <lib-grid1 
         *ngIf="tableType === 'grid'"
         [data]="data"
-        [(selectedItems)]="selectedItems"
+        [selectedItems]="selectedItems"
+        (selectedItemsChange)="onSelectedItemsChange($event)"
         [fieldTypeConfig]="fieldTypeConfig"
         [fieldLabels]="fieldLabels"
         [fieldOrder]="fieldOrder"
@@ -54,4 +57,7 @@
         (save)="onItemSaved($event)"
         (cancel)="onDialogCanceled()">
     </lib-crud-dialog1>
+
+    <!-- Diálogo de confirmación -->
+    <p-confirmDialog></p-confirmDialog>
 </div>

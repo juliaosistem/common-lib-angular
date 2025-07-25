@@ -80,4 +80,10 @@ export class Tabla1Component implements OnInit {
   onDeleteItem(item: Record<string, unknown>) {
     this.deleteItem.emit(item);
   }
+
+  // ✅ Método para capturar cambios de selección de PrimeNG
+  onSelectionChange(newSelection: Record<string, unknown>[] | null) {
+    this.selectedItems = newSelection;
+    this.selectedItemsChange.emit(newSelection);
+  }
 }

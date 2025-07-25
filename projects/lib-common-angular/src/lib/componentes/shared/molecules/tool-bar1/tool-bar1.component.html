@@ -1,7 +1,7 @@
 <p-toolbar styleClass="mb-6">
   <ng-template #start>
     <div class="flex items-center gap-2">
-      <lib-button-options-table />
+      <lib-button-options-table (onDelete)="onDeleteSelected()"></lib-button-options-table>
       <lib-button-add1 (add)="onNewItem()"></lib-button-add1>
     </div>
   </ng-template>

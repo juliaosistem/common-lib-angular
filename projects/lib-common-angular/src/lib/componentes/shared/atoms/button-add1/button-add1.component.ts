@@ -9,7 +9,7 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
   styleUrl: './button-add1.component.scss'
 })
 export class ButtonAdd1Component {
-  @Input() label: string = 'New';
+  @Input() label: string = 'Add';
   @Input() icon: string = 'pi pi-plus';
   @Input() disabled: boolean = false;
   @Input() size: 'small' | 'large' | undefined = undefined;

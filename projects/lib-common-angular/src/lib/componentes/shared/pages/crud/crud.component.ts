@@ -121,16 +121,41 @@ export class Crud implements OnInit {
             message: 'Are you sure you want to delete ' + itemName + '?',
             header: 'Confirm',
             icon: 'pi pi-exclamation-triangle',
-            accept: () => {
-                this.data = this.data.filter((val) => val['id'] !== item['id']);
-                this.dataChange.emit([...this.data]); // ✅ Emitir cambios
-                this.messageService.add({
-                    severity: 'success',
-                    summary: 'Successful',
-                    detail: 'Item Deleted',
-                    life: 3000,
-                });
-            },
+            accept: () => this.executeItemsDeletion([item], 1),
+        });
+    }
+
+    // ✅ Eliminar elementos seleccionados con confirmación
+    deleteSelectedItems() {
+        if (!this.selectedItems || this.selectedItems.length === 0) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Warning',
+                detail: 'No items selected',
+                life: 3000,
+            });
+            return;
+        }
+
+        const selectedCount = this.selectedItems.length;
+        this.confirmationService.confirm({
+            message: `Are you sure you want to delete ${selectedCount} selected item${selectedCount > 1 ? 's' : ''}?`,
+            header: 'Confirm Deletion',
+            icon: 'pi pi-exclamation-triangle',
+            accept: () => this.executeItemsDeletion(this.selectedItems, selectedCount),
+        });
+    }
+
+    private executeItemsDeletion(itemsToDelete: Record<string, unknown>[], count: number) {
+        const idsToDelete = itemsToDelete.map(item => item['id']);
+        this.data = this.data.filter(item => !idsToDelete.includes(item['id']));
+        this.selectedItems = [];
+        this.dataChange.emit([...this.data]);
+        this.messageService.add({
+            severity: 'success',
+            summary: 'Successful',
+            detail: `${count} item${count > 1 ? 's' : ''} deleted`,
+            life: 3000,
         });
     }
 
@@ -172,5 +197,10 @@ export class Crud implements OnInit {
 
     onViewChange(newView: 'table' | 'grid'): void {
         this.tableType = newView;
+    }
+
+    // ✅ Debug: Método para detectar cambios en selectedItems
+    onSelectedItemsChange(newSelection: Record<string, unknown>[] | null) {
+        this.selectedItems = newSelection || [];
     }
 }

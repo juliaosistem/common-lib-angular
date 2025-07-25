@@ -176,6 +176,7 @@ export class CrudComponent implements  OnInit {
 
     // ✅ Método para recibir cambios de datos del componente CRUD
     onDataChanged(updatedData: Record<string, unknown>[]) {
+        console.log('Data changed:', updatedData);
         this.data = [...updatedData]; // Actualizar la data local
     }
 }
