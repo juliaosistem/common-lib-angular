@@ -21,6 +21,17 @@
           @case ('checkbox') {
             <p-checkbox [id]="field.key" [(ngModel)]="currentItem[field.key]" [binary]="true" />
           }
+          @case ('select') {
+            <p-select 
+              [id]="field.key" 
+              [(ngModel)]="currentItem[field.key]" 
+              [options]="getSelectOptions(field.key)"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Select {{field.label}}"
+              [showClear]="true"
+            />
+          }
           @default {
             <input pInputText [id]="field.key" [(ngModel)]="currentItem[field.key]" />
           }
@@ -74,9 +85,6 @@
           @switch (field.type) {
             @case ('img') {
               <img [src]="getImageUrl(field, item[field.key])" [alt]="getImageAltText(field, item)" style="width: 64px" class="rounded" />
-            }
-            @case ('tag') {
-              <p-tag [value]="item[field.key]" [severity]="getFieldSeverity()" />
             }
             @case ('checkbox') {
                <span class="flex items-center gap-2">

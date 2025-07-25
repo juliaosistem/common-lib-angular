@@ -1,5 +1,5 @@
 // Tipos de campo soportados (minimalista)
-export type FieldType = 'img' | 'checkbox' | 'number' | 'text' | 'tag';
+export type FieldType = 'img' | 'checkbox' | 'number' | 'text' | 'select';
 
 // Interfaz para definir un campo dinámico
 export interface DynamicField {
@@ -88,7 +88,6 @@ export class DynamicEntity {
       { key: 'category', type: 'text', label: 'Category', order: 2 },
       { key: 'price', type: 'number', label: 'Price', order: 3 },
       { key: 'image', type: 'img', label: 'Image', order: 4 },
-      { key: 'inventoryStatus', type: 'tag', label: 'Status', order: 5 }
     ];
   }
 }

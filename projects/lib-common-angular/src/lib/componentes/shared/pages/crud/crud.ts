@@ -44,7 +44,7 @@ export class Crud {
             id: '1',
             name: 'Laptop Gaming Asus',
             price: 1299.99,
-            category: 'Electronics',
+            category: 'Gaming',
             available: true,
             image: 'laptop.jpg',
             description: 'Powerful gaming laptop with RTX 4060',
@@ -72,7 +72,7 @@ export class Crud {
             id: '3',
             name: 'Mechanical Keyboard',
             price: 159.99,
-            category: 'Accessories',
+            category: 'Gaming',
             available: true,
             image: 'keyboard.jpg',
             description: 'RGB mechanical keyboard with cherry switches',
@@ -88,15 +88,22 @@ export class Crud {
     fieldTypeConfig: Record<string, FieldType> = {
         name: 'text',
         price: 'number',
-        category: 'text',
+        category: 'select',
         available: 'checkbox',
         image: 'img',
         description: 'text',
         rating: 'number',
-        brand: 'text',
+        brand: 'select',
         warranty: 'checkbox',
         weight: 'number',
-        color: 'text'
+        color: 'select'
+    };
+
+    // ✅ Configuración de opciones para campos de tipo select
+    fieldSelectOptions: Record<string, string[]> = {
+        category: ['Electronics', 'Accessories', 'Gaming', 'Office', 'Software'],
+        brand: ['Asus', 'Logitech', 'Corsair', 'Razer', 'HP', 'Dell', 'Apple'],
+        color: ['Black', 'White', 'Silver', 'Red', 'Blue', 'RGB', 'Multi-color']
     };
 
     // ✅ Etiquetas personalizadas

@@ -24,6 +24,7 @@ export class Tabla1Component implements OnInit {
   @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas
   @Input() fieldOrder: string[] = [];                       // Orden de columnas
   @Input() excludeFields: string[] = ['id'];                // Campos a excluir
+  @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
   
   fields: DynamicField[] = []; // Campos dinámicos generados
   displayFields: DynamicField[] = [];
@@ -70,6 +71,12 @@ export class Tabla1Component implements OnInit {
 
   getFieldSeverity(): 'success' | 'info' | 'warn' | 'danger' | 'secondary' | 'contrast' {
     return this.dynamicFieldService.getFieldSeverity();
+  }
+
+  // ✅ Obtener opciones para campos de tipo select
+  getSelectOptions(fieldKey: string): { label: string; value: string }[] {
+    const options = this.fieldSelectOptions[fieldKey] || [];
+    return options.map(option => ({ label: option, value: option }));
   }
 
   editItem(item: Record<string, unknown>) {
