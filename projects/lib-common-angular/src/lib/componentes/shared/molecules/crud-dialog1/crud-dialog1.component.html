@@ -8,51 +8,56 @@
   (onHide)="onDialogHide()"
 >
   <ng-template #content>
-    @for (field of displayFields; track field.key) {
-      <div class="field">
-        <label [for]="field.key">{{ field.label }}</label>
-        @switch (field.type) {
-          @case ('text') {
-            <input 
-              pInputText 
-              [id]="field.key" 
-              [(ngModel)]="internalItem[field.key]"
-              [class.ng-invalid.ng-dirty]="submitted && !internalItem[field.key]" />
+    <form [formGroup]="itemForm">
+      @for (field of displayFields; track field.key) {
+        <div class="field">
+          <label [for]="field.key">
+            {{ field.label }}
+          </label>
+          
+          @switch (field.type) {
+            @case ('text') {
+              <input 
+                pInputText 
+                [id]="field.key" 
+                [formControlName]="field.key"
+                [placeholder]="'Enter ' + field.label" />
+            }
+            @case ('number') {
+              <p-inputNumber 
+                [id]="field.key" 
+                [formControlName]="field.key"
+                mode="decimal"
+                [placeholder]="'Enter ' + field.label" />
+            }
+            @case ('checkbox') {
+              <p-checkbox 
+                [id]="field.key" 
+                [formControlName]="field.key"
+                [binary]="true"
+                class="flex align-items-center gap-2" />
+            }
+            @case ('select') {
+              <p-select 
+                [id]="field.key" 
+                [formControlName]="field.key"
+                [options]="getSelectOptions(field.key)"
+                optionLabel="label"
+                optionValue="value"
+                [placeholder]="'Select ' + field.label"
+                [showClear]="true" />
+            }
+            @default {
+              <input 
+                pInputText 
+                [id]="field.key" 
+                [formControlName]="field.key"
+                [placeholder]="'Enter ' + field.label" />
+            }
           }
-          @case ('number') {
-            <p-inputNumber 
-              [id]="field.key" 
-              [(ngModel)]="internalItem[field.key]" 
-              mode="decimal" />
-          }
-          @case ('checkbox') {
-            <p-checkbox 
-              [id]="field.key" 
-              [(ngModel)]="internalItem[field.key]" 
-              [binary]="true" />
-          }
-          @case ('select') {
-            <p-select 
-              [id]="field.key" 
-              [(ngModel)]="internalItem[field.key]" 
-              [options]="getSelectOptions(field.key)"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Select {{field.label}}"
-              [showClear]="true" />
-          }
-          @default {
-            <input 
-              pInputText 
-              [id]="field.key" 
-              [(ngModel)]="internalItem[field.key]" />
-          }
-        }
-        @if (submitted && field.key === 'name' && !internalItem[field.key]) {
-          <small class="p-error">{{field.label}} is required.</small>
-        }
-      </div>
-    }
+        </div>
+      }
+    </form>
   </ng-template>
   
   <ng-template #footer>
