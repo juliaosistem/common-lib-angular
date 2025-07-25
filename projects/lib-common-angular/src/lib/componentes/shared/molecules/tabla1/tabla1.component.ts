@@ -16,10 +16,8 @@ import { ButtonActionDelete1Component } from '../../atoms/button-action-delete1/
   imports: [CommonModule, TableModule, PrimegModule, FormsModule, ButtonActionEdit1Component, ButtonActionDelete1Component],
 })
 export class Tabla1Component implements OnInit {
-  @Input() tableTitle: string = 'Table Title'; 
   @Input() data: Record<string, unknown>[] = [];
   @Input() selectedItems!: Record<string, unknown>[] | null;
-  
   @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Tipos por campo
   @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas
   @Input() fieldOrder: string[] = [];                       // Orden de columnas
