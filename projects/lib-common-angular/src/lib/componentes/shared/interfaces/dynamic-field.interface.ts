@@ -8,6 +8,8 @@ export interface DynamicField {
   label: string;         // Etiqueta para mostrar
   value: unknown;        // Valor del campo
   order?: number;        // Orden de visualización
+  accept?: string;       // Tipos de archivo aceptados (para type: 'file')
+  maxFileSize?: number;  // Tamaño máximo en bytes (para type: 'file')
 }
 
 // Clase principal para entidad dinámica

@@ -47,6 +47,24 @@
                 [placeholder]="'Select ' + field.label"
                 [showClear]="true" />
             }
+            @case ('img') {
+              <!-- ✅ FileUpload de PrimeNG para imágenes -->
+              <div class="file-upload-container">
+                <p-fileUpload 
+                  [multiple]="false"
+                  [accept]="field.accept || 'image/*'"
+                  [maxFileSize]="field.maxFileSize || 5242880"
+                  [showUploadButton]="false"
+                  [showCancelButton]="false"
+                  [chooseLabel]="'Choose ' + field.label"
+                  [chooseIcon]="'pi pi-upload'"
+                  [auto]="false"
+                  (onSelect)="onFileSelect($event, field.key)"
+                  (onRemove)="onFileRemove(field.key)"
+                  styleClass="w-full">
+                </p-fileUpload>
+              </div>
+            }
             @default {
               <input 
                 pInputText 

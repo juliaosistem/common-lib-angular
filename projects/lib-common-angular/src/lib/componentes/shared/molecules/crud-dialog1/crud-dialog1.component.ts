@@ -23,6 +23,11 @@ export class CrudDialog1Component implements OnChanges {
 
   itemForm: FormGroup;
 
+  /**
+   * Archivos seleccionados
+   */
+  selectedFiles: Record<string, File> = {};
+
   constructor(private fb: FormBuilder) {
     this.itemForm = this.fb.group({});
   }
@@ -57,9 +62,40 @@ export class CrudDialog1Component implements OnChanges {
         return 0;
       case 'select':
         return null;
+      case 'img':
+        return '';
       default:
         return '';
     }
+  }
+
+  /**
+   * Maneja la selección de archivos desde p-fileUpload
+   */
+  onFileSelect(event: { files: File[] }, fieldKey: string): void {
+    const file = event.files[0] as File;
+    
+    if (file) {
+      // Guardar archivo
+      this.selectedFiles[fieldKey] = file;
+      // Actualizar el formulario
+      this.itemForm.get(fieldKey)?.setValue(file.name);
+    }
+  }
+
+  /**
+   * Remueve un archivo seleccionado
+   */
+  onFileRemove(fieldKey: string): void {
+    delete this.selectedFiles[fieldKey];
+    this.itemForm.get(fieldKey)?.setValue('');
+  }
+
+  /**
+   * Obtiene el archivo seleccionado para un campo
+   */
+  getSelectedFile(fieldKey: string): File | null {
+    return this.selectedFiles[fieldKey] || null;
   }
 
   // ✅ Obtener opciones para campos de tipo select
@@ -72,6 +108,9 @@ export class CrudDialog1Component implements OnChanges {
     this.visible = false;
     this.visibleChange.emit(false);
     this.cancel.emit();
+    
+    // ✅ Limpiar archivos seleccionados
+    this.selectedFiles = {};
   }
 
   saveItem() {
@@ -80,6 +119,21 @@ export class CrudDialog1Component implements OnChanges {
     // ✅ Preservar el ID si existe (para edición)
     if (this.currentItem['id']) {
       formValue['id'] = this.currentItem['id'];
+    }
+
+    // ✅ Convertir archivos seleccionados a blob URLs para mostrar en tabla
+    Object.keys(this.selectedFiles).forEach(fieldKey => {
+      const file = this.selectedFiles[fieldKey];
+      if (file && file.type.startsWith('image/')) {
+        // Crear blob URL para mostrar la imagen en la tabla
+        const blobUrl = URL.createObjectURL(file);
+        formValue[fieldKey] = blobUrl;
+      }
+    });
+
+    // ✅ Agregar archivos originales al payload para procesamiento posterior
+    if (Object.keys(this.selectedFiles).length > 0) {
+      formValue['_files'] = this.selectedFiles;
     }
     
     this.save.emit(formValue);

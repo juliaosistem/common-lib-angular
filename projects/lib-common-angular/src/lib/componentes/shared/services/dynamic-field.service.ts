@@ -145,7 +145,32 @@ export class DynamicFieldService {
    * Obtiene la URL de imagen para un campo
    */
   getImageUrl(field: DynamicField, value: unknown): string {
-    return String(value || '');
+    if (!value) return '/assets/images/placeholder.png';
+    
+    const strValue = String(value);
+    
+    // Si ya es una URL completa (http/https), devolverla
+    if (strValue.startsWith('http://') || strValue.startsWith('https://')) {
+      return strValue;
+    }
+    
+    // Si es una ruta local que empieza con /, devolverla (assets, etc.)
+    if (strValue.startsWith('/')) {
+      return strValue;
+    }
+    
+    // Si es un blob URL (archivo subido), devolverlo
+    if (strValue.startsWith('blob:')) {
+      return strValue;
+    }
+    
+    // Si es solo nombre de archivo, asumir que está en assets/images
+    if (strValue.includes('.')) {
+      return `/assets/images/${strValue}`;
+    }
+    
+    // Fallback: devolver valor como está
+    return strValue;
   }
 
   /**
