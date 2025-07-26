@@ -50,10 +50,10 @@ export class ButtonOptionsTableComponent implements OnInit {
 
   addButtons() {
      this.addAddButton();
-     this.addDeleteButton();
      this.addWhatsappButton();
      this.addButtonImportExcelOrPdf();
      this.addButtonExportExcelOrPdf();
+     this.addDeleteButton();
   }
 
 
