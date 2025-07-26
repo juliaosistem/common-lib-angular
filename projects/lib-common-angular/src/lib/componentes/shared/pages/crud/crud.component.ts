@@ -9,7 +9,6 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
 import { Tabla1Component } from '../../molecules/tabla1/tabla1.component';
 import { Grid1Component } from '../../molecules/grid1/grid1.component';
 import { ToolBar1Component } from '../../molecules/tool-bar1/tool-bar1.component';
-import { CrudDialog1Component } from '../../molecules/crud-dialog1/crud-dialog1.component';
 
 // ✅ Importar los tipos del sistema dinámico
 import { FieldType, DynamicField } from '../../interfaces/dynamic-field.interface';
@@ -27,8 +26,7 @@ import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/
         PrimegModule,
         ToolBar1Component,
         Tabla1Component,
-        Grid1Component,
-        CrudDialog1Component
+        Grid1Component
     ],
     templateUrl: './crud.component.html',
     providers: [MessageService, ConfirmationService]
@@ -53,9 +51,12 @@ export class Crud implements OnInit {
 
     // ✅ EVENTOS PARA COMUNICACIÓN CON EL PADRE
     @Output() dataChange = new EventEmitter<Record<string, unknown>[]>();
+    @Output() editItemRequest = new EventEmitter<Record<string, unknown>>();
+    @Output() newItemRequest = new EventEmitter<void>();
+    @Output() itemSaved = new EventEmitter<Record<string, unknown>>();
+    @Output() dialogCanceled = new EventEmitter<void>();
 
     // ✅ Propiedades para el manejo del CRUD
-    itemDialog: boolean = false;
     currentItem: Record<string, unknown> = {};
     selectedItems: Record<string, unknown>[] = [];
     fields: DynamicField[] = [];
@@ -94,14 +95,12 @@ export class Crud implements OnInit {
 
     // ✅ Método para abrir el diálogo de edición
     editItem(item: Record<string, unknown>) {
-        this.currentItem = { ...item };
-        this.itemDialog = true;
+        this.editItemRequest.emit(item);
     }
 
     // ✅ Método para crear un nuevo item
     openNew() {
-        this.currentItem = {};
-        this.itemDialog = true;
+        this.newItemRequest.emit();
     }
 
     // ✅ Manejar cuando se guarda un item desde el diálogo
@@ -114,12 +113,13 @@ export class Crud implements OnInit {
             this.createNewItem();
         }
         this.finalizeItemSave();
+        this.itemSaved.emit(this.currentItem);
     }
 
     // ✅ Manejar cuando se cancela el diálogo
     onDialogCanceled() {
-        this.itemDialog = false;
         this.currentItem = {};
+        this.dialogCanceled.emit();
     }
 
     // ✅ Eliminar item con confirmación
@@ -196,10 +196,26 @@ export class Crud implements OnInit {
         });
     }
 
+    // ✅ Método público para procesar el guardado desde el componente padre
+    public processItemSave(savedItem: Record<string, unknown>) {
+        this.currentItem = { ...savedItem };
+
+        if (this.currentItem['id']) {
+            this.updateExistingItem();
+        } else {
+            this.createNewItem();
+        }
+        this.finalizeItemSave();
+    }
+
+    // ✅ Método público para establecer el item actual desde el componente padre
+    public setCurrentItem(item: Record<string, unknown>) {
+        this.currentItem = { ...item };
+    }
+
     private finalizeItemSave() {
         this.data = [...this.data];
         this.dataChange.emit([...this.data]); // ✅ Emitir cambios
-        this.itemDialog = false;
         this.currentItem = {};
     }
 

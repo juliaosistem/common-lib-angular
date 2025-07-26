@@ -15,16 +15,19 @@
   [rowsPerPageOptions]="rowsPerPageOptions"
 >
   <ng-template #header>
-    <tr>
-      <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
-      <th style="width: 8rem">Actions</th>
-      @for (field of displayFields; track field.key) {
-        <th style="min-width: 12rem">{{ field.label }}</th>
-      }
-    </tr>
+    @if (showDefaultHeader) {
+      <tr>
+        <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
+        <th style="width: 8rem">Actions</th>
+        @for (field of displayFields; track field.key) {
+          <th style="min-width: 12rem">{{ field.label }}</th>
+        }
+      </tr>
+  }
   </ng-template>
   
   <ng-template #body let-item>
+    @if (showDefaultBody) {
     <tr>
       <td style="width: 3rem"><p-tableCheckbox [value]="item" /></td>
       <td style="width: 8rem">
@@ -59,5 +62,6 @@
         </td>
       }
     </tr>
+  }
   </ng-template>
 </p-table>

@@ -49,16 +49,6 @@
         (deleteItem)="deleteItem($event)">
     </lib-grid1>
 
-    <!-- Diálogo CRUD -->
-    <lib-crud-dialog1
-        [(visible)]="itemDialog"
-        [displayFields]="displayFields"
-        [currentItem]="currentItem"
-        [fieldSelectOptions]="fieldSelectOptions"
-        (save)="onItemSaved($event)"
-        (cancel)="onDialogCanceled()">
-    </lib-crud-dialog1>
-
     <!-- Diálogo de confirmación -->
     <p-confirmDialog></p-confirmDialog>
 </div>

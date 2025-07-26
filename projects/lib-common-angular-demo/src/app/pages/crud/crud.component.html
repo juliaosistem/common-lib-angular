@@ -8,5 +8,33 @@
     [fieldOrder]="fieldOrder"
     [excludeFields]="excludeFields"
     [fieldSelectOptions]="fieldSelectOptions"
-    (dataChange)="onDataChanged($event)">
+    (dataChange)="onDataChanged($event)"
+    (editItemRequest)="onEditItemRequest($any($event))"
+    (newItemRequest)="onNewItemRequest()"
+    (itemSaved)="onItemSaved()"
+    (dialogCanceled)="onDialogCanceled()">
 </lib-crud>
+
+<!-- Diálogo CRUD manejado desde el componente demo -->
+<lib-crud-dialog1
+    [(visible)]="showDialog"
+    [displayFields]="$any(dialogDisplayFields)"
+    [currentItem]="dialogCurrentItem"
+    [fieldSelectOptions]="dialogFieldSelectOptions"
+    [body]="productDialogTemplate"
+    showDefaultHeader="true"
+    (save)="onDialogSave($any($event))"
+    (cancel)="onDialogCancel()">
+    [showDefault]
+</lib-crud-dialog1>
+
+<!-- Template para el body del dialog -->
+<ng-template #productDialogTemplate>
+    <lib-product-dialog1
+        [productDialog]="true"
+        [product]="dialogCurrentItem"
+        [statuses]="['INSTOCK', 'LOWSTOCK', 'OUTOFSTOCK']"
+        (onSave)="onProductSave($event)"
+        (onCancel)="onProductCancel()">
+    </lib-product-dialog1>
+</ng-template>

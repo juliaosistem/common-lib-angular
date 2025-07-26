@@ -25,4 +25,5 @@ export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.comp
 export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
 export * from './lib/componentes/shared/services/dynamic-field.service';
 export * from './lib/componentes/shared/pages/crud/crud.component';
+export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
 export * from './lib/componentes/shared/pages/notfound/notfound';

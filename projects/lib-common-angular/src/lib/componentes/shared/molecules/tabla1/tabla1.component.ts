@@ -27,6 +27,9 @@ export class Tabla1Component implements OnInit {
   @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
   @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
 
+  @Input() showDefaultHeader: boolean = true;               // Mostrar encabezado por defecto
+  @Input() showDefaultBody: boolean = true;                 // Mostrar cuerpo por defecto
+
   // Propiedades del paginador
   @Input() rows: number = 10;                               // Filas por página
   @Input() paginator: boolean = true;                       // Habilitar paginador

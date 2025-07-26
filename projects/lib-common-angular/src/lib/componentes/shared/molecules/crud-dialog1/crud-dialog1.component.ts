@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { PrimegModule } from '../../../../modulos/primeg.module';
@@ -13,11 +13,16 @@ import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/
   styleUrl: './crud-dialog1.component.scss'
 })
 export class CrudDialog1Component implements OnChanges {
+onSubmit() {
+throw new Error('Method not implemented.');
+}
   @Input() visible: boolean = false;
   @Input() displayFields: DynamicField[] = [];
   @Input() currentItem: Record<string, unknown> = {};
   @Input() fieldSelectOptions: Record<string, string[]> = {};
   @Input() isDefaultContent: boolean = true;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  @Input() body: TemplateRef<any> | undefined;
 
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<Record<string, unknown>>();

@@ -1,5 +1,5 @@
 import { Component,OnInit, ViewChild } from '@angular/core';
-import { Crud, FieldType } from 'lib-common-angular';
+import { Crud, CrudDialog1Component, FieldType, ProductDialog1Component } from 'lib-common-angular';
 import { Product, ProductService } from '../../core/services/product.service';
 import { Table } from 'primeng/table';
 import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
@@ -8,7 +8,7 @@ import { Menu } from 'primeng/menu';
 
 @Component({
   selector: 'app-crud',
-  imports: [Crud], 
+  imports: [Crud, CrudDialog1Component, ProductDialog1Component], 
   templateUrl: './crud.component.html',
   styleUrl: './crud.component.scss'
 
@@ -16,8 +16,11 @@ import { Menu } from 'primeng/menu';
 export class CrudComponent implements  OnInit {
 
     productDialog: boolean = false;
-
     submitted: boolean = false;
+    showDialog: boolean = false;
+    dialogCurrentItem: Record<string, unknown> = {};
+    dialogDisplayFields: unknown[] = [];
+    dialogFieldSelectOptions: Record<string, string[]> = {};
 
 // aqui tienes q implementar la logica para el crud 
 // traerte los servicios de la libreria
@@ -45,28 +48,7 @@ export class CrudComponent implements  OnInit {
     }
 
     loadDemoData() {
-/* 
-        this.tablaDataSharedDTO.data.dataList = this.productService.getProducts();
-
-        this.tablaDataSharedDTO.statuses = [
-            { label: 'INSTOCK', value: 'instock' },
-            { label: 'LOWSTOCK', value: 'lowstock' },
-            { label: 'OUTOFSTOCK', value: 'outofstock' }
-        ];
-
-        this.tablaDataSharedDTO.cols = [
-            { id: 1, field: 'code', header: 'Code', customExportHeader: 'Product Code' },
-            { id: 2, field: 'name', header: 'Name' },
-            { id: 3, field: 'image', header: 'Image' },
-            { id: 4, field: 'price', header: 'Price' },
-            { id: 5, field: 'category', header: 'Category' },
-            { id: 6, field: 'rating', header: 'Reviews' },
-            { id: 7, field: 'status', header: 'Status' },
-            { id: 8, field: 'edition', header: 'Edition' }
-        ];
-
-        this.tablaDataSharedDTO.exportColumns = this.tablaDataSharedDTO.cols.map((col) => ({ title: col.header, dataKey: col.field }));
-     */this.loaded = false;
+this.loaded = false;
     }
 
     // ✅ Datos dinámicos de ejemplo
@@ -151,6 +133,8 @@ export class CrudComponent implements  OnInit {
         weight: 'Weight (kg)',
         color: 'Color'
     };
+    
+   
 
     // ✅ Orden personalizado de columnas
     fieldOrder: string[] = [
@@ -173,7 +157,75 @@ export class CrudComponent implements  OnInit {
 
     // ✅ Método para recibir cambios de datos del componente CRUD
     onDataChanged(updatedData: Record<string, unknown>[]) {
-        console.log('Data changed:', updatedData);
         this.data = [...updatedData]; // Actualizar la data local
+    }
+
+    // ✅ Métodos para manejar los eventos del dialog
+    onEditItemRequest(item: Record<string, unknown>) {
+        this.dialogCurrentItem = { ...item };
+        this.dialogDisplayFields = this.createDisplayFields();
+        this.dialogFieldSelectOptions = { ...this.fieldSelectOptions };
+        this.showDialog = true;
+    }
+
+    onNewItemRequest() {
+        this.dialogCurrentItem = {};
+        this.dialogDisplayFields = this.createDisplayFields();
+        this.dialogFieldSelectOptions = { ...this.fieldSelectOptions };
+        this.showDialog = true;
+    }
+
+    onDialogSave(savedItem: Record<string, unknown>) {
+        // Procesar el guardado localmente por ahora
+        if (savedItem['id']) {
+            // Actualizar item existente
+            const index = this.data.findIndex(item => item['id'] === savedItem['id']);
+            if (index !== -1) {
+                this.data[index] = { ...savedItem };
+            }
+        } else {
+            // Crear nuevo item
+            savedItem['id'] = Date.now().toString(); // ID temporal
+            this.data.push({ ...savedItem });
+        }
+        this.data = [...this.data]; // Trigger change detection
+        this.showDialog = false;
+    }
+
+    onDialogCancel() {
+        this.showDialog = false;
+        this.dialogCurrentItem = {};
+    }
+
+    onDialogCanceled() {
+        this.showDialog = false;
+    }
+
+    onItemSaved() {
+        // Método llamado cuando el CRUD confirma que se guardó el item
+        this.showDialog = false;
+    }
+
+    // ✅ Métodos para manejar el ProductDialog1Component
+    onProductSave(product: unknown) {
+        // Convertir el producto a Record<string, unknown> y procesarlo
+        const productItem = product as Record<string, unknown>;
+        this.onDialogSave(productItem);
+    }
+
+    onProductCancel() {
+        this.onDialogCancel();
+    }
+
+    private createDisplayFields() {
+        // Crear los campos de display basados en la configuración
+        return this.fieldOrder.map(fieldKey => ({
+            key: fieldKey,
+            type: this.fieldTypeConfig[fieldKey] || 'text',
+            label: this.fieldLabels[fieldKey] || fieldKey,
+            value: '',
+            required: false,
+            visible: !this.excludeFields.includes(fieldKey)
+        })).filter(field => field.visible);
     }
 }

@@ -9,6 +9,8 @@
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
 >
   <ng-template #grid let-items>
+    @if (showDefaultGrid) {
+      <!-- Grid layout for displaying items -->
     <div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr)); max-width: 100%;">
       @for (item of items; track item['id']) {
         <div 
@@ -94,5 +96,6 @@
         </div>
       }
     </div>
+    }
   </ng-template>
 </p-dataview>

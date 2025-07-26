@@ -10,8 +10,16 @@
   (visibleChange)="onVisibilityChange($event)"
 >
   <ng-template #content>
-    @if (isDefaultContent) {
-      <form [formGroup]="itemForm">
+  
+      
+    
+   <ng-container 
+          *ngTemplateOutlet="body || defaultbody; ">
+        </ng-container>
+    
+      </ng-template>
+      <ng-template #defaultbody>
+          <form [formGroup]="itemForm">
         @for (field of displayFields; track field.key) {
           <div class="field">
             <label [for]="field.key">
@@ -85,8 +93,8 @@
           </div>
         }
       </form>
-    }
-  </ng-template>
+    
+        </ng-template>
 
   <ng-template #footer>
     <p-button
