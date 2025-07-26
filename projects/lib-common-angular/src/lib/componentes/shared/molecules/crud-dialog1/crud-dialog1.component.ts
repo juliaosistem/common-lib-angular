@@ -17,6 +17,7 @@ export class CrudDialog1Component implements OnChanges {
   @Input() displayFields: DynamicField[] = [];
   @Input() currentItem: Record<string, unknown> = {};
   @Input() fieldSelectOptions: Record<string, string[]> = {};
+  @Input() isDefaultContent: boolean = true;
 
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<Record<string, unknown>>();
