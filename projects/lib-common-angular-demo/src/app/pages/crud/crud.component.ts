@@ -168,9 +168,6 @@ export class CrudComponent implements  OnInit {
         
     ];
 
-    // Título de la tabla
-    tableTitle: string = 'Product List';
-
     // ✅ Campos a excluir de la vista
     excludeFields: string[] = ['id'];
 

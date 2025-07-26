@@ -38,7 +38,6 @@ export class Crud implements OnInit {
     @Input() submitted: boolean = false;
     @Input() loaded: boolean = false;
     @Input() tableType: 'table' | 'grid' = 'table';
-    @Input() tableTitle: string = 'Table Title'; 
     @Input() data: Record<string, unknown>[] = [];
     @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Configuración de tipos de campo
     @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personal
@@ -220,7 +219,6 @@ export class Crud implements OnInit {
             fieldOrder: this.fieldOrder,
             fieldLabels: this.fieldLabels,
             excludeFields: this.excludeFields,
-            fileName: this.tableTitle
         });
     }
 }
