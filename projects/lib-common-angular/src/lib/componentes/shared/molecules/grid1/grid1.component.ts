@@ -4,14 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interface';
 import { DynamicFieldService } from '../../services/dynamic-field.service';
-import { ButtonActionEdit1Component } from '../../atoms/button-action-edit1/button-action-edit1.component';
-import { ButtonActionDelete1Component } from '../../atoms/button-action-delete1/button-action-delete1.component';
+import { ButtonActionsRow1Component } from '../../atoms/button-actions-row1/button-actions-row1.component';
 import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-grid1',
   standalone: true,
-  imports: [CommonModule, FormsModule, PrimegModule, ButtonActionEdit1Component, ButtonActionDelete1Component],
+  imports: [CommonModule, FormsModule, PrimegModule, ButtonActionsRow1Component],
   templateUrl: './grid1.component.html',
   styleUrl: './grid1.component.scss',
 })
@@ -37,7 +36,6 @@ export class Grid1Component implements OnInit {
   @Input() showCurrentPageReport: boolean = true;           // Mostrar reporte de página
 
   @Output() editItem = new EventEmitter<Record<string, unknown>>();
-  @Output() deleteItem = new EventEmitter<Record<string, unknown>>();
   
   fields: DynamicField[] = []; // Campos dinámicos generados
 
@@ -85,10 +83,6 @@ export class Grid1Component implements OnInit {
   // ✅ Eventos que se emiten al componente padre
   onEditItem(item: Record<string, unknown>) {
     this.editItem.emit(item);
-  }
-
-  onDeleteItem(item: Record<string, unknown>) {
-    this.deleteItem.emit(item);
   }
 
   // ✅ Métodos para manejo de selección

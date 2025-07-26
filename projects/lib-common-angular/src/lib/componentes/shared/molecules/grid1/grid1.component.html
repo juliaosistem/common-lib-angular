@@ -69,19 +69,13 @@
             
             <!-- Botones de acción -->
             <div class="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
-              <!-- Botones de editar y eliminar a la izquierda -->
+              <!-- Botón de acciones unificado a la izquierda -->
               <div class="flex gap-2 items-center">
-                <lib-button-action-edit1 
+                <lib-button-actions-row1 
                   [item]="item" 
                   (edit)="onEditItem($event)"
                   (click)="$event.stopPropagation()">
-                </lib-button-action-edit1>
-                
-                <lib-button-action-delete1 
-                  [item]="item"
-                  (delete)="onDeleteItem($event)"
-                  (click)="$event.stopPropagation()">
-                </lib-button-action-delete1>
+                </lib-button-actions-row1>
               </div>
               
               <!-- Checkbox de selección a la derecha -->

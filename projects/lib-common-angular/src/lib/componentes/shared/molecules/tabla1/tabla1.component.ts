@@ -5,16 +5,16 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interface';
 import { DynamicFieldService } from '../../services/dynamic-field.service';
-import { ButtonActionEdit1Component } from '../../atoms/button-action-edit1/button-action-edit1.component';
-import { ButtonActionDelete1Component } from '../../atoms/button-action-delete1/button-action-delete1.component';
+import { ButtonActionsRow1Component } from '../../atoms/button-actions-row1/button-actions-row1.component';
 import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ButtonOptionsTableComponent } from "../../atoms/button-options-table/button-options-table.component";
 
 @Component({
   selector: 'lib-tabla1',
   standalone: true,
   templateUrl: './tabla1.component.html',
   styleUrl: './tabla1.component.scss',
-  imports: [CommonModule, TableModule, PrimegModule, FormsModule, ButtonActionEdit1Component, ButtonActionDelete1Component],
+  imports: [CommonModule,ButtonOptionsTableComponent, TableModule, PrimegModule, FormsModule, ButtonActionsRow1Component, ButtonOptionsTableComponent],
 })
 export class Tabla1Component implements OnInit {
   @Input() data: Record<string, unknown>[] = [];
@@ -37,7 +37,6 @@ export class Tabla1Component implements OnInit {
   @Input() showCurrentPageReport: boolean = true;           // Mostrar reporte de página
 
   @Output() editItem = new EventEmitter<Record<string, unknown>>();
-  @Output() deleteItem = new EventEmitter<Record<string, unknown>>();
   
   fields: DynamicField[] = []; // Campos dinámicos generados
 
@@ -85,10 +84,6 @@ export class Tabla1Component implements OnInit {
   // ✅ Eventos que se emiten al componente padre
   onEditItem(item: Record<string, unknown>) {
     this.editItem.emit(item);
-  }
-
-  onDeleteItem(item: Record<string, unknown>) {
-    this.deleteItem.emit(item);
   }
 
   // ✅ Método para capturar cambios de selección de PrimeNG

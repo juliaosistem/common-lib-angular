@@ -32,15 +32,10 @@
       <td style="width: 3rem"><p-tableCheckbox [value]="item" /></td>
       <td style="width: 8rem">
         <div class="flex gap-2 items-center">
-          <lib-button-action-edit1 
+          <lib-button-actions-row1 
             [item]="item" 
             (edit)="onEditItem($event)">
-          </lib-button-action-edit1>
-          
-          <lib-button-action-delete1 
-            [item]="item"
-            (delete)="onDeleteItem($event)">
-          </lib-button-action-delete1>
+          </lib-button-actions-row1>
         </div>
       </td>
       @for (field of displayFields; track field.key) {
