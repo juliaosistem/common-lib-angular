@@ -2,6 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angu
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-product-dialog1',
@@ -19,7 +20,13 @@ export class ProductDialog1Component implements OnInit, OnChanges {
   @Output() productDialogChange = new EventEmitter<boolean>();
   @Output() onSave = new EventEmitter<Record<string, unknown>>();
   @Output() onCancel = new EventEmitter<void>();
-  
+
+  componente: ComponentesDTO = {
+    id: 23,
+    nombreComponente: 'lib-product-dialog1',
+    version: '1.0'
+  };
+
   submitted: boolean = false;
   originalProduct: Record<string, unknown> = {};
 

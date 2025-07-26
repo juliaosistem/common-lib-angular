@@ -14,7 +14,7 @@ import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/
 export class ButtonActionsRow1Component implements OnInit {
 
   componente: ComponentesDTO = {
-    id: 23,
+    id: 24,
     nombreComponente: 'lib-button-actions-row1',
     version: '1.0',
   };
