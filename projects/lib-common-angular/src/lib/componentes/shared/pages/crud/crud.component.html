@@ -5,7 +5,8 @@
         (viewChange)="onViewChange($event)"
         [currentView]="tableType"
         (newItem)="openNew()"
-        (deleteSelected)="deleteSelectedItems()">
+        (deleteSelected)="deleteSelectedItems()"
+        (exportToExcel)="exportToExcel()">
     </lib-tool-bar1>
 
     <!-- Vista de tabla con sistema dinámico -->

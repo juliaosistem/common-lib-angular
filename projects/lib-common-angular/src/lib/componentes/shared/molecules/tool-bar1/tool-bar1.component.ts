@@ -28,6 +28,9 @@ export class ToolBar1Component {
   // ✅ Output para emitir eventos de eliminar seleccionados
   @Output() deleteSelected = new EventEmitter<void>();
 
+  // ✅ Output para emitir eventos de exportar a Excel
+  @Output() exportToExcel = new EventEmitter<void>();
+
   // ✅ Método para manejar el cambio desde el ViewButtonsContainer1
   onViewChange(newView: 'table' | 'grid'): void {
     this.viewChange.emit(newView);
@@ -41,5 +44,10 @@ export class ToolBar1Component {
   // ✅ Método para manejar la eliminación desde button-options-table
   onDeleteSelected(): void {
     this.deleteSelected.emit();
+  }
+
+  // ✅ Método para manejar la exportación a Excel
+  onExportToExcel(): void {
+    this.exportToExcel.emit();
   }
 }

@@ -203,4 +203,70 @@ export class Crud implements OnInit {
     onSelectedItemsChange(newSelection: Record<string, unknown>[] | null) {
         this.selectedItems = newSelection || [];
     }
+
+    // ✅ Método para exportar a Excel
+    exportToExcel(): void {
+        if (!this.data?.length) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'No Data',
+                detail: 'No data available to export',
+                life: 3000,
+            });
+            return;
+        }
+
+        this.performExcelExport();
+    }
+
+    private performExcelExport(): void {
+        import('xlsx').then(XLSX => {
+            const exportData = this.prepareDataForExport();
+            const ws = XLSX.utils.json_to_sheet(exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Data');
+            
+            const fileName = `${this.tableTitle || 'export'}_${new Date().toISOString().split('T')[0]}.xlsx`;
+            XLSX.writeFile(wb, fileName);
+            
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Export Successful',
+                detail: `Data exported to ${fileName}`,
+                life: 3000,
+            });
+        }).catch(() => {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Export Failed',
+                detail: 'Could not load Excel export library',
+                life: 3000,
+            });
+        });
+    }
+
+    private prepareDataForExport(): Record<string, unknown>[] {
+        return this.data.map(item => {
+            const exportItem: Record<string, unknown> = {};
+            const fields = this.fieldOrder.length ? this.fieldOrder : 
+                          Object.keys(item).filter(key => !this.excludeFields.includes(key));
+            
+            fields.forEach(field => {
+                const label = this.fieldLabels[field] || field;
+                const value = item[field];
+                exportItem[label] = this.formatValue(value);
+            });
+            
+            return exportItem;
+        });
+    }
+
+    private formatValue(value: unknown): string | number | boolean | null {
+        if (value === null || value === undefined) return null;
+        if (typeof value === 'boolean' || typeof value === 'number') return value;
+        if (Array.isArray(value)) return value.join(', ');
+        if (typeof value === 'object') return JSON.stringify(value);
+        if (value instanceof Date) return value.toLocaleDateString();
+        return String(value);
+    }
 }

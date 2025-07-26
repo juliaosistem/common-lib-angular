@@ -27,8 +27,8 @@ export class ButtonOptionsTableComponent implements OnInit {
   @Output() onEdit = new EventEmitter<unknown>();
   @Output() onDelete = new EventEmitter<void>(); // Sin parámetros - solo señal de eliminar seleccionados
   @Output() onWhatsapp = new EventEmitter<unknown>();
-  @Output() onExportPdf = new EventEmitter<unknown>();
-  @Output() onExportExcel = new EventEmitter<unknown>();
+  @Output() onExportPdf = new EventEmitter<void>();
+  @Output() onExportExcel = new EventEmitter<void>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() tablaDataSharedDTO!: TablaDataSharedDTO<Menu, any>;
@@ -57,8 +57,16 @@ export class ButtonOptionsTableComponent implements OnInit {
       label: 'Export',
       icon: 'pi pi-download',
       items: [
-        ...(this.isExportPdf ? [{ label: 'Export to PDF', icon: 'pi pi-file-pdf' }] : []),
-        ...(this.isExportExcel ? [{ label: 'Export to Excel', icon: 'pi pi-file-excel' }] : [])
+        ...(this.isExportPdf ? [{ 
+          label: 'Export to PDF', 
+          icon: 'pi pi-file-pdf',
+          command: () => this.onExportPdf.emit()
+        }] : []),
+        ...(this.isExportExcel ? [{ 
+          label: 'Export to Excel', 
+          icon: 'pi pi-file-excel',
+          command: () => this.onExportExcel.emit()
+        }] : [])
       ].filter(Boolean)
     });
   }}

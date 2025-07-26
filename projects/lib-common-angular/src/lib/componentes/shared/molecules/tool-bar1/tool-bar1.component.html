@@ -3,7 +3,8 @@
     <div class="flex items-center gap-2">
       <lib-button-options-table 
         (onAdd)="onNewItem()"
-        (onDelete)="onDeleteSelected()">
+        (onDelete)="onDeleteSelected()"
+        (onExportExcel)="onExportToExcel()">
       </lib-button-options-table>
       <lib-button-add1 (add)="onNewItem()"></lib-button-add1>
     </div>
