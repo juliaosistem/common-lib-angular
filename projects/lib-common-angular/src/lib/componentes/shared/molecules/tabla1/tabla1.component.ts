@@ -7,14 +7,13 @@ import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interfac
 import { DynamicFieldService } from '../../services/dynamic-field.service';
 import { ButtonActionsRow1Component } from '../../atoms/button-actions-row1/button-actions-row1.component';
 import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
-import { ButtonOptionsTableComponent } from "../../atoms/button-options-table/button-options-table.component";
 
 @Component({
   selector: 'lib-tabla1',
   standalone: true,
   templateUrl: './tabla1.component.html',
   styleUrl: './tabla1.component.scss',
-  imports: [CommonModule,ButtonOptionsTableComponent, TableModule, PrimegModule, FormsModule, ButtonActionsRow1Component, ButtonOptionsTableComponent],
+  imports: [CommonModule, TableModule, PrimegModule, FormsModule, ButtonActionsRow1Component],
 })
 export class Tabla1Component implements OnInit {
   @Input() data: Record<string, unknown>[] = [];

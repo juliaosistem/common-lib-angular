@@ -55,83 +55,82 @@ this.loaded = false;
     data: Record<string, unknown>[] = [
         {
             id: '1',
-            name: 'Laptop Gaming Asus',
+            name: 'Laptop Gaming Pro',
+            description: 'High-performance gaming laptop with advanced graphics',
+            inventoryStatus: 'INSTOCK',
+            category: 'Electronics',
             price: 1299.99,
-            category: 'Gaming',
-            available: true,
-            image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=300&h=200&fit=crop&crop=center',
-            description: 'Powerful gaming laptop with RTX 4060',
-            rating: 4.5,
-            brand: 'Asus',
-            warranty: true,
-            weight: 2.3,
-            color: 'Black'
+            quantity: 25,
+            image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=300&fit=crop'
         },
         {
             id: '2',
-            name: 'Mouse Logitech G502',
-            price: 79.99,
-            category: 'Accessories',
-            available: false,
-            image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=300&h=200&fit=crop&crop=center',
-            description: 'High precision gaming mouse',
-            rating: 4.8,
-            brand: 'Logitech',
-            warranty: true,
-            weight: 0.12,
-            color: 'Black'
+            name: 'Wireless Headphones',
+            description: 'Premium noise-canceling wireless headphones',
+            inventoryStatus: 'LOWSTOCK',
+            category: 'Electronics',
+            price: 199.99,
+            quantity: 8,
+            image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=300&fit=crop'
         },
         {
             id: '3',
-            name: 'Mechanical Keyboard',
-            price: 159.99,
-            category: 'Gaming',
-            available: true,
-            image: 'https://images.unsplash.com/photo-1541140532154-b024d705b90a?w=300&h=200&fit=crop&crop=center',
-            description: 'RGB mechanical keyboard with cherry switches',
-            rating: 4.3,
-            brand: 'Corsair',
-            warranty: false,
-            weight: 1.2,
-            color: 'RGB'
+            name: 'Running Shoes',
+            description: 'Comfortable running shoes for daily exercise',
+            inventoryStatus: 'INSTOCK',
+            category: 'Fitness',
+            price: 89.99,
+            quantity: 50,
+            image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=300&fit=crop'
+        },
+        {
+            id: '4',
+            name: 'Cotton T-Shirt',
+            description: 'Premium cotton t-shirt with modern fit',
+            inventoryStatus: 'OUTOFSTOCK',
+            category: 'Clothing',
+            price: 29.99,
+            quantity: 0,
+            image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=300&fit=crop'
+        },
+        {
+            id: '5',
+            name: 'Leather Wallet',
+            description: 'Genuine leather wallet with multiple compartments',
+            inventoryStatus: 'INSTOCK',
+            category: 'Accessories',
+            price: 49.99,
+            quantity: 15,
+            image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400&h=300&fit=crop'
         }
     ];
 
     // ✅ Configuración de tipos para cada campo
     fieldTypeConfig: Record<string, FieldType> = {
         name: 'text',
-        price: 'number',
-        category: 'select',
-        available: 'checkbox',
-        image: 'img',
         description: 'text',
-        rating: 'number',
-        brand: 'select',
-        warranty: 'checkbox',
-        weight: 'number',
-        color: 'select'
+        inventoryStatus: 'select',
+        category: 'select',
+        price: 'number',
+        quantity: 'number',
+        image: 'img'
     };
 
     // ✅ Configuración de opciones para campos de tipo select
     fieldSelectOptions: Record<string, string[]> = {
-        category: ['Electronics', 'Accessories', 'Gaming', 'Office', 'Software'],
-        brand: ['Asus', 'Logitech', 'Corsair', 'Razer', 'HP', 'Dell', 'Apple'],
-        color: ['Black', 'White', 'Silver', 'Red', 'Blue', 'RGB', 'Multi-color']
+        inventoryStatus: ['INSTOCK', 'LOWSTOCK', 'OUTOFSTOCK'],
+        category: ['Accessories', 'Clothing', 'Electronics', 'Fitness']
     };
 
     // ✅ Etiquetas personalizadas
     fieldLabels: Record<string, string> = {
-        name: 'Product Name',
-        price: 'Price ($)',
-        category: 'Category',
-        available: 'In Stock',
-        image: 'Product Image',
+        name: 'Name',
         description: 'Description',
-        rating: 'Rating (⭐)',
-        brand: 'Brand',
-        warranty: 'Has Warranty',
-        weight: 'Weight (kg)',
-        color: 'Color'
+        inventoryStatus: 'Inventory Status',
+        category: 'Category',
+        price: 'Price',
+        quantity: 'Quantity',
+        image: 'Image'
     };
     
    
@@ -140,16 +139,11 @@ this.loaded = false;
     fieldOrder: string[] = [
         'name',
         'description',
-        'image', 
-        'price',
-        'brand',
+        'image',
+        'inventoryStatus',
         'category',
-        'available',
-        'warranty',
-        'rating',
-        'weight',
-        'color',
-        
+        'price',
+        'quantity'
     ];
 
     // ✅ Campos a excluir de la vista
