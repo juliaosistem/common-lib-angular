@@ -27,7 +27,6 @@ export class ButtonOptionsTableComponent implements OnInit {
   @Input() isExportExcel: boolean = true;
   @Input() isExportPdf: boolean = true;
   @Input() isImportExcel: boolean = true;
-  @Input() isImportPdf: boolean = true;
   @Input() selectedItem: unknown; // Producto seleccionado
   
   @Output() onAdd = new EventEmitter<void>();
@@ -50,8 +49,8 @@ export class ButtonOptionsTableComponent implements OnInit {
 
   addButtons() {
      this.addAddButton();
-     this.addWhatsappButton();
-     this.addButtonImportExcelOrPdf();
+    //  this.addWhatsappButton();
+    //  this.addButtonImportExcel();
      this.addButtonExportExcelOrPdf();
      this.addDeleteButton();
   }
@@ -64,11 +63,11 @@ export class ButtonOptionsTableComponent implements OnInit {
       label: 'Export',
       icon: 'pi pi-download',
       items: [
-        ...(this.isExportPdf ? [{ 
+        /* ...(this.isExportPdf ? [{ 
           label: 'Export to PDF', 
           icon: 'pi pi-file-pdf',
           command: () => this.onExportPdf.emit()
-        }] : []),
+        }] : []), */
         ...(this.isExportExcel ? [{ 
           label: 'Export to Excel', 
           icon: 'pi pi-file-excel',
@@ -79,8 +78,8 @@ export class ButtonOptionsTableComponent implements OnInit {
   }}
 
   
-  addButtonImportExcelOrPdf() {
-    if (this.isImportExcel || this.isImportPdf) {
+  addButtonImportExcel() {
+    if (this.isImportExcel) {
       this.items.push({ separator: true });
       this.items.push({
         label: 'Import',
