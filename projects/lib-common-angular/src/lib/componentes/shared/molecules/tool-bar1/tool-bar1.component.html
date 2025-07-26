@@ -6,7 +6,10 @@
         (onDelete)="onDeleteSelected()"
         (onExportExcel)="onExportToExcel()">
       </lib-button-options-table>
-      <lib-button-add1 (add)="onNewItem()"></lib-button-add1>
+      <lib-button-add1 
+        *ngIf="showAddButton"
+        (add)="onNewItem()">
+      </lib-button-add1>
     </div>
   </ng-template>
 

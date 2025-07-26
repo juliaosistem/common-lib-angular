@@ -79,7 +79,6 @@ export class ButtonOptionsTableComponent implements OnInit {
         label: 'Import',
         icon: 'pi pi-upload',
         items: [
-          ...(this.isImportPdf ? [{ label: 'Import from PDF', icon: 'pi pi-file-pdf' }] : []),
           ...(this.isImportExcel ? [{ label: 'Import from Excel', icon: 'pi pi-file-excel' }] : [])
         ].filter(Boolean)
       });
