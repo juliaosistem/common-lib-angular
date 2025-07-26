@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PrimegModule } from '../../../../modulos/primeg.module';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-button-add1',
@@ -9,6 +10,13 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
   styleUrl: './button-add1.component.scss'
 })
 export class ButtonAdd1Component {
+
+  componente: ComponentesDTO = {
+    id: 9,
+    nombreComponente: 'lib-button-add1',
+    version: '1.0',
+  };
+
   @Input() label: string = 'Add';
   @Input() icon: string = 'pi pi-plus';
   @Input() disabled: boolean = false;

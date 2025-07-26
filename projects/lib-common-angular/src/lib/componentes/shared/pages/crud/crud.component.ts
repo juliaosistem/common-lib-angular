@@ -15,6 +15,7 @@ import { CrudDialog1Component } from '../../molecules/crud-dialog1/crud-dialog1.
 import { FieldType, DynamicField } from '../../interfaces/dynamic-field.interface';
 import { DynamicFieldService } from '../../services/dynamic-field.service';
 import { ExcelExportService } from '../../services/excel-export.service';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
     selector: 'lib-crud',
@@ -60,6 +61,12 @@ export class Crud implements OnInit {
     selectedItems: Record<string, unknown>[] = [];
     fields: DynamicField[] = [];
     displayFields: DynamicField[] = [];
+
+    componente: ComponentesDTO = {
+        id: 21,
+        nombreComponente: 'lib-crud',
+        version: '1.0'
+    };
 
     constructor(
         private messageService: MessageService,

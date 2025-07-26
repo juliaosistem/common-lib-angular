@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonTableView1Component } from '../../atoms/button-table-view1/button-table-view1.component';
 import { ButtonCardView1Component } from '../../atoms/button-card-view1/button-card-view1.component';
 import { FormsModule } from '@angular/forms';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-view-buttons-container1',
@@ -25,6 +26,12 @@ export class ViewButtonsContainer1Component {
   
   // Output para emitir cuando cambia la vista
   @Output() viewChange = new EventEmitter<'table' | 'grid'>();
+
+  componente: ComponentesDTO = {
+    id: 20,
+    nombreComponente: 'lib-view-buttons-container1',
+    version: '1.0'
+  };
 
   stateOptions = [
     { label: 'Table View', value: 'table' },

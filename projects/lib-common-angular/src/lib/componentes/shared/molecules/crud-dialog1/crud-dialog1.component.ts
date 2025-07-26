@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { DynamicField } from '../../interfaces/dynamic-field.interface';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-crud-dialog1',
@@ -22,6 +23,12 @@ export class CrudDialog1Component implements OnChanges {
   @Output() cancel = new EventEmitter<void>();
 
   itemForm: FormGroup;
+
+  componente: ComponentesDTO = {
+    id: 18,
+    nombreComponente: 'lib-crud-dialog1',
+    version: '1.0'
+  };
 
   /**
    * Archivos seleccionados

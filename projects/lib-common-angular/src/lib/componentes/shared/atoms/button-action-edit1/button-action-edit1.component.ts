@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PrimegModule } from '../../../../modulos/primeg.module';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-button-action-edit1',
@@ -16,6 +17,12 @@ export class ButtonActionEdit1Component {
   @Input() rounded: boolean = true;
   
   @Output() edit = new EventEmitter<Record<string, unknown>>();
+
+componente: ComponentesDTO = {
+    id: 14,
+    nombreComponente: 'lib-button-action-edit1',
+    version: '1.0'
+  };
 
   onEdit() {
     if (!this.disabled) {

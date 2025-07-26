@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PrimegModule } from '../../../../modulos/primeg.module';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-button-action-delete1',
@@ -9,6 +10,13 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
   styleUrl: './button-action-delete1.component.scss'
 })
 export class ButtonActionDelete1Component {
+
+  componente: ComponentesDTO = {
+    id: 15,
+    nombreComponente: 'lib-button-action-delete1',
+    version: '1.0'
+  };
+
   @Input() item: Record<string, unknown> = {};
   @Input() disabled: boolean = false;
   @Input() size: 'small' | 'large' | undefined = undefined;

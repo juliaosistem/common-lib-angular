@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { grid, apps } from 'ionicons/icons';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-button-card-view1',
@@ -11,6 +12,13 @@ import { grid, apps } from 'ionicons/icons';
   styleUrl: './button-card-view1.component.scss'
 })
 export class ButtonCardView1Component {
+
+  componente: ComponentesDTO = {
+    id: 10,
+    nombreComponente: 'lib-button-card-view1',
+    version: '1.0',
+  };
+
   constructor() {
     addIcons({ grid, apps });
   }

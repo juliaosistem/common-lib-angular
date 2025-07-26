@@ -7,6 +7,7 @@ import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interfac
 import { DynamicFieldService } from '../../services/dynamic-field.service';
 import { ButtonActionEdit1Component } from '../../atoms/button-action-edit1/button-action-edit1.component';
 import { ButtonActionDelete1Component } from '../../atoms/button-action-delete1/button-action-delete1.component';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-tabla1',
@@ -36,6 +37,12 @@ export class Tabla1Component implements OnInit {
   @Output() deleteItem = new EventEmitter<Record<string, unknown>>();
   
   fields: DynamicField[] = []; // Campos dinámicos generados
+
+  componente: ComponentesDTO = {
+    id: 17,
+    nombreComponente: 'lib-tabla1',
+    version: '1.0'
+  };
   
   constructor(
     private dynamicFieldService: DynamicFieldService

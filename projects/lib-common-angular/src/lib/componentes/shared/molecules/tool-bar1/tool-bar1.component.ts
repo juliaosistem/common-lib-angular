@@ -4,6 +4,7 @@ import { ButtonOptionsTableComponent } from '../../atoms/button-options-table/bu
 import { ButtonAdd1Component } from '../../atoms/button-add1/button-add1.component';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { ViewButtonsContainer1Component } from '../view-buttons-container1/view-buttons-container1.component';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-tool-bar1',
@@ -25,6 +26,12 @@ export class ToolBar1Component {
   @Output() newItem = new EventEmitter<void>();
   @Output() deleteSelected = new EventEmitter<void>();
   @Output() exportToExcel = new EventEmitter<void>();
+
+  componente: ComponentesDTO = {
+    id: 16,
+    nombreComponente: 'lib-tool-bar1',
+    version: '1.0'
+  };
 
   onViewChange(newView: 'table' | 'grid'): void {
     this.viewChange.emit(newView);
