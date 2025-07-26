@@ -1,11 +1,12 @@
 <!-- Diálogo de edición CRUD -->
 <p-dialog
-  [(visible)]="visible"
+  [visible]="visible"
   [modal]="true"
   [style]="{ width: '450px' }"
   header="Item Details"
   styleClass="p-fluid"
   (onHide)="onDialogHide()"
+  (visibleChange)="onVisibilityChange($event)"
 >
   <ng-template #content>
     <form [formGroup]="itemForm">

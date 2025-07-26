@@ -148,8 +148,25 @@ export class CrudDialog1Component implements OnChanges {
   }
 
   onDialogHide() {
+    // ✅ Solo limpiar archivos y resetear estado interno sin emitir eventos
+    // Esto evita el bucle infinito con el two-way binding
+    this.selectedFiles = {};
+    
+    // ✅ Solo emitir cancel si el diálogo se cerró sin guardar
     if (this.visible) {
-      this.hideDialog();
+      this.cancel.emit();
+    }
+  }
+
+  onVisibilityChange(visible: boolean) {
+    // ✅ Manejar el cambio de visibilidad desde PrimeNG
+    this.visible = visible;
+    this.visibleChange.emit(visible);
+    
+    if (!visible) {
+      // ✅ Limpiar archivos cuando se cierra el diálogo
+      this.selectedFiles = {};
+      this.cancel.emit();
     }
   }
 }
