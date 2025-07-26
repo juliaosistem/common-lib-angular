@@ -23,11 +23,25 @@
 
 // Estilo para el diálogo
 :host ::ng-deep .p-dialog {
+  border-radius: 12px;
+  overflow: hidden;
+  
   .p-dialog-header {
     background: var(--surface-ground);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
   }
   
   .p-dialog-content {
     padding: 2rem;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+  
+  .p-dialog-footer {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
   }
 }
