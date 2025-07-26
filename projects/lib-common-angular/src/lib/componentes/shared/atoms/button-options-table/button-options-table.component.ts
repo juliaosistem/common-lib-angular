@@ -21,19 +21,12 @@ export class ButtonOptionsTableComponent implements OnInit {
   };
 
   @Input() isAdd: boolean = true; 
-  @Input() isEdit: boolean = true;
   @Input() isDelete: boolean = true;
-  @Input() isWhatsapp: boolean = true;
   @Input() isExportExcel: boolean = true;
-  @Input() isExportPdf: boolean = true;
-  @Input() isImportExcel: boolean = true;
   @Input() selectedItem: unknown; // Producto seleccionado
   
   @Output() onAdd = new EventEmitter<void>();
-  @Output() onEdit = new EventEmitter<unknown>();
-  @Output() onDelete = new EventEmitter<void>(); // Sin parámetros - solo señal de eliminar seleccionados
-  @Output() onWhatsapp = new EventEmitter<unknown>();
-  @Output() onExportPdf = new EventEmitter<void>();
+  @Output() onDelete = new EventEmitter<void>();
   @Output() onExportExcel = new EventEmitter<void>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -49,25 +42,19 @@ export class ButtonOptionsTableComponent implements OnInit {
 
   addButtons() {
      this.addAddButton();
-    //  this.addWhatsappButton();
-    //  this.addButtonImportExcel();
      this.addButtonExportExcelOrPdf();
      this.addDeleteButton();
   }
 
 
   addButtonExportExcelOrPdf(){
-      if (this.isExportExcel || this.isExportPdf) {
+      if (this.isExportExcel) {
     this.items.push({ separator: true });
     this.items.push({
       label: 'Export',
       icon: 'pi pi-download',
       items: [
-        /* ...(this.isExportPdf ? [{ 
-          label: 'Export to PDF', 
-          icon: 'pi pi-file-pdf',
-          command: () => this.onExportPdf.emit()
-        }] : []), */
+        
         ...(this.isExportExcel ? [{ 
           label: 'Export to Excel', 
           icon: 'pi pi-file-excel',
@@ -78,18 +65,7 @@ export class ButtonOptionsTableComponent implements OnInit {
   }}
 
   
-  addButtonImportExcel() {
-    if (this.isImportExcel) {
-      this.items.push({ separator: true });
-      this.items.push({
-        label: 'Import',
-        icon: 'pi pi-upload',
-        items: [
-          ...(this.isImportExcel ? [{ label: 'Import from Excel', icon: 'pi pi-file-excel' }] : [])
-        ].filter(Boolean)
-      });
-    }
-  }
+  
   
   addAddButton(){
     if(this.isAdd) {this.items.push({ 
@@ -109,13 +85,5 @@ export class ButtonOptionsTableComponent implements OnInit {
     } });
   }
 }
-  addWhatsappButton(){
-    if (this.isWhatsapp) {
-      this.items.push({  
-        label: 'WhatsApp',  
-        icon: 'pi pi-whatsapp',
-        command: () => this.onWhatsapp.emit(this.selectedItem)
-      });
-    }
-    }
+  
 }

@@ -2,7 +2,9 @@
   <ng-template #start>
     <div class="flex items-center gap-2">
       <lib-button-options-table 
+      [isAdd]="showDropdownAddButton"
         (onAdd)="onNewItem()"
+        [isDelete]="showDropdownDeleteButton"
         (onDelete)="onDeleteSelected()"
         (onExportExcel)="onExportToExcel()">
       </lib-button-options-table>
@@ -10,6 +12,10 @@
         *ngIf="showAddButton"
         (add)="onNewItem()">
       </lib-button-add1>
+      <lib-button-delete1 
+        *ngIf="shouldShowDeleteButton"
+        (delete)="onDeleteSelected()">
+      </lib-button-delete1>
     </div>
   </ng-template>
 

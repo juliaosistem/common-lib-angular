@@ -4,6 +4,7 @@
     <lib-tool-bar1 
         (viewChange)="onViewChange($event)"
         [currentView]="tableType"
+        [selectedItems]="selectedItems"
         (newItem)="openNew()"
         (deleteSelected)="deleteSelectedItems()"
         (exportToExcel)="exportToExcel()">
