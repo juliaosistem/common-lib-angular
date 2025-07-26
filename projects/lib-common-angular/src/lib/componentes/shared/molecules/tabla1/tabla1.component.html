@@ -17,16 +17,29 @@
   <ng-template #header>
     <tr>
       <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
+      <th style="width: 8rem">Actions</th>
       @for (field of displayFields; track field.key) {
         <th style="min-width: 12rem">{{ field.label }}</th>
       }
-      <th style="min-width: 12rem">Actions</th>
     </tr>
   </ng-template>
   
   <ng-template #body let-item>
     <tr>
       <td style="width: 3rem"><p-tableCheckbox [value]="item" /></td>
+      <td style="width: 8rem">
+        <div class="flex gap-2 items-center">
+          <lib-button-action-edit1 
+            [item]="item" 
+            (edit)="onEditItem($event)">
+          </lib-button-action-edit1>
+          
+          <lib-button-action-delete1 
+            [item]="item"
+            (delete)="onDeleteItem($event)">
+          </lib-button-action-delete1>
+        </div>
+      </td>
       @for (field of displayFields; track field.key) {
         <td>
           @switch (field.type) {
@@ -45,19 +58,6 @@
           }
         </td>
       }
-      <td>
-        <div class="flex gap-2 items-center">
-          <lib-button-action-edit1 
-            [item]="item" 
-            (edit)="onEditItem($event)">
-          </lib-button-action-edit1>
-          
-          <lib-button-action-delete1 
-            [item]="item"
-            (delete)="onDeleteItem($event)">
-          </lib-button-action-delete1>
-        </div>
-      </td>
     </tr>
   </ng-template>
 </p-table>
