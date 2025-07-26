@@ -27,6 +27,7 @@ throw new Error('Method not implemented.');
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<Record<string, unknown>>();
   @Output() cancel = new EventEmitter<void>();
+  @Output() triggerSave = new EventEmitter<void>(); // Nuevo evento para templates personalizados
 
   itemForm: FormGroup;
 
@@ -127,6 +128,13 @@ throw new Error('Method not implemented.');
   }
 
   saveItem() {
+    // Si hay un template personalizado, delegar el guardado al template
+    if (this.body) {
+      this.triggerSave.emit();
+      return;
+    }
+
+    // Lógica original para formularios por defecto
     const formValue = this.itemForm.value;
     
     // ✅ Preservar el ID si existe (para edición)

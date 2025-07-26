@@ -16,7 +16,9 @@
 </lib-crud>
 
 <!-- Diálogo CRUD manejado desde el componente demo -->
+<!-- Dialog CRUD -->
 <lib-crud-dialog1
+    #crudDialog
     [(visible)]="showDialog"
     [displayFields]="$any(dialogDisplayFields)"
     [currentItem]="dialogCurrentItem"
@@ -34,6 +36,7 @@
         [productDialog]="true"
         [product]="dialogCurrentItem"
         [statuses]="['INSTOCK', 'LOWSTOCK', 'OUTOFSTOCK']"
+        [triggerSave]="crudDialog.triggerSave"
         (onSave)="onProductSave($event)"
         (onCancel)="onProductCancel()">
     </lib-product-dialog1>
