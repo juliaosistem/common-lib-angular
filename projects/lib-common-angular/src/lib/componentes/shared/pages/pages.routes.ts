@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { Crud } from './crud/crud';
+import { Crud } from './crud/crud.component';
 
 
 export default [  

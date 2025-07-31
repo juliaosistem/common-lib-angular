@@ -1,0 +1,34 @@
+:host {
+  display: inline-block;
+}
+
+// Estilo para el botón de edición
+:host ::ng-deep .p-button {
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+// Responsive behavior
+@media (max-width: 768px) {
+  :host ::ng-deep .p-button {
+    padding: 0.5rem;
+  }
+}

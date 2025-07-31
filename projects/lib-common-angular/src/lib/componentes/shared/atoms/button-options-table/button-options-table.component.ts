@@ -2,8 +2,9 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
-import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/TablaDataSharedDTO';
 import { Menu } from 'primeng/menu';
+import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-button-options-table',
@@ -13,22 +14,20 @@ import { Menu } from 'primeng/menu';
 })
 export class ButtonOptionsTableComponent implements OnInit {
 
+  componente: ComponentesDTO = {
+    id: 8,
+    nombreComponente: 'lib-button-options-table',
+    version: '1.0',
+  };
+
   @Input() isAdd: boolean = true; 
-  @Input() isEdit: boolean = true;
   @Input() isDelete: boolean = true;
-  @Input() isWhatsapp: boolean = true;
   @Input() isExportExcel: boolean = true;
-  @Input() isExportPdf: boolean = true;
-  @Input() isImportExcel: boolean = true;
-  @Input() isImportPdf: boolean = true;
   @Input() selectedItem: unknown; // Producto seleccionado
   
-  @Output() onAdd = new EventEmitter<unknown>();
-  @Output() onEdit = new EventEmitter<unknown>();
-  @Output() onDelete = new EventEmitter<unknown>();
-  @Output() onWhatsapp = new EventEmitter<unknown>();
-  @Output() onExportPdf = new EventEmitter<unknown>();
-  @Output() onExportExcel = new EventEmitter<unknown>();
+  @Output() onAdd = new EventEmitter<void>();
+  @Output() onDelete = new EventEmitter<void>();
+  @Output() onExportExcel = new EventEmitter<void>();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() tablaDataSharedDTO!: TablaDataSharedDTO<Menu, any>;
@@ -43,40 +42,30 @@ export class ButtonOptionsTableComponent implements OnInit {
 
   addButtons() {
      this.addAddButton();
-     this.addDeleteButton();
-     this.addWhatsappButton();
-     this.addButtonImportExcelOrPdf();
      this.addButtonExportExcelOrPdf();
+     this.addDeleteButton();
   }
 
 
   addButtonExportExcelOrPdf(){
-      if (this.isExportExcel || this.isExportPdf) {
+      if (this.isExportExcel) {
     this.items.push({ separator: true });
     this.items.push({
       label: 'Export',
       icon: 'pi pi-download',
       items: [
-        ...(this.isExportPdf ? [{ label: 'Export to PDF', icon: 'pi pi-file-pdf' }] : []),
-        ...(this.isExportExcel ? [{ label: 'Export to Excel', icon: 'pi pi-file-excel' }] : [])
+        
+        ...(this.isExportExcel ? [{ 
+          label: 'Export to Excel', 
+          icon: 'pi pi-file-excel',
+          command: () => this.onExportExcel.emit()
+        }] : [])
       ].filter(Boolean)
     });
   }}
 
   
-  addButtonImportExcelOrPdf() {
-    if (this.isImportExcel || this.isImportPdf) {
-      this.items.push({ separator: true });
-      this.items.push({
-        label: 'Import',
-        icon: 'pi pi-upload',
-        items: [
-          ...(this.isImportPdf ? [{ label: 'Import from PDF', icon: 'pi pi-file-pdf' }] : []),
-          ...(this.isImportExcel ? [{ label: 'Import from Excel', icon: 'pi pi-file-excel' }] : [])
-        ].filter(Boolean)
-      });
-    }
-  }
+  
   
   addAddButton(){
     if(this.isAdd) {this.items.push({ 
@@ -89,20 +78,12 @@ export class ButtonOptionsTableComponent implements OnInit {
   addDeleteButton() {
   if (this.isDelete){
   this.items.push({ 
-    label: 'Delete', 
+    label: 'Delete Selected', 
     icon: 'pi pi-trash',
-    command: () => { if (this.selectedItem)
-       {this.onDelete.emit(this.selectedItem);}
+    command: () => { 
+      this.onDelete.emit(); // Solo emitir el evento, sin parámetros
     } });
   }
 }
-  addWhatsappButton(){
-    if (this.isWhatsapp) {
-      this.items.push({  
-        label: 'WhatsApp',  
-        icon: 'pi pi-whatsapp',
-        command: () => this.onWhatsapp.emit(this.selectedItem)
-      });
-    }
-    }
+  
 }
