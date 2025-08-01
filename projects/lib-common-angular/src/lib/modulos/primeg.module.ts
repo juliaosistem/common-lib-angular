@@ -24,6 +24,8 @@ import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TieredMenuModule } from 'primeng/tieredmenu';
+import { FileUploadModule } from 'primeng/fileupload';
+import { DataViewModule } from 'primeng/dataview';
 
 @NgModule({
   declarations: [],
@@ -53,6 +55,8 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
    IconFieldModule,
    ConfirmDialogModule,
    TieredMenuModule,
+   FileUploadModule,
+   DataViewModule,
   ],
   exports:[
     ButtonModule,
@@ -79,6 +83,8 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
    IconFieldModule,
    ConfirmDialogModule,
   TieredMenuModule,
+  FileUploadModule,
+  DataViewModule,
   ]
 })
 export class PrimegModule { }

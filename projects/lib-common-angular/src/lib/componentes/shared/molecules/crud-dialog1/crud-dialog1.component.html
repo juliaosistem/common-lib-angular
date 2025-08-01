@@ -1,0 +1,113 @@
+<!-- Diálogo de edición CRUD -->
+<p-dialog
+  [visible]="visible"
+  [modal]="true"
+  [style]="{ width: '450px' }"
+  header="Item Details"
+  styleClass="p-fluid"
+  [dismissableMask]="true"
+  (onHide)="onDialogHide()"
+  (visibleChange)="onVisibilityChange($event)"
+>
+  <ng-template #content>
+  
+      
+    
+   <ng-container 
+          *ngTemplateOutlet="body || defaultbody; ">
+        </ng-container>
+    
+      </ng-template>
+      <ng-template #defaultbody>
+          <form [formGroup]="itemForm">
+        @for (field of displayFields; track field.key) {
+          <div class="field">
+            <label [for]="field.key">
+              {{ field.label }}
+            </label>
+
+            @switch (field.type) {
+              @case ("text") {
+                <input
+                  pInputText
+                  [id]="field.key"
+                  [formControlName]="field.key"
+                  [placeholder]="'Enter ' + field.label"
+                />
+              }
+              @case ("number") {
+                <p-inputNumber
+                  [id]="field.key"
+                  [formControlName]="field.key"
+                  mode="decimal"
+                  [placeholder]="'Enter ' + field.label"
+                />
+              }
+              @case ("checkbox") {
+                <p-checkbox
+                  [id]="field.key"
+                  [formControlName]="field.key"
+                  [binary]="true"
+                  class="flex align-items-center gap-2"
+                />
+              }
+              @case ("select") {
+                <p-select
+                  [id]="field.key"
+                  [formControlName]="field.key"
+                  [options]="getSelectOptions(field.key)"
+                  optionLabel="label"
+                  optionValue="value"
+                  [placeholder]="'Select ' + field.label"
+                  [showClear]="true"
+                />
+              }
+              @case ("img") {
+                <!-- ✅ FileUpload de PrimeNG para imágenes -->
+                <div class="file-upload-container">
+                  <p-fileUpload
+                    [multiple]="false"
+                    [accept]="field.accept || 'image/*'"
+                    [maxFileSize]="field.maxFileSize || 5242880"
+                    [showUploadButton]="false"
+                    [showCancelButton]="false"
+                    [chooseLabel]="'Choose ' + field.label"
+                    [chooseIcon]="'pi pi-upload'"
+                    [auto]="false"
+                    (onSelect)="onFileSelect($event, field.key)"
+                    (onRemove)="onFileRemove(field.key)"
+                    styleClass="w-full"
+                  >
+                  </p-fileUpload>
+                </div>
+              }
+              @default {
+                <input
+                  pInputText
+                  [id]="field.key"
+                  [formControlName]="field.key"
+                  [placeholder]="'Enter ' + field.label"
+                />
+              }
+            }
+          </div>
+        }
+      </form>
+    
+        </ng-template>
+
+  <ng-template #footer>
+    <p-button
+      label="Cancel"
+      icon="pi pi-times"
+      [text]="true"
+      (click)="hideDialog()"
+    />
+    <p-button
+      label="Save"
+      icon="pi pi-check"
+      [text]="true"
+      (click)="saveItem()"
+    />
+  </ng-template>
+</p-dialog>

@@ -5,7 +5,7 @@ import { filter, Subscription } from 'rxjs';
 import { AppTopbar } from './app.topbar';
 import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
-import { LayoutService } from '../../../../core/layout.service';
+import { LayoutService } from '../../../shared/services/layout.service';
 
 
 @Component({
@@ -27,6 +27,7 @@ import { LayoutService } from '../../../../core/layout.service';
 export class DaskBoard3 {
     overlayMenuOpenSubscription: Subscription;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     menuOutsideClickListener: any;
 
     @ViewChild(AppSidebar) appSidebar!: AppSidebar;

@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
 import { PrimegModule } from '../../../../modulos/primeg.module';
-import { Product } from '../../../../../../../lib-common-angular-demo/src/app/core/services/product.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-product-dialog1',
@@ -10,23 +10,37 @@ import { CommonModule } from '@angular/common';
   templateUrl: './product-dialog1.component.html',
   styleUrls: ['./product-dialog1.component.scss']
 })
-export class ProductDialog1Component implements OnInit {
+export class ProductDialog1Component implements OnInit, OnChanges {
   
   @Input() productDialog: boolean = false;
-  @Input() product: Product = {};
+  @Input() product: Record<string, unknown> = {};
   @Input() statuses: string[] = [];
+  @Input() triggerSave?: EventEmitter<void>;
   
   @Output() productDialogChange = new EventEmitter<boolean>();
-  @Output() onSave = new EventEmitter<unknown>();
+  @Output() onSave = new EventEmitter<Record<string, unknown>>();
   @Output() onCancel = new EventEmitter<void>();
-  
+
+  componente: ComponentesDTO = {
+    id: 23,
+    nombreComponente: 'lib-product-dialog1',
+    version: '1.0'
+  };
+
   submitted: boolean = false;
-  originalProduct: Product = {};
+  originalProduct: Record<string, unknown> = {};
 
   ngOnInit() {
     // Crear una copia del producto para evitar modificar el original
     if (this.product) {
       this.originalProduct = { ...this.product };
+    }
+
+    // Suscribirse al triggerSave si está disponible
+    if (this.triggerSave) {
+      this.triggerSave.subscribe(() => {
+        this.saveProduct();
+      });
     }
   }
 
@@ -34,6 +48,13 @@ export class ProductDialog1Component implements OnInit {
     // Cuando se abre el dialog, crear una copia del producto
     if (this.productDialog && this.product) {
       this.originalProduct = { ...this.product };
+    }
+
+    // Suscribirse al triggerSave si cambia
+    if (this.triggerSave) {
+      this.triggerSave.subscribe(() => {
+        this.saveProduct();
+      });
     }
   }
 
@@ -53,7 +74,7 @@ export class ProductDialog1Component implements OnInit {
   saveProduct() {
     this.submitted = true;
     
-    if (this.product.name && this.product.name.trim()) {
+    if (this.product['name'] && typeof this.product['name'] === 'string' && this.product['name'].trim()) {
       // Emitir el producto modificado
       this.onSave.emit(this.product);
       

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
     selector: 'app-notfound',
@@ -64,4 +65,10 @@ import { ButtonModule } from 'primeng/button';
             </div>
         </div>`
 })
-export class Notfound {}
+export class Notfound {
+    componente: ComponentesDTO = {
+        id: 22,
+        nombreComponente: 'app-notfound',
+        version: '1.0'
+    };
+}

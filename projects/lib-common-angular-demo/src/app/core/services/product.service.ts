@@ -19,7 +19,9 @@ export interface Product {
     rating?: number;
 }
 
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class ProductService {
     getProductsData() {
         return [
@@ -1291,10 +1293,10 @@ export class ProductService {
 
     generateId() {
         let text = '';
-        let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const POSSIBLE = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-        for (var i = 0; i < 5; i++) {
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
+        for (let i = 0; i < 5; i++) {
+            text += POSSIBLE.charAt(Math.floor(Math.random() * POSSIBLE.length));
         }
 
         return text;

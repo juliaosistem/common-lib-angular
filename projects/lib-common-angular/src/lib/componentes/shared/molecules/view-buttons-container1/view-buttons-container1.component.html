@@ -1,0 +1,16 @@
+<p-selectbutton
+  [(ngModel)]="value"
+  [options]="stateOptions"
+  optionLabel="label"
+  optionValue="value"
+  [allowEmpty]="false"
+>
+  <ng-template pTemplate="item" let-item>
+    <span *ngIf="item.value === 'table'">
+      <lib-button-table-view1></lib-button-table-view1>
+    </span>
+    <span *ngIf="item.value === 'grid'">
+      <lib-button-card-view1></lib-button-card-view1>
+    </span>
+  </ng-template>
+</p-selectbutton>

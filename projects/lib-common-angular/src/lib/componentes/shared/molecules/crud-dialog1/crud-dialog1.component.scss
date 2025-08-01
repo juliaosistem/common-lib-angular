@@ -1,0 +1,47 @@
+// Estilos para el componente CRUD Dialog
+.field {
+  margin-bottom: 1rem;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.p-error {
+  color: #e24c4c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+// Estilo para campos inválidos
+.ng-invalid.ng-dirty {
+  border-color: #e24c4c;
+}
+
+// Estilo para el diálogo
+:host ::ng-deep .p-dialog {
+  border-radius: 12px;
+  overflow: hidden;
+  
+  .p-dialog-header {
+    background: var(--surface-ground);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  .p-dialog-content {
+    padding: 2rem;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+  
+  .p-dialog-footer {
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+  }
+}

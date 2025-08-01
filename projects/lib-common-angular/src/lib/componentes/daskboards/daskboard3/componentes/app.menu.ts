@@ -18,6 +18,7 @@ import { AppMenuitem } from './app.menuitem';
 export class AppMenu {
     model: MenuItem[] = [];
 
+    // eslint-disable-next-line max-lines-per-function
     ngOnInit() {
         this.model = [
             {

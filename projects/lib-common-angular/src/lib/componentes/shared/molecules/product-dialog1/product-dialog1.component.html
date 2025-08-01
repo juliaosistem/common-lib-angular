@@ -1,19 +1,10 @@
-<p-dialog
-  [(visible)]="productDialog"
-  [style]="{ width: '450px' }"
-  header="Product Details"
-  [modal]="true"
->
-  <ng-template #content>
+
     <div class="flex flex-col gap-6">
       <img
-        [src]="
-          'https://primefaces.org/cdn/primeng/images/demo/product/' +
-          product.image
-        "
-        [alt]="product.image"
+        [src]="product['image']"
+        [alt]="product['image']"
         class="block m-auto pb-4"
-        *ngIf="product.image"
+        *ngIf="product['image']"
       />
       <div>
         <label for="name" class="block font-bold mb-3">Name</label>
@@ -21,12 +12,12 @@
           type="text"
           pInputText
           id="name"
-          [(ngModel)]="product.name"
+          [(ngModel)]="product['name']"
           required
           autofocus
           fluid
         />
-        <small class="text-red-500" *ngIf="submitted && !product.name"
+        <small class="text-red-500" *ngIf="submitted && !product['name']"
           >Name is required.</small
         >
       </div>
@@ -37,7 +28,7 @@
         <textarea
           id="description"
           pTextarea
-          [(ngModel)]="product.description"
+          [(ngModel)]="product['description']"
           required
           rows="3"
           cols="20"
@@ -50,11 +41,9 @@
           >Inventory Status</label
         >
         <p-select
-          [(ngModel)]="product.inventoryStatus"
+          [(ngModel)]="product['inventoryStatus']"
           inputId="inventoryStatus"
           [options]="statuses"
-          optionLabel="label"
-          optionValue="label"
           placeholder="Select a Status"
           fluid
         />
@@ -68,7 +57,7 @@
               id="category1"
               name="category"
               value="Accessories"
-              [(ngModel)]="product.category"
+              [(ngModel)]="product['category']"
             />
             <label for="category1">Accessories</label>
           </div>
@@ -77,7 +66,7 @@
               id="category2"
               name="category"
               value="Clothing"
-              [(ngModel)]="product.category"
+              [(ngModel)]="product['category']"
             />
             <label for="category2">Clothing</label>
           </div>
@@ -86,7 +75,7 @@
               id="category3"
               name="category"
               value="Electronics"
-              [(ngModel)]="product.category"
+              [(ngModel)]="product['category']"
             />
             <label for="category3">Electronics</label>
           </div>
@@ -95,7 +84,7 @@
               id="category4"
               name="category"
               value="Fitness"
-              [(ngModel)]="product.category"
+              [(ngModel)]="product['category']"
             />
             <label for="category4">Fitness</label>
           </div>
@@ -107,7 +96,7 @@
           <label for="price" class="block font-bold mb-3">Price</label>
           <p-inputnumber
             id="price"
-            [(ngModel)]="product.price"
+            [(ngModel)]="product['price']"
             mode="currency"
             currency="USD"
             locale="en-US"
@@ -116,14 +105,7 @@
         </div>
         <div class="col-span-6">
           <label for="quantity" class="block font-bold mb-3">Quantity</label>
-          <p-inputnumber id="quantity" [(ngModel)]="product.quantity" fluid />
+          <p-inputnumber id="quantity" [(ngModel)]="product['quantity']" fluid />
         </div>
       </div>
     </div>
-  </ng-template>
-
-  <ng-template #footer>
-    <p-button label="Cancel" icon="pi pi-times" text (click)="hideDialog()" />
-    <p-button label="Save" icon="pi pi-check" (click)="saveProduct()" />
-  </ng-template>
-</p-dialog>
