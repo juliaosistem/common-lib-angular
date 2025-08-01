@@ -1,0 +1,9 @@
+<div class="">
+    <p-button 
+        icon="pi pi-ellipsis-v" 
+        [text]="true"
+        [rounded]="true"
+        (click)="menu.toggle($event)" 
+    />
+    <p-tieredmenu #menu [model]="items" [popup]="true" />
+</div>

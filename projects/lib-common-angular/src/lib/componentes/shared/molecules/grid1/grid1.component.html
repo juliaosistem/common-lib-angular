@@ -1,0 +1,95 @@
+<p-dataview 
+  #dv 
+  [value]="data" 
+  [layout]="layout"
+  [rows]="rows"
+  [paginator]="paginator"
+  [rowsPerPageOptions]="rowsPerPageOptions"
+  [showCurrentPageReport]="showCurrentPageReport"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
+>
+  <ng-template #grid let-items>
+    @if (showDefaultGrid) {
+      <!-- Grid layout for displaying items -->
+    <div class="grid gap-4" style="grid-template-columns: repeat(auto-fill, minmax(288px, 1fr)); max-width: 100%;">
+      @for (item of items; track item['id']) {
+        <div 
+          [class]="'border rounded-lg p-4 shadow-sm hover:shadow-md transition-all duration-200 bg-white cursor-pointer ' + (isItemSelected(item) ? 'border-green-500 border-2 shadow-lg ring-2 ring-green-200' : 'border-gray-200')" 
+          style="max-width: 672px; justify-self: start;"
+          (click)="toggleItemSelection(item, { checked: !isItemSelected(item) })">
+          <!-- Contenido dinámico de cada card -->
+          <div class="flex flex-col gap-3 h-full">
+            @for (field of displayFields; track field.key) {
+              <div class="field-item">
+                @switch (field.type) {
+                  @case ('img') {
+                    <!-- Imagen -->
+                    <div class="w-full mb-3">
+                      <img 
+                        [src]="getImageUrl(field, item[field.key])" 
+                        [alt]="getImageAltText(field, item)"
+                        class="w-full h-48 object-cover rounded border" 
+                        style="aspect-ratio: 16/9;" />
+                    </div>
+                  }
+                  @case ('checkbox') {
+                    <!-- Campo booleano -->
+                    <div class="flex items-center gap-2 text-sm">
+                      <span class="font-medium text-gray-600">{{ field.label }}:</span>
+                      <span class="flex items-center gap-1">
+                        <i [class]="item[field.key] ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+                        <span>{{ item[field.key] ? 'Yes' : 'No' }}</span>
+                      </span>
+                    </div>
+                  }
+                  @case ('number') {
+                    <!-- Campo numérico -->
+                    <div class="flex items-center gap-2 text-sm">
+                      <span class="font-medium text-gray-600">{{ field.label }}:</span>
+                      <span>{{ formatDynamicFieldValue(field, item[field.key]) }}</span>
+                    </div>
+                  }
+                  @case ('select') {
+                    <!-- Campo select -->
+                    <div class="flex items-center gap-2 text-sm">
+                      <span class="font-medium text-gray-600">{{ field.label }}:</span>
+                      <span>{{ formatDynamicFieldValue(field, item[field.key]) }}</span>
+                    </div>
+                  }
+                  @default {
+                    <!-- Campo de texto -->
+                    <div class="flex items-center gap-2 text-sm">
+                      <span class="font-medium text-gray-600">{{ field.label }}:</span>
+                      <span>{{ formatDynamicFieldValue(field, item[field.key]) }}</span>
+                    </div>
+                  }
+                }
+              </div>
+            }
+            
+            <!-- Botones de acción -->
+            <div class="flex justify-between items-center mt-auto pt-3 border-t border-gray-100">
+              <!-- Botón de acciones unificado a la izquierda -->
+              <div class="flex gap-2 items-center">
+                <lib-button-actions-row1 
+                  [item]="item" 
+                  (edit)="onEditItem($event)"
+                  (click)="$event.stopPropagation()">
+                </lib-button-actions-row1>
+              </div>
+              
+              <!-- Checkbox de selección a la derecha -->
+              <p-checkbox 
+                [ngModel]="isItemSelected(item)"
+                (ngModelChange)="toggleItemSelection(item, { checked: $event })"
+                [binary]="true"
+                (click)="$event.stopPropagation()">
+              </p-checkbox>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+    }
+  </ng-template>
+</p-dataview>

@@ -1,0 +1,36 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended" // Reglas recomendadas para TypeScript
+
+  ],
+  "env": {
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "ignorePatterns": ["dist/", "node_modules/"], // Ignora dist y node_modules
+  "rules": {
+    "no-console": "error",
+    "max-lines-per-function": ["error", { 
+      "max":24, 
+      "skipComments": true,
+      "skipBlankLines": true
+      }],
+    "max-params": ["error", 4]
+  },
+  
+ "overrides": [
+    {
+      "files": ["src/api/controllers/**/*.ts"], // Aplica solo a los archivos en el paquete controllers
+      "rules": {
+        "max-lines-per-function": "off" // Deshabilita la regla en estos archivos
+      }
+    }
+  ]
+
+}

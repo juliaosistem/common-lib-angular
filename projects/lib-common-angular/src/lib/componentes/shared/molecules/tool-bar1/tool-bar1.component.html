@@ -1,0 +1,29 @@
+<p-toolbar styleClass="mb-6">
+  <ng-template #start>
+    <div class="flex items-center gap-2">
+      <lib-button-options-table 
+      [isAdd]="showDropdownAddButton"
+        (onAdd)="onNewItem()"
+        [isDelete]="showDropdownDeleteButton"
+        (onDelete)="onDeleteSelected()"
+        (onExportExcel)="onExportToExcel()">
+      </lib-button-options-table>
+      <lib-button-add1 
+        *ngIf="showAddButton"
+        (add)="onNewItem()">
+      </lib-button-add1>
+      <lib-button-delete1 
+        *ngIf="shouldShowDeleteButton"
+        (delete)="onDeleteSelected()">
+      </lib-button-delete1>
+    </div>
+  </ng-template>
+
+  <ng-template #end>
+    <lib-view-buttons-container1 
+      [currentView]="currentView" 
+      (viewChange)="onViewChange($event)" />
+  </ng-template>
+</p-toolbar>
+
+
