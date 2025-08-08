@@ -27,3 +27,17 @@ export * from './lib/componentes/shared/services/dynamic-field.service';
 export * from './lib/componentes/shared/pages/crud/crud.component';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
 export * from './lib/componentes/shared/pages/notfound/notfound';
+
+// Menú dinámico
+export * from './lib/componentes/shared/interfaces/menu.interface';
+export * from './lib/componentes/shared/atoms/menu-item1/menu-item1.component';
+export * from './lib/componentes/shared/molecules/dynamic-menu1/dynamic-menu1.component';
+export * from './lib/componentes/shared/services/dynamic-menu.service';
+export * from './lib/componentes/shared/pages/menu/menu.component';
+
+// Dashboard3 y sus componentes
+export * from './lib/componentes/daskboards/daskboard3/componentes/app.menu';
+export * from './lib/componentes/daskboards/daskboard3/componentes/app.sidebar';
+export * from './lib/componentes/daskboards/daskboard3/componentes/app.topbar';
+export * from './lib/componentes/daskboards/daskboard3/componentes/app.footer';
+export * from './lib/componentes/daskboards/daskboard3/componentes/dashboard3-menu.config';
