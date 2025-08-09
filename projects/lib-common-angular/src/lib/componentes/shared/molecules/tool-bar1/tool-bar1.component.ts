@@ -19,6 +19,8 @@ import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/
   ],
   templateUrl: './tool-bar1.component.html',
   styleUrl: './tool-bar1.component.scss',
+  standalone: true
+  
 })
 export class ToolBar1Component {
   @Input() currentView: 'table' | 'grid' = 'table';

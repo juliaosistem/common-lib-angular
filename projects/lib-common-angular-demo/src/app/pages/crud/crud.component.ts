@@ -10,7 +10,8 @@ import { Menu } from 'primeng/menu';
   selector: 'app-crud',
   imports: [Crud, CrudDialog1Component, ProductDialog1Component], 
   templateUrl: './crud.component.html',
-  styleUrl: './crud.component.scss'
+  styleUrl: './crud.component.scss',
+  standalone: true
 
 })
 export class CrudComponent implements  OnInit {

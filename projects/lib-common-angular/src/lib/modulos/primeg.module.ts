@@ -26,11 +26,13 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DataViewModule } from 'primeng/dataview';
+import { ImageModule } from 'primeng/image';
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
+    ImageModule,
     ButtonModule,
     AutoCompleteModule,
     CascadeSelectModule,
@@ -85,6 +87,7 @@ import { DataViewModule } from 'primeng/dataview';
   TieredMenuModule,
   FileUploadModule,
   DataViewModule,
+  ImageModule
   ]
 })
 export class PrimegModule { }
