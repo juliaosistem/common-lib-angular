@@ -36,8 +36,9 @@ export * from './lib/componentes/shared/services/dynamic-menu.service';
 export * from './lib/componentes/shared/pages/menu/menu.component';
 
 // Dashboard3 y sus componentes
-export * from './lib/componentes/daskboards/daskboard3/componentes/app.menu';
+export * from './lib/componentes/daskboards/daskboard3/moleculas/menu/menu3.component';
 export * from './lib/componentes/daskboards/daskboard3/componentes/app.sidebar';
 export * from './lib/componentes/daskboards/daskboard3/componentes/app.topbar';
 export * from './lib/componentes/daskboards/daskboard3/componentes/app.footer';
 export * from './lib/componentes/daskboards/daskboard3/componentes/dashboard3-menu.config';
+export * from './lib/componentes/daskboards/daskboard3/moleculas/productos/detalle-carrito-1/detalle-carrito-1.component';

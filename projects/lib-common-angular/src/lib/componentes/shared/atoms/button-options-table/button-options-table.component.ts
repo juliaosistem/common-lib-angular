@@ -11,6 +11,7 @@ import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/
   imports: [PrimegModule, FormsModule],
   templateUrl: './button-options-table.component.html',
   styleUrl: './button-options-table.component.scss',
+  standalone: true,
 })
 export class ButtonOptionsTableComponent implements OnInit {
 
