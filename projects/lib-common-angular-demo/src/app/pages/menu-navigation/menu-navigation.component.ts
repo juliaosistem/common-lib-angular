@@ -36,7 +36,8 @@ import { RouterModule } from '@angular/router';
           <i class="pi pi-pencil"></i>
           <span>Página CRUD</span>
         </a>
-        
+       
+
         <a routerLink="/menu-demo" class="nav-button">
           <i class="pi pi-bars"></i>
           <span>Demo del Menú</span>

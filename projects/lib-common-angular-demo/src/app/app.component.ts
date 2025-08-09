@@ -4,7 +4,8 @@ import { RouterOutlet } from '@angular/router';
   selector: 'app-root',
   imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  styleUrl: './app.component.scss',
+standalone: true,
 })
 export class AppComponent {
   title = 'lib-common-angular-demo';
