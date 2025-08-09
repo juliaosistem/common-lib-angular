@@ -1,0 +1,8 @@
+<div class="input-group mb-3">
+  <ion-select placeholder="{{'lenguage'| translate}}"   [(ngModel)]="seleccionada" (ionChange)=cambiaLang(seleccionada) >
+    <ion-select-option  *ngFor="let i of lenguages"  [value]="i">{{i}}
+    </ion-select-option>
+  </ion-select>
+
+</div>
+

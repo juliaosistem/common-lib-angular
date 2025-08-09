@@ -1,0 +1,62 @@
+<!-- Tabla -->
+<p-table
+  #dt
+  [value]="data"
+  [rows]="rows"
+  [paginator]="paginator"
+  [globalFilterFields]="['name']"
+  [tableStyle]="{ 'min-width': '75rem' }"
+  [selection]="selectedItems"
+  (selectionChange)="onSelectionChange($event)"
+  [rowHover]="true"
+  dataKey="id"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
+  [showCurrentPageReport]="showCurrentPageReport"
+  [rowsPerPageOptions]="rowsPerPageOptions"
+>
+  <ng-template #header>
+    @if (showDefaultHeader) {
+      <tr>
+        <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
+        <th style="width: 8rem">Actions</th>
+        @for (field of displayFields; track field.key) {
+          <th style="min-width: 12rem">{{ field.label }}</th>
+        }
+      </tr>
+  }
+  </ng-template>
+  
+  <ng-template #body let-item>
+    @if (showDefaultBody) {
+    <tr>
+      <td style="width: 3rem"><p-tableCheckbox [value]="item" /></td>
+      <td style="width: 8rem">
+        <div class="flex gap-2 items-center">
+          <lib-button-actions-row1 
+            [item]="item" 
+            (edit)="onEditItem($event)">
+          </lib-button-actions-row1>
+        </div>
+      </td>
+      @for (field of displayFields; track field.key) {
+        <td>
+          @switch (field.type) {
+            @case ('img') {
+              <img [src]="getImageUrl(field, item[field.key])" [alt]="getImageAltText(field, item)" style="width: 64px" class="rounded" />
+            }
+            @case ('checkbox') {
+               <span class="flex items-center gap-2">
+                  <i [class]="item[field.key] ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
+                  <span>{{ item[field.key] ? 'Yes' : 'No' }}</span>
+                </span>
+            }
+            @default {
+              <span>{{ formatDynamicFieldValue(field, item[field.key]) }}</span>
+            }
+          }
+        </td>
+      }
+    </tr>
+  }
+  </ng-template>
+</p-table>
