@@ -42,3 +42,4 @@ export * from './lib/componentes/daskboards/daskboard3/componentes/app.topbar';
 export * from './lib/componentes/daskboards/daskboard3/componentes/app.footer';
 export * from './lib/componentes/daskboards/daskboard3/componentes/dashboard3-menu.config';
 export * from './lib/componentes/daskboards/daskboard3/moleculas/productos/detalle-carrito-1/detalle-carrito-1.component';
+export * from './lib/componentes/daskboards/daskboard3/moleculas/productos/card-productos1/card-productos1.component';

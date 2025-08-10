@@ -70,10 +70,10 @@ export const defaultMenuConfig: MenuConfig = {
           order: 2,
           items: [
               {
-                  id: 'form-layout',
-                  label: 'Form Layout',
-                  icon: 'pi pi-fw pi-id-card',
-                  routerLink: ['/uikit/formlayout'],
+                  id: 'productos',
+                  label: 'card-productos',
+                  icon: 'pi-shopping-cart',
+                  routerLink: ['/componentes/card-productos'],
                   type: 'item',
                   order: 1
               },
