@@ -8,7 +8,7 @@ import Lara from '@primeng/themes/lara';
 import Nora from '@primeng/themes/nora';
 import { PrimeNG } from 'primeng/config';
 import { SelectButtonModule } from 'primeng/selectbutton';
-import { LayoutService } from '../../../../core/layout.service';
+import { LayoutService } from '../../../shared/services/layout.service';
 
 const presets = {
     Aura,
@@ -280,6 +280,7 @@ export class AppConfigurator {
         return palettes;
     });
 
+    // eslint-disable-next-line max-lines-per-function
     getPresetExt() {
         const color: SurfacesType = this.primaryColors().find((c) => c.name === this.selectedPrimaryColor()) || {};
         const preset = this.layoutService.layoutConfig().preset;
@@ -409,6 +410,7 @@ export class AppConfigurator {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     updateColors(event: any, type: string, color: any) {
         if (type === 'primary') {
             this.layoutService.layoutConfig.update((state) => ({ ...state, primary: color.name }));
@@ -420,6 +422,7 @@ export class AppConfigurator {
         event.stopPropagation();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     applyTheme(type: string, color: any) {
         if (type === 'primary') {
             updatePreset(this.getPresetExt());
@@ -428,6 +431,7 @@ export class AppConfigurator {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onPresetChange(event: any) {
         this.layoutService.layoutConfig.update((state) => ({ ...state, preset: event }));
         const preset = presets[event as KeyOfType<typeof presets>];

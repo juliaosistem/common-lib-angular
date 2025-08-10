@@ -1,23 +1,32 @@
-import { GallerySection1Component } from '../../molecules/gallery-section1/gallery-section1.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, Input } from '@angular/core';
 import { IonicModule, Platform } from '@ionic/angular';
-import { Nav1Component } from '../../molecules/nav1/nav1.component';
-import { Footer1Component } from '../../molecules/footer1/footer1.component';
-import { Slider1Component } from '../../molecules/slider1/slider1.component';
 import { TranslateService } from '@ngx-translate/core';
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
+
+import { Nav1Component } from '../../molecules/nav1/nav1.component';
+import { Slider1Component } from '../../molecules/slider1/slider1.component';
+import { Footer1Component } from '../../molecules/footer1/footer1.component';
 import { ServicesSection1Component } from '../../molecules/services-section1/services-section1.component';
+import { GallerySection1Component } from '../../molecules/gallery-section1/gallery-section1.component';
+
+import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
 
 @Component({
   selector: 'lib-index1',
   standalone: true,
-  imports: [IonicModule, Nav1Component, ServicesSection1Component,Footer1Component,Slider1Component,GallerySection1Component],
+  imports: [
+    IonicModule,
+    Nav1Component,
+    Slider1Component,
+    Footer1Component, 
+    ServicesSection1Component,
+    GallerySection1Component,
+  ],
   templateUrl: './index1.component.html',
-  styleUrl: './index1.component.css'
+  styleUrl: './index1.component.css',
 })
 export class Index1Component {
-  isMovile = false;
+    isMovile = false;
   langs:string[]=[];
 
 

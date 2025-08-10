@@ -1,0 +1,17 @@
+<div class="actions-dropdown">
+    <p-button 
+        icon="pi pi-ellipsis-v" 
+        [text]="true"
+        [rounded]="true"
+        [disabled]="disabled"
+        size="small"
+        (click)="menu.toggle($event)" 
+        aria-label="Row actions"
+    />
+    <p-tieredmenu 
+        #menu 
+        [model]="items" 
+        [popup]="true"
+        appendTo="body"
+    />
+</div>

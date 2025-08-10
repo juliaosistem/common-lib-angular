@@ -1,12 +1,12 @@
-import { Component, Renderer2, ViewChild } from '@angular/core';
+import { Component, Renderer2, ViewChild, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
 import { AppTopbar } from './app.topbar';
 import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
-import { LayoutService } from '../../../../core/layout.service';
-
+import { LayoutService } from '../../../shared/services/layout.service';
+import { MenuConfig } from '../../../shared/interfaces/menu.interface';
 
 @Component({
     selector: 'lib-daskboard3',
@@ -14,7 +14,7 @@ import { LayoutService } from '../../../../core/layout.service';
     imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter],
     template: `<div class="layout-wrapper" [ngClass]="containerClass">
         <lib-topbar3></lib-topbar3>
-        <lib-sidebar></lib-sidebar>
+        <lib-sidebar [menuConfig]="menuConfig" [userPermissions]="userPermissions"></lib-sidebar>
         <div class="layout-main-container">
             <div class="layout-main">
                 <router-outlet></router-outlet>
@@ -24,9 +24,13 @@ import { LayoutService } from '../../../../core/layout.service';
         <div class="layout-mask animate-fadein"></div>
     </div> `
 })
-export class DaskBoard3 {
+export class DaskBoard3 implements OnInit {
+    @Input() menuConfig?: MenuConfig;
+    @Input() userPermissions: string[] = ['admin.users.read', 'admin.settings.read', 'pages.crud.read'];
+    
     overlayMenuOpenSubscription: Subscription;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     menuOutsideClickListener: any;
 
     @ViewChild(AppSidebar) appSidebar!: AppSidebar;
@@ -36,7 +40,8 @@ export class DaskBoard3 {
     constructor(
         public layoutService: LayoutService,
         public renderer: Renderer2,
-        public router: Router
+        public router: Router,
+        private route: ActivatedRoute
     ) {
         this.overlayMenuOpenSubscription = this.layoutService.overlayOpen$.subscribe(() => {
             if (!this.menuOutsideClickListener) {
@@ -55,6 +60,26 @@ export class DaskBoard3 {
         this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
             this.hideMenu();
         });
+    }
+
+    ngOnInit() {
+        // Leer datos de la ruta si no se proporcionan como inputs
+        this.route.data.subscribe(data => {
+            if (data['menuConfig'] && !this.menuConfig) {
+                this.menuConfig = data['menuConfig'];
+                console.log('Dashboard3: MenuConfig cargado desde datos de ruta:', this.menuConfig);
+            }
+            
+            if (data['userPermissions'] && !this.userPermissions) {
+                this.userPermissions = data['userPermissions'];
+                console.log('Dashboard3: UserPermissions cargados desde datos de ruta:', this.userPermissions);
+            }
+        });
+
+        // Si no se proporciona menuConfig, usar configuración por defecto
+        if (!this.menuConfig) {
+            console.warn('Dashboard3: No se proporcionó menuConfig, usando configuración por defecto');
+        }
     }
 
     isOutsideClicked(event: MouseEvent) {
@@ -92,6 +117,7 @@ export class DaskBoard3 {
 
     get containerClass() {
         return {
+            'layout-wrapper': true,
             'layout-overlay': this.layoutService.layoutConfig().menuMode === 'overlay',
             'layout-static': this.layoutService.layoutConfig().menuMode === 'static',
             'layout-static-inactive': this.layoutService.layoutState().staticMenuDesktopInactive && this.layoutService.layoutConfig().menuMode === 'static',

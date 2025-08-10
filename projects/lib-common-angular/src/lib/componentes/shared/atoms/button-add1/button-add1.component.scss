@@ -1,0 +1,40 @@
+:host {
+  display: inline-block;
+}
+
+// Estilo para el botón de agregar
+:host ::ng-deep .p-button {
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.25);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    
+    &:hover {
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+// Estilo específico para el icono
+:host ::ng-deep .p-button .p-button-icon {
+  margin-right: 0.5rem;
+}
+
+// Responsive behavior
+@media (max-width: 768px) {
+  :host ::ng-deep .p-button {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+}

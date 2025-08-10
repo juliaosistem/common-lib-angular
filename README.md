@@ -39,3 +39,30 @@ este paso aplica si quieres correr la libreria en el mismo proyecto que tiene la
 **## ng serve  lib-common-angular-demo**
 
 esto levantara la aplicacion donde podras probar tus componentes creados en la libreria
+
+
+
+
+**# importante**
+
+Si se va a crear nuevos dtos importante usar la libreria  juliaositembackenexpress los siguientes pasos son para modificar la libreria y ir viendo cambios  descargar la libreria localmn
+
+**# descargar la libreria juliaositembackenexpress localmente**
+despues 
+
+**# npm i**
+ 
+en la carpeta de la libreria 
+
+**# npm run build** 
+
+esto para crear la carpeta dist
+
+**# npm link** 
+esto creara un enlace simbolico  una vez creado ese enlace ir ala carpeta  common-lib-angular y ejecutar 
+
+**# npm link juliaositembackenexpress** 
+
+esto ara que cree un enlace a la libreria  si queremos ir desarrollando ala par con la libreria podemos despues ejecutar 
+
+**# npm run Build:watch** 

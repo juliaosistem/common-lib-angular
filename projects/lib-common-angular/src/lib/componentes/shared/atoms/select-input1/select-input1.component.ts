@@ -4,6 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { CoreModuleLib } from '../../../../modulos/core.lib.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
 
 @Component({
   selector: 'lib-select-input1',
@@ -13,6 +14,13 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './select-input1.component.css'
 })
 export class SelectInput1Component {
+
+  componente: ComponentesDTO = {
+    id: 13,
+    nombreComponente: 'lib-select-input1',
+    version: '1.0',
+  };
+
   seleccionada:string ="";
 
   @Input()

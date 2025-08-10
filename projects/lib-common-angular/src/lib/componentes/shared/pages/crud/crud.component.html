@@ -1,11 +1,53 @@
-<lib-tool-bar1/>
+<!-- En crud.component.html -->
+<div class="card">
+    <!-- Toolbar para cambiar vista -->
+    <lib-tool-bar1 
+        (viewChange)="onViewChange($event)"
+        [currentView]="tableType"
+        [selectedItems]="selectedItems"
+        (newItem)="openNew()"
+        (deleteSelected)="deleteSelectedItems()"
+        (exportToExcel)="exportToExcel()">
+    </lib-tool-bar1>
 
-@if (!cargado) {
-  <lib-tabla1
-    [data]="tablaDataSharedDTO.data.dataList"
-    [rCols]="tablaDataSharedDTO.cols"
-    [rSelectedProducts]="tablaDataSharedDTO.selectedItems"
-  ></lib-tabla1>
-}
+    <!-- Vista de tabla con sistema dinámico -->
+    <lib-tabla1 
+        *ngIf="tableType === 'table'"
+        [data]="data"
+        [selectedItems]="selectedItems"
+        (selectedItemsChange)="onSelectedItemsChange($event)"
+        [fieldTypeConfig]="fieldTypeConfig"
+        [fieldLabels]="fieldLabels"
+        [fieldOrder]="fieldOrder"
+        [excludeFields]="excludeFields"
+        [fieldSelectOptions]="fieldSelectOptions"
+        [displayFields]="displayFields"
+        [rows]="rows"
+        [paginator]="paginator"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+        [showCurrentPageReport]="showCurrentPageReport"
+        (editItem)="editItem($event)">
+    </lib-tabla1>
 
-<p-confirmdialog [style]="{ width: '450px' }" />
+    <!-- Vista de grid -->
+    <lib-grid1 
+        *ngIf="tableType === 'grid'"
+        [data]="data"
+        [selectedItems]="selectedItems"
+        (selectedItemsChange)="onSelectedItemsChange($event)"
+        [fieldTypeConfig]="fieldTypeConfig"
+        [fieldLabels]="fieldLabels"
+        [fieldOrder]="fieldOrder"
+        [excludeFields]="excludeFields"
+        [fieldSelectOptions]="fieldSelectOptions"
+        [displayFields]="displayFields"
+        [rows]="rows"
+        [paginator]="paginator"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+        [showCurrentPageReport]="showCurrentPageReport"
+        (editItem)="editItem($event)">
+    </lib-grid1>
+
+    <!-- Diálogo de confirmación -->
+    <p-confirmDialog></p-confirmDialog>
+</div>

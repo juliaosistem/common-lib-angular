@@ -1,0 +1,14 @@
+<div class="dashboard-menu-container">
+            <lib-menu 
+                [menuId]="menuId"
+                [userPermissions]="userPermissions"
+                [showControls]="false"
+                [showInfo]="false"
+                [showEventLog]="false"
+                [showConfig]="false"
+                [initialConfig]="menuConfig"
+                (menuEvent)="onMenuEvent($event)"
+                (menuLoaded)="onMenuLoaded($event)"
+                (menuError)="onMenuError($event)">
+            </lib-menu>
+        </div>
