@@ -70,10 +70,18 @@ export const defaultMenuConfig: MenuConfig = {
           order: 2,
           items: [
               {
-                  id: 'productos',
+                  id: 'card-productos',
                   label: 'card-productos',
                   icon: 'pi-shopping-cart',
                   routerLink: ['/componentes/card-productos'],
+                  type: 'item',
+                  order: 1
+              },
+                {
+                  id: 'detalle-carrito',
+                  label: 'Detalle Carrito',
+                  icon: 'pi-shopping-cart',
+                  routerLink: ['/componentes/detalle-carrito'],
                   type: 'item',
                   order: 1
               },

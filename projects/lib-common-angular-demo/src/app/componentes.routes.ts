@@ -3,7 +3,7 @@ import { DetalleCarrito1Component ,CardProductos1Component , Notfound} from 'lib
     
 export default [
     
-   { path: '/notfound', component: Notfound },
+   { path: 'notfound', component: Notfound },
     { path: 'detalle-carrito', component: DetalleCarrito1Component },
     { path: 'card-productos', component: CardProductos1Component },
     { path: '**', redirectTo: '/notfound' }
