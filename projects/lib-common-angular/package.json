@@ -1,9 +1,9 @@
 {
   "name": "lib-common-angular",
-  "version": "0.0.3",
+  "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "^19.0.6",
-    "@angular/core": "^19.0.6"
+    "@angular/common": "^20.1.6",
+    "@angular/core": "^20.1.6"
   },
   "dependencies": {
     "primeicons": "^7.0.0",
