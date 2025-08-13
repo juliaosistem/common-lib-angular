@@ -6,7 +6,7 @@ import { AppTopbar } from './app.topbar';
 import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
 import { LayoutService } from '../../../shared/services/layout.service';
-import { MenuConfig } from '../../../shared/interfaces/menu.interface';
+import { MenuConfig } from '@juliaosistem/core-dtos';
 
 @Component({
     selector: 'lib-daskboard3',

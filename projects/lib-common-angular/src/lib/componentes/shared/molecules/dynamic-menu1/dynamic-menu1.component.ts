@@ -1,8 +1,9 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuItem1Component } from '../../atoms/menu-item1/menu-item1.component';
-import { MenuConfig, MenuItem, MenuEvent, MenuManager } from '../../interfaces/menu.interface';
+import {MenuManager } from '../../interfaces/menu.interface';
 import { DynamicMenuService } from '../../services/dynamic-menu.service';
+import { MenuConfig, MenuItem,MenuEvent } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'app-dynamic-menu1',

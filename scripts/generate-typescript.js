@@ -17,9 +17,44 @@ function convertTypeToTypeScript(type) {
       return 'boolean';
     case 'array':
       return 'any[]';
+    case 'datetime':
+    case 'date':
+    case 'time':
+      return 'Date';
+    case 'event':
+      return 'Event';
     default:
       return 'any';
   }
+}
+
+function generateTypeDefinition(typeName, typeObj, globalTypes = {}) {
+  //eslint-disable-next-line no-console
+  console.log(`\n🔍 Generando tipo: ${typeName}`);
+  
+  // Caso: Enum (tipo string con valores enum)
+  if (typeObj.type === 'string' && typeObj.enum && Array.isArray(typeObj.enum)) {
+    //eslint-disable-next-line no-console
+    console.log(`📝 Generando enum: ${typeName} con valores:`, typeObj.enum);
+    const enumValues = typeObj.enum.map(value => `'${value}'`).join(' | ');
+    return `export type ${typeName} = ${enumValues};\n\n`;
+  }
+  
+  // Caso: Tipo primitivo simple
+  if (typeObj.type && !typeObj.properties && !typeObj.enum) {
+    const tsType = convertTypeToTypeScript(typeObj.type);
+    return `export type ${typeName} = ${tsType};\n\n`;
+  }
+  
+  // Caso: Interfaz (objeto con propiedades)
+  if (typeObj.properties || typeObj.type === 'object') {
+    return generateInterface(typeName, typeObj, globalTypes);
+  }
+  
+  // Caso: Tipo vacío o no reconocido
+  //eslint-disable-next-line no-console
+  console.log(`⚠️ Tipo no reconocido: ${typeName}, generando interfaz vacía`);
+  return `export interface ${typeName} {\n}\n\n`;
 }
 
 // eslint-disable-next-line max-lines-per-function
@@ -84,7 +119,7 @@ function generateInterface(typeName, typeObj, globalTypes = {}) {
           //eslint-disable-next-line no-console
           console.log(`✅ Array con name: ${arrayType}`);
         }
-        // Verificar si items es string directo
+        // Verificar si items es string directo y es un tipo global
         else if (typeof prop.items === 'string' && globalTypes[prop.items]) {
           arrayType = prop.items;
           //eslint-disable-next-line no-console
@@ -109,6 +144,62 @@ function generateInterface(typeName, typeObj, globalTypes = {}) {
                 break;
               }
             }
+          }
+        }
+        // NUEVO: Verificar si items es un objeto con propiedad type (primitivo)
+        else if (prop.items && typeof prop.items === 'object' && prop.items.type) {
+          switch (prop.items.type) {
+            case 'string':
+              arrayType = 'string';
+              //eslint-disable-next-line no-console
+              console.log(`✅ Array de primitivos (object): ${prop.items.type} -> ${arrayType}[]`);
+              break;
+            case 'number':
+            case 'integer':
+              arrayType = 'number';
+              //eslint-disable-next-line no-console
+              console.log(`✅ Array de primitivos (object): ${prop.items.type} -> ${arrayType}[]`);
+              break;
+            case 'boolean':
+              arrayType = 'boolean';
+              //eslint-disable-next-line no-console
+              console.log(`✅ Array de primitivos (object): ${prop.items.type} -> ${arrayType}[]`);
+              break;
+            default:
+              // Si no es primitivo, verificar si es un tipo global
+              if (globalTypes[prop.items.type]) {
+                arrayType = prop.items.type;
+                //eslint-disable-next-line no-console
+                console.log(`✅ Array con tipo global (object): ${arrayType}`);
+              }
+              break;
+          }
+        }
+        // Verificar si items es un tipo primitivo (string directo)
+        else if (typeof prop.items === 'string') {
+          // DEBUG: Agregar logging aquí también
+          if (propName === 'rolesPermiso') {
+            //eslint-disable-next-line no-console
+            console.log(`🐛 DEBUG rolesPermiso - entrando a verificación primitivos con:`, prop.items);
+          }
+          
+          switch (prop.items) {
+            case 'string':
+              arrayType = 'string';
+              //eslint-disable-next-line no-console
+              console.log(`✅ Array de primitivos: ${prop.items} -> ${arrayType}[]`);
+              break;
+            case 'number':
+            case 'integer':
+              arrayType = 'number';
+              //eslint-disable-next-line no-console
+              console.log(`✅ Array de primitivos: ${prop.items} -> ${arrayType}[]`);
+              break;
+            case 'boolean':
+              arrayType = 'boolean';
+              //eslint-disable-next-line no-console
+              console.log(`✅ Array de primitivos: ${prop.items} -> ${arrayType}[]`);
+              break;
           }
         }
         
@@ -218,10 +309,10 @@ async function generateDTOs() {
     }
   }
   
-  // Luego generar las interfaces
+  // Luego generar las definiciones de tipos (enums, interfaces, etc.)
   if (ramlObj.types) {
     for (const [typeName, typeObj] of Object.entries(ramlObj.types)) {
-      output += generateInterface(typeName, typeObj, globalTypes);
+      output += generateTypeDefinition(typeName, typeObj, globalTypes);
     }
   }
   
@@ -237,8 +328,10 @@ async function generateDTOs() {
 }
 
 generateDTOs()
- // eslint-disable-next-line no-console
+  // eslint-disable-next-line no-console
   .then(file => console.log(`✅ DTOs generados en: ${file}`))
   // eslint-disable-next-line no-console
   .catch(error => console.error('❌ Error:', error.message));
+
+
 

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MenuItem, MenuEvent } from '../../interfaces/menu.interface';
+import { MenuItem, MenuEvent } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'app-menu-item1',

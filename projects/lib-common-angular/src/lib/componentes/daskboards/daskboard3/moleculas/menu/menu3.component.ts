@@ -1,10 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MenuConfig, MenuEvent } from '../../../../shared/interfaces/menu.interface';
+import { MenuConfig, MenuEvent } from '@juliaosistem/core-dtos';
 import { MenuComponent } from '../../../../shared/pages/menu/menu.component';
 import { DynamicMenuService } from '../../../../shared/services/dynamic-menu.service';
-import { DASHBOARD3_MENU_CONFIG } from '../../componentes/dashboard3-menu.config';
 
 @Component({
     selector: 'lib-menu3',
@@ -39,14 +38,17 @@ export class LibMenu3 implements OnInit {
 
     onMenuEvent(event: MenuEvent) {
         // Manejar eventos del menú del dashboard
+        // eslint-disable-next-line no-console
         console.log('Dashboard Menu Event:', event);
     }
 
     onMenuLoaded(config: MenuConfig) {
+        //eslint-disable-next-line no-console
         console.log('Dashboard Menu Loaded:', config);
     }
 
     onMenuError(error: string) {
+           // eslint-disable-next-line no-console
         console.error('Dashboard Menu Error:', error);
     }
 }

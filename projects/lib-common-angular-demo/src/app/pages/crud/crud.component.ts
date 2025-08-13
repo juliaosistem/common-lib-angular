@@ -1,5 +1,6 @@
 import { Component,OnInit, ViewChild } from '@angular/core';
-import { Crud, CrudDialog1Component, FieldType, ProductDialog1Component } from 'lib-common-angular';
+import { Crud, CrudDialog1Component, ProductDialog1Component } from 'lib-common-angular';
+import { FieldType } from '@juliaosistem/core-dtos';
 import { Product, ProductService } from '../../core/services/product.service';
 import { Table } from 'primeng/table';
 import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';

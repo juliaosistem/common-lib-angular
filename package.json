@@ -2,6 +2,7 @@
   "name": "lib-common-angular",
   "version": "0.0.1",
   "description": "Librería común de Angular para proyectos",
+  "type": "module",
   
   "scripts": {
     "ng": "ng",
@@ -10,6 +11,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:lib-common-angular-demo": "node dist/lib-common-angular-demo/server/server.mjs",
+    "prebuild": "npm run generate:dtos",
     "postinstall": "npm run update:dtos",
     "generate:dtos": "node scripts/generate-typescript.js",
     "update:dtos": "git submodule update --remote --merge && npm run generate:dtos"

@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DynamicMenu1Component } from '../../molecules/dynamic-menu1/dynamic-menu1.component';
-import { MenuConfig, MenuItem, MenuEvent } from '../../interfaces/menu.interface';
+import { MenuConfig, MenuItem, MenuEvent } from '@juliaosistem/core-dtos';
 import { DynamicMenuService } from '../../services/dynamic-menu.service';
 
 @Component({

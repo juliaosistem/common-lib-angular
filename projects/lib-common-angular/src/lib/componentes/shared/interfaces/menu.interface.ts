@@ -1,48 +1,6 @@
-// Tipos de elementos de menú
-export type MenuItemType = 'item' | 'separator' | 'group';
 
-// Interfaz para un elemento de menú individual
-export interface MenuItem {
-  id: string;
-  label: string;
-  icon?: string;
-  routerLink?: string[];
-  url?: string;
-  target?: '_blank' | '_self' | '_parent' | '_top';
-  disabled?: boolean;
-  visible?: boolean;
-  badge?: string;
-  badgeClass?: string;
-  class?: string;
-  style?: string;
-  separator?: boolean;
-  type: MenuItemType;
-  items?: MenuItem[];
-  order?: number;
-  permissions?: string[];
-}
+import {MenuItem,MenuConfig} from '@juliaosistem/core-dtos';
 
-// Interfaz para configuración del menú
-export interface MenuConfig {
-  id: string;
-  name: string;
-  items: MenuItem[];
-  theme?: 'light' | 'dark';
-  orientation?: 'horizontal' | 'vertical';
-  collapsed?: boolean;
-  collapsible?: boolean;
-  showIcons?: boolean;
-  showBadges?: boolean;
-  maxDepth?: number;
-}
-
-// Interfaz para eventos del menú
-export interface MenuEvent {
-  type: 'click' | 'hover' | 'expand' | 'collapse';
-  item: MenuItem;
-  event?: Event;
-  timestamp?: Date;
-}
 
 // Interfaz para el servicio de menú
 export interface MenuService {
@@ -134,3 +92,7 @@ export class MenuManager {
       }));
   }
 } 
+
+export {
+  MenuItem,
+  MenuConfig,}
