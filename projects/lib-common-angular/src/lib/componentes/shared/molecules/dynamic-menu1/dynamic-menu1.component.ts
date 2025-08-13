@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MenuItem1Component } from '../../atoms/menu-item1/menu-item1.component';
 import {MenuManager } from '../../interfaces/menu.interface';
@@ -12,7 +12,7 @@ import { MenuConfig, MenuItem,MenuEvent } from '@juliaosistem/core-dtos';
   templateUrl: './dynamic-menu1.component.html',
   styleUrls: ['./dynamic-menu1.component.scss']
 })
-export class DynamicMenu1Component implements OnInit, OnDestroy {
+export class DynamicMenu1Component implements OnInit {
   @Input() menuId!: string;
   @Input() userPermissions: string[] = [];
   @Input() initialConfig?: MenuConfig;
@@ -30,7 +30,7 @@ export class DynamicMenu1Component implements OnInit, OnDestroy {
   activeItemId?: string;
 
   private menuManager?: MenuManager;
-  private subscription?: any;
+  private subscription?: unknown;
 
   constructor(private menuService: DynamicMenuService) {}
 
@@ -42,11 +42,6 @@ export class DynamicMenu1Component implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
-  }
 
   async loadMenu() {
     if (!this.menuId) {
@@ -139,7 +134,7 @@ export class DynamicMenu1Component implements OnInit, OnDestroy {
       await this.loadMenu(); // Recargar menú
     } catch (err) {
       this.error = 'Error al agregar elemento del menú';
-      this.menuError.emit(this.error);
+      this.menuError.emit(this.error + err);
     }
   }
 
@@ -151,7 +146,7 @@ export class DynamicMenu1Component implements OnInit, OnDestroy {
       await this.loadMenu(); // Recargar menú
     } catch (err) {
       this.error = 'Error al eliminar elemento del menú';
-      this.menuError.emit(this.error);
+      this.menuError.emit(this.error + err);
     }
   }
 
@@ -163,7 +158,7 @@ export class DynamicMenu1Component implements OnInit, OnDestroy {
       await this.loadMenu(); // Recargar menú
     } catch (err) {
       this.error = 'Error al actualizar elemento del menú';
-      this.menuError.emit(this.error);
+      this.menuError.emit(this.error + err);
     }
   }
 

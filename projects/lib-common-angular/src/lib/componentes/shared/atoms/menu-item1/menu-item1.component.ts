@@ -97,6 +97,8 @@ export class MenuItem1Component implements OnInit {
   onItemLeave(event: Event) {
     // Opcional: emitir evento de salida del hover
     if (this.item.disabled) {
+        // eslint-disable-next-line no-console
+      console.log('Elemento de menú deshabilitado', event);
       return;
     }
   }

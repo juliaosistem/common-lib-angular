@@ -67,6 +67,7 @@ export class DaskBoard3 implements OnInit {
         this.route.data.subscribe(data => {
             if (data['menuConfig'] && !this.menuConfig) {
                 this.menuConfig = data['menuConfig'];
+                // eslint-disable-next-line no-console
                 console.log('Dashboard3: MenuConfig cargado desde datos de ruta:', this.menuConfig);
             }
             
