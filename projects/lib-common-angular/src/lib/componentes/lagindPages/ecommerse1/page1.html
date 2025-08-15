@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToyStore</title>
+    <title>Zigma Inflables</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome for icons -->
@@ -134,7 +134,8 @@
         .animate-title-initial.is-visible {
             opacity: 1;
             transform: translateX(0);
-            animation: rotate360 1s ease-out 1s forwards;
+            animation: rotate360 1s ease-out forwards;
+            animation-iteration-count: 2; /* Gira dos veces */
         }
 
         @keyframes rotate360 {
@@ -210,109 +211,215 @@
             opacity: 1;
             transform: scale(1);
         }
+        
+        /* Estilos del nuevo encabezado */
+        .header-top {
+            background-color: #fbc30d; /* Nuevo color amarillo */
+            color: black; /* Texto en negro */
+        }
+        
+        .header-top a {
+             color: black;
+             transition: color 0.3s;
+        }
+
+        .header-top a:hover {
+            color: #4a4a4a;
+        }
+
+        .main-nav {
+            background-color: #0093e9; /* Nuevo color azul */
+            padding: 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin-top: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 90%;
+            width: 1000px;
+        }
+
+        .main-nav-ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            gap: 2rem;
+        }
+
+        .main-nav-link {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: white; /* Color de link blanco */
+            transition: color 0.3s;
+        }
+        
+        .main-nav-link:hover {
+            color: #fbc30d; /* Nuevo color de hover para los links */
+        }
+        
+        /* Tamaño de la fuente ajustado */
+        .logo-center {
+            font-size: 2.5rem; /* Reducido de 3rem a 2.5rem */
+            font-weight: 700;
+            color: black;
+            text-shadow: 1px 1px 2px #fbc30d; /* Nuevo color para la sombra del logo */
+        }
+        
+        /* Animación del logo ya no tiene infinite */
+        .logo-rotate {
+            animation: rotate360 2s ease-out;
+        }
+
+        /* Estilos para el nuevo menú hamburguesa */
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            z-index: 50;
+        }
+        
+        @media (max-width: 767px) {
+            .hamburger-menu {
+                display: block;
+            }
+        }
+        
+        /* Ajuste para el encabezado en móvil para que el nombre de Zigma Inflables sea visible */
+        .mobile-header {
+            background-color: #0093e9; /* Mismo fondo que el desktop */
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-header .logo-center {
+             font-size: 2rem;
+        }
+        
+        /* Footer con texto en negro */
+        .footer-top {
+            color: black;
+        }
     </style>
 </head>
 <body class="overflow-x-hidden">
-    <!-- Header Section -->
-    <header class="bg-white shadow-md sticky top-0 z-50">
-        <div class="bg-[#dcf3b1] text-gray-800 py-2 px-4">
+    <!-- Header Section (Rediseñado) -->
+    <header>
+        <!-- Barra superior -->
+        <div class="header-top py-2 px-4">
             <div class="container mx-auto flex justify-between items-center text-sm flex-wrap">
                 <div class="flex items-center space-x-4">
-                    <span class="flex items-center"><i class="fas fa-phone mr-1"></i> Call Us: +1 213 974 5898</span>
-                    <span class="flex items-center"><i class="fas fa-envelope mr-1"></i> Email: toystore@template.com</span>
+                    <span class="flex items-center">FAQs</span>
+                    <span class="flex items-center">|</span>
+                    <span class="flex items-center">Help</span>
+                    <span class="flex items-center">|</span>
+                    <span class="flex items-center">Support</span>
                 </div>
                 <div class="flex space-x-3 text-lg">
-                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter hover:text-gray-600 transition"></i></a>
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f hover:text-gray-600 transition"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram hover:text-gray-600 transition"></i></a>
-                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube hover:text-gray-600 transition"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f hover:text-gray-200 transition"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter hover:text-gray-200 transition"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin hover:text-gray-200 transition"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram hover:text-gray-200 transition"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube hover:text-gray-200 transition"></i></a>
                 </div>
             </div>
         </div>
-        <nav class="container mx-auto p-4 flex justify-between items-center relative">
-            <a href="#" id="toystore-title" class="text-3xl font-bold text-gray-800 animate-title-initial" onclick="showPage('home-page')">ToyStore</a>
-            
-            <ul class="hidden md:flex md:space-x-8 items-center text-gray-700 font-semibold animate-title-left">
-                <li><a href="#" class="hover:text-gray-900 transition">Catalog</a></li>
-                <li><a href="#" class="hover:text-gray-900 transition">Delivery</a></li>
-                <li><a href="#" class="hover:text-gray-900 transition">About</a></li>
-                <li><a href="#" class="hover:text-gray-900 transition">Contacts</a></li>
-                <!-- Botones que ahora llaman a una función JS para cambiar de "página" -->
-                <li><a href="#" onclick="showPage('login-page')" class="bg-gray-800 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-gray-700 transition-colors">Login</a></li>
-                <li><a href="#" onclick="showPage('register-page')" class="bg-gray-800 text-white font-bold py-2 px-6 rounded-full shadow-lg hover:bg-gray-700 transition-colors">Register</a></li>
-            </ul>
-
-            <div class="flex items-center space-x-4">
-                <!-- Selector de Idioma -->
-                <div class="relative">
-                    <select class="rounded-md border border-gray-300 py-2 pl-3 pr-8 text-gray-700 font-semibold focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="es">ES</option>
-                        <option value="en">EN</option>
-                    </select>
-                </div>
-
-                <button class="md:hidden text-2xl p-2 rounded-md text-gray-700 hover:bg-gray-200 transition" id="mobile-menu-toggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="relative hidden md:block">
-                    <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:border-indigo-500">
-                    <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-                </div>
-                <div class="relative">
-                    <a href="#" class="text-2xl text-gray-700 hover:text-gray-900 transition" aria-label="Shopping Cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span class="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-100 transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">3</span>
-                    </a>
-                </div>
+        
+        <!-- Navbar para desktop -->
+        <nav class="main-nav hidden md:block">
+            <div class="flex items-center justify-between">
+                <!-- Menú Izquierdo -->
+                <ul class="main-nav-ul">
+                    <li><a href="#" onclick="showPage('home-page')" class="main-nav-link">Home</a></li>
+                    <li><a href="#" class="main-nav-link">About</a></li>
+                </ul>
+                <!-- Logo Central -->
+                <a href="#" id="toystore-title" class="logo-center" onclick="showPage('home-page')">Zigma Inflables</a>
+                <!-- Menú Derecho con iconos -->
+                <ul class="main-nav-ul">
+                    <li><a href="#" class="main-nav-link">Service</a></li>
+                    <li><a href="#" class="main-nav-link">Gallery</a></li>
+                    <li><a href="#" class="main-nav-link">Contact</a></li>
+                    <li class="flex items-center space-x-4">
+                        <select class="main-nav-link bg-transparent border-none focus:outline-none">
+                            <option value="es">ES</option>
+                            <option value="en">EN</option>
+                        </select>
+                        <a href="#" aria-label="Shopping Cart"><i class="fas fa-shopping-cart main-nav-link text-xl"></i></a>
+                    </li>
+                </ul>
             </div>
         </nav>
+
+        <!-- Navbar para móvil (oculto en desktop) -->
+        <nav class="mobile-header md:hidden py-4 px-6 flex items-center justify-between rounded-xl shadow-lg mt-4 mx-auto max-w-sm">
+            <!-- Hamburguesa y logo -->
+            <div class="flex items-center space-x-4">
+                <button id="mobile-menu-toggle" class="hamburger-menu text-2xl text-white">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="#" class="logo-center text-3xl" onclick="showPage('home-page')">Zigma Inflables</a>
+            </div>
+            <!-- Iconos a la derecha -->
+            <div class="flex items-center space-x-4">
+                 <select class="main-nav-link bg-transparent border-none focus:outline-none">
+                    <option value="es">ES</option>
+                    <option value="en">EN</option>
+                </select>
+                <a href="#" aria-label="Shopping Cart" class="text-white hover:text-gray-200 transition">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                </a>
+            </div>
+        </nav>
+        
         <!-- Menú desplegable para móvil -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg border-t border-gray-200">
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg border-t border-gray-200 mt-4 mx-auto max-w-sm rounded-xl">
             <ul class="flex flex-col items-center py-4 space-y-4">
-                <li><a href="#" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Catalog</a></li>
-                <li><a href="#" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Delivery</a></li>
-                <li><a href="#" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">About</a></li>
-                <li><a href="#" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Contacts</a></li>
+                <li><a href="#" onclick="showPage('home-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Home</a></li>
+                <li><a href="#" onclick="showPage('about-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">About</a></li>
                 <li><a href="#" onclick="showPage('login-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Login</a></li>
                 <li><a href="#" onclick="showPage('register-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Register</a></li>
             </ul>
         </div>
     </header>
+    
+    <!-- Hero Section con la barra de navegación flotante -->
+    <section class="relative bg-cover bg-center min-h-[500px] animate-hero-section" style="background-image: url('https://placehold.co/1200x500/fbc30d/ffffff?text=Zigma+Inflables');">
+        <div class="container mx-auto h-full flex items-center justify-center p-6 text-center pt-32">
+            <div class="bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-xl max-w-2xl shadow-xl">
+                <p class="text-lg font-medium text-gray-600 mb-2">¡Bienvenido a Zigma Inflables!</p>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">El mejor lugar para inflables</h1>
+                <a href="#" class="bg-[#fbc30d] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">Ver catálogo</a>
+            </div>
+        </div>
+    </section>
 
     <!-- --- SECCIÓN DE LA PÁGINA PRINCIPAL (HOME) --- -->
     <div id="home-page">
-        <!-- Sección original del Hero con animación -->
-        <section class="relative bg-cover bg-center min-h-[500px] animate-hero-section" style="background-image: url('https://placehold.co/1200x500/dcf3b1/000000?text=ToyStore+Hero+Image');">
-            <div class="container mx-auto h-full flex items-center justify-center p-6">
-                <div class="bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-xl text-center max-w-2xl shadow-xl">
-                    <p class="text-lg font-medium text-gray-600 mb-2">Say Hello to ToyStore!</p>
-                    <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">Free Ecommerce Template for Webflow</h1>
-                    <a href="#" class="bg-[#dcf3b1] text-gray-800 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#c2e49c] transition-colors">Open Catalog</a>
-                </div>
-            </div>
-        </section>
-
+        
         <!-- Nueva Hero Section con animaciones, inspirada en la imagen -->
         <section class="bg-gray-100 p-6 my-12 animate-scroll">
             <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Tarjeta 1: Stuffed Animals (Amarillo) -->
-                <a href="#" class="group relative block rounded-3xl shadow-xl transform hover:scale-105 transition-transform duration-300 category-card-animation bg-[#ffeb7b]">
+                <!-- Tarjeta 1: Castillos Inflables (Amarillo) -->
+                <a href="#" class="group relative block rounded-3xl shadow-xl transform hover:scale-105 transition-transform duration-300 category-card-animation bg-[#0093e9]">
                     <div class="flex items-center p-8">
-                        <img src="https://placehold.co/200x200/ffeb7b/000000?text=🧸" alt="Stuffed Animals" class="w-2/5 object-cover transform scale-125 -translate-y-2 translate-x-4">
-                        <div class="text-gray-800 text-center flex-1 pr-4">
-                            <h3 class="text-3xl font-bold">Stuffed Animals</h3>
-                            <span class="block mt-2 font-semibold">Shop Now</span>
+                        <img src="https://placehold.co/200x200/0093e9/ffffff?text=🏰" alt="Castillos Inflables" class="w-2/5 object-cover transform scale-125 -translate-y-2 translate-x-4">
+                        <div class="text-white text-center flex-1 pr-4">
+                            <h3 class="text-3xl font-bold">Castillos Inflables</h3>
+                            <span class="block mt-2 font-semibold">Comprar ahora</span>
                         </div>
                     </div>
                 </a>
-                <!-- Tarjeta 2: Wooden Toys (Rosa) -->
+                <!-- Tarjeta 2: Toboganes (Rosa) -->
                 <a href="#" class="group relative block rounded-3xl shadow-xl transform hover:scale-105 transition-transform duration-300 category-card-animation bg-[#ff5680]">
                     <div class="flex items-center p-8">
                         <div class="text-white text-center flex-1 pl-4">
-                            <h3 class="text-3xl font-bold">Wooden Toys</h3>
-                            <span class="block mt-2 font-semibold">Shop Now</span>
+                            <h3 class="text-3xl font-bold">Toboganes</h3>
+                            <span class="block mt-2 font-semibold">Comprar ahora</span>
                         </div>
-                        <img src="https://placehold.co/200x200/ff5680/ffffff?text=🧩" alt="Wooden Toys" class="w-2/5 object-cover transform scale-125 translate-y-2 -translate-x-4">
+                        <img src="https://placehold.co/200x200/ff5680/ffffff?text=🎢" alt="Toboganes Inflables" class="w-2/5 object-cover transform scale-125 translate-y-2 -translate-x-4">
                     </div>
                 </a>
             </div>
@@ -321,62 +428,62 @@
         <!-- Product Grid Section -->
         <main class="container mx-auto p-6">
             <div class="flex justify-between items-center my-8 animate-scroll">
-                <h2 class="text-4xl font-bold text-gray-800">All Toys</h2>
+                <h2 class="text-4xl font-bold text-gray-800">Todos los Inflables</h2>
                 <div class="flex space-x-2 text-gray-600 font-semibold">
-                    <button class="bg-[#dcf3b1] px-4 py-2 rounded-full hover:bg-[#c2e49c] transition">All Toys</button>
-                    <button class="px-4 py-2 rounded-full hover:bg-gray-200 transition">Wooden Toys</button>
-                    <button class="px-4 py-2 rounded-full hover:bg-gray-200 transition">Stuffed Animals</button>
+                    <button class="bg-[#fbc30d] text-white px-4 py-2 rounded-full hover:bg-[#cda41a] transition">Todos</button>
+                    <button class="px-4 py-2 rounded-full hover:bg-gray-200 transition">Castillos</button>
+                    <button class="px-4 py-2 rounded-full hover:bg-gray-200 transition">Toboganes</button>
                 </div>
             </div>
             <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Tarjeta de Producto 1 -->
                 <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Teddy+Bear" alt="Teddy Bear" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Teddy Bear</h3>
-                    <span class="text-2xl font-bold text-gray-800">$30.00 USD</span>
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Castillo+Clasico" alt="Castillo Inflable Clasico" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Castillo Clásico</h3>
+                    <span class="text-2xl font-bold text-gray-800">$300.00 USD</span>
                 </div>
 
                 <!-- Tarjeta de Producto 2 -->
                 <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Happy+Flower" alt="Happy Flower" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Happy Flower</h3>
-                    <span class="text-2xl font-bold text-gray-800">$38.00 USD</span>
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Tobogan+Acuatico" alt="Tobogan Acuatico" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Tobogán Acuático</h3>
+                    <span class="text-2xl font-bold text-gray-800">$380.00 USD</span>
                 </div>
 
                 <!-- Tarjeta de Producto 3 -->
                 <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Mega+Plush+Toy" alt="Mega Plush Toy" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Mega Plush Toy</h3>
-                    <span class="text-2xl font-bold text-gray-800">$38.00 USD</span>
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Inflable+con+Obstaculos" alt="Inflable con Obstaculos" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Inflable de Obstáculos</h3>
+                    <span class="text-2xl font-bold text-gray-800">$380.00 USD</span>
                 </div>
 
                 <!-- Tarjeta de Producto 4 -->
                 <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Lift+Machine" alt="Lift Machine" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Lift Machine</h3>
-                    <span class="text-2xl font-bold text-gray-800">$24.00 USD</span>
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Brinca+Brinca" alt="Brinca Brinca" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Brinca Brinca</h3>
+                    <span class="text-2xl font-bold text-gray-800">$240.00 USD</span>
                 </div>
                 
                 <!-- Más tarjetas de productos pueden ir aquí -->
                 <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Cute+Dog" alt="Cute Dog" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Cute Dog</h3>
-                    <span class="text-2xl font-bold text-gray-800">$24.00 USD</span>
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Inflable+Futbol" alt="Inflable de Futbol" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Inflable de Fútbol</h3>
+                    <span class="text-2xl font-bold text-gray-800">$240.00 USD</span>
                 </div>
                 <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Wooden+Camera" alt="Wooden Camera" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Wooden Camera</h3>
-                    <span class="text-2xl font-bold text-gray-800">$32.00 USD</span>
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Castillo+Princesa" alt="Castillo Princesa" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Castillo Princesa</h3>
+                    <span class="text-2xl font-bold text-gray-800">$320.00 USD</span>
                 </div>
                 <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Little+Rabbit" alt="Little Rabbit" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Little Rabbit</h3>
-                    <span class="text-2xl font-bold text-gray-800">$16.00 USD</span>
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Ring+Boxeo" alt="Ring de Boxeo" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Ring de Boxeo</h3>
+                    <span class="text-2xl font-bold text-gray-800">$160.00 USD</span>
                 </div>
                 <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Little+Friend" alt="Little Friend" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Little Friend</h3>
-                    <span class="text-2xl font-bold text-gray-800">$27.00 USD</span>
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Tobogan+Gigante" alt="Tobogan Gigante" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Tobogán Gigante</h3>
+                    <span class="text-2xl font-bold text-gray-800">$270.00 USD</span>
                 </div>
             </div>
         </main>
@@ -385,10 +492,10 @@
         <section class="relative bg-cover bg-center min-h-[500px] flex items-center justify-center text-white px-6 my-12 animate-history-section" style="background-image: url('https://placehold.co/1400x600/b0b0b0/ffffff?text=Our+Story+Background+Image');">
             <div class="absolute inset-0 bg-black/50"></div>
             <div class="relative text-center max-w-3xl z-10">
-                <p class="text-lg font-light mb-2">About The Shop</p>
-                <h2 class="text-4xl md:text-6xl font-bold mb-4">Watch Our Story</h2>
-                <p class="text-lg font-light mb-8">There is no magic formula to write perfect ad copy; it is based on a number of factors, including ad placement, demographic, even the consumer's mood.</p>
-                <button class="bg-[#dcf3b1] text-gray-800 p-4 rounded-full shadow-lg hover:bg-[#c2e49c] transition-colors">
+                <p class="text-lg font-light mb-2">Sobre Nosotros</p>
+                <h2 class="text-4xl md:text-6xl font-bold mb-4">Conoce Nuestra Historia</h2>
+                <p class="text-lg font-light mb-8">No hay una fórmula mágica para escribir un texto publicitario perfecto; se basa en varios factores, incluyendo la ubicación del anuncio, la demografía e incluso el estado de ánimo del consumidor.</p>
+                <button class="bg-[#fbc30d] text-white p-4 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
                     <i class="fas fa-play text-2xl"></i>
                 </button>
             </div>
@@ -397,8 +504,8 @@
         <!-- Nueva seccion de Instagram -->
         <section class="py-16 bg-white animate-instagram-section">
             <div class="container mx-auto px-6 text-center">
-                <span class="text-gray-500 font-semibold">@ElasticThemes</span>
-                <h2 class="text-4xl font-bold text-gray-800 my-4">We're on Instagram!</h2>
+                <span class="text-gray-500 font-semibold">@ZigmaInflables</span>
+                <h2 class="text-4xl font-bold text-gray-800 my-4">¡Estamos en Instagram!</h2>
                 <div class="flex flex-wrap justify-center gap-4 mt-8">
                     <!-- Imagen de Instagram 1 -->
                     <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
@@ -431,8 +538,8 @@
                         </a>
                     </div>
                 </div>
-                <a href="#" class="inline-block mt-8 bg-[#dcf3b1] text-gray-800 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#c2e49c] transition-colors">
-                    See More Photos
+                <a href="#" class="inline-block mt-8 bg-[#fbc30d] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
+                    Ver más fotos
                 </a>
             </div>
         </section>
@@ -442,29 +549,29 @@
             <div class="container mx-auto">
                 <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0 md:space-x-8">
                     <div class="flex items-center space-x-6 flex-grow">
-                        <!-- Icono de avión de papel con fondo verde -->
-                        <div class="flex-shrink-0 bg-[#dcf3b1] p-4 md:p-6 rounded-full shadow-md">
-                            <svg class="h-8 w-8 md:h-12 md:w-12 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Icono de avión de papel con fondo azul -->
+                        <div class="flex-shrink-0 bg-[#fbc30d] p-4 md:p-6 rounded-full shadow-md">
+                            <svg class="h-8 w-8 md:h-12 md:w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                             </svg>
                         </div>
                         <div class="text-gray-800 text-center md:text-left">
-                            <h3 class="text-xl md:text-2xl font-bold">Subscribe to our newsletter</h3>
-                            <p class="text-sm md:text-lg text-gray-600">& get 10% discount!</p>
+                            <h3 class="text-xl md:text-2xl font-bold">Suscríbete a nuestro boletín</h3>
+                            <p class="text-sm md:text-lg text-gray-600">¡y obtén un 10% de descuento!</p>
                         </div>
                     </div>
                     <div class="w-full md:w-auto flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
                         <form id="newsletter-form" class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
                             <div class="relative flex-grow">
-                                <input type="email" id="email-input" name="email" placeholder="Enter your email address" class="w-full pl-6 pr-12 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#dcf3b1]" required>
+                                <input type="email" id="email-input" name="email" placeholder="Ingresa tu correo electrónico" class="w-full pl-6 pr-12 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" required>
                                 <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
                                     <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
                                     </svg>
                                 </span>
                             </div>
-                            <button type="submit" class="bg-[#dcf3b1] text-gray-800 font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#c2e49c] transition-colors">
-                                Subscribe
+                            <button type="submit" class="bg-[#fbc30d] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
+                                Suscribirme
                             </button>
                         </form>
                     </div>
@@ -476,9 +583,9 @@
     <!-- --- SECCIÓN DE LA PÁGINA DE LOGIN (INICIALMENTE OCULTA) --- -->
     <div id="login-page" class="hidden auth-page">
         <section class="auth-section">
-            <div class="bg-[#dcf3b1] text-center p-8 rounded-t-xl">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Login</h2>
-                <p class="text-gray-600">Bienvenido de nuevo</p>
+            <div class="bg-[#fbc30d] text-center p-8 rounded-t-xl">
+                <h2 class="text-3xl font-bold text-white mb-2">Iniciar Sesión</h2>
+                <p class="text-white">Bienvenido de nuevo</p>
             </div>
             <form class="p-8">
                 <!-- Botones de Social Login -->
@@ -501,11 +608,11 @@
 
                 <div class="mb-6">
                     <label for="login-email" class="block text-gray-700 font-bold mb-2">Email</label>
-                    <input type="email" id="login-email" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#dcf3b1]" placeholder="ejemplo@correo.com" required>
+                    <input type="email" id="login-email" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="ejemplo@correo.com" required>
                 </div>
                 <div class="mb-6">
                     <label for="login-password" class="block text-gray-700 font-bold mb-2">Contraseña</label>
-                    <input type="password" id="login-password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#dcf3b1]" placeholder="********" required>
+                    <input type="password" id="login-password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="********" required>
                 </div>
                 <div class="flex items-center justify-between mb-6">
                     <div class="flex items-center">
@@ -514,7 +621,7 @@
                     </div>
                     <a href="#" class="text-sm font-semibold text-gray-800 hover:text-gray-600">¿Olvidaste tu contraseña?</a>
                 </div>
-                <button type="submit" class="w-full bg-[#dcf3b1] text-gray-800 font-bold py-3 px-4 rounded-full shadow-lg hover:bg-[#c2e49c] transition-colors">
+                <button type="submit" class="w-full bg-[#fbc30d] text-white font-bold py-3 px-4 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
                     Iniciar Sesión
                 </button>
             </form>
@@ -527,9 +634,9 @@
     <!-- --- SECCIÓN DE LA PÁGINA DE REGISTRO (INICIALMENTE OCULTA) --- -->
     <div id="register-page" class="hidden auth-page">
         <section class="auth-section">
-            <div class="bg-[#dcf3b1] text-center p-8 rounded-t-xl">
-                <h2 class="text-3xl font-bold text-gray-800 mb-2">Registro</h2>
-                <p class="text-gray-600">Crea tu cuenta en segundos</p>
+            <div class="bg-[#fbc30d] text-center p-8 rounded-t-xl">
+                <h2 class="text-3xl font-bold text-white mb-2">Registro</h2>
+                <p class="text-white">Crea tu cuenta en segundos</p>
             </div>
             <form class="p-8">
                 <!-- Botones de Social Login -->
@@ -552,21 +659,21 @@
 
                 <div class="mb-6">
                     <label for="register-name" class="block text-gray-700 font-bold mb-2">Nombre completo</label>
-                    <input type="text" id="register-name" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#dcf3b1]" placeholder="John Doe" required>
+                    <input type="text" id="register-name" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="John Doe" required>
                 </div>
                 <div class="mb-6">
                     <label for="register-email" class="block text-gray-700 font-bold mb-2">Email</label>
-                    <input type="email" id="register-email" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#dcf3b1]" placeholder="ejemplo@correo.com" required>
+                    <input type="email" id="register-email" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="ejemplo@correo.com" required>
                 </div>
                 <div class="mb-6">
                     <label for="register-password" class="block text-gray-700 font-bold mb-2">Contraseña</label>
-                    <input type="password" id="register-password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#dcf3b1]" placeholder="********" required>
+                    <input type="password" id="register-password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="********" required>
                 </div>
                 <div class="mb-6">
                     <label for="register-confirm-password" class="block text-gray-700 font-bold mb-2">Confirmar Contraseña</label>
-                    <input type="password" id="register-confirm-password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#dcf3b1]" placeholder="********" required>
+                    <input type="password" id="register-confirm-password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="********" required>
                 </div>
-                <button type="submit" class="w-full bg-[#dcf3b1] text-gray-800 font-bold py-3 px-4 rounded-full shadow-lg hover:bg-[#c2e49c] transition-colors">
+                <button type="submit" class="w-full bg-[#fbc30d] text-white font-bold py-3 px-4 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
                     Registrarse
                 </button>
             </form>
@@ -577,27 +684,27 @@
     </div>
 
     <!-- Footer Section -->
-    <footer class="bg-[#dcf3b1] text-gray-800 py-12 animate-scroll">
+    <footer class="bg-[#fbc30d] text-black py-12 animate-scroll">
         <div class="container mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-400 pb-8 mb-8">
-                <h2 class="text-3xl font-bold mb-4 md:mb-0">ToyStore</h2>
+            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-400 pb-8 mb-8 footer-top">
+                <h2 class="text-3xl font-bold mb-4 md:mb-0">Zigma Inflables</h2>
                 <div class="flex space-x-6 text-lg">
-                    <a href="#" class="hover:text-gray-600 transition">Home</a>
-                    <a href="#" class="hover:text-gray-600 transition">Catalog</a>
-                    <a href="#" class="hover:text-gray-600 transition">Delivery</a>
-                    <a href="#" class="hover:text-gray-600 transition">About</a>
-                    <a href="#" class="hover:text-gray-600 transition">Contacts</a>
+                    <a href="#" class="hover:text-gray-800 transition">Inicio</a>
+                    <a href="#" class="hover:text-gray-800 transition">Catálogo</a>
+                    <a href="#" class="hover:text-gray-800 transition">Entrega</a>
+                    <a href="#" class="hover:text-gray-800 transition">Sobre</a>
+                    <a href="#" class="hover:text-gray-800 transition">Contactos</a>
                 </div>
                 <div class="flex space-x-3 text-lg mt-4 md:mt-0">
-                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter hover:text-gray-600 transition"></i></a>
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f hover:text-gray-600 transition"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram hover:text-gray-600 transition"></i></a>
-                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube hover:text-gray-600 transition"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter hover:text-gray-800 transition"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f hover:text-gray-800 transition"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram hover:text-gray-800 transition"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube hover:text-gray-800 transition"></i></a>
                 </div>
             </div>
-            <div class="flex flex-col md:flex-row justify-between text-sm text-gray-600">
-                <p>Created with love by <a href="#" class="hover:underline">Elastic Themes</a></p>
-                <p>Powered by <a href="#" class="hover:underline">Webflow</a> &bull; <a href="#" class="hover:underline">Style Guide</a> &bull; <a href="#" class="hover:underline">Licensing</a></p>
+            <div class="flex flex-col md:flex-row justify-between text-sm text-gray-800">
+                <p>Creado con amor por <a href="#" class="hover:underline">Elastic Themes</a></p>
+                <p>Desarrollado por <a href="#" class="hover:underline">Webflow</a> &bull; <a href="#" class="hover:underline">Guía de Estilo</a> &bull; <a href="#" class="hover:underline">Licencias</a></p>
             </div>
         </div>
     </footer>
@@ -605,7 +712,7 @@
     <!-- Botón Flotante de WhatsApp -->
     <div id="whatsapp-button" class="whatsapp-float">
         <!-- Reemplaza '1234567890' con tu número de teléfono y el mensaje predeterminado -->
-        <a href="https://wa.me/1234567890?text=Hola,%20estoy%20interesado%20en%20los%20productos%20de%20ToyStore." target="_blank" aria-label="Contáctanos por WhatsApp">
+        <a href="https://wa.me/1234567890?text=Hola,%20estoy%20interesado%20en%20los%20productos%20de%20Zigma%20Inflables." target="_blank" aria-label="Contáctanos por WhatsApp">
             <i class="fab fa-whatsapp"></i>
         </a>
     </div>
@@ -668,7 +775,7 @@
             // Animación del título del header
             const toystoreTitle = document.getElementById('toystore-title');
             if (toystoreTitle) {
-                toystoreTitle.classList.add('is-visible');
+                toystoreTitle.classList.add('logo-rotate');
             }
             
             // Elementos a observar para animar al hacer scroll
@@ -804,4 +911,3 @@
     </script>
 </body>
 </html>
-
