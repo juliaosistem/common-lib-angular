@@ -1,0 +1,4 @@
+[build]
+  command = "bash scripts/setup-submodules.sh && npm run update:dtos && npm run build:demo"
+  publish = "dist/lib-common-angular-demo/browser"
+
