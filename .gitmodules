@@ -1,0 +1,4 @@
+[submodule "lib-core-dtos"]
+	path = lib-core-dtos
+	url = https://github.com/juliaosistem/lib-core-dtos.git
+	branch = 51-crud-categorias-back-bk

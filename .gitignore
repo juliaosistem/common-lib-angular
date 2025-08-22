@@ -42,3 +42,12 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Netlify
+.netlify/
+
+# Build outputs para demo
+/dist/lib-common-angular-demo/
+
+# Logs de Netlify
+netlify-debug.log

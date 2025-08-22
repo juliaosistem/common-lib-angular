@@ -14,6 +14,14 @@ export const routes: Routes = [
             { path: 'pages', loadChildren: () => import('./src/lib/componentes/shared/pages/pages.routes') }
         ]
     },
+    {
+        path: '',
+        component: DaskBoard3,
+        children: [
+            { path: 'componentes', loadChildren: () => import('./src/lib/componentes/shared/pages/componentes.routes') }
+        ]
+    },
+
     { path: 'notfound', component: Notfound },
     //{ path: 'auth', loadChildren: () => import('./app/pages/auth/auth.routes') },
     { path: '**', redirectTo: '/notfound' }

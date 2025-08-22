@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DynamicMenu1Component } from '../../molecules/dynamic-menu1/dynamic-menu1.component';
-import { MenuConfig, MenuItem, MenuEvent } from '../../interfaces/menu.interface';
+import { MenuConfig, MenuItem, MenuEvent } from '@juliaosistem/core-dtos';
 import { DynamicMenuService } from '../../services/dynamic-menu.service';
 
 @Component({
@@ -66,7 +66,7 @@ export class MenuComponent implements OnInit {
       this.menuLoaded.emit(config);
     } catch (error) {
       this.menuStatus = 'Error al cargar';
-      this.menuError.emit('Error al cargar el menú');
+      this.menuError.emit('Error al cargar el menú' + error);
     }
   }
 
@@ -138,6 +138,7 @@ export class MenuComponent implements OnInit {
       this.loadMenuInfo();
       this.menuItemAdded.emit(newItem);
     } catch (error) {
+      //eslint-disable-next-line no-console
       console.error('Error al agregar elemento:', error);
       this.menuError.emit('Error al agregar elemento del menú');
     }

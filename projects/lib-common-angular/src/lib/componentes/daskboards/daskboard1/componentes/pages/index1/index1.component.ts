@@ -50,12 +50,13 @@ export class Index1Component {
  }
 
  configurarIdiomas(){
-  this.langs= this.translate.getLangs();
+  this.langs = [...this.translate.getLangs()];
   this.translate.addLangs(["es","en","de","pt"]);
-  let defualtBrowserLang = this.translate.getBrowserLang();
+  const defualtBrowserLang = this.translate.getBrowserLang();
   if(defualtBrowserLang) {
      this.translate.use(defualtBrowserLang);
   }else{
+       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
        (this.negocio?.bussinesDTO?.lenguaje)
           ? this.translate.use(this.negocio.bussinesDTO.lenguaje)
           :this.translate.use("en")
