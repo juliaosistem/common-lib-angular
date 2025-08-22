@@ -289,6 +289,268 @@ function createPackageJson(outputDir) {
   );
 }
 
+function convertTypeToJava(type) {
+  switch (type) {
+    case 'string':
+      return 'String';
+    case 'integer':
+    case 'number':
+      return 'Integer';
+    case 'boolean':
+      return 'Boolean';
+    case 'array':
+      return 'List<Object>';
+    case 'datetime':
+    case 'date':
+    case 'time':
+      return 'LocalDateTime';
+    case 'event':
+      return 'Object';
+    default:
+      return 'Object';
+  }
+}
+
+// eslint-disable-next-line max-lines-per-function
+function generateJavaClass(typeName, typeObj, globalTypes = {}) {
+  //eslint-disable-next-line no-console
+  console.log(`\n🔍 Generando clase Java: ${typeName}`);
+  
+  let javaCode = `package com.juliaosystem.api.generated.dto;\n\n`;
+  
+  // Imports
+  const imports = new Set([
+    'import com.fasterxml.jackson.annotation.JsonProperty;',
+    'import lombok.Data;',
+    'import lombok.Builder;',
+    'import lombok.NoArgsConstructor;',
+    'import lombok.AllArgsConstructor;'
+  ]);
+  
+  // Caso: Enum
+  if (typeObj.type === 'string' && typeObj.enum && Array.isArray(typeObj.enum)) {
+    //eslint-disable-next-line no-console
+    console.log(`📝 Generando enum Java: ${typeName}`);
+    
+    javaCode += imports.values().next().value + '\n\n'; // Solo JsonProperty para enums
+    
+    javaCode += `/**\n`;
+    javaCode += ` * Enum generado automáticamente desde RAML\n`;
+    javaCode += ` * ⚠️ NO MODIFICAR MANUALMENTE\n`;
+    javaCode += ` */\n`;
+    javaCode += `public enum ${typeName} {\n`;
+    
+    typeObj.enum.forEach((value, index) => {
+      const enumName = value.toUpperCase()
+        .replace(/-/g, '_')
+        .replace(/ /g, '_')
+        .replace(/\./g, '_')
+        .replace(/[^A-Z0-9_]/g, '_');
+      
+      javaCode += `    @JsonProperty("${value}")\n`;
+      javaCode += `    ${enumName}("${value}")`;
+      javaCode += index < typeObj.enum.length - 1 ? ',\n\n' : ';\n\n';
+    });
+    
+    javaCode += `    private final String value;\n\n`;
+    javaCode += `    ${typeName}(String value) {\n`;
+    javaCode += `        this.value = value;\n`;
+    javaCode += `    }\n\n`;
+    javaCode += `    public String getValue() {\n`;
+    javaCode += `        return value;\n`;
+    javaCode += `    }\n`;
+    javaCode += `}\n`;
+    
+    return javaCode;
+  }
+  
+  // Caso: Clase
+  if (typeObj.properties || typeObj.type === 'object') {
+    // Analizar propiedades para imports adicionales
+    if (typeObj.properties) {
+      const properties = Array.isArray(typeObj.properties)
+        ? typeObj.properties
+        : Object.entries(typeObj.properties).map(([key, value]) => ({ ...value, name: key }));
+      
+      properties.forEach(prop => {
+        const javaType = getJavaTypeForProperty(prop, globalTypes);
+        if (javaType.includes('LocalDateTime') || javaType.includes('LocalDate')) {
+          imports.add('import java.time.*;');
+        }
+        if (javaType.includes('List<')) {
+          imports.add('import java.util.List;');
+        }
+        if (prop.required) {
+          imports.add('import jakarta.validation.constraints.NotNull;');
+        }
+      });
+    }
+    
+    // Escribir imports
+    Array.from(imports).forEach(imp => {
+      javaCode += imp + '\n';
+    });
+    javaCode += '\n';
+    
+    // Clase
+    javaCode += `/**\n`;
+    javaCode += ` * DTO generado automáticamente desde RAML\n`;
+    javaCode += ` * ⚠️ NO MODIFICAR MANUALMENTE\n`;
+    if (typeObj.description) {
+      javaCode += ` * \n`;
+      javaCode += ` * ${typeObj.description}\n`;
+    }
+    javaCode += ` */\n`;
+    javaCode += `@Data\n`;
+    javaCode += `@Builder\n`;
+    javaCode += `@NoArgsConstructor\n`;
+    javaCode += `@AllArgsConstructor\n`;
+    javaCode += `public class ${typeName} {\n\n`;
+    
+    // Propiedades
+    if (typeObj.properties) {
+      const properties = Array.isArray(typeObj.properties)
+        ? typeObj.properties
+        : Object.entries(typeObj.properties).map(([key, value]) => ({ ...value, name: key }));
+      
+      properties.forEach(prop => {
+        const propName = prop.name || prop.key;
+        const javaType = getJavaTypeForProperty(prop, globalTypes);
+        
+        javaCode += `    /**\n`;
+        javaCode += `     * ${prop.description || propName}\n`;
+        if (prop.example) {
+          javaCode += `     * Ejemplo: ${prop.example}\n`;
+        }
+        javaCode += `     */\n`;
+        javaCode += `    @JsonProperty("${propName}")\n`;
+        
+        if (prop.required) {
+          javaCode += `    @NotNull\n`;
+        }
+        
+        javaCode += `    private ${javaType} ${propName};\n\n`;
+      });
+    }
+    
+    javaCode += `}\n`;
+    return javaCode;
+  }
+  
+  // Tipo simple
+  const javaType = convertTypeToJava(typeObj.type);
+  javaCode += `public class ${typeName} {\n`;
+  javaCode += `    // Tipo simple: ${javaType}\n`;
+  javaCode += `}\n`;
+  
+  return javaCode;
+}
+
+// eslint-disable-next-line max-lines-per-function
+function getJavaTypeForProperty(prop, globalTypes) {
+  let propType = prop.type;
+  
+  // Array
+  if (Array.isArray(propType) && propType.length > 0) {
+    propType = propType[0];
+  }
+  
+  // Array con sintaxis []
+  if (typeof propType === 'string' && propType.endsWith('[]')) {
+    const baseType = propType.slice(0, -2);
+    if (globalTypes[baseType]) {
+      return `List<${baseType}>`;
+    } else {
+      return 'List<Object>';
+    }
+  }
+  
+  // Array con items
+  if (propType === 'array' && prop.items) {
+    let arrayType = 'Object';
+    
+    if (typeof prop.items === 'string' && prop.items.includes('.')) {
+      const actualType = prop.items.split('.')[1];
+      if (globalTypes[actualType]) {
+        arrayType = actualType;
+      }
+    } else if (prop.items.originalType && globalTypes[prop.items.originalType]) {
+      arrayType = prop.items.originalType;
+    } else if (prop.items.name && globalTypes[prop.items.name]) {
+      arrayType = prop.items.name;
+    } else if (typeof prop.items === 'string' && globalTypes[prop.items]) {
+      arrayType = prop.items;
+    } else if (typeof prop.items === 'string') {
+      switch (prop.items) {
+        case 'string': arrayType = 'String'; break;
+        case 'number':
+        case 'integer': arrayType = 'Integer'; break;
+        case 'boolean': arrayType = 'Boolean'; break;
+      }
+    } else if (prop.items && typeof prop.items === 'object' && prop.items.type) {
+      switch (prop.items.type) {
+        case 'string': arrayType = 'String'; break;
+        case 'number':
+        case 'integer': arrayType = 'Integer'; break;
+        case 'boolean': arrayType = 'Boolean'; break;
+        default:
+          if (globalTypes[prop.items.type]) {
+            arrayType = prop.items.type;
+          }
+          break;
+      }
+    }
+    
+    return `List<${arrayType}>`;
+  }
+  
+  // Referencia con namespace
+  if (propType && typeof propType === 'string' && propType.includes('.')) {
+    const actualType = propType.split('.')[1];
+    if (globalTypes[actualType]) {
+      return actualType;
+    }
+  }
+  
+  // Tipo global
+  if (globalTypes[propType]) {
+    return propType;
+  }
+  
+  // Include
+  if (propType && typeof propType === 'string' && propType.includes('/')) {
+    return path.basename(propType, '.raml');
+  }
+  
+  // Primitivo
+  return convertTypeToJava(propType);
+}
+
+function createJavaFiles(ramlObj, outputDir) {
+  const javaOutputDir = path.join(outputDir, 'java');
+  if (!fs.existsSync(javaOutputDir)) {
+    fs.mkdirSync(javaOutputDir, { recursive: true });
+  }
+  
+  const globalTypes = {};
+  if (ramlObj.types) {
+    for (const [typeName, typeObj] of Object.entries(ramlObj.types)) {
+      globalTypes[typeName] = typeObj;
+    }
+  }
+  
+  if (ramlObj.types) {
+    for (const [typeName, typeObj] of Object.entries(ramlObj.types)) {
+      const javaCode = generateJavaClass(typeName, typeObj, globalTypes);
+      const fileName = `${typeName}.java`;
+      fs.writeFileSync(path.join(javaOutputDir, fileName), javaCode);
+      //eslint-disable-next-line no-console
+      console.log(`✅ Clase Java generada: ${fileName}`);
+    }
+  }
+  
+  return javaOutputDir;
+}
 
 // eslint-disable-next-line max-lines-per-function
 async function generateDTOs() {
@@ -297,11 +559,11 @@ async function generateDTOs() {
   
   const ramlObj = await raml2obj.parse(ramlFile);
   
+  // Generar TypeScript (código existente)
   let output = '// Tipos TypeScript generados automáticamente desde RAML\n';
   output += '// ⚠️  NO MODIFICAR MANUALMENTE - Se sobrescribe en cada generación\n';
   output += '// Paquete virtual: import {} from "@juliaosistem/core-dtos"\n\n';
 
-  // Primero generar todos los tipos globales
   const globalTypes = {};
   if (ramlObj.types) {
     for (const [typeName, typeObj] of Object.entries(ramlObj.types)) {
@@ -309,7 +571,6 @@ async function generateDTOs() {
     }
   }
   
-  // Luego generar las definiciones de tipos (enums, interfaces, etc.)
   if (ramlObj.types) {
     for (const [typeName, typeObj] of Object.entries(ramlObj.types)) {
       output += generateTypeDefinition(typeName, typeObj, globalTypes);
@@ -324,12 +585,18 @@ async function generateDTOs() {
   fs.writeFileSync(outputFile, output);
   createPackageJson(outputDir);
   
-  return outputFile;
+  // Generar Java
+  const javaOutputDir = createJavaFiles(ramlObj, outputDir);
+  
+  return { typescript: outputFile, java: javaOutputDir };
 }
 
 generateDTOs()
   // eslint-disable-next-line no-console
-  .then(file => console.log(`✅ DTOs generados en: ${file}`))
+  .then(files => {
+    console.log(`✅ DTOs TypeScript generados en: ${files.typescript}`);
+    console.log(`✅ DTOs Java generados en: ${files.java}`);
+  })
   // eslint-disable-next-line no-console
   .catch(error => console.error('❌ Error:', error.message));
 
