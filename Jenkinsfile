@@ -222,10 +222,10 @@ pipeline {
     
 post {
     always {
-        node {
+       
             sh 'docker system prune -f || true'
             cleanWs()
-        }
+        
     }
     success {
         script {
