@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { DynamicField, FieldType } from '../interfaces/dynamic-field.interface';
-
+import { DynamicField } from '../interfaces/dynamic-field.interface';
+import { FieldType } from '@juliaosistem/core-dtos';
 export interface GenerateFieldsConfig {
   data: Record<string, unknown>[];
   fieldTypeConfig?: Record<string, FieldType>;

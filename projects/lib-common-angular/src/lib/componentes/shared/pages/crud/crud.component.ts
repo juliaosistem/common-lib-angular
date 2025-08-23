@@ -11,10 +11,10 @@ import { Grid1Component } from '../../molecules/grid1/grid1.component';
 import { ToolBar1Component } from '../../molecules/tool-bar1/tool-bar1.component';
 
 // ✅ Importar los tipos del sistema dinámico
-import { FieldType, DynamicField } from '../../interfaces/dynamic-field.interface';
+import { FieldType, DynamicField } from '@juliaosistem/core-dtos';
 import { DynamicFieldService } from '../../services/dynamic-field.service';
 import { ExcelExportService } from '../../services/excel-export.service';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
     selector: 'lib-crud',

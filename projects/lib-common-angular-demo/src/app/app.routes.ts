@@ -64,6 +64,14 @@ export const routes: Routes = [
           menuConfig: defaultMenuConfig,
           userPermissions: permissionConfigs.user
         }
+      },
+      { 
+        path: 'componentes', 
+        loadChildren: () => import('./componentes.routes'),
+        data: {
+          menuConfig: defaultMenuConfig,
+          userPermissions: permissionConfigs.user
+        }
       }
     ]
   }

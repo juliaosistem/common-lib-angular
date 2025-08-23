@@ -6,7 +6,7 @@ import { AppTopbar } from './app.topbar';
 import { AppSidebar } from './app.sidebar';
 import { AppFooter } from './app.footer';
 import { LayoutService } from '../../../shared/services/layout.service';
-import { MenuConfig } from '../../../shared/interfaces/menu.interface';
+import { MenuConfig } from '@juliaosistem/core-dtos';
 
 @Component({
     selector: 'lib-daskboard3',
@@ -67,6 +67,7 @@ export class DaskBoard3 implements OnInit {
         this.route.data.subscribe(data => {
             if (data['menuConfig'] && !this.menuConfig) {
                 this.menuConfig = data['menuConfig'];
+                // eslint-disable-next-line no-console
                 console.log('Dashboard3: MenuConfig cargado desde datos de ruta:', this.menuConfig);
             }
             
