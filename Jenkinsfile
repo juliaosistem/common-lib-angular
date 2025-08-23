@@ -188,16 +188,12 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: "${RANCHER_CREDENTIALS_ID}", variable: 'RANCHER_TOKEN')]) {
                     script {
-                        // 🔄 Usar variables de entorno para URLs
                         def rancherUrl = env.RANCHER_URL ?: 'https://rancher.your-domain.com'
                         def projectId = env.RANCHER_PROJECT_ID ?: 'c-xxxxx:p-xxxxx'
                         
                         sh """
                             echo "🚀 Desplegando ${env.DEMO_IMAGE_TAG} en Rancher..."
-                            
                             # Deploy logic aquí...
-                            # (mismo código de deploy pero usando variables dinámicas)
-                            
                             echo "✅ Despliegue completado"
                         """
                     }
@@ -211,7 +207,6 @@ pipeline {
             }
             steps {
                 echo "🚀 Desplegando en entorno de staging..."
-                // Deploy a staging environment
             }
         }
         
@@ -221,15 +216,16 @@ pipeline {
             }
             steps {
                 echo "🧪 Desplegando feature branch para testing..."
-                // Deploy temporal para testing de features
             }
         }
     }
     
     post {
         always {
-            sh 'docker system prune -f || true'
-            cleanWs()
+            node {
+                sh 'docker system prune -f || true'
+                cleanWs()
+            }
         }
         success {
             script {
@@ -244,14 +240,13 @@ pipeline {
                     deployStatus = "📦 Solo build (no deploy)"
                 }
                 
-                def message = """
+                echo """
 ✅ **Pipeline Exitoso - ${env.BRANCH_NAME}** 
 📦 **Librería**: v${env.LIB_VERSION}
 🐳 **Docker**: ${env.DEMO_IMAGE_TAG}
 ${deployStatus}
 🔗 **Build**: ${env.BUILD_URL}
 """
-                echo message
             }
         }
         failure {
