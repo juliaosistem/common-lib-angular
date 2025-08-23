@@ -220,41 +220,41 @@ pipeline {
         }
     }
     
-    post {
-        always {
-            script {
-                sh 'docker system prune -f || true'
-                cleanWs()
+post {
+    always {
+        // limpiar docker basura y el workspace
+        sh 'docker system prune -f || true'
+        cleanWs()
+    }
+    success {
+        script {
+            def deployStatus = ""
+            if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main') {
+                deployStatus = "🚀 Desplegado en PRODUCCIÓN"
+            } else if (env.BRANCH_NAME == 'develop') {
+                deployStatus = "🧪 Desplegado en STAGING"
+            } else if (env.BRANCH_NAME.startsWith('feature/')) {
+                deployStatus = "🔬 Desplegado en FEATURE env"
+            } else {
+                deployStatus = "📦 Solo build (no deploy)"
             }
-        }
-        success {
-            script {
-                def deployStatus = ""
-                if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main') {
-                    deployStatus = "🚀 Desplegado en PRODUCCIÓN"
-                } else if (env.BRANCH_NAME == 'develop') {
-                    deployStatus = "🧪 Desplegado en STAGING"
-                } else if (env.BRANCH_NAME.startsWith('feature/')) {
-                    deployStatus = "🔬 Desplegado en FEATURE env"
-                } else {
-                    deployStatus = "📦 Solo build (no deploy)"
-                }
-                
-                echo """
-✅ **Pipeline Exitoso - ${env.BRANCH_NAME}** 
+            
+            echo """
+✅ **Pipeline Exitoso - ${env.BRANCH_NAME}**
 📦 **Librería**: v${env.LIB_VERSION}
 🐳 **Docker**: ${env.DEMO_IMAGE_TAG}
 ${deployStatus}
 🔗 **Build**: ${env.BUILD_URL}
 """
-            }
         }
-        failure {
-            echo """
+    }
+    failure {
+        echo """
 ❌ **Pipeline Falló - ${env.BRANCH_NAME}**
 📝 **Commit**: ${env.GIT_COMMIT}
 🔗 **Build**: ${env.BUILD_URL}
 """
-        }
     }
+}
+
 }
