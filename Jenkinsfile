@@ -24,16 +24,21 @@ pipeline {
     }
     
     stages {
-          stage('Install Dependencies') {
-            steps {
-                sh '''
-                    echo "📥 Instalando dependencias..."
-                    npm install
-                    echo "🔄 Actualizando DTOs..."
-                    npm run update:dtos
-                '''
-            }
+         stage('Install dependencies') {
+    steps {
+        withCredentials([usernamePassword(
+            credentialsId: 'credenciales git',
+            usernameVariable: 'GIT_USER',
+            passwordVariable: 'GIT_PASS'
+        )]) {
+            sh '''
+                git config --global url."https://${GIT_USER}:${GIT_PASS}@github.com/".insteadOf "https://github.com/"
+                npm install
+            '''
         }
+    }
+}
+
         
         stage('Checkout & Info') {
             steps {
