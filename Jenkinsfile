@@ -24,11 +24,22 @@ pipeline {
     }
     
     stages {
+          stage('Install Dependencies') {
+            steps {
+                sh '''
+                    echo "📥 Instalando dependencias..."
+                    npm install
+                    echo "🔄 Actualizando DTOs..."
+                    npm run update:dtos
+                '''
+            }
+        }
+        
         stage('Checkout & Info') {
             steps {
                 script {
                     // 🔄 En multibranch, checkout es automático
-                    
+                     
                     // Obtener versión de la librería
                     env.LIB_VERSION = sh(
                         script: "node -p \"require('./package.json').version\"",
@@ -44,16 +55,6 @@ pipeline {
             }
         }
         
-        stage('Install Dependencies') {
-            steps {
-                sh '''
-                    echo "📥 Instalando dependencias..."
-                    npm ci
-                    echo "🔄 Actualizando DTOs..."
-                    npm run update:dtos
-                '''
-            }
-        }
         
         stage('Quality Gates') {
             parallel {
