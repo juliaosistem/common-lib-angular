@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        NODE_VERSION = '22.12.0'
+        NODE_VERSION = 'nodejs'
         
         // 🔄 Usar variables de entorno de Jenkins (más seguro)
         NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOCKER_REGISTRY ?: 'localhost:8082'}"
@@ -222,9 +222,10 @@ pipeline {
     
 post {
     always {
-        // limpiar docker basura y el workspace
-        sh 'docker system prune -f || true'
-        cleanWs()
+        node {
+            sh 'docker system prune -f || true'
+            cleanWs()
+        }
     }
     success {
         script {
@@ -256,5 +257,6 @@ ${deployStatus}
 """
     }
 }
+
 
 }
