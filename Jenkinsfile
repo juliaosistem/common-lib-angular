@@ -26,22 +26,28 @@ pipeline {
 
     stages {
 
+        // REEMPLAZADO: Checkout & Info (evitar checkout automático que inserta creds malformadas)
         stage('Checkout & Info') {
             steps {
                 script {
-                    // Checkout del repo principal usando credentialsId configurado en Jenkins
-                    checkout([$class: 'GitSCM',
-                        branches: [[name: "*/${env.BRANCH_NAME ?: 'develop'}"]],
-                        userRemoteConfigs: [[
-                            url: 'https://github.com/juliaosistem/common-lib-angular.git',
-                            credentialsId: 'credenciales git'
-                        ]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: []
-                    ])
+                    withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                        sh '''
+                          set -e
+                          echo "🔎 Validando acceso al repo principal..."
+                          if ! git ls-remote --heads "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" "${BRANCH_NAME:-develop}" >/dev/null 2>&1; then
+                            echo "ERROR: no se pudo acceder al repo principal con las credenciales proporcionadas."
+                            echo "Verifica 'credenciales git' en Jenkins: Username = tu usuario GitHub (no email), Password = token personal (PAT)."
+                            exit 1
+                          fi
+                          echo "📥 Clonando repo principal..."
+                          rm -rf ./* || true
+                          git clone --branch "${BRANCH_NAME:-develop}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" .
+                        '''
+                    }
 
-                    // Calcular valores runtime
-                    env.GIT_COMMIT_SHORT = env.GIT_COMMIT ? env.GIT_COMMIT.take(7) : sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    // Obtener commit y calcular variables desde el repo clonado
+                    env.GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+                    env.GIT_COMMIT_SHORT = env.GIT_COMMIT.take(7)
                     env.BUILD_TAG = "${env.BRANCH_NAME ?: 'no-branch'}-${env.BUILD_NUMBER ?: 'no-build'}-${env.GIT_COMMIT_SHORT}"
                     env.DEMO_IMAGE_TAG = "${env.NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${env.BUILD_TAG}"
                     env.LIB_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
