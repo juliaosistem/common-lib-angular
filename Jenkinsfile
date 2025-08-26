@@ -309,24 +309,3 @@ ${deployStatus}
         }
     }
 }
-                    echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
-📝 **Commit**: ${env.GIT_COMMIT}
-🔗 **Build**: ${env.BUILD_URL}
-"""
-                }
-            }
-        }
-    }
-}
-            script {
-                // Ejecutar mensajes / acciones de failure dentro de node si necesitan workspace
-                node {
-                    echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
-📝 **Commit**: ${env.GIT_COMMIT}
-🔗 **Build**: ${env.BUILD_URL}
-"""
-                }
-            }
-        }
-    }
-}
