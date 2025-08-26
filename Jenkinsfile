@@ -281,10 +281,10 @@ ${deployStatus}
             }
         }
         failure {
-            echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
+           sh ' echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
 📝 **Commit**: ${env.GIT_COMMIT}
 🔗 **Build**: ${env.BUILD_URL}
-"""
+"""'
         }
     }
 }
