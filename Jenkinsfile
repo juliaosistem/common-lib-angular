@@ -25,32 +25,32 @@ pipeline {
     
     stages {
 
-        //  stage('preparar dtos') {
-        //     steps {
-        //         usa credenciales con usuario/password configuradas en Jenkins (id: 'credenciales git')
-        //         withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-        //             sh '''
+         stage('preparar dtos') {
+            steps {
+                usa credenciales con usuario/password configuradas en Jenkins (id: 'credenciales git')
+                withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    sh '''
                         
-        //                 echo "🔽 Preparando lib-core-dtos (branch: develop)"
+                        echo "🔽 Preparando lib-core-dtos (branch: develop)"
                         
-        //                 # Si existe submodulo, actualizar; si no, clonar directamente
-        //                 if [ -d "lib-core-dtos/.git" ]; then
-        //                   echo "📁 lib-core-dtos existe: actualizando..."
-        //                   cd lib-core-dtos
-        //                   git fetch --all --prune
-        //                   git checkout develop || true
-        //                   git pull origin develop || true
-        //                   cd ..
-        //                 else
-        //                   echo "📥 Clonando lib-core-dtos desde GitHub..."
-        //                  git clone --branch develop https://zigmainflables@gmail.com:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git lib-core-dtos
-        //                 fi
+                        # Si existe submodulo, actualizar; si no, clonar directamente
+                        if [ -d "lib-core-dtos/.git" ]; then
+                          echo "📁 lib-core-dtos existe: actualizando..."
+                          cd lib-core-dtos
+                          git fetch --all --prune
+                          git checkout develop || true
+                          git pull origin develop || true
+                          cd ..
+                        else
+                          echo "📥 Clonando lib-core-dtos desde GitHub..."
+                         git clone --branch develop https://Farius-red:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git lib-core-dtos
+                        fi
                         
-        //                 echo "✅ lib-core-dtos listo"
-        //             '''
-        //         }
-        //     }
-        // }
+                        echo "✅ lib-core-dtos listo"
+                    '''
+                }
+            }
+        }
          stage('Install dependencies') {
                 steps {
                         sh '''
