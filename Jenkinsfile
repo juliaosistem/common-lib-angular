@@ -27,7 +27,6 @@ pipeline {
 
          stage('preparar dtos') {
             steps {
-                usa credenciales con usuario/password configuradas en Jenkins (id: 'credenciales git')
                 withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     sh '''
                         
