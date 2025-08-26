@@ -11,12 +11,12 @@ pipeline {
         NEXUS_CREDENTIALS_ID = 'nexus-credentials'
         RANCHER_CREDENTIALS_ID = 'rancher-api-credentials'
         
-        // 🌳 Variables automáticas en multibranch
+        // 🌳 Variables automáticas en multibranch (dejarlas vacías y calcular en runtime)
         BRANCH_NAME = "${env.BRANCH_NAME}"
-        GIT_COMMIT_SHORT = "${env.GIT_COMMIT.take(7)}"
-        BUILD_TAG = "${BRANCH_NAME}-${env.BUILD_NUMBER}-${GIT_COMMIT_SHORT}"
+        GIT_COMMIT_SHORT = ""
+        BUILD_TAG = ""
         LIB_VERSION = ""
-        DEMO_IMAGE_TAG = "${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
+        DEMO_IMAGE_TAG = ""
     }
     
     tools {
@@ -77,7 +77,7 @@ pipeline {
         stage('Checkout & Info') {
             steps {
                 script {
-                    // Hacer checkout explícito dentro del agent usando credentialsId (evita el error de URL malformada)
+                    // Checkout explícito (usa credentialsId)
                     checkout([$class: 'GitSCM',
                         branches: [[name: "*/${env.BRANCH_NAME ?: 'develop'}"]],
                         userRemoteConfigs: [[
@@ -85,6 +85,17 @@ pipeline {
                             credentialsId: 'credenciales git'
                         ]]
                     ])
+                    
+                    // Obtener commit corto de forma segura
+                    if (env.GIT_COMMIT) {
+                        env.GIT_COMMIT_SHORT = env.GIT_COMMIT.take(7)
+                    } else {
+                        env.GIT_COMMIT_SHORT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    }
+                    
+                    // Construir BUILD_TAG y DEMO_IMAGE_TAG dinámicamente
+                    env.BUILD_TAG = "${env.BRANCH_NAME ?: 'no-branch'}-${env.BUILD_NUMBER ?: 'no-build'}-${env.GIT_COMMIT_SHORT}"
+                    env.DEMO_IMAGE_TAG = "${env.NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${env.BUILD_TAG}"
                     
                     // Obtener versión de la librería
                     env.LIB_VERSION = sh(
@@ -269,8 +280,13 @@ pipeline {
     
     post {
         always {
-            sh 'docker system prune -f || true'
-            cleanWs()
+            script {
+                // Ejecutar limpieza dentro de node para disponer de hudson.FilePath
+                node {
+                    sh 'docker system prune -f || true'
+                    cleanWs()
+                }
+            }
         }
         success {
             script {
@@ -294,12 +310,14 @@ ${deployStatus}
             }
         }
         failure {
-            // Evitar sh fuera de node y usar script/echo consistente
             script {
-                echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
+                // Ejecutar mensajes / acciones de failure dentro de node si necesitan workspace
+                node {
+                    echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
 📝 **Commit**: ${env.GIT_COMMIT}
 🔗 **Build**: ${env.BUILD_URL}
 """
+                }
             }
         }
     }
