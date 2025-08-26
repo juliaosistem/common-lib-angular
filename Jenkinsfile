@@ -28,26 +28,31 @@ pipeline {
 
          stage('preparar dtos') {
             steps {
-                // Usar checkout con credentialsId en lugar de incrustar usuario/token en la URL
-                script {
-                    // Si ya existe el dir, actualizar; si no, checkout en ese dir
-                    if (fileExists('lib-core-dtos/.git')) {
-                        sh '''
-                          set -e
-                          cd lib-core-dtos
-                          git fetch --all --prune
-                          git checkout develop || true
-                          git pull origin develop || true
-                        '''
-                    } else {
-                        dir('lib-core-dtos') {
-                            checkout([$class: 'GitSCM',
-                                branches: [[name: '*/develop']],
-                                userRemoteConfigs: [[
-                                    url: 'https://github.com/juliaosistem/lib-core-dtos.git',
-                                    credentialsId: 'credenciales git'
-                                ]]
-                            ])
+                // Usar withCredentials para clonar y validar credenciales antes de clonar
+                withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    script {
+                        // Si ya existe el dir, actualizar; si no, clonar usando credenciales
+                        if (fileExists('lib-core-dtos/.git')) {
+                            sh '''
+                              set -e
+                              cd lib-core-dtos
+                              git fetch --all --prune
+                              git checkout develop || true
+                              git pull origin develop || true
+                            '''
+                        } else {
+                            // validar credenciales intentando acceder al repo remoto
+                            sh '''
+                              set -e
+                              echo "🔎 Validando acceso a lib-core-dtos..."
+                              if ! git ls-remote --heads "https://Farius-red:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" develop >/dev/null 2>&1; then
+                                echo "ERROR: no se pudo acceder a https://github.com/juliaosistem/lib-core-dtos.git"
+                                echo "Revisa el credentialsId 'credenciales git' - el username y el token/password deben estar en los campos correctos."
+                                exit 1
+                              fi
+                              echo "📥 Clonando lib-core-dtos..."
+                              git clone --branch develop "https://Farius-red:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
+                            '''
                         }
                     }
                 }
@@ -73,14 +78,21 @@ pipeline {
         stage('Checkout & Info') {
             steps {
                 script {
-                    // Checkout explícito (usa credentialsId)
-                    checkout([$class: 'GitSCM',
-                        branches: [[name: "*/${env.BRANCH_NAME ?: 'develop'}"]],
-                        userRemoteConfigs: [[
-                            url: 'https://github.com/juliaosistem/common-lib-angular.git',
-                            credentialsId: 'credenciales git'
-                        ]]
-                    ])
+                    // Hacer checkout explícito usando credenciales y validar antes
+                    withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                        sh '''
+                          set -e
+                          echo "🔎 Validando acceso al repo principal..."
+                          if ! git ls-remote --heads "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" ${BRANCH_NAME:-develop} >/dev/null 2>&1; then
+                            echo "ERROR: no se pudo acceder a https://github.com/juliaosistem/common-lib-angular.git"
+                            echo "Verifica 'credenciales git' en Jenkins (username debe ser tu usuario GitHub y password tu token personal)."
+                            exit 1
+                          fi
+                          echo "📥 Clonando repo principal..."
+                          rm -rf ./* || true
+                          git clone --branch "${BRANCH_NAME:-develop}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" .
+                        '''
+                    }
                     
                     // Obtener commit corto de forma segura
                     if (env.GIT_COMMIT) {
