@@ -43,7 +43,7 @@ pipeline {
                           cd ..
                         else
                           echo "📥 Clonando lib-core-dtos desde GitHub..."
-                          git clone --branch develop "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
+                          git clone --branch develop "git clone https://zigmainflables@gmail.com:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
                         fi
                         
                         echo "✅ lib-core-dtos listo"
