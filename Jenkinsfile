@@ -24,20 +24,51 @@ pipeline {
     }
     
     stages {
-         stage('Install dependencies') {
-    steps {
-        withCredentials([usernamePassword(
-            credentialsId: 'credenciales git',
-            usernameVariable: 'GIT_USER',
-            passwordVariable: 'GIT_PASS'
-        )]) {
-            sh '''
-                git config --global url."https://${GIT_USER}:${GIT_PASS}@github.com/".insteadOf "https://github.com/"
-                npm install
-            '''
+
+         stage('Prepare DTOs') {
+            steps {
+                // usa credenciales con usuario/password configuradas en Jenkins (id: 'credenciales git')
+                withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    sh '''
+                        set -e
+                        echo "🔽 Preparando lib-core-dtos (branch: develop)"
+                        
+                        # Si existe submodulo, actualizar; si no, clonar directamente
+                        if [ -d "lib-core-dtos/.git" ]; then
+                          echo "📁 lib-core-dtos existe: actualizando..."
+                          cd lib-core-dtos
+                          git fetch --all --prune
+                          git checkout develop || true
+                          git pull origin develop || true
+                          cd ..
+                        else
+                          echo "📥 Clonando lib-core-dtos desde GitHub..."
+                          git clone --branch develop "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
+                        fi
+                        
+                        echo "✅ lib-core-dtos listo"
+                    '''
+                }
+            }
         }
-    }
-}
+         stage('Install dependencies') {
+                steps {
+                   
+                        sh '''
+                            echo "📦 Instalando dependencias..."
+                            npm install
+                            echo "✅ Dependencias instaladas"
+                            echo "🔄 Generando DTOs y construyendo proyectos..."
+                            npm run generate:dtos
+                            echo "✅ DTOs generados"
+                            echo "🔨 Construyendo librería y demo..."
+                            npm run build:lib
+                            echo "✅ Librería construida"
+                            npm run build:demo
+                        '''
+                    }
+                }
+        }
 
         
         stage('Checkout & Info') {
