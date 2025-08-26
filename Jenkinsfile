@@ -4,19 +4,15 @@ pipeline {
     environment {
         NODE_VERSION = 'nodejs'
         
-        // 🔄 Usar variables de entorno de Jenkins (más seguro)
-        NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOCKER_REGISTRY ?: 'localhost:8082'}"
-        NEXUS_NPM_REGISTRY = "${env.NEXUS_NPM_REGISTRY ?: 'http://localhost:8081/repository/npm-hosted/'}"
+        // 🔄 Valores estáticos / configurables
+        NEXUS_DOCKER_REGISTRY = 'localhost:8082'
+        NEXUS_NPM_REGISTRY = 'http://localhost:8081/repository/npm-hosted/'
         
         NEXUS_CREDENTIALS_ID = 'nexus-credentials'
         RANCHER_CREDENTIALS_ID = 'rancher-api-credentials'
         
-        // 🌳 Variables automáticas en multibranch (dejarlas vacías y calcular en runtime)
-        BRANCH_NAME = "${env.BRANCH_NAME}"
-        GIT_COMMIT_SHORT = ""
-        BUILD_TAG = ""
-        LIB_VERSION = ""
-        DEMO_IMAGE_TAG = ""
+        // Variables calculadas en runtime/etapas (no aquí)
+        // BRANCH_NAME, GIT_COMMIT_SHORT, BUILD_TAG, LIB_VERSION, DEMO_IMAGE_TAG
     }
     
     tools {
