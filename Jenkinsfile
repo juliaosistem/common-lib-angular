@@ -31,51 +31,23 @@ pipeline {
                 // Usar withCredentials para clonar y validar credenciales antes de clonar
                 withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     script {
-                        // Si ya existe el dir, actualizar; si no, clonar usando credenciales
-                        if (fileExists('lib-core-dtos/.git')) {
-                            sh '''
-                              set -e
-                              cd lib-core-dtos
-                              git fetch --all --prune
-                              git checkout develop || true
-                              git pull origin develop || true
-                            '''
-                        } else {
-                            // validar credenciales intentando acceder al repo remoto
-                            sh '''
-                              set -e
-                              echo "🔎 Validando acceso a lib-core-dtos..."
-                              if ! git ls-remote --heads "https://Farius-red:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" develop >/dev/null 2>&1; then
-                                echo "ERROR: no se pudo acceder a https://github.com/juliaosistem/lib-core-dtos.git"
-                                echo "Revisa el credentialsId 'credenciales git' - el username y el token/password deben estar en los campos correctos."
-                                exit 1
-                              fi
-                              echo "📥 Clonando lib-core-dtos..."
-                              git clone --branch develop "https://Farius-red:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
-                            '''
-                        }
+                        // Eliminar cualquier copia previa y clonar desde cero (más fiable)
+                        sh '''
+                          set -e
+                          echo "🔽 Preparando lib-core-dtos (clone limpio)"
+                          rm -rf lib-core-dtos
+                          # intentar clonar la rama 'develop'; si falla (rama no existe), clonar por defecto
+                          if ! git clone --branch develop "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos 2>/dev/null; then
+                              echo "⚠️ Rama 'develop' no disponible o clonación falló; clonando la rama por defecto..."
+                              git clone "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
+                          fi
+                          echo "✅ lib-core-dtos listo"
+                        '''
                     }
                 }
             }
         }
-         stage('Install dependencies') {
-                steps {
-                        sh '''
-                            echo "📦 Instalando dependencias..."
-                            npm install
-                            echo "✅ Dependencias instaladas"
-                            echo "🔄 Generando DTOs y construyendo proyectos..."
-                            npm run generate:dtos
-                            echo "✅ DTOs generados"
-                            echo "🔨 Construyendo librería y demo..."
-                            npm run build:lib
-                            echo "✅ Librería construida"
-                            npm run build:demo
-                        '''
-                }
-         }
-        
-        stage('Checkout & Info') {
+         stage('Checkout & Info') {
             steps {
                 script {
                     // Hacer checkout explícito usando credenciales y validar antes
@@ -120,6 +92,22 @@ pipeline {
             }
         }
         
+        stage('Install dependencies') {
+                steps {
+                        sh '''
+                            echo "📦 Instalando dependencias..."
+                            npm install
+                            echo "✅ Dependencias instaladas"
+                            echo "🔄 Generando DTOs y construyendo proyectos..."
+                            npm run generate:dtos
+                            echo "✅ DTOs generados"
+                            echo "🔨 Construyendo librería y demo..."
+                            npm run build:lib
+                            echo "✅ Librería construida"
+                            npm run build:demo
+                        '''
+                }
+         }
         
         stage('Quality Gates') {
             parallel {
@@ -318,6 +306,18 @@ ${deployStatus}
             }
         }
         failure {
+            script {
+                // Ejecutar mensajes / acciones de failure dentro de node si necesitan workspace
+                node {
+                    echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
+📝 **Commit**: ${env.GIT_COMMIT}
+🔗 **Build**: ${env.BUILD_URL}
+"""
+                }
+            }
+        }
+    }
+}
             script {
                 // Ejecutar mensajes / acciones de failure dentro de node si necesitan workspace
                 node {
