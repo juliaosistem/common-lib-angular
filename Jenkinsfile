@@ -53,7 +53,6 @@ pipeline {
         }
          stage('Install dependencies') {
                 steps {
-                   
                         sh '''
                             echo "📦 Instalando dependencias..."
                             npm install
@@ -66,10 +65,8 @@ pipeline {
                             echo "✅ Librería construida"
                             npm run build:demo
                         '''
-                    }
                 }
-        }
-
+         }
         
         stage('Checkout & Info') {
             steps {
@@ -291,6 +288,9 @@ ${deployStatus}
 ❌ **Pipeline Falló - ${env.BRANCH_NAME}**
 📝 **Commit**: ${env.GIT_COMMIT}
 🔗 **Build**: ${env.BUILD_URL}
+"""
+    }
+}
 """
     }
 }
