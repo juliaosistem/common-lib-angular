@@ -31,6 +31,12 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                        // Validación en Groovy antes de ejecutar comandos con las credenciales
+                        def u = env.GIT_USER ?: ''
+                        if (u.contains('@') || u.contains(' ') || u.contains(':')) {
+                            error("Credencial mal formada: Username contiene caracteres inválidos (${u}).\nAsegura en Jenkins que 'credenciales git' sea tipo 'Username with password' con:\n - Username = tu usuario de GitHub (ej. farius-red), NO el email\n - Password = token personal (PAT).")
+                        }
+
                         sh '''
                           set -e
                           echo "🔎 Validando acceso al repo principal..."
