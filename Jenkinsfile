@@ -26,7 +26,7 @@ pipeline {
 
     stages {
 
-        // REEMPLAZADO: Checkout & Info (evitar checkout automático que inserta creds malformadas)
+        // REEMPLAZADO: Checkout & Info (clonar en tmp y copiar para evitar "destination path '.' already exists")
         stage('Checkout & Info') {
             steps {
                 script {
@@ -45,9 +45,12 @@ pipeline {
                             echo "Verifica 'credenciales git' en Jenkins: Username = tu usuario GitHub (no email), Password = token personal (PAT)."
                             exit 1
                           fi
-                          echo "📥 Clonando repo principal..."
-                          rm -rf ./* || true
-                          git clone --branch "${BRANCH_NAME:-develop}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" .
+                          echo "📥 Clonando repo principal en tmp_checkout..."
+                          rm -rf tmp_checkout
+                          git clone --branch "${BRANCH_NAME:-develop}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" tmp_checkout
+                          echo "📤 Copiando contenido al workspace (sobrescribe archivos existentes)..."
+                          cp -a tmp_checkout/. .
+                          rm -rf tmp_checkout
                         '''
                     }
 
