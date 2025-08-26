@@ -26,62 +26,27 @@ pipeline {
     
     stages {
 
-         stage('preparar dtos') {
-            steps {
-                // Usar withCredentials para clonar y validar credenciales antes de clonar
-                withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                    script {
-                        // Eliminar cualquier copia previa y clonar desde cero (más fiable)
-                        sh '''
-                          set -e
-                          echo "🔽 Preparando lib-core-dtos (clone limpio)"
-                          rm -rf lib-core-dtos
-                          # intentar clonar la rama 'develop'; si falla (rama no existe), clonar por defecto
-                          if ! git clone --branch develop "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos 2>/dev/null; then
-                              echo "⚠️ Rama 'develop' no disponible o clonación falló; clonando la rama por defecto..."
-                              git clone "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
-                          fi
-                          echo "✅ lib-core-dtos listo"
-                        '''
-                    }
-                }
-            }
-        }
+         // MOVER: Checkout & Info al inicio para garantizar workspace correcto
          stage('Checkout & Info') {
             steps {
                 script {
-                    // Hacer checkout explícito usando credenciales y validar antes
-                    withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                        sh '''
-                          set -e
-                          echo "🔎 Validando acceso al repo principal..."
-                          if ! git ls-remote --heads "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" ${BRANCH_NAME:-develop} >/dev/null 2>&1; then
-                            echo "ERROR: no se pudo acceder a https://github.com/juliaosistem/common-lib-angular.git"
-                            echo "Verifica 'credenciales git' en Jenkins (username debe ser tu usuario GitHub y password tu token personal)."
-                            exit 1
-                          fi
-                          echo "📥 Clonando repo principal..."
-                          rm -rf ./* || true
-                          git clone --branch "${BRANCH_NAME:-develop}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" .
-                        '''
-                    }
+                    // Usar checkout declarativo con credentialsId (no borra subdirs)
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: "*/${env.BRANCH_NAME ?: 'develop'}"]],
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/juliaosistem/common-lib-angular.git',
+                            credentialsId: 'credenciales git'
+                        ]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: []
+                    ])
                     
-                    // Obtener commit corto de forma segura
-                    if (env.GIT_COMMIT) {
-                        env.GIT_COMMIT_SHORT = env.GIT_COMMIT.take(7)
-                    } else {
-                        env.GIT_COMMIT_SHORT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    }
-                    
-                    // Construir BUILD_TAG y DEMO_IMAGE_TAG dinámicamente
+                    // Obtener commit corto y calcular tags en runtime
+                    env.GIT_COMMIT_SHORT = env.GIT_COMMIT ? env.GIT_COMMIT.take(7) : sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     env.BUILD_TAG = "${env.BRANCH_NAME ?: 'no-branch'}-${env.BUILD_NUMBER ?: 'no-build'}-${env.GIT_COMMIT_SHORT}"
                     env.DEMO_IMAGE_TAG = "${env.NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${env.BUILD_TAG}"
                     
-                    // Obtener versión de la librería
-                    env.LIB_VERSION = sh(
-                        script: "node -p \"require('./package.json').version\"",
-                        returnStdout: true
-                    ).trim()
+                    env.LIB_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
                     
                     echo "🚀 Build automático en multibranch"
                     echo "📦 Rama: ${env.BRANCH_NAME}"
@@ -91,23 +56,49 @@ pipeline {
                 }
             }
         }
-        
-        stage('Install dependencies') {
-                steps {
+
+         // Ahora preparar dtos (clonado limpio en subdirectorio)
+         stage('preparar dtos') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    script {
                         sh '''
-                            echo "📦 Instalando dependencias..."
-                            npm install
-                            echo "✅ Dependencias instaladas"
-                            echo "🔄 Generando DTOs y construyendo proyectos..."
-                            npm run generate:dtos
-                            echo "✅ DTOs generados"
-                            echo "🔨 Construyendo librería y demo..."
-                            npm run build:lib
-                            echo "✅ Librería construida"
-                            npm run build:demo
+                          set -e
+                          echo "🔽 Preparando lib-core-dtos (clone limpio)"
+                          rm -rf lib-core-dtos
+                          if ! git clone --branch develop "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos 2>/dev/null; then
+                              echo "⚠️ No se pudo clonar la rama 'develop' (posible que no exista); clonando rama por defecto..."
+                              git clone "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
+                          fi
+                          echo "✅ lib-core-dtos listo"
                         '''
+                    }
                 }
-         }
+            }
+        }
+
+        // Instalar dependencias solo después del checkout principal
+        stage('Install dependencies') {
+            steps {
+                script {
+                    if (!fileExists('package.json')) {
+                        error("package.json no encontrado en workspace. Asegúrate de que el checkout se realizó correctamente.")
+                    }
+                    sh '''
+                        echo "📦 Instalando dependencias..."
+                        npm install
+                        echo "✅ Dependencias instaladas"
+                        echo "🔄 Generando DTOs y construyendo proyectos..."
+                        npm run generate:dtos
+                        echo "✅ DTOs generados"
+                        echo "🔨 Construyendo librería y demo..."
+                        npm run build:lib
+                        echo "✅ Librería construida"
+                        npm run build:demo
+                    '''
+                }
+            }
+        }
         
         stage('Quality Gates') {
             parallel {
@@ -309,6 +300,15 @@ ${deployStatus}
             script {
                 // Ejecutar mensajes / acciones de failure dentro de node si necesitan workspace
                 node {
+                    echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
+📝 **Commit**: ${env.GIT_COMMIT}
+🔗 **Build**: ${env.BUILD_URL}
+"""
+                }
+            }
+        }
+    }
+}
                     echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
 📝 **Commit**: ${env.GIT_COMMIT}
 🔗 **Build**: ${env.BUILD_URL}
