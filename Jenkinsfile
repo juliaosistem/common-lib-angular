@@ -1,36 +1,35 @@
 pipeline {
     agent any
-    
+
     environment {
         NODE_VERSION = 'nodejs'
-        
+
         // 🔄 Valores estáticos / configurables
         NEXUS_DOCKER_REGISTRY = 'localhost:8082'
         NEXUS_NPM_REGISTRY = 'http://localhost:8081/repository/npm-hosted/'
-        
+
         NEXUS_CREDENTIALS_ID = 'nexus-credentials'
         RANCHER_CREDENTIALS_ID = 'rancher-api-credentials'
-        
+
         // Variables calculadas en runtime/etapas (no aquí)
         // BRANCH_NAME, GIT_COMMIT_SHORT, BUILD_TAG, LIB_VERSION, DEMO_IMAGE_TAG
     }
-    
+
     tools {
         nodejs "${NODE_VERSION}"
     }
-    
-    // Evitar el checkout automático que ocurre antes de asignar el agent
+
     options {
+        // Evitar checkout automático; hacemos checkout explícito dentro del pipeline
         skipDefaultCheckout()
     }
-    
+
     stages {
 
-         // MOVER: Checkout & Info al inicio para garantizar workspace correcto
-         stage('Checkout & Info') {
+        stage('Checkout & Info') {
             steps {
                 script {
-                    // Usar checkout declarativo con credentialsId (no borra subdirs)
+                    // Checkout del repo principal usando credentialsId configurado en Jenkins
                     checkout([$class: 'GitSCM',
                         branches: [[name: "*/${env.BRANCH_NAME ?: 'develop'}"]],
                         userRemoteConfigs: [[
@@ -40,14 +39,13 @@ pipeline {
                         doGenerateSubmoduleConfigurations: false,
                         extensions: []
                     ])
-                    
-                    // Obtener commit corto y calcular tags en runtime
+
+                    // Calcular valores runtime
                     env.GIT_COMMIT_SHORT = env.GIT_COMMIT ? env.GIT_COMMIT.take(7) : sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     env.BUILD_TAG = "${env.BRANCH_NAME ?: 'no-branch'}-${env.BUILD_NUMBER ?: 'no-build'}-${env.GIT_COMMIT_SHORT}"
                     env.DEMO_IMAGE_TAG = "${env.NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${env.BUILD_TAG}"
-                    
                     env.LIB_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
-                    
+
                     echo "🚀 Build automático en multibranch"
                     echo "📦 Rama: ${env.BRANCH_NAME}"
                     echo "📝 Commit: ${env.GIT_COMMIT}"
@@ -57,8 +55,7 @@ pipeline {
             }
         }
 
-         // Ahora preparar dtos (clonado limpio en subdirectorio)
-         stage('preparar dtos') {
+        stage('preparar dtos') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     script {
@@ -67,7 +64,7 @@ pipeline {
                           echo "🔽 Preparando lib-core-dtos (clone limpio)"
                           rm -rf lib-core-dtos
                           if ! git clone --branch develop "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos 2>/dev/null; then
-                              echo "⚠️ No se pudo clonar la rama 'develop' (posible que no exista); clonando rama por defecto..."
+                              echo "⚠️ No se pudo clonar la rama 'develop' (posible que no exista); clonando la rama por defecto..."
                               git clone "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
                           fi
                           echo "✅ lib-core-dtos listo"
@@ -77,7 +74,6 @@ pipeline {
             }
         }
 
-        // Instalar dependencias solo después del checkout principal
         stage('Install dependencies') {
             steps {
                 script {
@@ -99,7 +95,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Quality Gates') {
             parallel {
                 stage('Lint') {
@@ -119,7 +115,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Build Library') {
             steps {
                 sh '''
@@ -134,12 +130,12 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Publish NPM Library') {
             when {
                 anyOf {
                     branch 'master'
-                    branch 'main' 
+                    branch 'main'
                     branch 'develop'
                     branch 'release/*'
                 }
@@ -151,27 +147,21 @@ pipeline {
                     passwordVariable: 'NEXUS_PASS'
                 )]) {
                     script {
-                        // 🔄 Extraer dominio dinámicamente
                         def nexusDomain = env.NEXUS_NPM_REGISTRY.replaceAll('https?://', '').split('/')[0]
-                        
                         sh """
                             echo "📤 Publicando librería v${env.LIB_VERSION} en Nexus NPM..."
                             npm config set registry ${env.NEXUS_NPM_REGISTRY}
-                            
-                            # Configurar autenticación dinámicamente
                             echo "//${nexusDomain}/:_auth=\$(echo -n "${NEXUS_USER}:${NEXUS_PASS}" | base64)" > ~/.npmrc
                             echo "//${nexusDomain}/:always-auth=true" >> ~/.npmrc
-                            
                             cd dist/lib-common-angular
                             npm publish
-                            
                             echo "✅ Librería v${env.LIB_VERSION} publicada exitosamente"
                         """
                     }
                 }
             }
         }
-        
+
         stage('Build Demo App') {
             steps {
                 sh '''
@@ -185,7 +175,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Docker Build & Push') {
             when {
                 anyOf {
@@ -204,25 +194,20 @@ pipeline {
                     sh '''
                         echo "🐳 Construyendo imagen Docker..."
                         docker build -t ${DEMO_IMAGE_TAG} .
-                        
                         echo "🔐 Login a Nexus Docker Registry..."
                         echo "${NEXUS_PASS}" | docker login ${NEXUS_DOCKER_REGISTRY} -u "${NEXUS_USER}" --password-stdin
-                        
                         echo "📤 Pushing imagen..."
                         docker push ${DEMO_IMAGE_TAG}
-                        
-                        # Tag latest para ramas principales
                         if [ "${BRANCH_NAME}" = "master" ] || [ "${BRANCH_NAME}" = "main" ]; then
                             docker tag ${DEMO_IMAGE_TAG} ${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:latest
                             docker push ${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:latest
                         fi
-                        
                         echo "✅ Imagen publicada: ${DEMO_IMAGE_TAG}"
                     '''
                 }
             }
         }
-        
+
         stage('Deploy to Production') {
             when {
                 anyOf {
@@ -233,9 +218,6 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: "${RANCHER_CREDENTIALS_ID}", variable: 'RANCHER_TOKEN')]) {
                     script {
-                        def rancherUrl = env.RANCHER_URL ?: 'https://rancher.your-domain.com'
-                        def projectId = env.RANCHER_PROJECT_ID ?: 'c-xxxxx:p-xxxxx'
-                        
                         sh """
                             echo "🚀 Desplegando ${env.DEMO_IMAGE_TAG} en Rancher..."
                             # Deploy logic aquí...
@@ -245,7 +227,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Deploy to Staging') {
             when {
                 branch 'develop'
@@ -254,7 +236,7 @@ pipeline {
                 echo "🚀 Desplegando en entorno de staging..."
             }
         }
-        
+
         stage('Deploy Feature') {
             when {
                 branch 'feature/*'
@@ -263,12 +245,12 @@ pipeline {
                 echo "🧪 Desplegando feature branch para testing..."
             }
         }
-    }
-    
+
+    } // end stages
+
     post {
         always {
             script {
-                // Ejecutar limpieza dentro de node para disponer de hudson.FilePath
                 node {
                     sh 'docker system prune -f || true'
                     cleanWs()
@@ -282,30 +264,30 @@ pipeline {
                     deployStatus = "🚀 Desplegado en PRODUCCIÓN"
                 } else if (env.BRANCH_NAME == 'develop') {
                     deployStatus = "🧪 Desplegado en STAGING"
-                } else if (env.BRANCH_NAME.startsWith('feature/')) {
+                } else if (env.BRANCH_NAME?.startsWith('feature/')) {
                     deployStatus = "🔬 Desplegado en FEATURE env"
                 } else {
                     deployStatus = "📦 Solo build (no deploy)"
                 }
-                
-                echo """✅ **Pipeline Exitoso - ${env.BRANCH_NAME}**
-📦 **Librería**: v${env.LIB_VERSION}
-🐳 **Docker**: ${env.DEMO_IMAGE_TAG}
+
+                echo """✅ Pipeline Exitoso - ${env.BRANCH_NAME}
+📦 Librería: v${env.LIB_VERSION}
+🐳 Docker: ${env.DEMO_IMAGE_TAG}
 ${deployStatus}
-🔗 **Build**: ${env.BUILD_URL}
+🔗 Build: ${env.BUILD_URL}
 """
             }
         }
         failure {
             script {
-                // Ejecutar mensajes / acciones de failure dentro de node si necesitan workspace
                 node {
-                    echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
-📝 **Commit**: ${env.GIT_COMMIT}
-🔗 **Build**: ${env.BUILD_URL}
+                    echo """❌ Pipeline Falló - ${env.BRANCH_NAME}
+📝 Commit: ${env.GIT_COMMIT}
+🔗 Build: ${env.BUILD_URL}
 """
                 }
             }
         }
     }
-}
+
+} // end pipeline
