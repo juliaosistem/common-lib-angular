@@ -23,30 +23,37 @@ pipeline {
         nodejs "${NODE_VERSION}"
     }
     
+    // Evitar el checkout automático que ocurre antes de asignar el agent
+    options {
+        skipDefaultCheckout()
+    }
+    
     stages {
 
          stage('preparar dtos') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                    sh '''
-                        
-                        echo "🔽 Preparando lib-core-dtos (branch: develop)"
-                        
-                        # Si existe submodulo, actualizar; si no, clonar directamente
-                        if [ -d "lib-core-dtos/.git" ]; then
-                          echo "📁 lib-core-dtos existe: actualizando..."
+                // Usar checkout con credentialsId en lugar de incrustar usuario/token en la URL
+                script {
+                    // Si ya existe el dir, actualizar; si no, checkout en ese dir
+                    if (fileExists('lib-core-dtos/.git')) {
+                        sh '''
+                          set -e
                           cd lib-core-dtos
                           git fetch --all --prune
                           git checkout develop || true
                           git pull origin develop || true
-                          cd ..
-                        else
-                          echo "📥 Clonando lib-core-dtos desde GitHub..."
-                         git clone --branch develop https://Farius-red:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git lib-core-dtos
-                        fi
-                        
-                        echo "✅ lib-core-dtos listo"
-                    '''
+                        '''
+                    } else {
+                        dir('lib-core-dtos') {
+                            checkout([$class: 'GitSCM',
+                                branches: [[name: '*/develop']],
+                                userRemoteConfigs: [[
+                                    url: 'https://github.com/juliaosistem/lib-core-dtos.git',
+                                    credentialsId: 'credenciales git'
+                                ]]
+                            ])
+                        }
+                    }
                 }
             }
         }
@@ -70,8 +77,15 @@ pipeline {
         stage('Checkout & Info') {
             steps {
                 script {
-                    // 🔄 En multibranch, checkout es automático
-                     
+                    // Hacer checkout explícito dentro del agent usando credentialsId (evita el error de URL malformada)
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: "*/${env.BRANCH_NAME ?: 'develop'}"]],
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/juliaosistem/common-lib-angular.git',
+                            credentialsId: 'credenciales git'
+                        ]]
+                    ])
+                    
                     // Obtener versión de la librería
                     env.LIB_VERSION = sh(
                         script: "node -p \"require('./package.json').version\"",
@@ -280,10 +294,13 @@ ${deployStatus}
             }
         }
         failure {
-    sh '''echo "❌ **Pipeline Falló - ''' + env.BRANCH_NAME + '''**"
-        echo "📝 **Commit**: ''' + env.GIT_COMMIT + '''"
-        echo "🔗 **Build**: ''' + env.BUILD_URL + '''"'''
+            // Evitar sh fuera de node y usar script/echo consistente
+            script {
+                echo """❌ **Pipeline Falló - ${env.BRANCH_NAME}**
+📝 **Commit**: ${env.GIT_COMMIT}
+🔗 **Build**: ${env.BUILD_URL}
+"""
+            }
         }
-}
-
+    }
 }
