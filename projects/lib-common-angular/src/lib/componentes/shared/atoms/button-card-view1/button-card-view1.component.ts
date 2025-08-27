@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { grid, apps } from 'ionicons/icons';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
-
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-button-card-view1',
   standalone: true,

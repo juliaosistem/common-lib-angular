@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { ComponentServicesService } from '../../../../../shared/services/component-services.service';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
-import { ComponentesDTO, PlantillaDTO } from '@juliaosistem/core-dtos';
+import { BusinessDTO, ComponentesDTO, PlantillaDTO } from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-layout-services1',
   standalone: true,
@@ -20,7 +20,7 @@ export class LayoutServices1Component  implements OnInit {
   @Input()
   negocio: PlantillaDTO = {
     id: '',
-    bussinesDTO: undefined,
+    bussinesDTO: new Object() as BusinessDTO,
     menu: undefined,
   };
 
