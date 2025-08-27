@@ -48,8 +48,8 @@ pipeline {
                           echo "📥 Clonando repo principal en tmp_checkout..."
                           rm -rf tmp_checkout
                           git clone --branch "${BRANCH_NAME:-develop}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" tmp_checkout
-                          echo "📤 Copiando contenido al workspace (sobrescribe archivos existentes)..."
-                          cp -a tmp_checkout/. .
+                          echo "📤 Sincronizando contenido al workspace (excluyendo .git)..."
+                          rsync -a --delete --exclude='.git' tmp_checkout/ .
                           rm -rf tmp_checkout
                         '''
                     }
