@@ -49,7 +49,12 @@ pipeline {
                           rm -rf tmp_checkout
                           git clone --branch "${BRANCH_NAME:-develop}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" tmp_checkout
                           echo "📤 Sincronizando contenido al workspace (excluyendo .git)..."
-                          rsync -a --delete --exclude='.git' tmp_checkout/ .
+                          if command -v rsync >/dev/null 2>&1; then
+                            rsync -a --delete --exclude='.git' tmp_checkout/ .
+                          else
+                            echo "⚠️ rsync no disponible: usando git archive como fallback (no requiere rsync)"
+                            git -C tmp_checkout archive HEAD | tar -x -C .
+                          fi
                           rm -rf tmp_checkout
                         '''
                     }
