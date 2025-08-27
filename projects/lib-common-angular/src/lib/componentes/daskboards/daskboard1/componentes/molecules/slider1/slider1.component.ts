@@ -3,9 +3,7 @@ import { register } from 'swiper/element/bundle';
 import { TranslateService } from '@ngx-translate/core';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { CommonModule } from '@angular/common';
-import { SliderDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/sliderDTO';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
+import { ComponentesDTO, PlantillaDTO, SliderDTO } from '@juliaosistem/core-dtos';
 
  register();
 

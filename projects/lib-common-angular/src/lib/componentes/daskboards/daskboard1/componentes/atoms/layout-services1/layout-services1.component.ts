@@ -2,9 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { ComponentServicesService } from '../../../../../shared/services/component-services.service';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
-
+import { ComponentesDTO, PlantillaDTO } from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-layout-services1',
   standalone: true,
