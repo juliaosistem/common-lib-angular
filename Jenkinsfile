@@ -223,8 +223,8 @@ pipeline {
                     usernameVariable: 'NEXUS_USER',
                     passwordVariable: 'NEXUS_PASS'
                 )]) {
-                          sh """
-                        bash -lc 'set -euo pipefail
+                    sh '''
+                         bash -lc 'set -euo pipefail
                         echo "🐳 Construyendo imagen Docker..."
                         if ! command -v docker >/dev/null 2>&1; then
                           echo "ERROR: docker no está instalado en este agente. Usa un agente con Docker (o Docker-in-Docker) y vuelve a intentar."
@@ -248,8 +248,7 @@ pipeline {
                         fi
 
                         echo "✅ Imagen publicada: ${DEMO_IMAGE_TAG}"
-                        '
-                    """
+                    '''
                 }
             }
         }
