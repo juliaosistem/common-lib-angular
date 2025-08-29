@@ -224,16 +224,29 @@ pipeline {
                     passwordVariable: 'NEXUS_PASS'
                 )]) {
                     sh '''
+                        set -euo pipefail
                         echo "🐳 Construyendo imagen Docker..."
-                        docker build -t ${DEMO_IMAGE_TAG} .
-                        echo "🔐 Login a Nexus Docker Registry..."
-                        echo "${NEXUS_PASS}" | docker login ${NEXUS_DOCKER_REGISTRY} -u "${NEXUS_USER}" --password-stdin
-                        echo "📤 Pushing imagen..."
-                        docker push ${DEMO_IMAGE_TAG}
-                        if [ "${BRANCH_NAME}" = "master" ] || [ "${BRANCH_NAME}" = "main" ] || [ "${BRANCH_NAME}" = "desplieges" ]; then
-                            docker tag ${DEMO_IMAGE_TAG} ${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:latest
-                            docker push ${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:latest
+                        if ! command -v docker >/dev/null 2>&1; then
+                          echo "ERROR: docker no está instalado en este agente. Usa un agente con Docker (o Docker-in-Docker) y vuelve a intentar."
+                          exit 2
                         fi
+
+                        echo "🔨 Build: tag=${DEMO_IMAGE_TAG}"
+                        docker build -t "${DEMO_IMAGE_TAG}" .
+
+                        echo "🔐 Login a Nexus Docker host=${NEXUS_DOCKER_HOST} (credenciales enmascaradas)..."
+                        echo "${NEXUS_PASS}" | docker login "${NEXUS_DOCKER_HOST}" -u "${NEXUS_USER}" --password-stdin
+
+                        echo "📤 Pushing imagen ${DEMO_IMAGE_TAG}..."
+                        docker push "${DEMO_IMAGE_TAG}" || { echo "ERROR: falló docker push ${DEMO_IMAGE_TAG}"; exit 3; }
+
+                        if [ "${BRANCH_NAME}" = "master" ] || [ "${BRANCH_NAME}" = "main" ] || [ "${BRANCH_NAME}" = "desplieges" ]; then
+                            latest_tag="${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:latest"
+                            echo "🔖 Tagging ${DEMO_IMAGE_TAG} -> ${latest_tag}"
+                            docker tag "${DEMO_IMAGE_TAG}" "${latest_tag}"
+                            docker push "${latest_tag}" || { echo "ERROR: falló docker push ${latest_tag}"; exit 4; }
+                        fi
+
                         echo "✅ Imagen publicada: ${DEMO_IMAGE_TAG}"
                     '''
                 }
