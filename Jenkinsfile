@@ -149,8 +149,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Publish NPM Library') {
+   stage('Publicar en Nexus NPM') {
             when {
                 anyOf {
                     branch 'master'
@@ -167,16 +166,28 @@ pipeline {
                     passwordVariable: 'NEXUS_PASS'
                 )]) {
                     script {
-                        def nexusDomain = env.NEXUS_NPM_REGISTRY.replaceAll('https?://', '').split('/')[0]
-                        sh """
-                            echo "📤 Publicando librería v${env.LIB_VERSION} en Nexus NPM..."
-                            npm config set registry ${env.NEXUS_NPM_REGISTRY}
-                            echo "//${nexusDomain}/:_auth=\$(echo -n "${NEXUS_USER}:${NEXUS_PASS}" | base64)" > ~/.npmrc
-                            echo "//${nexusDomain}/:always-auth=true" >> ~/.npmrc
+                        sh '''
+                            set -e
+                            echo "📤 Publicando librería v${LIB_VERSION} en Nexus NPM..."
+                            # asegurar registry en npm config (no imprime secretos)
+                            npm config set registry "$NEXUS_NPM_REGISTRY"
+
+                            # calcular host+path (ej: nexus.juliaosistem-server.in/repository/npm) desde la URL
+                            hostpath=$(echo "$NEXUS_NPM_REGISTRY" | sed -E 's|https?://||; s|/$||')
+
+                            # crear .npmrc usando variables de shell (no interpolar secretos con Groovy)
+                            # auth en base64 user:pass; always-auth para que npm use credenciales
+                            printf "registry=%s\n//%s/:_auth=%s\n//%s/:always-auth=true\n" \
+                                "$NEXUS_NPM_REGISTRY" \
+                                "$hostpath" \
+                                "$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)" \
+                                "$hostpath" > ~/.npmrc
+
+                            # forzar publish al registry de Nexus (evita publishConfig en package.json)
                             cd dist/lib-common-angular
-                            npm publish
-                            echo "✅ Librería v${env.LIB_VERSION} publicada exitosamente"
-                        """
+                            npm publish --registry "$NEXUS_NPM_REGISTRY"
+                            echo "✅ Librería v${LIB_VERSION} publicada exitosamente en $NEXUS_NPM_REGISTRY"
+                        '''
                     }
                 }
             }
