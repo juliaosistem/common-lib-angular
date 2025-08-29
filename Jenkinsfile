@@ -26,7 +26,22 @@ pipeline {
     }
 
     stages {
-
+        stage('Discover Labels') {
+            steps {
+                script {
+                    // Mostrar información del nodo actual
+                    echo "Nodo actual: ${env.NODE_NAME}"
+                    echo "Labels del nodo: ${env.NODE_LABELS}"
+                    
+                    // Listar todos los nodos disponibles
+                    def nodes = Jenkins.instance.nodes
+                    nodes.each { node ->
+                        echo "Nodo: ${node.displayName}"
+                        echo "Labels: ${node.labelString}"
+                        echo "---"
+                    }
+                }
+            }
         // REEMPLAZADO: Checkout & Info (clonar en tmp y copiar para evitar "destination path '.' already exists")
         stage('Checkout & Info') {
             steps {
