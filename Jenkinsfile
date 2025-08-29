@@ -224,7 +224,7 @@ pipeline {
                     passwordVariable: 'NEXUS_PASS'
                 )]) {
                     sh '''
-                        set -euo pipefail
+                        set -eu
                         echo "🐳 Construyendo imagen Docker..."
                         
                         # Verificar si Docker está disponible
@@ -234,6 +234,7 @@ pipeline {
                             echo "1. Instalar Docker en el agente actual"
                             echo "2. Usar un agente Jenkins con Docker instalado"
                             echo "3. Configurar Docker-in-Docker (DinD)"
+                            echo "4. Usar un label de agente que tenga Docker"
                             exit 1
                         fi
 
@@ -303,7 +304,14 @@ pipeline {
         always {
             script {
                 node {
-                    sh 'docker system prune -f || true'
+                    sh '''
+                        # Limpiar Docker si está disponible
+                        if command -v docker >/dev/null 2>&1; then
+                            docker system prune -f || true
+                        else
+                            echo "Docker no disponible, saltando limpieza"
+                        fi
+                    '''
                     cleanWs()
                 }
             }
