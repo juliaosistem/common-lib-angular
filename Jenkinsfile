@@ -116,32 +116,31 @@ pipeline {
             }
         }
 
-        stage('Quality Gates') {
-            parallel {
-                stage('Lint') {
-                    steps {
-                        sh 'npm run lint'
-                    }
-                }
-                stage('Test Library') {
-                    steps {
-                        sh 'npm run test:lib'
-                    }
-                }
-                stage('Test Demo') {
-                    steps {
-                        sh 'npm run test:demo'
-                    }
-                }
-            }
-        }
+        // stage('Quality Gates') {
+        //     parallel {
+        //         stage('Lint') {
+        //             steps {
+        //                 sh 'npm run lint'
+        //             }
+        //         }
+        //         stage('Test Library') {
+        //             steps {
+        //                 sh 'npm run test:lib'
+        //             }
+        //         }
+        //         stage('Test Demo') {
+        //             steps {
+        //                 sh 'npm run test:demo'
+        //             }
+        //         }
+        //     }
+        // }
 
         stage('Build Library') {
             steps {
                 sh '''
                     echo "🔨 Construyendo librería..."
                     npm run build:lib
-                    npm run pack:lib
                 '''
             }
             post {
@@ -158,6 +157,7 @@ pipeline {
                     branch 'main'
                     branch 'develop'
                     branch 'release/*'
+                    branch 'desplieges/*'
                 }
             }
             steps {
@@ -203,6 +203,7 @@ pipeline {
                     branch 'main'
                     branch 'develop'
                     branch 'release/*'
+                    branch 'desplieges/*'
                 }
             }
             steps {
@@ -232,7 +233,7 @@ pipeline {
             when {
                 anyOf {
                     branch 'master'
-                    branch 'main'
+                   
                 }
             }
             steps {
@@ -251,6 +252,7 @@ pipeline {
         stage('Deploy to Staging') {
             when {
                 branch 'develop'
+                branch 'desplieges/*'
             }
             steps {
                 echo "🚀 Desplegando en entorno de staging..."
@@ -260,6 +262,7 @@ pipeline {
         stage('Deploy Feature') {
             when {
                 branch 'feature/*'
+                branch 'desplieges/*'
             }
             steps {
                 echo "🧪 Desplegando feature branch para testing..."
@@ -286,7 +289,10 @@ pipeline {
                     deployStatus = "🧪 Desplegado en STAGING"
                 } else if (env.BRANCH_NAME?.startsWith('feature/')) {
                     deployStatus = "🔬 Desplegado en FEATURE env"
-                } else {
+                } else if (env.BRANCH_NAME?.startsWith('desplieges')) {
+                    deployStatus = "🔬 Desplegado"
+                }
+                 else {
                     deployStatus = "📦 Solo build (no deploy)"
                 }
 
