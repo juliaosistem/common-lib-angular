@@ -226,32 +226,38 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push') {
-            // Nuevo: ejecutar esta etapa dentro de un contenedor que tenga docker CLI
-            // Monta el socket del host para usar el daemon del host.
-            agent {
-                docker {
-                    // Imagen ligera con docker CLI; ajusta versión si lo necesitas.
-                    image 'docker:24.0.5'
-                    // Montar socket para usar el daemon del host
-                    args '-v /var/run/docker.sock:/var/run/docker.sock'
+        // NUEVO: Detectar si Kaniko o Docker están disponibles en el agente
+        stage('Detect Container Tools') {
+            steps {
+                script {
+                    env.KANIKO_AVAILABLE = sh(script: 'if [ -x /kaniko/executor ]; then echo true; else echo false; fi', returnStdout: true).trim()
+                    env.DOCKER_AVAILABLE = sh(script: 'if command -v docker >/dev/null 2>&1; then echo true; else echo false; fi', returnStdout: true).trim()
+                    echo "KANIKO_AVAILABLE=${env.KANIKO_AVAILABLE} DOCKER_AVAILABLE=${env.DOCKER_AVAILABLE}"
                 }
             }
+        }
+
+        stage('Docker Build & Push') {
+            // Ejecutar solo en ramas deseadas Y solo si hay Kaniko o Docker disponible
             when {
-                anyOf {
-                    branch 'master'
-                    branch 'main'
-                    branch 'develop'
-                    branch 'release/*'
-                    branch 'desplieges'
+                allOf {
+                    anyOf {
+                        branch 'master'
+                        branch 'main'
+                        branch 'develop'
+                        branch 'release/*'
+                        branch 'desplieges'
+                    }
+                    expression {
+                        return env.KANIKO_AVAILABLE == 'true' || env.DOCKER_AVAILABLE == 'true'
+                    }
                 }
             }
             steps {
                 script {
-                    // Detectar disponibilidad de Kaniko o Docker en tiempo de ejecución.
-                    // Dentro de este agente docker, `docker` estará disponible apuntando al socket montado.
-                    def hasKaniko = sh(script: 'if [ -x /kaniko/executor ]; then echo yes; else echo no; fi', returnStdout: true).trim() == 'yes'
-                    def hasDocker = sh(script: 'if command -v docker >/dev/null 2>&1; then echo yes; else echo no; fi', returnStdout: true).trim() == 'yes'
+                    // Usar las variables detectadas en la etapa anterior
+                    def hasKaniko = env.KANIKO_AVAILABLE == 'true'
+                    def hasDocker = env.DOCKER_AVAILABLE == 'true'
 
                     if (hasKaniko) {
                         echo "🐳 Kaniko detectado: usando Kaniko para build y push"
@@ -303,7 +309,7 @@ EOF
                             '''
                         }
                     } else if (hasDocker) {
-                        echo "🐳 Docker disponible en el contenedor (socket montado): usando docker build/push"
+                        echo "🐳 Docker disponible en el agente: usando docker build/push"
                         withCredentials([usernamePassword(
                             credentialsId: "${NEXUS_CREDENTIALS_ID}",
                             usernameVariable: 'NEXUS_USER',
@@ -330,8 +336,8 @@ EOF
                             '''
                         }
                     } else {
-                        echo "⚠️ Ni Kaniko ni Docker están disponibles en este nodo/contendedor. Saltando Docker Build & Push."
-                        echo "   Si necesita publicar imágenes desde este pipeline, habilite un Cloud Kubernetes en Jenkins o instale Docker/Kaniko en el agente."
+                        echo "⚠️ Ni Kaniko ni Docker están disponibles en este nodo. Saltando Docker Build & Push."
+                        echo "   Si necesita publicar imágenes desde este pipeline, habilite un agente con Docker o Kaniko."
                     }
                 }
             }
