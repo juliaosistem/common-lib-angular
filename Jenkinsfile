@@ -42,6 +42,7 @@ pipeline {
                     }
                 }
             }
+        }
         // REEMPLAZADO: Checkout & Info (clonar en tmp y copiar para evitar "destination path '.' already exists")
         stage('Checkout & Info') {
             steps {
