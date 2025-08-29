@@ -224,27 +224,37 @@ pipeline {
                     passwordVariable: 'NEXUS_PASS'
                 )]) {
                     sh '''
-                         bash -lc 'set -euo pipefail
+                        set -euo pipefail
                         echo "🐳 Construyendo imagen Docker..."
+                        
+                        # Verificar si Docker está disponible
                         if ! command -v docker >/dev/null 2>&1; then
-                          echo "ERROR: docker no está instalado en este agente. Usa un agente con Docker (o Docker-in-Docker) y vuelve a intentar."
-                          exit 2
+                            echo "ERROR: Docker no está instalado en este agente Jenkins."
+                            echo "Opciones para resolverlo:"
+                            echo "1. Instalar Docker en el agente actual"
+                            echo "2. Usar un agente Jenkins con Docker instalado"
+                            echo "3. Configurar Docker-in-Docker (DinD)"
+                            exit 1
                         fi
 
                         echo "🔨 Build: tag=${DEMO_IMAGE_TAG}"
                         docker build -t "${DEMO_IMAGE_TAG}" .
 
-                        echo "🔐 Login a Nexus Docker host=${NEXUS_DOCKER_HOST:-$(echo ${NEXUS_DOCKER_REGISTRY} | sed -E 's|https?://||; s|/$||')} (credenciales enmascaradas)..."
-                        echo "${NEXUS_PASS}" | docker login "${NEXUS_DOCKER_HOST:-$(echo ${NEXUS_DOCKER_REGISTRY} | sed -E 's|https?://||; s|/$||')}" -u "${NEXUS_USER}" --password-stdin
+                        # Extraer host del registry para login
+                        DOCKER_HOST=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')
+                        
+                        echo "🔐 Login a Nexus Docker host=${DOCKER_HOST}..."
+                        echo "${NEXUS_PASS}" | docker login "${DOCKER_HOST}" -u "${NEXUS_USER}" --password-stdin
 
                         echo "📤 Pushing imagen ${DEMO_IMAGE_TAG}..."
-                        docker push "${DEMO_IMAGE_TAG}" || { echo "ERROR: falló docker push ${DEMO_IMAGE_TAG}"; exit 3; }
+                        docker push "${DEMO_IMAGE_TAG}"
 
+                        # Tag como latest para ramas principales
                         if [ "${BRANCH_NAME}" = "master" ] || [ "${BRANCH_NAME}" = "main" ] || [ "${BRANCH_NAME}" = "desplieges" ]; then
-                            latest_tag="$(echo ${NEXUS_DOCKER_REGISTRY} | sed -E 's|https?://||; s|/$||')/lib-common-angular-demo:latest"
-                            echo "🔖 Tagging ${DEMO_IMAGE_TAG} -> ${latest_tag}"
-                            docker tag "${DEMO_IMAGE_TAG}" "${latest_tag}"
-                            docker push "${latest_tag}" || { echo "ERROR: falló docker push ${latest_tag}"; exit 4; }
+                            LATEST_TAG="${DOCKER_HOST}/lib-common-angular-demo:latest"
+                            echo "🔖 Tagging ${DEMO_IMAGE_TAG} -> ${LATEST_TAG}"
+                            docker tag "${DEMO_IMAGE_TAG}" "${LATEST_TAG}"
+                            docker push "${LATEST_TAG}"
                         fi
 
                         echo "✅ Imagen publicada: ${DEMO_IMAGE_TAG}"
@@ -275,9 +285,11 @@ pipeline {
 
         stage('Deploy entorno de desarrollo') {
             when {
-                branch 'develop'
-                branch 'desplieges'
-                branch 'feature/*'
+                anyOf {
+                    branch 'develop'
+                    branch 'desplieges'
+                    branch 'feature/*'
+                }
             }
             steps {
                 echo "🚀 Desplegando en entorno de desarrollo..."
