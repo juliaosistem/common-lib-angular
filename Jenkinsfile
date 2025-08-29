@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         NODE_VERSION = 'nodejs'
-        DOCKER_VERSION = 'docker' // Asegura que Docker esté instalado en el agente
 
         // 🔄 Valores estáticos / configurables
         NEXUS_DOCKER_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/docker/'
@@ -18,7 +17,7 @@ pipeline {
 
     tools {
         nodejs "${NODE_VERSION}"
-        docker "${DOCKER_VERSION}"
+        // Docker se maneja como comando directo, no como herramienta de Jenkins
     }
 
     options {
