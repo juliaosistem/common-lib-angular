@@ -5,8 +5,8 @@ pipeline {
         NODE_VERSION = 'nodejs'
 
         // 🔄 Valores estáticos / configurables
-        NEXUS_DOCKER_REGISTRY = 'localhost:8082'
-        NEXUS_NPM_REGISTRY = 'http://localhost:8081/repository/npm-hosted/'
+        NEXUS_DOCKER_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/docker/'
+        NEXUS_NPM_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/npm/'
 
         NEXUS_CREDENTIALS_ID = 'nexus-credentials'
         RANCHER_CREDENTIALS_ID = 'rancher-api-credentials'
@@ -157,7 +157,7 @@ pipeline {
                     branch 'main'
                     branch 'develop'
                     branch 'release/*'
-                    branch 'desplieges/*'
+                    branch 'desplieges'
                 }
             }
             steps {
