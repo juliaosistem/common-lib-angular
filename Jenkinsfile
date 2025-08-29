@@ -236,53 +236,76 @@ pipeline {
                     branch 'desplieges'
                 }
             }
+            agent {
+                kubernetes {
+                    yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: kaniko
+    image: gcr.io/kaniko-project/executor:latest
+    command:
+    - cat
+    tty: true
+"""
+                }
+            }
             steps {
-                withCredentials([usernamePassword(
-                    credentialsId: "${NEXUS_CREDENTIALS_ID}",
-                    usernameVariable: 'NEXUS_USER',
-                    passwordVariable: 'NEXUS_PASS'
-                )]) {
-                    sh '''
-                        set -eu
-                        echo "🐳 Construyendo imagen Docker..."
-                        
-                        # Verificar si Docker está disponible
-                        if ! command -v docker >/dev/null 2>&1; then
-                            echo "ERROR: Docker no está instalado en este agente Jenkins."
-                            echo "Opciones para resolverlo:"
-                            echo "1. Instalar Docker en el agente actual"
-                            echo "2. Usar un agente Jenkins con Docker instalado"
-                            echo "3. Configurar Docker-in-Docker (DinD)"
-                            echo "4. Usar un label de agente que tenga Docker"
-                            exit 1
-                        fi
+                script {
+                    withCredentials([usernamePassword(
+                        credentialsId: "${NEXUS_CREDENTIALS_ID}",
+                        usernameVariable: 'NEXUS_USER',
+                        passwordVariable: 'NEXUS_PASS'
+                    )]) {
+                        sh '''
+                            set -eu
+                            echo "🐳 Preparando config.json de Docker para Kaniko desde credenciales de Jenkins..."
 
-                        echo "🔨 Build: tag=${DEMO_IMAGE_TAG} con versión=${LIB_VERSION}"
-                        docker build \
-                            --build-arg APP_VERSION="${LIB_VERSION}" \
-                            --build-arg BUILD_TAG="${BUILD_TAG}" \
-                            --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" \
-                            -t "${DEMO_IMAGE_TAG}" .
+                            # hostpath usado como clave en config.json (sin protocolo ni / final)
+                            hostpath=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')
 
-                        # Extraer host del registry para login
-                        DOCKER_HOST=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')
-                        
-                        echo "🔐 Login a Nexus Docker host=${DOCKER_HOST}..."
-                        echo "${NEXUS_PASS}" | docker login "${DOCKER_HOST}" -u "${NEXUS_USER}" --password-stdin
+                            # crear config.json en workspace
+                            auth=$(printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64 -w0 2>/dev/null || printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64)
+                            cat > "${WORKSPACE}/kaniko-config.json" <<EOF
+{
+  "auths": {
+    "${hostpath}": {
+      "username": "${NEXUS_USER}",
+      "password": "${NEXUS_PASS}",
+      "auth": "${auth}"
+    }
+  }
+}
+EOF
 
-                        echo "📤 Pushing imagen ${DEMO_IMAGE_TAG}..."
-                        docker push "${DEMO_IMAGE_TAG}"
+                            # colocar en la ruta que Kaniko espera
+                            mkdir -p /kaniko/.docker
+                            cp "${WORKSPACE}/kaniko-config.json" /kaniko/.docker/config.json
+                            chmod 600 /kaniko/.docker/config.json
 
-                        # Tag como latest para ramas principales
-                        if [ "${BRANCH_NAME}" = "master" ] || [ "${BRANCH_NAME}" = "main" ] || [ "${BRANCH_NAME}" = "desplieges" ]; then
-                            LATEST_TAG="${DOCKER_HOST}/lib-common-angular-demo:latest"
-                            echo "🔖 Tagging ${DEMO_IMAGE_TAG} -> ${LATEST_TAG}"
-                            docker tag "${DEMO_IMAGE_TAG}" "${LATEST_TAG}"
-                            docker push "${LATEST_TAG}"
-                        fi
+                            # preparar destino
+                            REGISTRY="${NEXUS_DOCKER_REGISTRY%/}"
+                            DEST="${REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
+                            echo "Destino: ${DEST}"
 
-                        echo "✅ Imagen publicada: ${DEMO_IMAGE_TAG}"
-                    '''
+                            # ejecutar Kaniko
+                            /kaniko/executor \
+                              --context "${WORKSPACE}" \
+                              --dockerfile "${WORKSPACE}/Dockerfile" \
+                              --destination "${DEST}" \
+                              --build-arg APP_VERSION="${LIB_VERSION}" \
+                              --build-arg BUILD_TAG="${BUILD_TAG}" \
+                              --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" \
+                              --verbosity info
+
+                            echo "✅ Imagen publicada: ${DEST}"
+
+                            # limpieza de artefactos sensibles
+                            rm -f "${WORKSPACE}/kaniko-config.json" || true
+                            rm -f /kaniko/.docker/config.json || true
+                        '''
+                    } // end withCredentials
                 }
             }
         }
