@@ -26,21 +26,23 @@ pipeline {
     }
 
     stages {
-        stage('Discover Labels') {
+        stage('Check Node Info') {
             steps {
-                script {
-                    // Mostrar información del nodo actual
-                    echo "Nodo actual: ${env.NODE_NAME}"
-                    echo "Labels del nodo: ${env.NODE_LABELS}"
-                    
-                    // Listar todos los nodos disponibles
-                    def nodes = Jenkins.instance.nodes
-                    nodes.each { node ->
-                        echo "Nodo: ${node.displayName}"
-                        echo "Labels: ${node.labelString}"
-                        echo "---"
-                    }
-                }
+                sh '''
+                    echo "=== INFORMACIÓN DEL NODO ==="
+                    echo "NODE_NAME: $NODE_NAME"
+                    echo "NODE_LABELS: $NODE_LABELS"
+                    echo "WORKSPACE: $WORKSPACE"
+                    echo "JENKINS_HOME: $JENKINS_HOME"
+                    echo "=== HERRAMIENTAS DISPONIBLES ==="
+                    which docker || echo "Docker no encontrado"
+                    which node || echo "Node.js no encontrado"
+                    which npm || echo "NPM no encontrado"
+                    which java || echo "Java no encontrado"
+                    echo "=== SISTEMA ==="
+                    uname -a
+                    echo "=== FIN ==="
+                '''
             }
         }
         // REEMPLAZADO: Checkout & Info (clonar en tmp y copiar para evitar "destination path '.' already exists")
