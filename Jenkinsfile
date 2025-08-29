@@ -236,38 +236,27 @@ pipeline {
                     branch 'desplieges'
                 }
             }
-            agent {
-                kubernetes {
-                    yaml """
-apiVersion: v1
-kind: Pod
-spec:
-  containers:
-  - name: kaniko
-    image: gcr.io/kaniko-project/executor:latest
-    command:
-    - cat
-    tty: true
-"""
-                }
-            }
             steps {
                 script {
-                    withCredentials([usernamePassword(
-                        credentialsId: "${NEXUS_CREDENTIALS_ID}",
-                        usernameVariable: 'NEXUS_USER',
-                        passwordVariable: 'NEXUS_PASS'
-                    )]) {
-                        sh '''
-                            set -eu
-                            echo "🐳 Preparando config.json de Docker para Kaniko desde credenciales de Jenkins..."
+                    // Detectar disponibilidad de Kaniko o Docker en tiempo de ejecución
+                    def hasKaniko = sh(script: 'if [ -x /kaniko/executor ]; then echo yes; else echo no; fi', returnStdout: true).trim() == 'yes'
+                    def hasDocker = sh(script: 'if command -v docker >/dev/null 2>&1; then echo yes; else echo no; fi', returnStdout: true).trim() == 'yes'
 
-                            # hostpath usado como clave en config.json (sin protocolo ni / final)
-                            hostpath=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')
+                    if (hasKaniko) {
+                        echo "🐳 Kaniko detectado: usando Kaniko para build y push"
+                        withCredentials([usernamePassword(
+                            credentialsId: "${NEXUS_CREDENTIALS_ID}",
+                            usernameVariable: 'NEXUS_USER',
+                            passwordVariable: 'NEXUS_PASS'
+                        )]) {
+                            sh '''
+                                set -eu
+                                echo "🐳 Preparando config.json de Docker para Kaniko desde credenciales de Jenkins..."
 
-                            # crear config.json en workspace
-                            auth=$(printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64 -w0 2>/dev/null || printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64)
-                            cat > "${WORKSPACE}/kaniko-config.json" <<EOF
+                                hostpath=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')
+
+                                auth=$(printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64 -w0 2>/dev/null || printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64)
+                                cat > "${WORKSPACE}/kaniko-config.json" <<EOF
 {
   "auths": {
     "${hostpath}": {
@@ -279,33 +268,60 @@ spec:
 }
 EOF
 
-                            # colocar en la ruta que Kaniko espera
-                            mkdir -p /kaniko/.docker
-                            cp "${WORKSPACE}/kaniko-config.json" /kaniko/.docker/config.json
-                            chmod 600 /kaniko/.docker/config.json
+                                mkdir -p /kaniko/.docker || true
+                                cp "${WORKSPACE}/kaniko-config.json" /kaniko/.docker/config.json || true
+                                chmod 600 /kaniko/.docker/config.json || true
 
-                            # preparar destino
-                            REGISTRY="${NEXUS_DOCKER_REGISTRY%/}"
-                            DEST="${REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
-                            echo "Destino: ${DEST}"
+                                REGISTRY="${NEXUS_DOCKER_REGISTRY%/}"
+                                DEST="${REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
+                                echo "Destino: ${DEST}"
 
-                            # ejecutar Kaniko
-                            /kaniko/executor \
-                              --context "${WORKSPACE}" \
-                              --dockerfile "${WORKSPACE}/Dockerfile" \
-                              --destination "${DEST}" \
-                              --build-arg APP_VERSION="${LIB_VERSION}" \
-                              --build-arg BUILD_TAG="${BUILD_TAG}" \
-                              --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" \
-                              --verbosity info
+                                /kaniko/executor \
+                                  --context "${WORKSPACE}" \
+                                  --dockerfile "${WORKSPACE}/Dockerfile" \
+                                  --destination "${DEST}" \
+                                  --build-arg APP_VERSION="${LIB_VERSION}" \
+                                  --build-arg BUILD_TAG="${BUILD_TAG}" \
+                                  --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" \
+                                  --verbosity info
 
-                            echo "✅ Imagen publicada: ${DEST}"
+                                echo "✅ Imagen publicada: ${DEST}"
 
-                            # limpieza de artefactos sensibles
-                            rm -f "${WORKSPACE}/kaniko-config.json" || true
-                            rm -f /kaniko/.docker/config.json || true
-                        '''
-                    } // end withCredentials
+                                rm -f "${WORKSPACE}/kaniko-config.json" || true
+                                rm -f /kaniko/.docker/config.json || true
+                            '''
+                        }
+                    } else if (hasDocker) {
+                        echo "🐳 Docker local detectado: usando docker build/push como fallback"
+                        withCredentials([usernamePassword(
+                            credentialsId: "${NEXUS_CREDENTIALS_ID}",
+                            usernameVariable: 'NEXUS_USER',
+                            passwordVariable: 'NEXUS_PASS'
+                        )]) {
+                            sh '''
+                                set -eu
+                                REGISTRY="${NEXUS_DOCKER_REGISTRY%/}"
+                                IMAGE="${REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
+                                echo "Destino: ${IMAGE}"
+
+                                echo "🔐 Logueando en registry..."
+                                docker login --username "$NEXUS_USER" --password-stdin $(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||') <<< "$NEXUS_PASS"
+
+                                echo "🔨 Construyendo imagen..."
+                                docker build -t "${IMAGE}" --build-arg APP_VERSION="${LIB_VERSION}" --build-arg BUILD_TAG="${BUILD_TAG}" --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" -f Dockerfile .
+
+                                echo "📤 Pushing..."
+                                docker push "${IMAGE}"
+
+                                echo "✅ Imagen publicada: ${IMAGE}"
+
+                                docker logout $(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||') || true
+                            '''
+                        }
+                    } else {
+                        echo "⚠️ Ni Kaniko ni Docker están disponibles en este nodo. Saltando Docker Build & Push."
+                        echo "   Si necesita publicar imágenes desde este pipeline, habilite un Cloud Kubernetes en Jenkins o instale Docker/Kaniko en el agente."
+                    }
                 }
             }
         }
