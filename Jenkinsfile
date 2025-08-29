@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         NODE_VERSION = 'nodejs'
+        DOCKER_VERSION = 'docker' // Asegura que Docker esté instalado en el agente
 
         // 🔄 Valores estáticos / configurables
         NEXUS_DOCKER_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/docker/'
@@ -17,6 +18,7 @@ pipeline {
 
     tools {
         nodejs "${NODE_VERSION}"
+        docker "${DOCKER_VERSION}"
     }
 
     options {
@@ -238,8 +240,12 @@ pipeline {
                             exit 1
                         fi
 
-                        echo "🔨 Build: tag=${DEMO_IMAGE_TAG}"
-                        docker build -t "${DEMO_IMAGE_TAG}" .
+                        echo "🔨 Build: tag=${DEMO_IMAGE_TAG} con versión=${LIB_VERSION}"
+                        docker build \
+                            --build-arg APP_VERSION="${LIB_VERSION}" \
+                            --build-arg BUILD_TAG="${BUILD_TAG}" \
+                            --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" \
+                            -t "${DEMO_IMAGE_TAG}" .
 
                         # Extraer host del registry para login
                         DOCKER_HOST=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')

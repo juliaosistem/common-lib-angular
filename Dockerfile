@@ -1,33 +1,16 @@
-# Multi-stage build para la demo
-FROM node:22.12.0-alpine AS builder
-
-WORKDIR /app
-
-# Copiar package files para aprovechar cache de Docker
-COPY package*.json ./
-COPY angular.json ./
-COPY tsconfig*.json ./
-
-# Instalar dependencias
-RUN npm ci --only=production
-
-# Copiar código fuente
-COPY . .
-
-# Construir la librería primero
-RUN npm run build:lib
-
-# Construir la demo
-RUN npm run build:demo
-
-# Imagen final optimizada para Nexus/Rancher
+# Dockerfile optimizado - usa artefactos ya construidos en Jenkins
 FROM nginx:alpine
+
+# Build arguments desde Jenkins
+ARG APP_VERSION="unknown"
+ARG BUILD_TAG="unknown"
+ARG GIT_COMMIT="unknown"
 
 # Instalar curl para health checks
 RUN apk add --no-cache curl
 
-# Copiar archivos construidos de la demo
-COPY --from=builder /app/dist/lib-common-angular-demo/browser /usr/share/nginx/html
+# Copiar archivos ya construidos de la demo (desde Jenkins)
+COPY dist/lib-common-angular-demo/browser /usr/share/nginx/html
 
 # Configuración de nginx
 COPY nginx.conf /etc/nginx/nginx.conf
@@ -44,16 +27,16 @@ RUN chown -R angular:angular /usr/share/nginx/html && \
     touch /var/run/nginx.pid && \
     chown -R angular:angular /var/run/nginx.pid
 
-# Labels para Nexus/Rancher
+# Labels dinámicos con información de build
 LABEL maintainer="Daniel Juliao <zigmainflables@gmail.com>"
 LABEL description="Demo application for lib-common-angular"
-LABEL version="1.0"
+LABEL version="${APP_VERSION}"
+LABEL build.tag="${BUILD_TAG}"
+LABEL build.commit="${GIT_COMMIT}"
+LABEL build.date="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
 USER angular
 
 EXPOSE 8080
-
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:8080/health || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]
