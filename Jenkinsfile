@@ -214,7 +214,7 @@ pipeline {
                     branch 'main'
                     branch 'develop'
                     branch 'release/*'
-                    branch 'desplieges/*'
+                    branch 'desplieges'
                 }
             }
             steps {
@@ -230,7 +230,7 @@ pipeline {
                         echo "${NEXUS_PASS}" | docker login ${NEXUS_DOCKER_REGISTRY} -u "${NEXUS_USER}" --password-stdin
                         echo "📤 Pushing imagen..."
                         docker push ${DEMO_IMAGE_TAG}
-                        if [ "${BRANCH_NAME}" = "master" ] || [ "${BRANCH_NAME}" = "main" ]; then
+                        if [ "${BRANCH_NAME}" = "master" ] || [ "${BRANCH_NAME}" = "main" ] || [ "${BRANCH_NAME}" = "desplieges" ]; then
                             docker tag ${DEMO_IMAGE_TAG} ${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:latest
                             docker push ${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:latest
                         fi
@@ -260,25 +260,17 @@ pipeline {
             }
         }
 
-        stage('Deploy to Staging') {
+        stage('Deploy entorno de desarrollo') {
             when {
                 branch 'develop'
-                branch 'desplieges/*'
+                branch 'desplieges'
+                branch 'feature/*'
             }
             steps {
-                echo "🚀 Desplegando en entorno de staging..."
+                echo "🚀 Desplegando en entorno de desarrollo..."
             }
         }
 
-        stage('Deploy Feature') {
-            when {
-                branch 'feature/*'
-                branch 'desplieges/*'
-            }
-            steps {
-                echo "🧪 Desplegando feature branch para testing..."
-            }
-        }
 
     } // end stages
 
@@ -297,7 +289,7 @@ pipeline {
                 if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main') {
                     deployStatus = "🚀 Desplegado en PRODUCCIÓN"
                 } else if (env.BRANCH_NAME == 'develop') {
-                    deployStatus = "🧪 Desplegado en STAGING"
+                    deployStatus = "🧪 Desplegado en desarrollo"
                 } else if (env.BRANCH_NAME?.startsWith('feature/')) {
                     deployStatus = "🔬 Desplegado en FEATURE env"
                 } else if (env.BRANCH_NAME?.startsWith('desplieges')) {
