@@ -56,6 +56,7 @@ pipeline {
                             error("Credencial mal formada: Username contiene caracteres inválidos (${u}).\nAsegura en Jenkins que 'credenciales git' sea tipo 'Username with password' con:\n - Username = tu usuario de GitHub (ej. farius-red), NO el email\n - Password = token personal (PAT).")
                         }
 
+                        // Hacer clone y sincronizar al workspace (no borrar tmp_checkout aún)
                         sh '''
                           set -e
                           echo "🔎 Validando acceso al repo principal..."
@@ -74,22 +75,24 @@ pipeline {
                             echo "⚠️ rsync no disponible: usando git archive como fallback (no requiere rsync)"
                             git -C tmp_checkout archive HEAD | tar -x -C .
                           fi
-                          rm -rf tmp_checkout
                         '''
+
+                        // Obtener commit desde el clone temporal antes de borrar tmp_checkout
+                        env.GIT_COMMIT = sh(script: 'git -C tmp_checkout rev-parse HEAD', returnStdout: true).trim()
+                        env.GIT_COMMIT_SHORT = env.GIT_COMMIT.take(7)
+                        env.BUILD_TAG = "${env.BRANCH_NAME ?: 'no-branch'}-${env.BUILD_NUMBER ?: 'no-build'}-${env.GIT_COMMIT_SHORT}"
+                        env.DEMO_IMAGE_TAG = "${env.NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${env.BUILD_TAG}"
+                        env.LIB_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
+
+                        // ahora sí limpiar el clone temporal
+                        sh 'rm -rf tmp_checkout'
+
+                        echo "🚀 Build automático en multibranch"
+                        echo "📦 Rama: ${env.BRANCH_NAME}"
+                        echo "📝 Commit: ${env.GIT_COMMIT}"
+                        echo "🏷️ Versión librería: ${env.LIB_VERSION}"
+                        echo "🏷️ Tag imagen: ${env.BUILD_TAG}"
                     }
-
-                    // Obtener commit y calcular variables desde el repo clonado
-                    env.GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                    env.GIT_COMMIT_SHORT = env.GIT_COMMIT.take(7)
-                    env.BUILD_TAG = "${env.BRANCH_NAME ?: 'no-branch'}-${env.BUILD_NUMBER ?: 'no-build'}-${env.GIT_COMMIT_SHORT}"
-                    env.DEMO_IMAGE_TAG = "${env.NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${env.BUILD_TAG}"
-                    env.LIB_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
-
-                    echo "🚀 Build automático en multibranch"
-                    echo "📦 Rama: ${env.BRANCH_NAME}"
-                    echo "📝 Commit: ${env.GIT_COMMIT}"
-                    echo "🏷️ Versión librería: ${env.LIB_VERSION}"
-                    echo "🏷️ Tag imagen: ${env.BUILD_TAG}"
                 }
             }
         }
