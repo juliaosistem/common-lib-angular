@@ -7,6 +7,9 @@ pipeline {
         // 🔄 Valores estáticos / configurables
         NEXUS_DOCKER_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/docker/'
         NEXUS_NPM_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/npm/'
+        
+        // Docker remoto
+        DOCKER_HOST = 'tcp://172.19.0.1:2375'
 
         NEXUS_CREDENTIALS_ID = 'nexus-credentials'
         RANCHER_CREDENTIALS_ID = 'rancher-api-credentials'
@@ -237,9 +240,15 @@ pipeline {
         stage('Detect Container Tools') {
             steps {
                 script {
-                   
-                    env.DOCKER_AVAILABLE = sh(script: 'if command -v docker >/dev/null 2>&1; then echo true; else echo false; fi', returnStdout: true).trim()
-                    echo "DOCKER_AVAILABLE=${env.DOCKER_AVAILABLE}"
+                    // Verificar Docker remoto usando DOCKER_HOST
+                    env.DOCKER_AVAILABLE = sh(script: '''
+                        if curl -s --connect-timeout 5 "${DOCKER_HOST#tcp://}/version" >/dev/null 2>&1; then
+                            echo true
+                        else
+                            echo false
+                        fi
+                    ''', returnStdout: true).trim()
+                    echo "DOCKER_AVAILABLE=${env.DOCKER_AVAILABLE} (usando DOCKER_HOST=${env.DOCKER_HOST})"
                 }
             }
         }
@@ -262,12 +271,10 @@ pipeline {
             }
             steps {
                 script {
-                    // Usar las variables detectadas en la etapa anterior
-                    
                     def hasDocker = env.DOCKER_AVAILABLE == 'true'
 
                      if (hasDocker) {
-                        echo "🐳 Docker disponible en el agente: usando docker build/push"
+                        echo "🐳 Docker remoto disponible en ${env.DOCKER_HOST}: usando docker build/push"
                         withCredentials([usernamePassword(
                             credentialsId: "${NEXUS_CREDENTIALS_ID}",
                             usernameVariable: 'NEXUS_USER',
@@ -275,9 +282,11 @@ pipeline {
                         )]) {
                             sh '''
                                 set -eu
+                                export DOCKER_HOST="${DOCKER_HOST}"
                                 REGISTRY="${NEXUS_DOCKER_REGISTRY%/}"
                                 IMAGE="${REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
                                 echo "Destino: ${IMAGE}"
+                                echo "Docker Host: ${DOCKER_HOST}"
 
                                 echo "🔐 Logueando en registry..."
                                 docker login --username "$NEXUS_USER" --password-stdin $(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||') <<< "$NEXUS_PASS"
@@ -294,7 +303,8 @@ pipeline {
                             '''
                         }
                     } else {
-                        echo "   Si necesita publicar imágenes desde este pipeline, habilite un agente con Docker o Kaniko."
+                        echo "❌ Docker no disponible en ${env.DOCKER_HOST}"
+                        echo "   Verifique que el daemon de Docker esté ejecutándose y accesible desde Jenkins."
                     }
                 }
             }
