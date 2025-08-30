@@ -135,25 +135,6 @@ pipeline {
             }
         }
 
-        // stage('Quality Gates') {
-        //     parallel {
-        //         stage('Lint') {
-        //             steps {
-        //                 sh 'npm run lint'
-        //             }
-        //         }
-        //         stage('Test Library') {
-        //             steps {
-        //                 sh 'npm run test:lib'
-        //             }
-        //         }
-        //         stage('Test Demo') {
-        //             steps {
-        //                 sh 'npm run test:demo'
-        //             }
-        //         }
-        //     }
-        // }
 
         stage('Build Library') {
             steps {
