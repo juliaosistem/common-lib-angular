@@ -237,9 +237,9 @@ pipeline {
         stage('Detect Container Tools') {
             steps {
                 script {
-                    env.KANIKO_AVAILABLE = sh(script: 'if [ -x /kaniko/executor ]; then echo true; else echo false; fi', returnStdout: true).trim()
+                   
                     env.DOCKER_AVAILABLE = sh(script: 'if command -v docker >/dev/null 2>&1; then echo true; else echo false; fi', returnStdout: true).trim()
-                    echo "KANIKO_AVAILABLE=${env.KANIKO_AVAILABLE} DOCKER_AVAILABLE=${env.DOCKER_AVAILABLE}"
+                    echo "DOCKER_AVAILABLE=${env.DOCKER_AVAILABLE}"
                 }
             }
         }
@@ -256,66 +256,17 @@ pipeline {
                         branch 'desplieges'
                     }
                     expression {
-                        return env.KANIKO_AVAILABLE == 'true' || env.DOCKER_AVAILABLE == 'true'
+                        return  env.DOCKER_AVAILABLE == 'true'
                     }
                 }
             }
             steps {
                 script {
                     // Usar las variables detectadas en la etapa anterior
-                    def hasKaniko = env.KANIKO_AVAILABLE == 'true'
+                    
                     def hasDocker = env.DOCKER_AVAILABLE == 'true'
 
-                    if (hasKaniko) {
-                        echo "🐳 Kaniko detectado: usando Kaniko para build y push"
-                        withCredentials([usernamePassword(
-                            credentialsId: "${NEXUS_CREDENTIALS_ID}",
-                            usernameVariable: 'NEXUS_USER',
-                            passwordVariable: 'NEXUS_PASS'
-                        )]) {
-                            sh '''
-                                set -eu
-                                echo "🐳 Preparando config.json de Docker para Kaniko desde credenciales de Jenkins..."
-
-                                hostpath=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')
-
-                                auth=$(printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64 -w0 2>/dev/null || printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64)
-                                cat > "${WORKSPACE}/kaniko-config.json" <<EOF
-{
-  "auths": {
-    "${hostpath}": {
-      "username": "${NEXUS_USER}",
-      "password": "${NEXUS_PASS}",
-      "auth": "${auth}"
-    }
-  }
-}
-EOF
-
-                                mkdir -p /kaniko/.docker || true
-                                cp "${WORKSPACE}/kaniko-config.json" /kaniko/.docker/config.json || true
-                                chmod 600 /kaniko/.docker/config.json || true
-
-                                REGISTRY="${NEXUS_DOCKER_REGISTRY%/}"
-                                DEST="${REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
-                                echo "Destino: ${DEST}"
-
-                                /kaniko/executor \
-                                  --context "${WORKSPACE}" \
-                                  --dockerfile "${WORKSPACE}/Dockerfile" \
-                                  --destination "${DEST}" \
-                                  --build-arg APP_VERSION="${LIB_VERSION}" \
-                                  --build-arg BUILD_TAG="${BUILD_TAG}" \
-                                  --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" \
-                                  --verbosity info
-
-                                echo "✅ Imagen publicada: ${DEST}"
-
-                                rm -f "${WORKSPACE}/kaniko-config.json" || true
-                                rm -f /kaniko/.docker/config.json" || true
-                            '''
-                        }
-                    } else if (hasDocker) {
+                     if (hasDocker) {
                         echo "🐳 Docker disponible en el agente: usando docker build/push"
                         withCredentials([usernamePassword(
                             credentialsId: "${NEXUS_CREDENTIALS_ID}",
@@ -343,7 +294,6 @@ EOF
                             '''
                         }
                     } else {
-                        echo "⚠️ Ni Kaniko ni Docker están disponibles en este nodo. Saltando Docker Build & Push."
                         echo "   Si necesita publicar imágenes desde este pipeline, habilite un agente con Docker o Kaniko."
                     }
                 }
