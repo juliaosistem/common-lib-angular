@@ -123,9 +123,22 @@ pipeline {
                         error("package.json no encontrado en workspace. Asegúrate de que el checkout se realizó correctamente.")
                     }
                     sh '''
-                        echo "📦 Instalando dependencias..."
+                        echo "📦 Instalando dependencias usando registry público (npmjs.org)..."
+
+                        # Respaldar ~/.npmrc si existe (por ejemplo contiene configuración para Nexus)
+                        if [ -f ~/.npmrc ]; then
+                            echo "🔒 Respaldando ~/.npmrc a ~/.npmrc.jenkins_backup"
+                            mv ~/.npmrc ~/.npmrc.jenkins_backup || true
+                        fi
+
+                        # Forzar registry público para instalar paquetes
+                        npm config set registry "https://registry.npmjs.org/"
+
+                        # Instalar dependencias
                         npm install
+
                         echo "✅ Dependencias instaladas"
+
                         echo "🔄 Generando DTOs y construyendo proyectos..."
                         npm run generate:dtos
                         echo "✅ DTOs generados"
@@ -133,6 +146,16 @@ pipeline {
                         npm run build:lib
                         echo "✅ Librería construida"
                         npm run build:demo
+                        echo "✅ Demo construida"
+
+                        # Restaurar ~/.npmrc si existía
+                        if [ -f ~/.npmrc.jenkins_backup ]; then
+                            echo "🔓 Restaurando ~/.npmrc desde backup"
+                            mv ~/.npmrc.jenkins_backup ~/.npmrc || true
+                        else
+                            # eliminar setting de registry local si no había ~/.npmrc
+                            npm config delete registry || true
+                        fi
                     '''
                 }
             }
