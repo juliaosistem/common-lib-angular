@@ -283,13 +283,17 @@ pipeline {
                             sh '''
                                 set -eu
                                 export DOCKER_HOST="${DOCKER_HOST}"
-                                REGISTRY="${NEXUS_DOCKER_REGISTRY%/}"
-                                IMAGE="${REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
+                                
+                                # Extraer host del registry (sin https://)
+                                REGISTRY_HOST=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')
+                                IMAGE="lib-common-angular-demo:${BRANCH_NAME}-${BUILD_TAG}"
+                                
                                 echo "Destino: ${IMAGE}"
                                 echo "Docker Host: ${DOCKER_HOST}"
+                                echo "Registry Host: ${REGISTRY_HOST}"
 
                                 echo "🔐 Logueando en registry..."
-                                docker login --username "$NEXUS_USER" --password-stdin $(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||') <<< "$NEXUS_PASS"
+                                echo "$NEXUS_PASS" | docker login --username "$NEXUS_USER" --password-stdin "$REGISTRY_HOST"
 
                                 echo "🔨 Construyendo imagen..."
                                 docker build -t "${IMAGE}" --build-arg APP_VERSION="${LIB_VERSION}" --build-arg BUILD_TAG="${BUILD_TAG}" --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" -f Dockerfile .
@@ -299,7 +303,7 @@ pipeline {
 
                                 echo "✅ Imagen publicada: ${IMAGE}"
 
-                                docker logout $(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||') || true
+                                docker logout "$REGISTRY_HOST" || true
                             '''
                         }
                     } else {
