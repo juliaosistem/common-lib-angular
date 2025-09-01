@@ -1,0 +1,21 @@
+   <div class="flex flex-col space-y-4 mb-6">
+        <button type="button"
+            class="flex items-center justify-center space-x-2 bg-white text-gray-800 font-bold py-3 px-4 rounded-full border border-gray-300 shadow-md hover:bg-gray-100 transition-colors">
+            <i class="fab fa-google text-lg"></i>
+            @if (isRegistering && isLogout) {
+                <span>Registrarse con Google</span>
+            } @else {
+                <span>Iniciar sesión con Google</span>
+            }
+        </button>
+        <button type="button"
+            class="flex items-center justify-center space-x-2 bg-[#3b5998] text-white font-bold py-3 px-4 rounded-full shadow-md hover:bg-[#2d4373] transition-colors">
+            <i class="fab fa-facebook-f text-lg"></i>
+            <span>Registrarse con Facebook</span>
+            @if (isRegistering && isLogout) {
+                <span>Registrarse con Facebook</span>
+            } @else {
+                <span>Iniciar sesión con Facebook</span>
+            }
+        </button>
+    </div>

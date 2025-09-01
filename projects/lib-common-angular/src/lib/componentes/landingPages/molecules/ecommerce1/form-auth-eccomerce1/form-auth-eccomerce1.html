@@ -1,0 +1,19 @@
+<form class="p-8">
+    
+    
+    <lib-section-login-registro-ecomerce1></lib-section-login-registro-ecomerce1>
+    <!-- Botones de Social Login -->
+    <lib-buttons-socialmedia-login [isRegistering]="isRegistering" [isLogout]="isLogout"></lib-buttons-socialmedia-login>
+    
+    <!-- Campos del formulario -->
+     @if (isRegistering && isLogout) {
+        <lib-inputs-register-ecommerce1></lib-inputs-register-ecommerce1>
+     }@else {
+        <lib-inputs-login-ecommerce1></lib-inputs-login-ecommerce1>
+     }
+    
+    <button type="submit"
+        class="w-full bg-[#fbc30d] text-white font-bold py-3 px-4 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
+       {{isRegistering ? 'Registrarse' : 'Iniciar sesión'}}
+    </button>
+</form>
