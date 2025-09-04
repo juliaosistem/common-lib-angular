@@ -1,78 +1,141 @@
-  <header>
-        <!-- Barra superior -->
-        <div class="header-top py-2 px-4">
-            <div class="container mx-auto flex justify-between items-center text-sm flex-wrap">
-                <div class="flex items-center space-x-4">
-                    <span class="flex items-center">FAQs</span>
-                    <span class="flex items-center">|</span>
-                    <span class="flex items-center">Help</span>
-                    <span class="flex items-center">|</span>
-                    <span class="flex items-center">Support</span>
-                </div>
-                <div class="flex space-x-3 text-lg">
-                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f hover:text-gray-200 transition"></i></a>
-                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter hover:text-gray-200 transition"></i></a>
-                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin hover:text-gray-200 transition"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram hover:text-gray-200 transition"></i></a>
-                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube hover:text-gray-200 transition"></i></a>
-                </div>
+<header>
+    <!-- Barra superior -->
+    <div class="header-top py-2 px-4">
+        <div class="container mx-auto flex justify-between items-center text-sm flex-wrap">
+            <div class="flex items-center space-x-4">
+                <span class="flex items-center">FAQs</span>
+                <span class="flex items-center">|</span>
+                <span class="flex items-center">Help</span>
+                <span class="flex items-center">|</span>
+                <span class="flex items-center">Support</span>
+            </div>
+            <div class="flex space-x-3 text-lg">
+                <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f hover:text-gray-200 transition"></i></a>
+                <a href="#" aria-label="Twitter"><i class="fab fa-twitter hover:text-gray-200 transition"></i></a>
+                <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin hover:text-gray-200 transition"></i></a>
+                <a href="#" aria-label="Instagram"><i class="fab fa-instagram hover:text-gray-200 transition"></i></a>
+                <a href="#" aria-label="YouTube"><i class="fab fa-youtube hover:text-gray-200 transition"></i></a>
             </div>
         </div>
-        
-        <!-- Navbar para desktop -->
-        <nav class="main-nav hidden md:block">
-            <div class="flex items-center justify-between">
-                <!-- Menú Izquierdo -->
-                <ul class="main-nav-ul">
-                    <li><a href="#" onclick="showPage('home-page')" class="main-nav-link">Home</a></li>
-                    <li><a href="#" class="main-nav-link">About</a></li>
-                </ul>
-                <!-- Logo Central -->
-                <a href="#" id="toystore-title" class="logo-center" onclick="showPage('home-page')">Zigma Inflables</a>
-                <!-- Menú Derecho con iconos -->
-                <ul class="main-nav-ul">
-                    <li><a href="#" class="main-nav-link">Service</a></li>
-                    <li><a href="#" class="main-nav-link">Gallery</a></li>
-                    <li><a href="#" class="main-nav-link">Contact</a></li>
-                    <li class="flex items-center space-x-4">
-                        <select class="main-nav-link bg-transparent border-none focus:outline-none">
-                            <option value="es">ES</option>
-                            <option value="en">EN</option>
-                        </select>
-                        <a href="#" aria-label="Shopping Cart"><i class="fas fa-shopping-cart main-nav-link text-xl"></i></a>
+    </div>
+    
+    <!-- Navbar para desktop -->
+    <nav class="main-nav hidden md:block">
+        <div class="flex items-center justify-between">
+            <!-- Menú Izquierdo -->
+            <ul class="main-nav-ul">
+                @for (item of getLeftMenuItems(); track item.id) {
+                    <li>
+                        <a 
+                            [routerLink]="item.routerLink" 
+                            [href]="item.url"
+                            [target]="item.target"
+                            [class]="'main-nav-link ' + (item.class || '')"
+                            [style]="item.style"
+                            [attr.disabled]="item.disabled"
+                            (click)="onMenuItemClick(item, $event)">
+                            @if (currentMenu.showIcons && item.icon) {
+                                <i [class]="item.icon + ' mr-2'"></i>
+                            }
+                            {{ item.label }}
+                            @if (currentMenu.showBadges && item.badge) {
+                                <span [class]="'badge ml-2 ' + (item.badgeClass || '')">
+                                    {{ item.badge }}
+                                </span>
+                            }
+                        </a>
                     </li>
-                </ul>
-            </div>
-        </nav>
-
-        <!-- Navbar para móvil (oculto en desktop) -->
-        <nav class="mobile-header md:hidden py-4 px-6 flex items-center justify-between rounded-xl shadow-lg mt-4 mx-auto max-w-sm">
-            <!-- Hamburguesa y logo -->
-            <div class="flex items-center space-x-4">
-                <button id="mobile-menu-toggle" class="hamburger-menu text-2xl text-white">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <a href="#" class="logo-center text-3xl" onclick="showPage('home-page')">Zigma Inflables</a>
-            </div>
-            <!-- Iconos a la derecha -->
-            <div class="flex items-center space-x-4">
-                 <select class="main-nav-link bg-transparent border-none focus:outline-none">
-                    <option value="es">ES</option>
-                    <option value="en">EN</option>
-                </select>
-                <a href="#" aria-label="Shopping Cart" class="text-white hover:text-gray-200 transition">
-                    <i class="fas fa-shopping-cart text-xl"></i>
-                </a>
-            </div>
-        </nav>
-        
-        <!-- Menú desplegable para móvil -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg border-t border-gray-200 mt-4 mx-auto max-w-sm rounded-xl">
-            <ul class="flex flex-col items-center py-4 space-y-4">
-                <li><a href="#" onclick="showPage('home-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Home</a></li>
-                <li><a href="#" onclick="showPage('about-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">About</a></li>
-                <li><a href="#" onclick="showPage('login-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Login</a></li>
-                <li><a href="#" onclick="showPage('register-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Register</a></li>
+                }
+            </ul>
+            
+            <!-- Logo Central -->
+            <a [routerLink]="getLeftMenuItems()[0].routerLink || ['/']" class="logo-center">
+                {{ logoText }}
+            </a>
+            
+            <!-- Menú Derecho -->
+            <ul class="main-nav-ul">
+                @for (item of getRightMenuItems(); track item.id) {
+                    <li>
+                        <a 
+                            [routerLink]="item.routerLink" 
+                            [href]="item.url"
+                            [target]="item.target"
+                            [class]="'main-nav-link ' + (item.class || '')"
+                            [style]="item.style"
+                            [attr.disabled]="item.disabled"
+                            (click)="onMenuItemClick(item, $event)">
+                            @if (currentMenu.showIcons && item.icon) {
+                                <i [class]="item.icon + ' mr-2'"></i>
+                            }
+                            {{ item.label }}
+                            @if (currentMenu.showBadges && item.badge) {
+                                <span [class]="'badge ml-2 ' + (item.badgeClass || '')">
+                                    {{ item.badge }}
+                                </span>
+                            }
+                        </a>
+                    </li>
+                }
+                <li class="flex items-center space-x-4">
+                    <select class="main-nav-link bg-transparent border-none focus:outline-none">
+                        <option value="es">ES</option>
+                        <option value="en">EN</option>
+                    </select>
+                    <a href="#" aria-label="Shopping Cart">
+                        <i class="fas fa-shopping-cart main-nav-link text-xl"></i>
+                    </a>
+                </li>
             </ul>
         </div>
-    </header>
+    </nav>
+
+    <!-- Navbar para móvil -->
+    <nav class="mobile-header md:hidden py-4 px-6 flex items-center justify-between rounded-xl shadow-lg mt-4 mx-auto max-w-sm">
+        <div class="flex items-center space-x-4">
+            <button id="mobile-menu-toggle" class="hamburger-menu text-2xl text-white">
+                <i class="fas fa-bars"></i>
+            </button>
+            <a [routerLink]="getLeftMenuItems()[0].routerLink || ['/']" class="logo-center text-3xl">
+                {{ logoText }}
+            </a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <select class="main-nav-link bg-transparent border-none focus:outline-none">
+                <option value="es">ES</option>
+                <option value="en">EN</option>
+            </select>
+            <a href="#" aria-label="Shopping Cart" class="text-white hover:text-gray-200 transition">
+                <i class="fas fa-shopping-cart text-xl"></i>
+            </a>
+        </div>
+    </nav>
+    
+    <!-- Menú desplegable para móvil -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg border-t border-gray-200 mt-4 mx-auto max-w-sm rounded-xl">
+        <ul class="flex flex-col items-center py-4 space-y-4">
+            @for (item of getMobileMenuItems(); track item.id) {
+                <li>
+                    <a 
+                        [routerLink]="item.routerLink" 
+                        [href]="item.url"
+                        [target]="item.target"
+                        [class]="'block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition ' + (item.class || '')"
+                        [style]="item.style"
+                        [attr.disabled]="item.disabled"
+                        (click)="onMenuItemClick(item, $event)">
+                        @if (currentMenu.showIcons && item.icon) {
+                            <i [class]="item.icon + ' mr-2'"></i>
+                        }
+                        {{ item.label }}
+                        @if (currentMenu.showBadges && item.badge) {
+                            <span [class]="'badge ml-2 ' + (item.badgeClass || '')">
+                                {{ item.badge }}
+                            </span>
+                        }
+                    </a>
+                </li>
+            }
+        </ul>
+    </div>
+</header>

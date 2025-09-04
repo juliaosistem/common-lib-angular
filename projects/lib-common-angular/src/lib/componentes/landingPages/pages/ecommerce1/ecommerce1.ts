@@ -1,15 +1,13 @@
 import { Component, OnDestroy, OnInit, ElementRef, ViewChild, Renderer2, PLATFORM_ID, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
-import { HeaderEcommerce1 } from "../../molecules/ecommerce1/header-ecommerce1/header-ecommerce1";
+import { HeaderEcommerce1Component } from "../../molecules/ecommerce1/header-ecommerce1/header-ecommerce1";
 import { BarFloatEcommerce1 } from "../../molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1";
 import { FooterEcommerce1 } from "../../molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1";
-import { LoginEcommerce1 } from "./login-ecommerce1/login-ecommerce1";
-import { RegisterEcommerce1 } from "./register-ecommerce1/register-ecommerce1";
-
+import { RouterOutlet } from '@angular/router';
 @Component({
   selector: 'lib-ecommerce1',
-  imports: [HeaderEcommerce1, BarFloatEcommerce1, FooterEcommerce1, LoginEcommerce1, RegisterEcommerce1],
+  imports: [BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet],
   templateUrl: './ecommerce1.html',
   styleUrl: './ecommerce1.scss'
 })
@@ -59,13 +57,13 @@ export class Ecommerce1 implements OnInit, OnDestroy {
     // Usar Angular Router para navegación
     switch (page) {
       case 'home':
-        this.router.navigate(['/ecommerce1']);
+        this.router.navigate(['/pages/ecomerce1/home']);
         break;
       case 'login':
-        this.router.navigate(['/ecommerce1/login']);
+        this.router.navigate(['/pages/ecomerce1/login']);
         break;
       case 'register':
-        this.router.navigate(['/ecommerce1/register']);
+        this.router.navigate(['/pages/ecomerce1/register']);
         break;
     }
   }

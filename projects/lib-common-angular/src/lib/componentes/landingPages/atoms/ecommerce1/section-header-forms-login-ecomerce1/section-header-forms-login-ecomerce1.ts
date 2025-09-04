@@ -4,7 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'lib-section-header-forms-login-ecomerce1',
   imports: [],
   templateUrl: './section-header-forms-login-ecomerce1.html',
-  styleUrl: './section-header-forms-login-ecomerce1.css'
+  styleUrl: './section-header-forms-login-ecomerce1.scss'
 })
 export class SectionHeaderFormsLoginEcomerce1 {
 

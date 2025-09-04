@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeaderEcommerce1 } from './header-ecommerce1';
+import { HeroSectionEcommerce1 } from './hero-section-ecommerce1';
 
-describe('HeaderEcommerce1', () => {
-  let component: HeaderEcommerce1;
-  let fixture: ComponentFixture<HeaderEcommerce1>;
+describe('HeroSectionEcommerce1', () => {
+  let component: HeroSectionEcommerce1;
+  let fixture: ComponentFixture<HeroSectionEcommerce1>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HeaderEcommerce1]
+      imports: [HeroSectionEcommerce1]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(HeaderEcommerce1);
+    fixture = TestBed.createComponent(HeroSectionEcommerce1);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
