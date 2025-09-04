@@ -155,3 +155,51 @@
             transform: scale(1.1);
             color: #25D366; /* Color de WhatsApp en hover */
         }
+
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .main-image-container:hover .image-overlay {
+            opacity: 1;
+        }
+        
+        .magnify-icon {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            padding: 12px;
+            transform: scale(0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .image-overlay:hover .magnify-icon {
+            background-color: rgba(255, 255, 255, 1);
+            transform: scale(1.1);
+        }
+        
+        .magnify-icon i {
+            font-size: 24px;
+            color: #374151;
+        }
+        
+        .main-image-container:hover {
+            .image-overlay {
+                opacity: 1;
+            }
+            
+            img {
+                transform: scale(1.05);
+            }
+        }

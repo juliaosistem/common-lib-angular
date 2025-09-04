@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
+import { ProductoDTO } from '@juliaosistem/core-dtos';
+ import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
 
 export interface Product {
     id?: string;
@@ -19,7 +20,7 @@ export interface Product {
 @Injectable({
     providedIn: 'root'
 })
-export class ProductService  /* extends JuliaoSystemCrudHttpService<Product, Product> */ {
+export class ProductService   extends JuliaoSystemCrudHttpService<ProductoDTO,ProductoDTO>  {
    
   
    

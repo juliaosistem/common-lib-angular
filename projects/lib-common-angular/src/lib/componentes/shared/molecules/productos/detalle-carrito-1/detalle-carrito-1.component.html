@@ -15,16 +15,16 @@
                 
                 <!-- Miniaturas de la galería -->
                 <div class="grid grid-cols-4 gap-4">
-                    <div 
-                        *ngFor="let imageUrl of product.images" 
-                        class="thumbnail-container p-1 rounded-lg cursor-pointer"
-                        (click)="updateMainImage(imageUrl)">
-                        <div 
-                            class="thumbnail"
-                            [class.thumbnail-active]="isActiveThumbnail(imageUrl)">
-                            <img [src]="imageUrl" alt="Miniatura" class="w-full h-full object-cover rounded">
+                    @for (imagen of product.imagen; track $index) {
+                        <div class="thumbnail-container p-1 rounded-lg cursor-pointer"
+                             (click)="updateMainImage(imagen.url)">
+                            <div 
+                                class="thumbnail"
+                                [class.thumbnail-active]="isActiveThumbnail(imagen.url)">
+                                <img [src]="imagen.url" alt="Miniatura {{ imagen.alt }}" class="w-full h-full object-cover rounded">
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </div>
 
@@ -43,26 +43,29 @@
                         </p-button>
                     </div>
 
-                    <div class="flex items-center space-x-2 mb-6">
+                        <!-- esta es la parte de reseñas -->
+                    <!-- <div class="flex items-center space-x-2 mb-6">
                         <p-rating 
                             [ngModel]="product.rating" 
                             [readonly]="true"
                             class="text-yellow-500">
                         </p-rating>
                         <span class="text-gray-500 text-sm">({{ product.reviews }}) reseñas</span>
-                    </div>
+                    </div> -->
 
-                    <p class="text-gray-600 leading-relaxed mb-8">{{ product.description }}</p>
+                    <p class="text-gray-600 leading-relaxed mb-8">{{ product.descripcion }}</p>
 
                     <div class="flex items-center space-x-4 mb-8">
-                        <span class="old-price">{{ formatPrice(product.oldPrice) }}</span>
-                        <span class="current-price">{{ formatPrice(product.price) }}</span>
-                        <span class="discount-label">{{ discount }}% OFF</span>
+                        @if(product.descuento != undefined && product.descuento > 0) {
+                        <span class="old-price">{{ product.precio[0].precio | currency:product.precio[0].codigo_iso :'code' }}</span>
+                        <span class="discount-label">{{ product.descuento}}% OFF</span>
+                        }
+                        <span class="current-price">{{ discount | currency:product.precio[0].codigo_iso :'code'}}</span>
                     </div>
                 </div>
 
                 <div>
-                    <div class="flex items-center mb-8">
+                    <!-- <div class="flex items-center mb-8">
                         <label class="text-gray-700 font-medium mr-4">Cantidad:</label>
                         <div class="flex items-center space-x-2">
                             <p-button 
@@ -81,20 +84,15 @@
                                 class="quantity-btn">
                             </p-button>
                         </div>
-                    </div>
+                    </div> -->
 
-                    <p-button 
-                        label="Agregar al carrito"
-                        icon="pi pi-shopping-cart"
-                        (onClick)="addToCart()"
-                        class="w-full bg-blue-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:bg-blue-700 transition-colors transform hover:scale-105">
-                    </p-button>
-                    
-                    <div 
-                        *ngIf="showCartMessage"
-                        class="mt-4 text-center text-sm font-semibold text-green-600">
-                        Producto añadido al carrito.
-                    </div>
+                    <lib-button-add-to-card1 ></lib-button-add-to-card1>
+
+                    @if (showCartMessage) {
+                        <div class="mt-4 text-center text-sm font-semibold text-green-600">
+                            Producto añadido al carrito.
+                        </div>
+                    }
                 </div>
             </div>
         </div>

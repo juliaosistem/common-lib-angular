@@ -5,17 +5,20 @@
          (mouseleave)="onMouseLeave()">
         
         <!-- Slider de imágenes -->
-        <div class="image-slider">
+        <div class="image-slider relative">
             <img [src]="currentImageUrl" 
-                 [alt]="product.name + ' - ' + currentColor" 
-                 class="transition-opacity duration-500 active">
+                 [alt]="product.name" 
+                 class="transition-opacity duration-500 active cursor-pointer">
+            
+            <!-- Overlay con icono de lupa -->
+            <div class="image-overlay absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer"
+                 (click)="navigateToProductDetail()">
+                <div class="magnify-icon bg-white bg-opacity-90 rounded-full p-3 transform scale-90 group-hover:scale-100 transition-transform duration-300 hover:bg-opacity-100">
+                    <i class="pi pi-search text-2xl text-gray-700"></i>
+                </div>
+            </div>
         </div>
         
-        <!-- Información de la imagen (color) -->
-        <div class="image-info">
-            Color: <span>{{ currentColor }}</span>
-        </div>
-
         <!-- Controles del slider -->
         <div class="slider-controls">
             <p-button 
@@ -45,11 +48,11 @@
         
         <!-- Galería de miniaturas que aparece al hacer hover -->
         <div class="thumbnail-gallery grid grid-cols-5 gap-2 group-hover:flex">
-            @for (image of product.images; track $index) {
+            @for (image of product.imagen; track $index) {
                 <div class="thumbnail-container rounded-lg cursor-pointer"
                      (click)="selectImage($index)">
                     <div class="thumbnail" [class.active]="isActiveThumbnail($index)">
-                        <img [src]="image.url" [alt]="'Miniatura de color ' + image.color">
+                        <img [src]="image.url" [alt]="image.alt">
                     </div>
                 </div>
             }
@@ -59,57 +62,34 @@
     <!-- Contenido del producto -->
     <div class="flex-grow flex flex-col p-4 md:p-6 text-gray-800">
         <h3 class="text-lg md:text-xl font-semibold mb-2 line-clamp-2">{{ product.name }}</h3>
-        <p class="text-sm text-gray-500 mb-2">Por {{ product.brand }}</p>
+        <p class="text-sm text-gray-500 mb-2">Por {{ product.idBusiness}}</p>
         
         <div class="flex items-center justify-between mb-4 text-sm text-gray-600">
-            <span class="font-medium">Categoría: {{ product.category }}</span>
-            <span class="font-medium text-green-600">Cantidad disponible: {{ product.stock }}</span>
+            <span class="font-medium">Categoría: {{ product.idCategoria }}</span>
+            <span class="font-medium text-green-600">Cantidad disponible: {{ product.cantidad }}</span>
         </div>
 
         <!-- Precios y descuento -->
         <div class="mt-auto">
             <div class="flex items-end mb-4">
-                <span class="old-price text-sm mr-2">${{ formatPrice(product.oldPrice) }}</span>
-                <span class="text-2xl font-bold text-gray-900">${{ formatPrice(product.price) }}</span>
+                @if(product.descuento != undefined && product.descuento > 0) {
+                    <span class="old-price text-sm mr-2">{{product.precio[0].precio | currency:product.precio[0].codigo_iso :'code'}}</span>
+                }
+                <span class="text-2xl font-bold text-gray-900">{{ discount | currency:product.precio[0].codigo_iso :'code'}}</span>
             </div>
             
             <!-- Botones de acción y cuotas -->
             <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center space-y-2 md:space-y-0">
-                <span class="discount-badge text-xs font-semibold px-2 py-1 rounded-full">{{ discount }}% OFF</span>
-                <span class="text-xs text-green-600">3 cuotas de ${{ installmentPrice }} con 0% interés</span>
+                @if(product.descuento != undefined && product.descuento > 0) {
+                <span class="discount-badge text-xs font-semibold px-2 py-1 rounded-full">{{ product.descuento }}% OFF</span>
+                }
             </div>
             
             <!-- Contenedor de botones de acción -->
             <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 mt-6">
                 <!-- Botón inicial de Agregar al carrito -->
-                @if (!showQuantitySelector) {
-                    <p-button 
-                        label="Agregar al carrito"
-                        icon="pi pi-shopping-cart"
-                        (onClick)="handleAddToCart()"
-                        class="flex-1  text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
-                    </p-button>
-                }
+              <lib-button-add-to-card1 [product]="product"></lib-button-add-to-card1>
 
-                <!-- Selector de cantidad -->
-                @if (showQuantitySelector) {
-                    <div class="flex-1 flex items-center justify-between bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md">
-                        <p-button 
-                            icon="pi pi-minus" 
-                            [text]="true"
-                            (onClick)="decrementQuantity()"
-                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
-                        </p-button>
-                        <span class="text-xl font-bold">{{ selectedQuantity }}</span>
-                        <p-button 
-                            icon="pi pi-plus" 
-                            [text]="true"
-                            (onClick)="incrementQuantity()"
-                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
-                        </p-button>
-                    </div>
-                }
-                
                 <p-button 
                     label="Compartir   "
                     icon="pi pi-share-alt"

@@ -1,52 +1,87 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy,  Input } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
-import { ProductoDTO } from '@juliaosistem/core-dtos';
+import { ProductoDTO,ImagenDTO, ComponentesDTO } from '@juliaosistem/core-dtos';
+import { Router } from '@angular/router';
+import { ButtonAddToCard1 } from "../../../atoms/button-add-to-card1/button-add-to-card1";
 
-interface ProductImage {
-  url: string;
-  color: string;
-}
-
-interface Product {
-  name: string;
-  brand: string;
-  oldPrice: number;
-  price: number;
-  category: string;
-  stock: number;
-  images: ProductImage[];
-}
 
 @Component({
   selector: 'lib-card-productos1',
-  imports: [CommonModule, PrimegModule],
+  imports: [CommonModule, PrimegModule, ButtonAddToCard1],
+  providers: [CurrencyPipe],
   templateUrl: './card-productos1.component.html',
   styleUrl: './card-productos1.component.scss',
   standalone: true
 })
 export class CardProductos1Component implements OnInit, OnDestroy {
+  
+  componente:ComponentesDTO = {
+          id: 26,
+          nombreComponente: 'lib-card-productos1',
+          version: '1.0',
+          descripcion: 'Componente card para mostrar productos'
+        }
 
+  @Input() 
   product: ProductoDTO = {
+    id:'550e8400-e29b-41d4-a716-446655440000',
     name: "Maleta Viaje Mediana Con Ruedas Resistente Moderna 20-22kg",
 
-    precio: 350000,
+    precio: [{
+      codigo_iso: "COP",
+      nombreMoneda: "Peso colombiano",
+      precio: 350000
+    }, {
+      codigo_iso: "USD",
+      nombreMoneda: "Dólar estadounidense",
+      precio: 95
+    }],
 
     idCategoria: "Viajes y equipaje",
     cantidad: 15,
-    imagen: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-    disponible: true,
+    imagen: [{
+      id: "1",
+      url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+      alt: "Maleta Rosa",
+      idComponente: 0
+    }, {
+      id: "2",
+      url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
+      alt: "Maleta Amarilla",
+      idComponente: 0
+    }, {
+      id: "3",
+      url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+      alt: "Maleta Amarilla",
+      idComponente: 0
+    }, {
+      id: "4",
+      url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
+      alt: "Maleta Beige",
+      idComponente: 0
+    }
+  
+  ],
     descripcion: '',
     comision: 0,
-    idDatosUsuario: ''
+    fechaCreacion: '',
+    fechaActualizacion: '',
+    estado: "Activo",
+    idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
+    idBusiness: 1
   };
+  
 
   currentImageIndex: number = 0;
-  selectedQuantity: number = 0;
+ 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   autoSlideInterval: any;
   discount: number = 0;
   installmentPrice: string = '';
-  showQuantitySelector: boolean = false;
+
+
+  constructor(private currencyPipe: CurrencyPipe, private router: Router) {}
 
   ngOnInit(): void {
     this.calculateDiscount();
@@ -58,24 +93,25 @@ export class CardProductos1Component implements OnInit, OnDestroy {
     this.stopAutoSlide();
   }
 
-  get currentImage(): ProductImage {
-    return this.product.images[this.currentImageIndex];
+  get currentImage(): ImagenDTO {
+    return this.product.imagen[this.currentImageIndex];
   }
 
   get currentImageUrl(): string {
     return this.currentImage.url;
   }
 
-  get currentColor(): string {
-    return this.currentImage.color;
-  }
+  
 
-  calculateDiscount(): void {
-    this.discount = Math.round(100 - (this.product.price / this.product.oldPrice) * 100);
+  calculateDiscount(): number {
+    if(this.product.descuento && this.product.descuento > 0)
+      return this.discount = this.product.precio[0].precio - (this.product.precio[0].precio * this.product.descuento / 100)
+    else
+      return this.discount = this.product.precio[0].precio;
   }
 
   calculateInstallmentPrice(): void {
-    const installment = (this.product.price / 3).toLocaleString('es-CO', { 
+    const installment = (this.product.precio[0].precio / 3).toLocaleString('es-CO', { 
       minimumFractionDigits: 2, 
       maximumFractionDigits: 2 
     });
@@ -83,11 +119,11 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   }
 
   prevImage(): void {
-    this.currentImageIndex = (this.currentImageIndex - 1 + this.product.images.length) % this.product.images.length;
+    this.currentImageIndex = (this.currentImageIndex - 1 + this.product.imagen.length) % this.product.imagen.length;
   }
 
   nextImage(): void {
-    this.currentImageIndex = (this.currentImageIndex + 1) % this.product.images.length;
+    this.currentImageIndex = (this.currentImageIndex + 1) % this.product.imagen.length;
   }
 
   selectImage(index: number): void {
@@ -119,31 +155,11 @@ export class CardProductos1Component implements OnInit, OnDestroy {
     this.startAutoSlide();
   }
 
-  handleAddToCart(): void {
-    this.selectedQuantity = 1;
-    this.showQuantitySelector = true;
-    console.log(`Producto agregado al carrito. Cantidad: ${this.selectedQuantity}`);
-  }
 
-  incrementQuantity(): void {
-    if (this.selectedQuantity < this.product.stock) {
-      this.selectedQuantity++;
-    } else {
-      console.log('No hay más stock disponible.');
-    }
-  }
 
-  decrementQuantity(): void {
-    if (this.selectedQuantity > 0) {
-      this.selectedQuantity--;
-      if (this.selectedQuantity === 0) {
-        this.showQuantitySelector = false;
-      }
-    }
-  }
 
   shareProductOnWhatsapp(): void {
-    const text = `¡Mira esta maleta! ${this.product.name} por solo $${this.formatPrice(this.product.price)}.`;
+    const text = `¡Mira esto! ${this.product.name} por solo $${this.currencyPipe.transform(this.discount, this.product.precio[0].codigo_iso ,'code')}`;
     const url = window.location.href;
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
     window.open(whatsappUrl, '_blank');
@@ -154,7 +170,13 @@ export class CardProductos1Component implements OnInit, OnDestroy {
     console.log('¡Lógica de compartir aquí!');
   }
 
-  formatPrice(price: number): string {
-    return price.toLocaleString('es-CO');
+  /**
+   * Navega al detalle del producto
+   */
+  navigateToProductDetail(): void {
+    if (this.product?.id) {
+      this.router.navigate(['/producto/detalle', this.product.id]);
+    }
   }
+
 }
