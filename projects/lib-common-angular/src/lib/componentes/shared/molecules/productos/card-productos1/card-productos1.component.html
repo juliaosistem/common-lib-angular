@@ -45,13 +45,14 @@
         
         <!-- Galería de miniaturas que aparece al hacer hover -->
         <div class="thumbnail-gallery grid grid-cols-5 gap-2 group-hover:flex">
-            <div *ngFor="let image of product.images; let i = index" 
-                 class="thumbnail-container rounded-lg cursor-pointer"
-                 (click)="selectImage(i)">
-                <div class="thumbnail" [class.active]="isActiveThumbnail(i)">
-                    <img [src]="image.url" [alt]="'Miniatura de color ' + image.color">
+            @for (image of product.images; track $index) {
+                <div class="thumbnail-container rounded-lg cursor-pointer"
+                     (click)="selectImage($index)">
+                    <div class="thumbnail" [class.active]="isActiveThumbnail($index)">
+                        <img [src]="image.url" [alt]="'Miniatura de color ' + image.color">
+                    </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
 
@@ -81,37 +82,39 @@
             <!-- Contenedor de botones de acción -->
             <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 mt-6">
                 <!-- Botón inicial de Agregar al carrito -->
-                <p-button 
-                    *ngIf="!showQuantitySelector"
-                    label="Agregar al carrito"
-                    icon="pi pi-shopping-cart"
-                    (onClick)="handleAddToCart()"
-                    class="flex-1 bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
-                </p-button>
+                @if (!showQuantitySelector) {
+                    <p-button 
+                        label="Agregar al carrito"
+                        icon="pi pi-shopping-cart"
+                        (onClick)="handleAddToCart()"
+                        class="flex-1  text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
+                    </p-button>
+                }
 
                 <!-- Selector de cantidad -->
-                <div *ngIf="showQuantitySelector"
-                     class="flex-1 flex items-center justify-between bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md">
-                    <p-button 
-                        icon="pi pi-minus" 
-                        [text]="true"
-                        (onClick)="decrementQuantity()"
-                        class="text-white hover:text-blue-200 focus:outline-none transition-colors">
-                    </p-button>
-                    <span class="text-xl font-bold">{{ selectedQuantity }}</span>
-                    <p-button 
-                        icon="pi pi-plus" 
-                        [text]="true"
-                        (onClick)="incrementQuantity()"
-                        class="text-white hover:text-blue-200 focus:outline-none transition-colors">
-                    </p-button>
-                </div>
+                @if (showQuantitySelector) {
+                    <div class="flex-1 flex items-center justify-between bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md">
+                        <p-button 
+                            icon="pi pi-minus" 
+                            [text]="true"
+                            (onClick)="decrementQuantity()"
+                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
+                        </p-button>
+                        <span class="text-xl font-bold">{{ selectedQuantity }}</span>
+                        <p-button 
+                            icon="pi pi-plus" 
+                            [text]="true"
+                            (onClick)="incrementQuantity()"
+                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
+                        </p-button>
+                    </div>
+                }
                 
                 <p-button 
-                    label="Compartir"
+                    label="Compartir   "
                     icon="pi pi-share-alt"
                     (onClick)="shareProduct()"
-                    class="flex-1 bg-gray-200 text-gray-800 font-bold py-3 px-4 rounded-lg shadow-md hover:bg-gray-300 transition-colors transform hover:scale-105">
+                    class="flex-1 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
                 </p-button>
             </div>
         </div>

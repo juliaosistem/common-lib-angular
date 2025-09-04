@@ -41,5 +41,25 @@ export * from './lib/componentes/daskboards/daskboard3/componentes/app.sidebar';
 export * from './lib/componentes/daskboards/daskboard3/componentes/app.topbar';
 export * from './lib/componentes/daskboards/daskboard3/componentes/app.footer';
 export * from './lib/componentes/daskboards/daskboard3/componentes/dashboard3-menu.config';
-export * from './lib/componentes/daskboards/daskboard3/moleculas/productos/detalle-carrito-1/detalle-carrito-1.component';
-export * from './lib/componentes/daskboards/daskboard3/moleculas/productos/card-productos1/card-productos1.component';
+
+// shared
+export * from './lib/componentes/shared/molecules/productos/detalle-carrito-1/detalle-carrito-1.component';
+export * from './lib/componentes/shared/molecules/productos/card-productos1/card-productos1.component';
+export * from './lib/componentes/shared/molecules/section-filters-categories-productos/section-filters-categories-productos';
+
+// Landing Pages
+     // Ecommerce 1
+         // Pages
+export * from './lib/componentes/landingPages/pages/ecommerce1/home-ecommerce1/home-ecommerce1';
+export * from './lib/componentes/landingPages/pages/ecommerce1/login-ecommerce1/login-ecommerce1';
+export * from './lib/componentes/landingPages/pages/ecommerce1/register-ecommerce1/register-ecommerce1';
+         // Atoms
+export * from './lib/componentes/landingPages/atoms/ecommerce1/buttons-socialmedia-login/buttons-socialmedia-login';
+export * from './lib/componentes/landingPages/atoms/ecommerce1/inputs-login-ecommerce1/inputs-login-ecommerce1';
+export * from './lib/componentes/landingPages/atoms/ecommerce1/inputs-register-ecommerce1/inputs-register-ecommerce1';
+export * from './lib/componentes/landingPages/atoms/ecommerce1/buttons-socialmedia-login/buttons-socialmedia-login';
+        // Molecules
+export * from './lib/componentes/landingPages/molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1';
+export * from './lib/componentes/landingPages/molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1';
+export * from './lib/componentes/landingPages/molecules/ecommerce1/form-auth-eccomerce1/form-auth-eccomerce1';
+export * from './lib/componentes/landingPages/molecules/ecommerce1/header-ecommerce1/header-ecommerce1';

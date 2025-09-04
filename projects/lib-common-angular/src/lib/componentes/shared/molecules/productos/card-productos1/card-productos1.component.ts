@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PrimegModule } from '../../../../../../modulos/primeg.module';
+import { PrimegModule } from '../../../../../modulos/primeg.module';
+import { ProductoDTO } from '@juliaosistem/core-dtos';
 
 interface ProductImage {
   url: string;
@@ -26,20 +27,18 @@ interface Product {
 })
 export class CardProductos1Component implements OnInit, OnDestroy {
 
-  product: Product = {
+  product: ProductoDTO = {
     name: "Maleta Viaje Mediana Con Ruedas Resistente Moderna 20-22kg",
-    brand: "Under Armour",
-    oldPrice: 350000,
-    price: 262500,
-    category: "Viajes y equipaje",
-    stock: 15,
-    images: [
-      { url: 'https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa', color: 'Rosa' },
-      { url: 'https://placehold.co/600x600/F0E68C/000?text=Maleta+Beige', color: 'Beige' },
-      { url: 'https://placehold.co/600x600/36454F/FFF?text=Maleta+Negra', color: 'Negra' },
-      { url: 'https://placehold.co/600x600/E94E5A/FFF?text=Maleta+Roja', color: 'Roja' },
-      { url: 'https://placehold.co/600x600/1E3A8A/FFF?text=Maleta+Azul', color: 'Azul' }
-    ]
+
+    precio: 350000,
+
+    idCategoria: "Viajes y equipaje",
+    cantidad: 15,
+    imagen: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+    disponible: true,
+    descripcion: '',
+    comision: 0,
+    idDatosUsuario: ''
   };
 
   currentImageIndex: number = 0;
