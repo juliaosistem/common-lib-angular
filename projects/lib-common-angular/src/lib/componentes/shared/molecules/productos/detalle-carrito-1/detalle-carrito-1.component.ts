@@ -38,7 +38,7 @@ export class DetalleCarrito1Component implements OnInit {
 
   ngOnInit(): void {
     this.selectedImageUrl = this.product.imagen[0].url
-    this.discount = Math.round(100 - (this.product.price / this.product.oldPrice) * 100);
+    this.discount = Math.round(100 - (this.product[0].precio / this.product.oldPrice) * 100);
   }
 
   updateMainImage(imageUrl: string): void {

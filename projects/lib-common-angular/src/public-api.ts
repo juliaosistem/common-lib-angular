@@ -78,6 +78,6 @@ export * from './lib/componentes/shared/services/product.service';
 
 // Estados y acciones
 export * from './lib/assets/state/productos.state';
-export * from './lib/assets/state/usuarios.state';
+
 export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/generic-crud.state';
