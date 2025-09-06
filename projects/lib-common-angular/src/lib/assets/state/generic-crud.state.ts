@@ -9,7 +9,7 @@ export interface GenericCrudActions<RQ> {
   All: new (payload: QueryParams, filters?: Map<string, string>) => any;
   Add: new (payload: RQ, queryParams: QueryParams) => any;
   Update: new (payload: RQ, queryParams: QueryParams) => any;
-  Delete: new (id: string, queryParams: QueryParams) => any;
+  Delete: new ( queryParams: QueryParams) => any;
 }
 
 /**
@@ -35,7 +35,7 @@ export abstract class GenericCrudState<RES, RQ> {
 
   // 🔹 Obtener todos
   @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.All; } as any)
-  getAll({ setState }: StateContext<PlantillaResponse<RES>>, action: any) {
+  All({ setState }: StateContext<PlantillaResponse<RES>>, action: any) {
     return this.service.all(action.payload, action.filters).subscribe((res) => {
       setState(res);
     });
@@ -88,7 +88,7 @@ export abstract class GenericCrudState<RES, RQ> {
   // 🔹 Eliminar
   @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.Delete; } as any)
   delete({ getState, setState }: StateContext<PlantillaResponse<RES>>, action: any) {
-    return this.service.delete(action.id, action.queryParams).subscribe((res) => {
+    return this.service.delete(action.queryParams).subscribe((res) => {
       const currentState = getState();
 
       if (currentState.dataList) {

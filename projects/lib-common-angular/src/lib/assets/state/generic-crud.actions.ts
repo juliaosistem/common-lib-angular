@@ -20,7 +20,7 @@ export function createGenericCrudActions<RQ>(entityName: string) {
 
   class Delete {
     static readonly type = `[${entityName}] DELETE`;
-    constructor(public id: string, public queryParams: QueryParams) {}
+    constructor(public queryParams: QueryParams) {}
   }
 
  

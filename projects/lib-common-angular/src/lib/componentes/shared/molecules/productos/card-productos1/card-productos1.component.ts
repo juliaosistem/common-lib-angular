@@ -4,6 +4,7 @@ import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { ProductoDTO,ImagenDTO, ComponentesDTO } from '@juliaosistem/core-dtos';
 import { Router } from '@angular/router';
 import { ButtonAddToCard1 } from "../../../atoms/button-add-to-card1/button-add-to-card1";
+import { ProductService } from '../../../services/product.service';
 
 
 @Component({
@@ -73,19 +74,18 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   };
   
 
+  discount: number = 0;
   currentImageIndex: number = 0;
  
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   autoSlideInterval: any;
-  discount: number = 0;
-  installmentPrice: string = '';
 
 
-  constructor(private currencyPipe: CurrencyPipe, private router: Router) {}
+
+  constructor(private currencyPipe: CurrencyPipe, private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
-    this.calculateDiscount();
-    this.calculateInstallmentPrice();
+    this.discount = this.productService.calculateDiscount(this.product); 
     this.startAutoSlide();
   }
 
@@ -102,22 +102,6 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   }
 
   
-
-  calculateDiscount(): number {
-    if(this.product.descuento && this.product.descuento > 0)
-      return this.discount = this.product.precio[0].precio - (this.product.precio[0].precio * this.product.descuento / 100)
-    else
-      return this.discount = this.product.precio[0].precio;
-  }
-
-  calculateInstallmentPrice(): void {
-    const installment = (this.product.precio[0].precio / 3).toLocaleString('es-CO', { 
-      minimumFractionDigits: 2, 
-      maximumFractionDigits: 2 
-    });
-    this.installmentPrice = installment;
-  }
-
   prevImage(): void {
     this.currentImageIndex = (this.currentImageIndex - 1 + this.product.imagen.length) % this.product.imagen.length;
   }

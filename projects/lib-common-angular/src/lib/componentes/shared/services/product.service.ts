@@ -1281,6 +1281,13 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
         return Promise.resolve(this.getProductsWithOrdersData().slice(0, 10));
     }
 
+    calculateDiscount(product: ProductoDTO): number {
+    if (product.descuento && product.descuento > 0)
+      return product.precio[0].precio - (product.precio[0].precio * product.descuento / 100);
+    else
+      return product.precio[0].precio;
+  }
+
     generatePrduct(): Product {
         const product: Product = {
             id: this.generateId(),
