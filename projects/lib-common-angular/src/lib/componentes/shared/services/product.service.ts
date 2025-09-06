@@ -2,7 +2,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ProductoDTO } from '@juliaosistem/core-dtos';
- import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
+import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
+import { LibConfigService } from '../../../config/lib-config.service';
 
 export interface Product {
     id?: string;
@@ -20,8 +21,7 @@ export interface Product {
 @Injectable({
     providedIn: 'root'
 })
-export class ProductService   extends JuliaoSystemCrudHttpService<ProductoDTO,ProductoDTO>  {
-   
+export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, ProductoDTO> {
   
    
     getProductsData() {
@@ -1258,10 +1258,12 @@ export class ProductService   extends JuliaoSystemCrudHttpService<ProductoDTO,Pr
         'Yoga Set'
     ];
 
-    constructor( http: HttpClient) {
-        // super(http);
-        // this.basePathUrl = 'http://localhost:3000/api/products';
+    constructor(http: HttpClient, private configService: LibConfigService) {
+        super(http);
+        const baseUrl = this.configService.get<string>('baseUrlProducts') || 'http://localhost:3000/products';
+        this.basePathUrl = `${baseUrl}/product`;
     }
+    
 
     getProductsMini() {
         return Promise.resolve(this.getProductsData().slice(0, 5));

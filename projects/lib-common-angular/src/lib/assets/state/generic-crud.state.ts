@@ -1,0 +1,107 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Injectable } from '@angular/core';
+import { StateContext, Selector, Action } from '@ngxs/store';
+import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
+import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
+import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
+
+export interface GenericCrudActions<RQ> {
+  All: new (payload: QueryParams, filters?: Map<string, string>) => any;
+  Add: new (payload: RQ, queryParams: QueryParams) => any;
+  Update: new (payload: RQ, queryParams: QueryParams) => any;
+  Delete: new (id: string, queryParams: QueryParams) => any;
+}
+
+/**
+ * Clase genérica base híbrida:
+ * - Define @Action genéricos que se enlazan dinámicamente con las acciones pasadas.
+ * - El estado hijo NO necesita volver a declararlos.
+ * @param RES Tipo de dato de respuesta (entidad)
+ * @param RQ Tipo de dato de solicitud (entidad o DTO)
+ * @param service Servicio HTTP  específico
+ */
+@Injectable()
+export abstract class GenericCrudState<RES, RQ> {
+  protected constructor(
+    protected readonly service: JuliaoSystemCrudHttpService<RES, RQ>,
+    protected readonly actions: GenericCrudActions<RQ>
+  ) {}
+
+  // 🔹 Selector común
+  @Selector()
+  static getResponse<RES>(state: PlantillaResponse<RES>): PlantillaResponse<RES> {
+    return state;
+  }
+
+  // 🔹 Obtener todos
+  @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.All; } as any)
+  getAll({ setState }: StateContext<PlantillaResponse<RES>>, action: any) {
+    return this.service.all(action.payload, action.filters).subscribe((res) => {
+      setState(res);
+    });
+  }
+
+  // 🔹 Agregar
+  @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.Add; } as any)
+  add({ getState, setState }: StateContext<PlantillaResponse<RES>>, action: any) {
+    return this.service.add(action.payload, action.queryParams).subscribe((res) => {
+      const currentState = getState();
+      const newItem = res.data;
+
+      if (newItem && currentState.dataList) {
+        const updatedState: PlantillaResponse<RES> = {
+          ...currentState,
+          dataList: [...currentState.dataList, newItem],
+          data: newItem,
+          message: res.message,
+          rta: true,
+        };
+        setState(updatedState);
+      }
+    });
+  }
+
+  // 🔹 Actualizar
+  @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.Update; } as any)
+  update({ getState, setState }: StateContext<PlantillaResponse<RES>>, action: any) {
+    return this.service.update(action.payload, action.queryParams).subscribe((res) => {
+      const currentState = getState();
+      const updatedItem = res.data;
+
+      if (updatedItem && currentState.dataList) {
+        const updatedList = currentState.dataList.map((item: any) =>
+          item.id === (updatedItem as any).id ? updatedItem : item
+        );
+
+        const updatedState: PlantillaResponse<RES> = {
+          ...currentState,
+          data: updatedItem,
+          dataList: updatedList,
+          message: res.message,
+          rta: true,
+        };
+        setState(updatedState);
+      }
+    });
+  }
+
+  // 🔹 Eliminar
+  @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.Delete; } as any)
+  delete({ getState, setState }: StateContext<PlantillaResponse<RES>>, action: any) {
+    return this.service.delete(action.id, action.queryParams).subscribe((res) => {
+      const currentState = getState();
+
+      if (currentState.dataList) {
+        const filteredList = currentState.dataList.filter((item: any) => item.id !== action.id);
+
+        const updatedState: PlantillaResponse<RES> = {
+          ...currentState,
+          dataList: filteredList,
+          message: res.message,
+          rta: true,
+        };
+        setState(updatedState);
+      }
+    });
+  }
+}

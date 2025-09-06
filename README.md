@@ -1,7 +1,73 @@
 # Lib-Common-angular
 
 Esta libreria se usa para todos los proyectos frontales de aqui se usan los componentes 
- version 19.0.6.
+ version 20.1.6.
+
+# Lib Common Angular
+
+## Configuración de Ambientes
+
+### Uso Básico
+
+```typescript
+// En tu app.module.ts
+import { LibCommonAngularModule, LibConfigModule } from 'lib-common-angular';
+
+@NgModule({
+  imports: [
+    // ...otros imports
+    LibCommonAngularModule,
+    LibConfigModule.forRoot({
+      baseUrlProducts: 'https://api.miapp.com/productos',
+      baseUrlAuth: 'https://auth.miapp.com',
+      baseUrlUsers: 'https://users.miapp.com',
+      apiVersion: 'v2',
+      timeout: 60000
+    })
+  ],
+  // ...resto del módulo
+})
+export class AppModule { }
+```
+
+### Configuración por Ambiente
+
+```typescript
+// environment.prod.ts
+export const environment = {
+  production: true,
+  libConfig: {
+    baseUrlProducts: 'https://api-prod.miapp.com/productos',
+    baseUrlAuth: 'https://auth-prod.miapp.com',
+    baseUrlUsers: 'https://users-prod.miapp.com'
+  }
+};
+
+// app.module.ts
+import { environment } from '../environments/environment';
+
+@NgModule({
+  imports: [
+    LibConfigModule.forRoot(environment.libConfig)
+  ]
+})
+export class AppModule { }
+```
+
+### Configuración Dinámica
+
+```typescript
+// En cualquier servicio o componente
+constructor(private libConfig: LibConfigService) {}
+
+updateConfig() {
+  this.libConfig.updateConfig({
+    baseUrlProducts: 'https://nueva-api.com'
+  });
+}
+```
+
+
 
 ## Paso 1
 

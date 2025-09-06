@@ -4,10 +4,7 @@
 
 export * from './lib/common-lib.service';
 export * from './lib/common-lib.component';
-export * from './lib/modulos/core.lib.module';
-export * from './lib/componentes/daskboards/daskboard1/componentes/pages/index1/index1.component';
-export * from './lib/assets/state/bussines-state.state';
-export * from './lib/componentes/daskboards/daskboard3/componentes/daskboard3';
+
 
 // Estados y acciones
 /* export * from './lib/assets/state/tabla1.state';
@@ -41,6 +38,10 @@ export * from './lib/componentes/daskboards/daskboard3/componentes/app.sidebar';
 export * from './lib/componentes/daskboards/daskboard3/componentes/app.topbar';
 export * from './lib/componentes/daskboards/daskboard3/componentes/app.footer';
 export * from './lib/componentes/daskboards/daskboard3/componentes/dashboard3-menu.config';
+export * from './lib/componentes/daskboards/daskboard3/componentes/daskboard3';
+
+//dashboard1 y sus componentes
+export * from './lib/componentes/daskboards/daskboard1/componentes/pages/index1/index1.component';
 
 // shared
 export * from './lib/componentes/shared/molecules/productos/detalle-carrito-1/detalle-carrito-1.component';
@@ -63,3 +64,20 @@ export * from './lib/componentes/landingPages/molecules/ecommerce1/footer-ecomme
 export * from './lib/componentes/landingPages/molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1';
 export * from './lib/componentes/landingPages/molecules/ecommerce1/form-auth-eccomerce1/form-auth-eccomerce1';
 export * from './lib/componentes/landingPages/molecules/ecommerce1/header-ecommerce1/header-ecommerce1';
+
+// Configuration
+export * from './lib/config/lib-config.service';
+
+//modulos
+export * from './lib/modulos/primeg.module';
+export * from './lib/config/lib-config.module';
+export * from './lib/modulos/core.lib.module';
+
+//servicios
+export * from './lib/componentes/shared/services/product.service';
+
+// Estados y acciones
+export * from './lib/assets/state/productos.state';
+export * from './lib/assets/state/usuarios.state';
+export * from './lib/assets/state/usuarios.actions';
+export * from './lib/assets/state/generic-crud.state';
