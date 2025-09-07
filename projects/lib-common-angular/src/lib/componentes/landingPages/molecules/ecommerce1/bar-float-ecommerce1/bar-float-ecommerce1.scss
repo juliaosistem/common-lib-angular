@@ -1,5 +1,4 @@
-   /* Animación para el Hero Section */
-        .animate-hero-section {
+    .animate-hero-section {
             opacity: 0;
             transform: translateY(50px);
             transition: opacity 1.5s ease-out, transform 1.5s ease-out;

@@ -5,57 +5,14 @@
 
         <!-- Product Grid Section -->
         <main class="container mx-auto p-6">
-            <lib-section-filters-categories-productos></lib-section-filters-categories-productos>
+            <lib-section-filters-categories-productos [categorias]="Categorias"></lib-section-filters-categories-productos>
             <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Tarjeta de Producto 1 -->
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Castillo+Clasico" alt="Castillo Inflable Clasico" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Castillo Clásico</h3>
-                    <span class="text-2xl font-bold text-gray-800">$300.00 USD</span>
-                </div>
-
-                <!-- Tarjeta de Producto 2 -->
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Tobogan+Acuatico" alt="Tobogan Acuatico" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Tobogán Acuático</h3>
-                    <span class="text-2xl font-bold text-gray-800">$380.00 USD</span>
-                </div>
-
-                <!-- Tarjeta de Producto 3 -->
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Inflable+con+Obstaculos" alt="Inflable con Obstaculos" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Inflable de Obstáculos</h3>
-                    <span class="text-2xl font-bold text-gray-800">$380.00 USD</span>
-                </div>
-
-                <!-- Tarjeta de Producto 4 -->
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Brinca+Brinca" alt="Brinca Brinca" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Brinca Brinca</h3>
-                    <span class="text-2xl font-bold text-gray-800">$240.00 USD</span>
-                </div>
                 
-                <!-- Más tarjetas de productos pueden ir aquí -->
                 <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Inflable+Futbol" alt="Inflable de Futbol" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Inflable de Fútbol</h3>
-                    <span class="text-2xl font-bold text-gray-800">$240.00 USD</span>
-                </div>
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Castillo+Princesa" alt="Castillo Princesa" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Castillo Princesa</h3>
-                    <span class="text-2xl font-bold text-gray-800">$320.00 USD</span>
-                </div>
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Ring+Boxeo" alt="Ring de Boxeo" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Ring de Boxeo</h3>
-                    <span class="text-2xl font-bold text-gray-800">$160.00 USD</span>
-                </div>
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Tobogan+Gigante" alt="Tobogan Gigante" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Tobogán Gigante</h3>
-                    <span class="text-2xl font-bold text-gray-800">$270.00 USD</span>
-                </div>
+                  @for (product of Products; track $index) {
+                    <lib-card-productos1 [product]="product"></lib-card-productos1>
+                  }  
+              </div>
             </div>
         </main>
 
@@ -73,47 +30,7 @@
         </section>
 
         <!-- Nueva seccion de Instagram -->
-        <section class="py-16 bg-white animate-instagram-section">
-            <div class="container mx-auto px-6 text-center">
-                <span class="text-gray-500 font-semibold">@ZigmaInflables</span>
-                <h2 class="text-4xl font-bold text-gray-800 my-4">¡Estamos en Instagram!</h2>
-                <div class="flex flex-wrap justify-center gap-4 mt-8">
-                    <!-- Imagen de Instagram 1 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+1" alt="Instagram Picture 1" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                    <!-- Imagen de Instagram 2 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+2" alt="Instagram Picture 2" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                    <!-- Imagen de Instagram 3 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+3" alt="Instagram Picture 3" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                    <!-- Imagen de Instagram 4 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+4" alt="Instagram Picture 4" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                    <!-- Imagen de Instagram 5 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+5" alt="Instagram Picture 5" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                </div>
-                <a href="#" class="inline-block mt-8 bg-[#fbc30d] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
-                    Ver más fotos
-                </a>
-            </div>
-        </section>
+        <lib-section-images-instagram-ecommerce1></lib-section-images-instagram-ecommerce1>
 
         <!-- Nueva sección del Newsletter -->
         <section class="py-16 px-6 my-12 animate-newsletter-section">

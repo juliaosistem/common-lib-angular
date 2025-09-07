@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
+import { ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-header-ecommerce1',
@@ -10,6 +10,14 @@ import { MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
   styleUrls: ['./header-ecommerce1.scss']
 })
 export class HeaderEcommerce1Component implements OnInit {
+
+  // Metadata del componente  
+  componente:ComponentesDTO = {
+          id: 34,
+          nombreComponente: 'lib-header-ecommerce1',
+          version: '1.0',
+          descripcion: 'Componente para mostrar el encabezado en la página de ecommerce1'
+        }
   
   @Input() logoText: string = 'Zigma Inflables';
   @Input() menuConfig: MenuConfig | null = null;

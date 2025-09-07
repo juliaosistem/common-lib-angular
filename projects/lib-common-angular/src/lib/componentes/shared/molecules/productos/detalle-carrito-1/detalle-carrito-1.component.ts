@@ -16,7 +16,7 @@ import { ProductService } from '../../../services/product.service';
   standalone: true
 })
 export class DetalleCarrito1Component implements OnInit {
-    
+  // Metadata del componente    
     componente:ComponentesDTO = {
             id: 27,
             nombreComponente: 'lib-detalle-carrito-1',
@@ -25,15 +25,23 @@ export class DetalleCarrito1Component implements OnInit {
           }
   
   @Input()
+  // Variable que recibe el producto a mostrar
   product!: ProductoDTO;
 
+  // Variable que determina si el usuario está logueado
+  @Input()
+  isLogin: boolean = false;
 
-  
+  // Variable que determina el descuento aplicado al producto
   discount: number = 0;
 
+  // Variable que determina la cantidad actual del producto
   currentQuantity: number = 1;
+  // Variable que almacena la URL de la imagen seleccionada
   selectedImageUrl: string = '';
+  // Variable que controla la visibilidad del mensaje de agregado al carrito
   showCartMessage: boolean = false;
+  // Variable que indica si el producto es favorito
   isFavorite: boolean = false;
 
   constructor(private productService: ProductService) {}
@@ -42,22 +50,41 @@ export class DetalleCarrito1Component implements OnInit {
    this.checkIsProductExists();
   }
 
+/**
+ * Método para verificar si el producto existe y tiene imágenes
+ * Si el producto tiene imágenes, se selecciona la primera imagen por defecto
+ * y se calcula el descuento utilizando el servicio de productos.
+ */
   checkIsProductExists(){
     if(this.product && this.product?.imagen.length > 0) {
       this.selectedImageUrl = this.product?.imagen[0].url
       this.discount = this.productService.calculateDiscount(this.product);
     }
   }
+
+  /**
+   * 
+   * @param imageUrl URL de la imagen seleccionada
+   * Método para actualizar la imagen principal cuando se selecciona una miniatura
+   */
   updateMainImage(imageUrl: string): void {
     this.selectedImageUrl = imageUrl;
   }
 
   
 
+
   toggleFavorite(): void {
     this.isFavorite = !this.isFavorite;
   }
 
+
+/**
+ * 
+ * @param imageUrl URL de la imagen a verificar
+ * Método para verificar si una miniatura es la imagen activa
+ * @returns 
+ */
   isActiveThumbnail(imageUrl: string): boolean {
     return this.selectedImageUrl === imageUrl;
   }

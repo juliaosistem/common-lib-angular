@@ -126,30 +126,8 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Animación para el Hero Section */
-        .animate-hero-section {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
-        }
-        
-        .animate-hero-section.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Animación de las tarjetas de producto (modificada para ser más notoria y lenta) */
-        .product-card {
-            opacity: 0;
-            transform: translateX(-400px); /* Movimiento más grande para que sea muy notorio */
-            transition: opacity 2.5s ease-out, transform 2.5s ease-out; /* Duración de la animación aumentada */
-        }
-
-        .product-card.is-visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
+     
+       
         /* Animación de las tarjetas de categoría */
         .category-card-animation {
             opacity: 0;
@@ -173,17 +151,7 @@
             transform: translateY(0);
         }
 
-        /* Animación para la seccion de Instagram */
-        .animate-instagram-section {
-            opacity: 0;
-            transform: scale(0.9);
-            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
-        }
-        .animate-instagram-section.is-visible {
-            opacity: 1;
-            transform: scale(1);
-        }
-
+    
         /* Animación para el newsletter */
         .animate-newsletter-section {
             opacity: 0;

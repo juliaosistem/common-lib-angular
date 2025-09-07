@@ -1,14 +1,14 @@
 <div class="flex justify-between items-center my-8 animate-scroll">
-    <h2 class="text-4xl font-bold text-gray-800">Todos los Inflables</h2>
+    <h2 class="text-4xl font-bold text-gray-800">{{titleComponent}}</h2>
     <div class="flex space-x-2 text-gray-600 font-semibold">
         <button class="bg-[#fbc30d] text-white px-4 py-2 rounded-full hover:bg-[#cda41a] transition">
             Todos
         </button>
-        <button class="px-4 py-2 rounded-full hover:bg-gray-200 transition">
-            Castillos
-        </button>
-        <button class="px-4 py-2 rounded-full hover:bg-gray-200 transition">
-            Toboganes
-        </button>
+        @for (categoria of categorias; track $index) {
+          <button class="px-4 py-2 rounded-full hover:bg-gray-200 transition">
+              {{ categoria.nombreCategoria }}
+          </button>
+        }
+       
     </div>
 </div>

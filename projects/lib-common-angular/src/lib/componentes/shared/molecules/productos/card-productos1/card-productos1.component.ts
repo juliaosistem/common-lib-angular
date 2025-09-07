@@ -25,54 +25,7 @@ export class CardProductos1Component implements OnInit, OnDestroy {
         }
 
   @Input() 
-  product: ProductoDTO = {
-    id:'550e8400-e29b-41d4-a716-446655440000',
-    name: "Maleta Viaje Mediana Con Ruedas Resistente Moderna 20-22kg",
-
-    precio: [{
-      codigo_iso: "COP",
-      nombreMoneda: "Peso colombiano",
-      precio: 350000
-    }, {
-      codigo_iso: "USD",
-      nombreMoneda: "Dólar estadounidense",
-      precio: 95
-    }],
-
-    idCategoria: "Viajes y equipaje",
-    cantidad: 15,
-    imagen: [{
-      id: "1",
-      url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-      alt: "Maleta Rosa",
-      idComponente: 0
-    }, {
-      id: "2",
-      url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
-      alt: "Maleta Amarilla",
-      idComponente: 0
-    }, {
-      id: "3",
-      url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-      alt: "Maleta Amarilla",
-      idComponente: 0
-    }, {
-      id: "4",
-      url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
-      alt: "Maleta Beige",
-      idComponente: 0
-    }
-  
-  ],
-    descripcion: '',
-    comision: 0,
-    fechaCreacion: '',
-    fechaActualizacion: '',
-    estado: "Activo",
-    idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
-    idBusiness: 1
-  };
-  
+  product!: ProductoDTO 
 
   discount: number = 0;
   currentImageIndex: number = 0;
@@ -85,14 +38,25 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   constructor(private currencyPipe: CurrencyPipe, private productService: ProductService, private router: Router) {}
 
   ngOnInit(): void {
-    this.discount = this.productService.calculateDiscount(this.product); 
-    this.startAutoSlide();
+    this.checkIsProductExistsAndLoadData();
   }
 
   ngOnDestroy(): void {
     this.stopAutoSlide();
   }
 
+/**
+ * Verifica si el producto existe y carga los datos necesarios
+ */
+  checkIsProductExistsAndLoadData():void {
+    if(this.productService.checkIsProductIsnotEmptyOrNull(this.product)){
+      this.discount = this.productService.calculateDiscount(this.product);
+      this.startAutoSlide();
+    } else {
+      this.discount = 0;
+    }
+  }
+  
   get currentImage(): ImagenDTO {
     return this.product.imagen[this.currentImageIndex];
   }
@@ -107,6 +71,7 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   }
 
   nextImage(): void {
+  
     this.currentImageIndex = (this.currentImageIndex + 1) % this.product.imagen.length;
   }
 

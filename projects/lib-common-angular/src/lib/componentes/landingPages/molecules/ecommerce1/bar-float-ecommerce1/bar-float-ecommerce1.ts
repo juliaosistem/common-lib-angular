@@ -1,11 +1,18 @@
 import { Component } from '@angular/core';
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-bar-float-ecommerce1',
   imports: [],
   templateUrl: './bar-float-ecommerce1.html',
-  styleUrl: './bar-float-ecommerce1.css'
+  styleUrl: './bar-float-ecommerce1.scss'
 })
 export class BarFloatEcommerce1 {
 
+  componente:ComponentesDTO = {
+          id: 33,
+          nombreComponente: 'lib-bar-float-ecommerce1',
+          version: '1.0',
+          descripcion: 'Componente para mostrar una barra flotante en la página de ecommerce1'
+        }
 }
