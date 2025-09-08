@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Index2Component } from './src/public-api';
-import { DaskBoard3 } from './src/lib/componentes/daskboards/daskboard3/componentes/daskboard3';
+import { DaskBoard3 } from './src/lib/componentes/daskboards/daskboard3/daskboard3';
 import { Notfound } from './src/lib/componentes/shared/pages/notfound/notfound';
 
 

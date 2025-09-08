@@ -1,3 +1,30 @@
+.dashboard-menu-container {
+            height: 100%;
+            overflow-y: auto;
+        }
+        
+        .dashboard-menu-container ::ng-deep .menu-container {
+            padding: 0;
+            background: transparent;
+        }
+        
+        .dashboard-menu-container ::ng-deep .menu-controls {
+            display: none;
+        }
+        
+        .dashboard-menu-container ::ng-deep .menu-info {
+            display: none;
+        }
+        
+        .dashboard-menu-container ::ng-deep .config-section {
+            display: none;
+        }
+        
+        .dashboard-menu-container ::ng-deep .menu-wrapper {
+            border: none;
+            min-height: auto;
+        }
+
 .menu-container {
     display: flex;
     flex-direction: column;

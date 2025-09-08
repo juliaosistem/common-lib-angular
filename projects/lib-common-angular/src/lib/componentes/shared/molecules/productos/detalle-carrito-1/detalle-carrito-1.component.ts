@@ -12,7 +12,7 @@ import { ProductService } from '../../../services/product.service';
   selector: 'lib-detalle-carrito-1',
   imports: [CommonModule, PrimegModule, FormsModule, ButtonAddToCard1],
   templateUrl: './detalle-carrito-1.component.html',
-  styleUrl: './detalle-carrito-1.component.scss',
+  styleUrls: ['./detalle-carrito-1.component.scss'],
   standalone: true
 })
 export class DetalleCarrito1Component implements OnInit {

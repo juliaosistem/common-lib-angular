@@ -207,10 +207,10 @@ export const defaultMenuConfig: MenuConfig = {
           order: 3,
           items: [
               {
-                  id: 'landing',
-                  label: 'Landing',
+                  id: 'ecommerce1',
+                  label: 'ecommerce1',
                   icon: 'pi pi-fw pi-globe',
-                  routerLink: ['/landing'],
+                  routerLink: ['/pages/ecommerce1'],
                   type: 'item',
                   order: 1
               },

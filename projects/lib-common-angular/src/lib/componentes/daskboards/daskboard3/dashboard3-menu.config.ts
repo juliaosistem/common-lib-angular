@@ -1,4 +1,4 @@
-import { MenuConfig } from '../../../shared/interfaces/menu.interface';
+import { MenuConfig } from '../../shared/interfaces/menu.interface';
 
 export const DASHBOARD3_MENU_CONFIG: MenuConfig = {
     id: 'dashboard3-menu',

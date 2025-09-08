@@ -1,20 +1,20 @@
-import { Component, Renderer2, ViewChild, Input, OnInit } from '@angular/core';
+import { Component, Renderer2, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { filter, Subscription } from 'rxjs';
-import { AppTopbar } from './app.topbar';
-import { AppSidebar } from './app.sidebar';
-import { AppFooter } from './app.footer';
-import { LayoutService } from '../../../shared/services/layout.service';
+import { AppTopbar } from './moleculas/app.topbar';
+import { AppFooter } from './moleculas/app.footer';
+import { LayoutService } from '../../shared/services/layout.service';
 import { MenuConfig } from '@juliaosistem/core-dtos';
+import { MenuComponent } from "./moleculas/menu/menu.component";
 
 @Component({
     selector: 'lib-daskboard3',
     standalone: true,
-    imports: [CommonModule, AppTopbar, AppSidebar, RouterModule, AppFooter],
+    imports: [CommonModule, AppTopbar, RouterModule, AppFooter,  MenuComponent],
     template: `<div class="layout-wrapper" [ngClass]="containerClass">
         <lib-topbar3></lib-topbar3>
-        <lib-sidebar [menuConfig]="menuConfig" [userPermissions]="userPermissions"></lib-sidebar>
+        <lib-menu [menuConfig]="menuConfig" [userPermissions]="userPermissions"></lib-menu>
         <div class="layout-main-container">
             <div class="layout-main">
                 <router-outlet></router-outlet>
@@ -33,9 +33,7 @@ export class DaskBoard3 implements OnInit {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     menuOutsideClickListener: any;
 
-    @ViewChild(AppSidebar) appSidebar!: AppSidebar;
 
-    @ViewChild(AppTopbar) appTopBar!: AppTopbar;
 
     constructor(
         public layoutService: LayoutService,

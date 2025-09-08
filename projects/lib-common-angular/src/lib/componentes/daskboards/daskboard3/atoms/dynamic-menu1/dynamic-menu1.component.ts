@@ -1,8 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MenuItem1Component } from '../../atoms/menu-item1/menu-item1.component';
-import {MenuManager } from '../../interfaces/menu.interface';
-import { DynamicMenuService } from '../../services/dynamic-menu.service';
+import { MenuItem1Component } from '../../../../shared/atoms/menu-item1/menu-item1.component';
+import {MenuManager } from '../../../../shared/interfaces/menu.interface';
+import { DynamicMenuService } from '../../../../shared/services/dynamic-menu.service';
 import { MenuConfig, MenuItem,MenuEvent } from '@juliaosistem/core-dtos';
 
 @Component({
@@ -15,7 +15,7 @@ import { MenuConfig, MenuItem,MenuEvent } from '@juliaosistem/core-dtos';
 export class DynamicMenu1Component implements OnInit {
   @Input() menuId!: string;
   @Input() userPermissions: string[] = [];
-  @Input() initialConfig?: MenuConfig;
+  @Input() menuConfig?: MenuConfig;
   @Input() autoLoad: boolean = true;
 
   @Output() menuEvent = new EventEmitter<MenuEvent>();
@@ -35,8 +35,8 @@ export class DynamicMenu1Component implements OnInit {
   constructor(private menuService: DynamicMenuService) {}
 
   ngOnInit() {
-    if (this.initialConfig) {
-      this.setConfig(this.initialConfig);
+    if (this.menuConfig) {
+      this.setConfig(this.menuConfig);
     } else if (this.autoLoad && this.menuId) {
       this.loadMenu();
     }

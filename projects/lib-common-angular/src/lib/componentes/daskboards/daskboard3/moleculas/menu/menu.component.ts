@@ -1,22 +1,23 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DynamicMenu1Component } from '../../molecules/dynamic-menu1/dynamic-menu1.component';
 import { MenuConfig, MenuItem, MenuEvent } from '@juliaosistem/core-dtos';
-import { DynamicMenuService } from '../../services/dynamic-menu.service';
+import { DynamicMenuService } from '../../../../shared/services/dynamic-menu.service';
+import { DynamicMenu1Component } from '../../atoms/dynamic-menu1/dynamic-menu1.component';
 
 @Component({
   selector: 'lib-menu',
   standalone: true,
-  imports: [CommonModule, FormsModule, DynamicMenu1Component],
+  imports: [CommonModule, FormsModule,DynamicMenu1Component],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
 })
 export class MenuComponent implements OnInit {
   // ✅ INPUTS PARA CONFIGURACIÓN
-  @Input() menuId: string = 'main-menu';
-  @Input() userPermissions: string[] = ['admin.users.read', 'reports.sales.read'];
-  @Input() showControls: boolean = true;
+  @Input() menuId: string = 'dashboard3-menu';
+  @Input() menuConfig?: MenuConfig;
+   @Input() userPermissions: string[] = ['admin.users.read', 'admin.settings.read', 'pages.crud.read'];
+ @Input() showControls: boolean = true;
   @Input() showInfo: boolean = true;
   @Input() showEventLog: boolean = true;
   @Input() showConfig: boolean = true;
@@ -35,17 +36,8 @@ export class MenuComponent implements OnInit {
   menuStatus = 'Cargando...';
   eventLog: Array<{timestamp: Date, type: string, item: string}> = [];
 
-  menuConfig: MenuConfig = {
-    id: 'main-menu',
-    name: 'Menú Principal',
-    items: [],
-    theme: 'light',
-    orientation: 'vertical',
-    collapsible: true,
-    showIcons: true,
-    showBadges: true,
-    maxDepth: 3
-  };
+  
+
 
   constructor(private menuService: DynamicMenuService) {}
 
@@ -55,8 +47,18 @@ export class MenuComponent implements OnInit {
       this.menuConfig = { ...this.initialConfig };
     }
     
-    this.loadMenuInfo();
-  }
+      if (this.menuConfig) {
+            this.menuId = this.menuConfig.id || 'dashboard3-menu';
+        }
+        
+        // Inicializar el menú dinámico
+        this.initializeDynamicMenu();
+    }
+
+    private initializeDynamicMenu() {
+        // Configurar el menú dinámico para el dashboard3
+        this.menuService.updateMenuConfig(this.menuId, this.menuConfig!);
+    }
 
   async loadMenuInfo() {
     try {
@@ -86,15 +88,15 @@ export class MenuComponent implements OnInit {
     this.loadMenuInfo();
   }
 
-  onThemeChange(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    this.menuConfig.theme = select.value as 'light' | 'dark';
-  }
+  // onThemeChange(event: Event) {
+  //   const select = event.target as HTMLSelectElement;
+  //   this.menuConfig.theme = select.value as 'light' | 'dark';
+  // }
 
-  onOrientationChange(event: Event) {
-    const select = event.target as HTMLSelectElement;
-    this.menuConfig.orientation = select.value as 'horizontal' | 'vertical';
-  }
+  // onOrientationChange(event: Event) {
+  //  // const select = event.target as HTMLSelectElement;
+  //  // this.menuConfig.orientation = select.value as 'horizontal' | 'vertical';
+  // }
 
   onMenuEvent(event: MenuEvent) {
     this.eventLog.unshift({
@@ -151,8 +153,8 @@ export class MenuComponent implements OnInit {
   }
 
   applyCustomConfig() {
-    this.menuConfig.id = this.menuId;
-    this.menuService.updateMenuConfig(this.menuId, this.menuConfig);
+    //this.menuConfig.id = this.menuId;
+  //  this.menuService.updateMenuConfig(this.menuId, this.menuConfig);
     this.loadMenuInfo();
     this.configApplied.emit(this.menuConfig);
   }
@@ -175,11 +177,13 @@ export class MenuComponent implements OnInit {
     this.eventLog = [];
   }
 
-  public getCurrentConfig(): MenuConfig {
-    return { ...this.menuConfig };
-  }
+  // public getCurrentConfig(): MenuConfig {
+  //   return { ...this.menuConfig };
+  // }
 
   public getEventLog() {
     return [...this.eventLog];
   }
+
+  
 } 
