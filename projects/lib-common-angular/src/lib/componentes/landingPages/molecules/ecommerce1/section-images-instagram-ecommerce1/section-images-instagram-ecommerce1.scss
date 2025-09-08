@@ -1,0 +1,10 @@
+ /* Animación para la seccion de Instagram */
+        .animate-instagram-section {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+        .animate-instagram-section.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }

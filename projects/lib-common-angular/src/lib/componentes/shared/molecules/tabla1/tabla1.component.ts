@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
-import { DynamicField, FieldType } from '../../interfaces/dynamic-field.interface';
+import { DynamicField } from '../../interfaces/dynamic-field.interface';
+import { FieldType } from '@juliaosistem/core-dtos';
 import { DynamicFieldService } from '../../services/dynamic-field.service';
 import { ButtonActionsRow1Component } from '../../atoms/button-actions-row1/button-actions-row1.component';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-tabla1',

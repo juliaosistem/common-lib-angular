@@ -4,7 +4,7 @@ import { IonicModule } from '@ionic/angular';
 import { CoreModuleLib } from '../../../../modulos/core.lib.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-select-input1',

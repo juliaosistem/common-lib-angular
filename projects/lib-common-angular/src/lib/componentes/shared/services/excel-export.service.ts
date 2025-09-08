@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MessageService } from 'primeng/api';
 
-export interface ExcelExportConfig {
-  data: Record<string, unknown>[];
-  fieldOrder: string[];
-  fieldLabels: Record<string, string>;
-  excludeFields: string[];
-  fileName?: string;
-}
+import { ExcelExportConfig } from '@juliaosistem/core-dtos'; // Assuming you have a model for the config
 
 @Injectable({
   providedIn: 'root'

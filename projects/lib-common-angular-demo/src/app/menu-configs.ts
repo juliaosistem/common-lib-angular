@@ -70,10 +70,18 @@ export const defaultMenuConfig: MenuConfig = {
           order: 2,
           items: [
               {
-                  id: 'form-layout',
-                  label: 'Form Layout',
-                  icon: 'pi pi-fw pi-id-card',
-                  routerLink: ['/uikit/formlayout'],
+                  id: 'card-productos',
+                  label: 'card-productos',
+                  icon: 'pi-shopping-cart',
+                  routerLink: ['/componentes/card-productos'],
+                  type: 'item',
+                  order: 1
+              },
+                {
+                  id: 'detalle-carrito',
+                  label: 'Detalle Carrito',
+                  icon: 'pi-shopping-cart',
+                  routerLink: ['/componentes/detalle-carrito'],
                   type: 'item',
                   order: 1
               },
@@ -199,10 +207,10 @@ export const defaultMenuConfig: MenuConfig = {
           order: 3,
           items: [
               {
-                  id: 'landing',
-                  label: 'Landing',
+                  id: 'ecommerce1',
+                  label: 'ecommerce1',
                   icon: 'pi pi-fw pi-globe',
-                  routerLink: ['/landing'],
+                  routerLink: ['/pages/ecommerce1'],
                   type: 'item',
                   order: 1
               },

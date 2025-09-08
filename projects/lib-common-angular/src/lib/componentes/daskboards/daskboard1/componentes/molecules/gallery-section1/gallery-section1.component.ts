@@ -2,8 +2,7 @@ import { ComponentServicesService } from '../../../../../shared/services/compone
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import{ImagenDTO} from 'juliaositembackenexpress/dist/api/dtos/bussines/ImagenDTO';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ComponentesDTO, ImagenDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-gallery-section1',

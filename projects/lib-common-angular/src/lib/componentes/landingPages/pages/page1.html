@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zigma Inflables</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f7f7;
+        }
+
+        /* Estilo para el botón flotante de WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+        }
+
+        .whatsapp-float.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .whatsapp-float a {
+            display: block;
+            background-color: #25d366;
+            color: white;
+            padding: 1rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1-px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .whatsapp-float a:hover {
+            transform: scale(1.1);
+        }
+
+        .whatsapp-float .fa-whatsapp {
+            font-size: 2.5rem;
+        }
+        
+        /* Modal styling (solo para el de WhatsApp) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 400px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            color: #aaa;
+            cursor: pointer;
+        }
+        
+        /* Estilos para las nuevas secciones de Login y Registro (paginas separadas) */
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 2rem 0;
+        }
+
+        .auth-section {
+            background-color: #ffffff;
+            padding: 4rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 500px;
+            margin: 4rem auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Animaciones para los elementos al hacer scroll */
+        .animate-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+
+        .animate-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animación del titulo */
+        .animate-title-initial {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        .animate-title-final {
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .animate-title-initial.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+            animation: rotate360 1s ease-out forwards;
+            animation-iteration-count: 2; /* Gira dos veces */
+        }
+
+        @keyframes rotate360 {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Animación para el Hero Section */
+        .animate-hero-section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+        
+        .animate-hero-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animación de las tarjetas de producto (modificada para ser más notoria y lenta) */
+        .product-card {
+            opacity: 0;
+            transform: translateX(-400px); /* Movimiento más grande para que sea muy notorio */
+            transition: opacity 2.5s ease-out, transform 2.5s ease-out; /* Duración de la animación aumentada */
+        }
+
+        .product-card.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* Animación de las tarjetas de categoría */
+        .category-card-animation {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+
+        .category-card-animation.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Animación para la seccion "Nuestra Historia" */
+        .animate-history-section {
+            opacity: 0;
+            transform: translateY(100px);
+            transition: opacity 2s ease-out, transform 2s ease-out;
+        }
+        .animate-history-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animación para la seccion de Instagram */
+        .animate-instagram-section {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+        .animate-instagram-section.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Animación para el newsletter */
+        .animate-newsletter-section {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+        .animate-newsletter-section.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Estilos del nuevo encabezado */
+        .header-top {
+            background-color: #fbc30d; /* Nuevo color amarillo */
+            color: black; /* Texto en negro */
+        }
+        
+        .header-top a {
+             color: black;
+             transition: color 0.3s;
+        }
+
+        .header-top a:hover {
+            color: #4a4a4a;
+        }
+
+        .main-nav {
+            background-color: #0093e9; /* Nuevo color azul */
+            padding: 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin-top: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 90%;
+            width: 1000px;
+        }
+
+        .main-nav-ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            gap: 2rem;
+        }
+
+        .main-nav-link {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: white; /* Color de link blanco */
+            transition: color 0.3s;
+        }
+        
+        .main-nav-link:hover {
+            color: #fbc30d; /* Nuevo color de hover para los links */
+        }
+        
+        /* Tamaño de la fuente ajustado */
+        .logo-center {
+            font-size: 2.5rem; /* Reducido de 3rem a 2.5rem */
+            font-weight: 700;
+            color: black;
+            text-shadow: 1px 1px 2px #fbc30d; /* Nuevo color para la sombra del logo */
+        }
+        
+        /* Animación del logo ya no tiene infinite */
+        .logo-rotate {
+            animation: rotate360 2s ease-out;
+        }
+
+        /* Estilos para el nuevo menú hamburguesa */
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            z-index: 50;
+        }
+        
+        @media (max-width: 767px) {
+            .hamburger-menu {
+                display: block;
+            }
+        }
+        
+        /* Ajuste para el encabezado en móvil para que el nombre de Zigma Inflables sea visible */
+        .mobile-header {
+            background-color: #0093e9; /* Mismo fondo que el desktop */
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-header .logo-center {
+             font-size: 2rem;
+        }
+        
+        /* Footer con texto en negro */
+        .footer-top {
+            color: black;
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+    <!-- Header Section (Rediseñado) -->
+    <header>
+        <!-- Barra superior -->
+        <div class="header-top py-2 px-4">
+            <div class="container mx-auto flex justify-between items-center text-sm flex-wrap">
+                <div class="flex items-center space-x-4">
+                    <span class="flex items-center">FAQs</span>
+                    <span class="flex items-center">|</span>
+                    <span class="flex items-center">Help</span>
+                    <span class="flex items-center">|</span>
+                    <span class="flex items-center">Support</span>
+                </div>
+                <div class="flex space-x-3 text-lg">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f hover:text-gray-200 transition"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter hover:text-gray-200 transition"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin hover:text-gray-200 transition"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram hover:text-gray-200 transition"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube hover:text-gray-200 transition"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navbar para desktop -->
+        <nav class="main-nav hidden md:block">
+            <div class="flex items-center justify-between">
+                <!-- Menú Izquierdo -->
+                <ul class="main-nav-ul">
+                    <li><a href="#" onclick="showPage('home-page')" class="main-nav-link">Home</a></li>
+                    <li><a href="#" class="main-nav-link">About</a></li>
+                </ul>
+                <!-- Logo Central -->
+                <a href="#" id="toystore-title" class="logo-center" onclick="showPage('home-page')">Zigma Inflables</a>
+                <!-- Menú Derecho con iconos -->
+                <ul class="main-nav-ul">
+                    <li><a href="#" class="main-nav-link">Service</a></li>
+                    <li><a href="#" class="main-nav-link">Gallery</a></li>
+                    <li><a href="#" class="main-nav-link">Contact</a></li>
+                    <li class="flex items-center space-x-4">
+                        <select class="main-nav-link bg-transparent border-none focus:outline-none">
+                            <option value="es">ES</option>
+                            <option value="en">EN</option>
+                        </select>
+                        <a href="#" aria-label="Shopping Cart"><i class="fas fa-shopping-cart main-nav-link text-xl"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Navbar para móvil (oculto en desktop) -->
+        <nav class="mobile-header md:hidden py-4 px-6 flex items-center justify-between rounded-xl shadow-lg mt-4 mx-auto max-w-sm">
+            <!-- Hamburguesa y logo -->
+            <div class="flex items-center space-x-4">
+                <button id="mobile-menu-toggle" class="hamburger-menu text-2xl text-white">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <a href="#" class="logo-center text-3xl" onclick="showPage('home-page')">Zigma Inflables</a>
+            </div>
+            <!-- Iconos a la derecha -->
+            <div class="flex items-center space-x-4">
+                 <select class="main-nav-link bg-transparent border-none focus:outline-none">
+                    <option value="es">ES</option>
+                    <option value="en">EN</option>
+                </select>
+                <a href="#" aria-label="Shopping Cart" class="text-white hover:text-gray-200 transition">
+                    <i class="fas fa-shopping-cart text-xl"></i>
+                </a>
+            </div>
+        </nav>
+        
+        <!-- Menú desplegable para móvil -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg border-t border-gray-200 mt-4 mx-auto max-w-sm rounded-xl">
+            <ul class="flex flex-col items-center py-4 space-y-4">
+                <li><a href="#" onclick="showPage('home-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Home</a></li>
+                <li><a href="#" onclick="showPage('about-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">About</a></li>
+                <li><a href="#" onclick="showPage('login-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Login</a></li>
+                <li><a href="#" onclick="showPage('register-page'); mobileMenu.classList.add('hidden');" class="block p-2 w-full text-center text-gray-700 font-semibold hover:bg-gray-100 transition">Register</a></li>
+            </ul>
+        </div>
+    </header>
+    
+    <!-- Hero Section con la barra de navegación flotante -->
+    <section class="relative bg-cover bg-center min-h-[500px] animate-hero-section" style="background-image: url('https://placehold.co/1200x500/fbc30d/ffffff?text=Zigma+Inflables');">
+        <div class="container mx-auto h-full flex items-center justify-center p-6 text-center pt-32">
+            <div class="bg-white/80 backdrop-blur-sm p-8 md:p-12 rounded-xl max-w-2xl shadow-xl">
+                <p class="text-lg font-medium text-gray-600 mb-2">¡Bienvenido a Zigma Inflables!</p>
+                <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-4">El mejor lugar para inflables</h1>
+                <a href="#" class="bg-[#fbc30d] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">Ver catálogo</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- --- SECCIÓN DE LA PÁGINA PRINCIPAL (HOME) --- -->
+    <div id="home-page">
+        
+        <!-- Nueva Hero Section con animaciones, inspirada en la imagen -->
+        <section class="bg-gray-100 p-6 my-12 animate-scroll">
+            <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Tarjeta 1: Castillos Inflables (Amarillo) -->
+                <a href="#" class="group relative block rounded-3xl shadow-xl transform hover:scale-105 transition-transform duration-300 category-card-animation bg-[#0093e9]">
+                    <div class="flex items-center p-8">
+                        <img src="https://placehold.co/200x200/0093e9/ffffff?text=🏰" alt="Castillos Inflables" class="w-2/5 object-cover transform scale-125 -translate-y-2 translate-x-4">
+                        <div class="text-white text-center flex-1 pr-4">
+                            <h3 class="text-3xl font-bold">Castillos Inflables</h3>
+                            <span class="block mt-2 font-semibold">Comprar ahora</span>
+                        </div>
+                    </div>
+                </a>
+                <!-- Tarjeta 2: Toboganes (Rosa) -->
+                <a href="#" class="group relative block rounded-3xl shadow-xl transform hover:scale-105 transition-transform duration-300 category-card-animation bg-[#ff5680]">
+                    <div class="flex items-center p-8">
+                        <div class="text-white text-center flex-1 pl-4">
+                            <h3 class="text-3xl font-bold">Toboganes</h3>
+                            <span class="block mt-2 font-semibold">Comprar ahora</span>
+                        </div>
+                        <img src="https://placehold.co/200x200/ff5680/ffffff?text=🎢" alt="Toboganes Inflables" class="w-2/5 object-cover transform scale-125 translate-y-2 -translate-x-4">
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <!-- Product Grid Section -->
+        <main class="container mx-auto p-6">
+            <div class="flex justify-between items-center my-8 animate-scroll">
+                <h2 class="text-4xl font-bold text-gray-800">Todos los Inflables</h2>
+                <div class="flex space-x-2 text-gray-600 font-semibold">
+                    <button class="bg-[#fbc30d] text-white px-4 py-2 rounded-full hover:bg-[#cda41a] transition">Todos</button>
+                    <button class="px-4 py-2 rounded-full hover:bg-gray-200 transition">Castillos</button>
+                    <button class="px-4 py-2 rounded-full hover:bg-gray-200 transition">Toboganes</button>
+                </div>
+            </div>
+            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Tarjeta de Producto 1 -->
+                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Castillo+Clasico" alt="Castillo Inflable Clasico" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Castillo Clásico</h3>
+                    <span class="text-2xl font-bold text-gray-800">$300.00 USD</span>
+                </div>
+
+                <!-- Tarjeta de Producto 2 -->
+                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Tobogan+Acuatico" alt="Tobogan Acuatico" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Tobogán Acuático</h3>
+                    <span class="text-2xl font-bold text-gray-800">$380.00 USD</span>
+                </div>
+
+                <!-- Tarjeta de Producto 3 -->
+                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Inflable+con+Obstaculos" alt="Inflable con Obstaculos" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Inflable de Obstáculos</h3>
+                    <span class="text-2xl font-bold text-gray-800">$380.00 USD</span>
+                </div>
+
+                <!-- Tarjeta de Producto 4 -->
+                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Brinca+Brinca" alt="Brinca Brinca" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Brinca Brinca</h3>
+                    <span class="text-2xl font-bold text-gray-800">$240.00 USD</span>
+                </div>
+                
+                <!-- Más tarjetas de productos pueden ir aquí -->
+                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Inflable+Futbol" alt="Inflable de Futbol" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Inflable de Fútbol</h3>
+                    <span class="text-2xl font-bold text-gray-800">$240.00 USD</span>
+                </div>
+                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Castillo+Princesa" alt="Castillo Princesa" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Castillo Princesa</h3>
+                    <span class="text-2xl font-bold text-gray-800">$320.00 USD</span>
+                </div>
+                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Ring+Boxeo" alt="Ring de Boxeo" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Ring de Boxeo</h3>
+                    <span class="text-2xl font-bold text-gray-800">$160.00 USD</span>
+                </div>
+                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
+                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Tobogan+Gigante" alt="Tobogan Gigante" class="rounded-lg mb-4 w-full">
+                    <h3 class="text-xl font-semibold mb-1">Tobogán Gigante</h3>
+                    <span class="text-2xl font-bold text-gray-800">$270.00 USD</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Seccion "Nuestra Historia" -->
+        <section class="relative bg-cover bg-center min-h-[500px] flex items-center justify-center text-white px-6 my-12 animate-history-section" style="background-image: url('https://placehold.co/1400x600/b0b0b0/ffffff?text=Our+Story+Background+Image');">
+            <div class="absolute inset-0 bg-black/50"></div>
+            <div class="relative text-center max-w-3xl z-10">
+                <p class="text-lg font-light mb-2">Sobre Nosotros</p>
+                <h2 class="text-4xl md:text-6xl font-bold mb-4">Conoce Nuestra Historia</h2>
+                <p class="text-lg font-light mb-8">No hay una fórmula mágica para escribir un texto publicitario perfecto; se basa en varios factores, incluyendo la ubicación del anuncio, la demografía e incluso el estado de ánimo del consumidor.</p>
+                <button class="bg-[#fbc30d] text-white p-4 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
+                    <i class="fas fa-play text-2xl"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Nueva seccion de Instagram -->
+        <section class="py-16 bg-white animate-instagram-section">
+            <div class="container mx-auto px-6 text-center">
+                <span class="text-gray-500 font-semibold">@ZigmaInflables</span>
+                <h2 class="text-4xl font-bold text-gray-800 my-4">¡Estamos en Instagram!</h2>
+                <div class="flex flex-wrap justify-center gap-4 mt-8">
+                    <!-- Imagen de Instagram 1 -->
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
+                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+1" alt="Instagram Picture 1" class="w-full h-auto object-cover">
+                        </a>
+                    </div>
+                    <!-- Imagen de Instagram 2 -->
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
+                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+2" alt="Instagram Picture 2" class="w-full h-auto object-cover">
+                        </a>
+                    </div>
+                    <!-- Imagen de Instagram 3 -->
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
+                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+3" alt="Instagram Picture 3" class="w-full h-auto object-cover">
+                        </a>
+                    </div>
+                    <!-- Imagen de Instagram 4 -->
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
+                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+4" alt="Instagram Picture 4" class="w-full h-auto object-cover">
+                        </a>
+                    </div>
+                    <!-- Imagen de Instagram 5 -->
+                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
+                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
+                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+5" alt="Instagram Picture 5" class="w-full h-auto object-cover">
+                        </a>
+                    </div>
+                </div>
+                <a href="#" class="inline-block mt-8 bg-[#fbc30d] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
+                    Ver más fotos
+                </a>
+            </div>
+        </section>
+
+        <!-- Nueva sección del Newsletter -->
+        <section class="py-16 px-6 my-12 animate-newsletter-section">
+            <div class="container mx-auto">
+                <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0 md:space-x-8">
+                    <div class="flex items-center space-x-6 flex-grow">
+                        <!-- Icono de avión de papel con fondo azul -->
+                        <div class="flex-shrink-0 bg-[#fbc30d] p-4 md:p-6 rounded-full shadow-md">
+                            <svg class="h-8 w-8 md:h-12 md:w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                            </svg>
+                        </div>
+                        <div class="text-gray-800 text-center md:text-left">
+                            <h3 class="text-xl md:text-2xl font-bold">Suscríbete a nuestro boletín</h3>
+                            <p class="text-sm md:text-lg text-gray-600">¡y obtén un 10% de descuento!</p>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-auto flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+                        <form id="newsletter-form" class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
+                            <div class="relative flex-grow">
+                                <input type="email" id="email-input" name="email" placeholder="Ingresa tu correo electrónico" class="w-full pl-6 pr-12 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" required>
+                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
+                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
+                                    </svg>
+                                </span>
+                            </div>
+                            <button type="submit" class="bg-[#fbc30d] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
+                                Suscribirme
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div> <!-- Fin de la seccion de la pagina principal -->
+
+    <!-- --- SECCIÓN DE LA PÁGINA DE LOGIN (INICIALMENTE OCULTA) --- -->
+    <div id="login-page" class="hidden auth-page">
+        <section class="auth-section">
+            <div class="bg-[#fbc30d] text-center p-8 rounded-t-xl">
+                <h2 class="text-3xl font-bold text-white mb-2">Iniciar Sesión</h2>
+                <p class="text-white">Bienvenido de nuevo</p>
+            </div>
+            <form class="p-8">
+                <!-- Botones de Social Login -->
+                <div class="flex flex-col space-y-4 mb-6">
+                    <button type="button" class="flex items-center justify-center space-x-2 bg-white text-gray-800 font-bold py-3 px-4 rounded-full border border-gray-300 shadow-md hover:bg-gray-100 transition-colors">
+                        <i class="fab fa-google text-lg"></i>
+                        <span>Iniciar sesión con Google</span>
+                    </button>
+                    <button type="button" class="flex items-center justify-center space-x-2 bg-[#3b5998] text-white font-bold py-3 px-4 rounded-full shadow-md hover:bg-[#2d4373] transition-colors">
+                        <i class="fab fa-facebook-f text-lg"></i>
+                        <span>Iniciar sesión con Facebook</span>
+                    </button>
+                </div>
+                
+                <div class="relative flex py-5 items-center">
+                    <div class="flex-grow border-t border-gray-300"></div>
+                    <span class="flex-shrink mx-4 text-gray-500">O</span>
+                    <div class="flex-grow border-t border-gray-300"></div>
+                </div>
+
+                <div class="mb-6">
+                    <label for="login-email" class="block text-gray-700 font-bold mb-2">Email</label>
+                    <input type="email" id="login-email" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="ejemplo@correo.com" required>
+                </div>
+                <div class="mb-6">
+                    <label for="login-password" class="block text-gray-700 font-bold mb-2">Contraseña</label>
+                    <input type="password" id="login-password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="********" required>
+                </div>
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center">
+                        <input id="remember-me" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-900">Recordarme</label>
+                    </div>
+                    <a href="#" class="text-sm font-semibold text-gray-800 hover:text-gray-600">¿Olvidaste tu contraseña?</a>
+                </div>
+                <button type="submit" class="w-full bg-[#fbc30d] text-white font-bold py-3 px-4 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
+                    Iniciar Sesión
+                </button>
+            </form>
+            <div class="text-center p-8 border-t border-gray-200">
+                <p class="text-gray-600">¿No tienes una cuenta? <a href="#" onclick="showPage('register-page')" class="text-gray-800 font-bold hover:underline">Regístrate</a></p>
+            </div>
+        </section>
+    </div>
+
+    <!-- --- SECCIÓN DE LA PÁGINA DE REGISTRO (INICIALMENTE OCULTA) --- -->
+    <div id="register-page" class="hidden auth-page">
+        <section class="auth-section">
+            <div class="bg-[#fbc30d] text-center p-8 rounded-t-xl">
+                <h2 class="text-3xl font-bold text-white mb-2">Registro</h2>
+                <p class="text-white">Crea tu cuenta en segundos</p>
+            </div>
+            <form class="p-8">
+                <!-- Botones de Social Login -->
+                <div class="flex flex-col space-y-4 mb-6">
+                    <button type="button" class="flex items-center justify-center space-x-2 bg-white text-gray-800 font-bold py-3 px-4 rounded-full border border-gray-300 shadow-md hover:bg-gray-100 transition-colors">
+                        <i class="fab fa-google text-lg"></i>
+                        <span>Registrarse con Google</span>
+                    </button>
+                    <button type="button" class="flex items-center justify-center space-x-2 bg-[#3b5998] text-white font-bold py-3 px-4 rounded-full shadow-md hover:bg-[#2d4373] transition-colors">
+                        <i class="fab fa-facebook-f text-lg"></i>
+                        <span>Registrarse con Facebook</span>
+                    </button>
+                </div>
+
+                <div class="relative flex py-5 items-center">
+                    <div class="flex-grow border-t border-gray-300"></div>
+                    <span class="flex-shrink mx-4 text-gray-500">O</span>
+                    <div class="flex-grow border-t border-gray-300"></div>
+                </div>
+
+                <div class="mb-6">
+                    <label for="register-name" class="block text-gray-700 font-bold mb-2">Nombre completo</label>
+                    <input type="text" id="register-name" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="John Doe" required>
+                </div>
+                <div class="mb-6">
+                    <label for="register-email" class="block text-gray-700 font-bold mb-2">Email</label>
+                    <input type="email" id="register-email" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="ejemplo@correo.com" required>
+                </div>
+                <div class="mb-6">
+                    <label for="register-password" class="block text-gray-700 font-bold mb-2">Contraseña</label>
+                    <input type="password" id="register-password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="********" required>
+                </div>
+                <div class="mb-6">
+                    <label for="register-confirm-password" class="block text-gray-700 font-bold mb-2">Confirmar Contraseña</label>
+                    <input type="password" id="register-confirm-password" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" placeholder="********" required>
+                </div>
+                <button type="submit" class="w-full bg-[#fbc30d] text-white font-bold py-3 px-4 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
+                    Registrarse
+                </button>
+            </form>
+            <div class="text-center p-8 border-t border-gray-200">
+                <p class="text-gray-600">¿Ya tienes una cuenta? <a href="#" onclick="showPage('login-page')" class="text-gray-800 font-bold hover:underline">Inicia sesión</a></p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="bg-[#fbc30d] text-black py-12 animate-scroll">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center border-b border-gray-400 pb-8 mb-8 footer-top">
+                <h2 class="text-3xl font-bold mb-4 md:mb-0">Zigma Inflables</h2>
+                <div class="flex space-x-6 text-lg">
+                    <a href="#" class="hover:text-gray-800 transition">Inicio</a>
+                    <a href="#" class="hover:text-gray-800 transition">Catálogo</a>
+                    <a href="#" class="hover:text-gray-800 transition">Entrega</a>
+                    <a href="#" class="hover:text-gray-800 transition">Sobre</a>
+                    <a href="#" class="hover:text-gray-800 transition">Contactos</a>
+                </div>
+                <div class="flex space-x-3 text-lg mt-4 md:mt-0">
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter hover:text-gray-800 transition"></i></a>
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f hover:text-gray-800 transition"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram hover:text-gray-800 transition"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube hover:text-gray-800 transition"></i></a>
+                </div>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between text-sm text-gray-800">
+                <p>Creado con amor por <a href="#" class="hover:underline">Elastic Themes</a></p>
+                <p>Desarrollado por <a href="#" class="hover:underline">Webflow</a> &bull; <a href="#" class="hover:underline">Guía de Estilo</a> &bull; <a href="#" class="hover:underline">Licencias</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Botón Flotante de WhatsApp -->
+    <div id="whatsapp-button" class="whatsapp-float">
+        <!-- Reemplaza '1234567890' con tu número de teléfono y el mensaje predeterminado -->
+        <a href="https://wa.me/1234567890?text=Hola,%20estoy%20interesado%20en%20los%20productos%20de%20Zigma%20Inflables." target="_blank" aria-label="Contáctanos por WhatsApp">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+    
+    <!-- Modal para WhatsApp -->
+    <div id="whatsapp-modal" class="modal-overlay">
+        <div class="modal-content relative p-8">
+            <span id="close-whatsapp-modal" class="modal-close-button">&times;</span>
+            <div class="text-center">
+                <div class="bg-[#25d366] text-white p-4 rounded-full inline-block mb-4">
+                    <i class="fab fa-whatsapp text-4xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-gray-800 mb-2">¡No te vayas aún!</h3>
+                <p class="text-gray-600 mb-6">Si tienes alguna pregunta, puedes chatear con nosotros directamente por WhatsApp.</p>
+                <a href="https://wa.me/1234567890?text=Hola,%20tengo%20una%20pregunta." target="_blank" class="bg-[#25d366] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#20b355] transition-colors">
+                    Chatear en WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // --- Lógica para cambiar de página ---
+        const pages = ['home-page', 'login-page', 'register-page'];
+        
+        // Muestra u oculta las páginas según el ID
+        function showPage(pageId) {
+            pages.forEach(id => {
+                const page = document.getElementById(id);
+                if (page) {
+                    page.classList.add('hidden');
+                }
+            });
+            const activePage = document.getElementById(pageId);
+            if (activePage) {
+                activePage.classList.remove('hidden');
+            }
+        }
+        
+        // Al cargar la página, asegurarse de que solo la página principal sea visible
+        window.addEventListener('DOMContentLoaded', (event) => {
+            showPage('home-page');
+            
+            // --- Animación de elementos al hacer scroll ---
+            const observerOptions = {
+                root: null, // usa el viewport como raíz
+                rootMargin: '0px',
+                threshold: 0.2 // 20% del elemento es visible para que la animación se active
+            };
+            
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // Dejar de observar una vez que se activa
+                    }
+                });
+            }, observerOptions);
+            
+            // Animación del título del header
+            const toystoreTitle = document.getElementById('toystore-title');
+            if (toystoreTitle) {
+                toystoreTitle.classList.add('logo-rotate');
+            }
+            
+            // Elementos a observar para animar al hacer scroll
+            const animateElements = document.querySelectorAll('.animate-scroll');
+            animateElements.forEach(element => {
+                observer.observe(element);
+            });
+
+            // Animación de las tarjetas de producto
+            const productCards = document.querySelectorAll('.product-card');
+            productCards.forEach((card, index) => {
+                // Añadir un retraso escalonado a cada tarjeta
+                card.style.transitionDelay = `${index * 0.2}s`; // Aumentado a 0.2s para que sea más lento
+                observer.observe(card);
+            });
+
+            // Animación de las tarjetas de categoría
+            const categoryCards = document.querySelectorAll('.category-card-animation');
+            categoryCards.forEach(card => {
+                observer.observe(card);
+            });
+            
+            // Animación del Hero Section original
+            const heroSection = document.querySelector('.animate-hero-section');
+            if (heroSection) {
+                observer.observe(heroSection);
+            }
+
+            // Animación para la seccion "Nuestra Historia"
+            const historySection = document.querySelector('.animate-history-section');
+            if (historySection) {
+                observer.observe(historySection);
+            }
+
+            // Animación para la seccion de Instagram
+            const instagramSection = document.querySelector('.animate-instagram-section');
+            if (instagramSection) {
+                observer.observe(instagramSection);
+            }
+
+            // Animación para el newsletter
+            const newsletterSection = document.querySelector('.animate-newsletter-section');
+            if (newsletterSection) {
+                observer.observe(newsletterSection);
+            }
+        });
+
+        // --- Lógica del botón de WhatsApp flotante ---
+        window.addEventListener('scroll', () => {
+            const whatsappButton = document.getElementById('whatsapp-button');
+            const productGrid = document.getElementById('product-grid');
+
+            // Solo mostrar si la página de inicio está activa
+            if (document.getElementById('home-page').classList.contains('hidden')) {
+                whatsappButton.classList.remove('show');
+                return;
+            }
+
+            // Mostrar el botón si el scroll vertical es mayor que la posición del grid de productos
+            if (window.scrollY > (productGrid.offsetTop - 500)) {
+                whatsappButton.classList.add('show');
+            } else {
+                whatsappButton.classList.remove('show');
+            }
+        });
+
+        // --- Menú Hamburguesa ---
+        const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // --- Lógica del Modal de WhatsApp ---
+        const whatsappModal = document.getElementById('whatsapp-modal');
+        const closeWhatsappModalButton = document.getElementById('close-whatsapp-modal');
+        let whatsappModalShown = false; // Variable para controlar si el modal ya se ha mostrado
+
+        // Función para mostrar el modal de WhatsApp
+        function showWhatsappModal() {
+             if (document.getElementById('home-page').classList.contains('hidden')) {
+                return; // No mostrar si no estamos en la página principal
+            }
+            if (!whatsappModalShown) {
+                whatsappModal.style.display = 'flex';
+                whatsappModalShown = true; // Establecer la variable en true después de mostrar
+            }
+        }
+        
+        // Función para ocultar el modal de WhatsApp
+        function hideWhatsappModal() {
+            whatsappModal.style.display = 'none';
+        }
+        
+        // Ocultar el modal al hacer clic en el botón de cerrar
+        closeWhatsappModalButton.addEventListener('click', hideWhatsappModal);
+
+        // Ocultar el modal al hacer clic en el overlay (fuera del contenido)
+        whatsappModal.addEventListener('click', (event) => {
+            if (event.target === whatsappModal) {
+                hideWhatsappModal();
+            }
+        });
+
+        // Paso 1: Mostrar el modal después de 10 segundos
+        setTimeout(() => {
+            showWhatsappModal();
+        }, 10000); // 10000 milisegundos = 10 segundos
+
+        // Paso 2: Mostrar el modal cuando el mouse sale de la parte superior de la página (exit-intent)
+        document.addEventListener('mouseout', (event) => {
+            // Verificar si el cursor se movió a la parte superior de la ventana
+            if (event.clientY <= 0 && !whatsappModalShown) {
+                showWhatsappModal();
+            }
+        });
+
+        // --- Lógica del formulario del newsletter ---
+        const newsletterForm = document.getElementById('newsletter-form');
+        const emailInput = document.getElementById('email-input');
+
+        newsletterForm.addEventListener('submit', (event) => {
+            event.preventDefault(); // Prevenir el envío del formulario por defecto
+
+            const email = emailInput.value;
+            const message = `Hola, quiero ver tus productos. Este es mi correo: ${email}. Vi esto desde tu página web.`;
+            const whatsappNumber = '1234567890'; // Reemplaza con tu número de teléfono de WhatsApp
+
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+    </script>
+</body>
+</html>

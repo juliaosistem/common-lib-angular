@@ -1,7 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
+import { ProductoDTO } from '@juliaosistem/core-dtos';
+import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
+import { LibConfigService } from '../../../config/lib-config.service';
 
 export interface Product {
     id?: string;
@@ -19,10 +21,66 @@ export interface Product {
 @Injectable({
     providedIn: 'root'
 })
-export class ProductService  /* extends JuliaoSystemCrudHttpService<Product, Product> */ {
-   
+export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, ProductoDTO> {
+
   
-   
+       constructor(http: HttpClient, private configService: LibConfigService) {
+        super(http);
+        const baseUrl = this.configService.get<string>('baseUrlProducts') || 'http://localhost:3000/products';
+        this.basePathUrl = `${baseUrl}/product`;
+        }
+
+      mockProductoDTO(): ProductoDTO {
+        return {
+            id: '550e8400-e29b-41d4-a716-446655440000',
+            name: "Maleta Viaje Mediana Con Ruedas Resistente Moderna 20-22kg",
+
+            precio: [{
+                codigo_iso: "COP",
+                nombreMoneda: "Peso colombiano",
+                precio: 350000
+            }, {
+                codigo_iso: "USD",
+                nombreMoneda: "Dólar estadounidense",
+                precio: 95
+            }],
+
+            idCategoria: "Viajes y equipaje",
+            cantidad: 15,
+            imagen: [{
+                id: "1",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Rosa",
+                idComponente: 0
+            }, {
+                id: "2",
+                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "3",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "4",
+                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
+                alt: "Maleta Beige",
+                idComponente: 0
+            }
+
+            ],
+            descripcion: '',
+            comision: 0,
+            fechaCreacion: '',
+            fechaActualizacion: '',
+            estado: "Activo",
+            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
+            idBusiness: 1
+        };
+
+    }
+
     getProductsData() {
         return [
             {
@@ -1257,10 +1315,7 @@ export class ProductService  /* extends JuliaoSystemCrudHttpService<Product, Pro
         'Yoga Set'
     ];
 
-    constructor( http: HttpClient) {
-        // super(http);
-        // this.basePathUrl = 'http://localhost:3000/api/products';
-    }
+ 
 
     getProductsMini() {
         return Promise.resolve(this.getProductsData().slice(0, 5));
@@ -1274,8 +1329,19 @@ export class ProductService  /* extends JuliaoSystemCrudHttpService<Product, Pro
         return this.getProductsData();
     }
 
-    getProductsWithOrdersSmall() {
+    getProductsWithOrdersSmall() { 
         return Promise.resolve(this.getProductsWithOrdersData().slice(0, 10));
+    }
+
+    calculateDiscount(product: ProductoDTO): number {
+        if(product){
+            if (product.descuento && product.descuento > 0)
+                return product.precio[0].precio - (product.precio[0].precio * product.descuento / 100);
+            else
+                return product.precio[0].precio;
+        }else{
+            return 0;
+        }
     }
 
     generatePrduct(): Product {
@@ -1323,5 +1389,14 @@ export class ProductService  /* extends JuliaoSystemCrudHttpService<Product, Pro
 
     generateRating() {
         return Math.floor(Math.random() * Math.floor(5) + 1);
+    }
+
+    /**
+     * Devuelve true si el producto no es nulo ni undefined
+     * @param product 
+     * @returns  boolean
+     */
+    checkIsProductIsnotEmptyOrNull(product: ProductoDTO): boolean {
+        return product != null && product != undefined;
     }
 }

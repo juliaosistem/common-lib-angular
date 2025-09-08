@@ -1,18 +1,5 @@
-// Tipos de campo soportados (minimalista)
-export type FieldType = 'img' | 'checkbox' | 'number' | 'text' | 'select';
+import { DynamicField } from '@juliaosistem/core-dtos';
 
-// Interfaz para definir un campo dinámico
-export interface DynamicField {
-  key: string;           // Clave del campo en el objeto
-  type: FieldType;       // Tipo de renderizado
-  label: string;         // Etiqueta para mostrar
-  value: unknown;        // Valor del campo
-  order?: number;        // Orden de visualización
-  accept?: string;       // Tipos de archivo aceptados (para type: 'file')
-  maxFileSize?: number;  // Tamaño máximo en bytes (para type: 'file')
-}
-
-// Clase principal para entidad dinámica
 export class DynamicEntity {
   id?: string;
   name?: string;
@@ -93,3 +80,7 @@ export class DynamicEntity {
     ];
   }
 }
+export {
+  DynamicField // Agregar un campo
+};
+

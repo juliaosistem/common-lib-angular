@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MenuItem, MenuEvent } from '../../interfaces/menu.interface';
+import { MenuItem, MenuEvent } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'app-menu-item1',
@@ -97,6 +97,8 @@ export class MenuItem1Component implements OnInit {
   onItemLeave(event: Event) {
     // Opcional: emitir evento de salida del hover
     if (this.item.disabled) {
+        // eslint-disable-next-line no-console
+      console.log('Elemento de menú deshabilitado', event);
       return;
     }
   }

@@ -1,8 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { LayoutServices1Component } from '../../atoms/layout-services1/layout-services1.component';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
+import { ComponentesDTO, PlantillaDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-services-section1',

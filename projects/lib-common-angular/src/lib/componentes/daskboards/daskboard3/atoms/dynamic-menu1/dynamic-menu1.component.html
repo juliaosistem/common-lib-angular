@@ -1,0 +1,54 @@
+<nav 
+  [class]="getMenuClasses()"
+  [attr.aria-label]="config?.name || 'Menú de navegación'"
+>
+  <!-- Botón de colapsar/expandir -->
+  @if (config?.collapsible) {
+    <button 
+      class="menu-toggle-btn"
+      (click)="toggleMenu()"
+      [attr.aria-expanded]="!collapsed"
+      [attr.aria-label]="collapsed ? 'Expandir menú' : 'Colapsar menú'"
+    >
+      <i class="pi" [class]="collapsed ? 'pi-bars' : 'pi-times'"></i>
+    </button>
+  }
+
+  <!-- Contenedor del menú -->
+  <div 
+    class="menu-container"
+    [class.menu-collapsed]="collapsed"
+  >
+    <!-- Lista de elementos del menú -->
+    <ul class="menu-list">
+      @for (item of menuItems; track $index) {
+        <app-menu-item1
+          [item]="item"
+          [showIcons]="config?.showIcons ?? true"
+          [showBadges]="config?.showBadges ?? true"
+          [collapsed]="collapsed"
+          [depth]="0"
+          [maxDepth]="config?.maxDepth ?? 3"
+          [activeItemId]="activeItemId"
+          (menuEvent)="onMenuItemEvent($event)"
+        ></app-menu-item1>
+      }
+    </ul>
+
+    <!-- Indicador de carga -->
+    @if (loading) {
+      <div class="menu-loading">
+        <i class="pi pi-spin pi-spinner"></i>
+        <span>Cargando menú...</span>
+      </div>
+    }
+
+    <!-- Mensaje de error -->
+    @if (error) {
+      <div class="menu-error">
+        <i class="pi pi-exclamation-triangle"></i>
+        <span>{{ error }}</span>
+      </div>
+    }
+  </div>
+</nav>
