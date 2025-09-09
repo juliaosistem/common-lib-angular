@@ -145,6 +145,8 @@ export class DynamicMenu1Component implements OnInit {
   private toggleItemExpansion(itemId: string) {
     if (this.expandedItems.has(itemId)) {
       this.expandedItems.delete(itemId);
+      // También colapsar todos los subitems de este item
+      this.collapseAllSubItems(itemId);
       this.menuEvent.emit({
         type: 'collapse',
         item: { id: itemId, label: '', type: 'item' }
@@ -156,6 +158,33 @@ export class DynamicMenu1Component implements OnInit {
         item: { id: itemId, label: '', type: 'item' }
       });
     }
+  }
+
+  // Colapsar todos los subitems de un item específico
+  private collapseAllSubItems(parentId: string) {
+    const parentItem = this.findItemById(parentId, this.menuItems);
+    if (parentItem && parentItem.items) {
+      parentItem.items.forEach((subItem: MenuItem) => {
+        this.expandedItems.delete(subItem.id);
+        if (subItem.items && subItem.items.length > 0) {
+          this.collapseAllSubItems(subItem.id);
+        }
+      });
+    }
+  }
+
+  // Buscar un item por ID recursivamente
+  private findItemById(id: string, items: MenuItem[]): MenuItem | null {
+    for (const item of items) {
+      if (item.id === id) {
+        return item;
+      }
+      if (item.items && item.items.length > 0) {
+        const found = this.findItemById(id, item.items);
+        if (found) return found;
+      }
+    }
+    return null;
   }
 
   // Método para verificar si un item está expandido (usar en template)

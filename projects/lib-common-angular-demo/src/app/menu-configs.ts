@@ -84,7 +84,7 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi-shopping-cart',
                   routerLink: ['/componentes/detalle-carrito'],
                   type: 'item',
-                  order: 1
+                  order: 2
               },
               {
                   id: 'input',
@@ -92,7 +92,7 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-check-square',
                   routerLink: ['/uikit/input'],
                   type: 'item',
-                  order: 2
+                  order: 3
               },
               {
                   id: 'button',
@@ -100,7 +100,7 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-mobile',
                   routerLink: ['/uikit/button'],
                   type: 'item',
-                  order: 3
+                  order: 4
               },
               {
                   id: 'table',
@@ -108,15 +108,14 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-table',
                   routerLink: ['/uikit/table'],
                   type: 'item',
-                  order: 4
-              },
+                  order: 5              },
               {
                   id: 'list',
                   label: 'List',
                   icon: 'pi pi-fw pi-list',
                   routerLink: ['/uikit/list'],
                   type: 'item',
-                  order: 5
+                  order: 6
               },
               {
                   id: 'tree',
@@ -124,7 +123,7 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-share-alt',
                   routerLink: ['/uikit/tree'],
                   type: 'item',
-                  order: 6
+                  order: 7
               },
               {
                   id: 'panel',
@@ -132,7 +131,7 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-tablet',
                   routerLink: ['/uikit/panel'],
                   type: 'item',
-                  order: 7
+                  order: 8
               },
               {
                   id: 'overlay',
@@ -140,7 +139,7 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-clone',
                   routerLink: ['/uikit/overlay'],
                   type: 'item',
-                  order: 8
+                  order: 9
               },
               {
                   id: 'media',
@@ -148,7 +147,7 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-image',
                   routerLink: ['/uikit/media'],
                   type: 'item',
-                  order: 9
+                  order: 10
               },
               {
                   id: 'menu',
@@ -156,7 +155,7 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-bars',
                   routerLink: ['/uikit/menu'],
                   type: 'item',
-                  order: 10
+                  order: 11
               },
               {
                   id: 'message',
@@ -164,7 +163,7 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-comment',
                   routerLink: ['/uikit/message'],
                   type: 'item',
-                  order: 11
+                  order: 12
               },
               {
                   id: 'file',
@@ -172,32 +171,9 @@ export const defaultMenuConfig: MenuConfig = {
                   icon: 'pi pi-fw pi-file',
                   routerLink: ['/uikit/file'],
                   type: 'item',
-                  order: 12
-              },
-              {
-                  id: 'chart',
-                  label: 'Chart',
-                  icon: 'pi pi-fw pi-chart-bar',
-                  routerLink: ['/uikit/charts'],
-                  type: 'item',
                   order: 13
               },
-              {
-                  id: 'timeline',
-                  label: 'Timeline',
-                  icon: 'pi pi-fw pi-calendar',
-                  routerLink: ['/uikit/timeline'],
-                  type: 'item',
-                  order: 14
-              },
-              {
-                  id: 'misc',
-                  label: 'Misc',
-                  icon: 'pi pi-fw pi-circle',
-                  routerLink: ['/uikit/misc'],
-                  type: 'item',
-                  order: 15
-              }
+
           ]
       },
       {
@@ -395,32 +371,7 @@ export const defaultMenuConfig: MenuConfig = {
               }
           ]
       },
-      {
-          id: 'get-started',
-          label: 'Get Started',
-          icon: 'pi pi-fw pi-info-circle',
-          type: 'group',
-          order: 5,
-          items: [
-              {
-                  id: 'documentation',
-                  label: 'Documentation',
-                  icon: 'pi pi-fw pi-book',
-                  routerLink: ['/documentation'],
-                  type: 'item',
-                  order: 1
-              },
-              {
-                  id: 'view-source',
-                  label: 'View Source',
-                  icon: 'pi pi-fw pi-github',
-                  url: 'https://github.com/primefaces/sakai-ng',
-                  target: '_blank',
-                  type: 'item',
-                  order: 2
-              }
-          ]
-      }
+   
   ],
   theme: 'light',
   orientation: 'vertical',

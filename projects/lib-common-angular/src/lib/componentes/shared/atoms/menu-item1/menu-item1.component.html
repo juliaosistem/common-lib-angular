@@ -84,9 +84,11 @@
             [showIcons]="showIcons"
             [showBadges]="showBadges"
             [collapsed]="collapsed"
-            [isItemExpanded]="isItemExpanded"
+            [isItemExpanded]="isSubItemExpanded(subItem.id)"
+            [expandedItems]="expandedItems"
             [depth]="depth + 1"
             [maxDepth]="maxDepth"
+            [activeItemId]="activeItemId"
             (menuEvent)="onSubMenuEvent($event)"
           ></app-menu-item1>
         }
@@ -98,4 +100,4 @@
 <!-- Separador -->
 @if (item.separator) {
   <li class="menu-separator"></li>
-} 
+}

@@ -18,7 +18,8 @@ export class MenuItem1Component implements OnInit {
   @Input() depth: number = 0;
   @Input() maxDepth: number = 3;
   @Input() activeItemId?: string;
-  @Input() isItemExpanded: boolean = false; // Nuevo input para controlar expansión
+  @Input() isItemExpanded: boolean = false;
+  @Input() expandedItems?: Set<string>; // Para acceder al Set de items expandidos
 
   @Output() menuEvent = new EventEmitter<MenuEvent>();
 
@@ -107,5 +108,10 @@ export class MenuItem1Component implements OnInit {
   onSubMenuEvent(event: MenuEvent) {
     // Propagar eventos de submenús hacia arriba
     this.menuEvent.emit(event);
+  }
+
+  // Método para verificar si un subitem está expandido
+  isSubItemExpanded(itemId: string): boolean {
+    return this.expandedItems?.has(itemId) ?? false;
   }
 } 
