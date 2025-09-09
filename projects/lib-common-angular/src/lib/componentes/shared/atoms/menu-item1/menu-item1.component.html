@@ -1,73 +1,101 @@
-<li 
-  *ngIf="!item.separator"
-  [class]="getItemClasses()"
-  [style]="item.style"
-  (click)="onItemClick($event)"
-  (mouseenter)="onItemHover($event)"
-  (mouseleave)="onItemLeave($event)"
->
-  <!-- Enlace interno -->
-  <a 
-    *ngIf="item.routerLink && !item.disabled"
-    [routerLink]="item.routerLink"
-    [class]="getLinkClasses()"
-    [attr.aria-label]="item.label"
-    class="menu-link"
+@if (!item.separator) {
+  <li 
+    [class]="getItemClasses()"
+    [style]="item.style"
+    (click)="onItemClick($event)"
+    (mouseenter)="onItemHover($event)"
+    (mouseleave)="onItemLeave($event)"
   >
-    <i *ngIf="showIcons && item.icon" [class]="item.icon"></i>
-    <span class="menu-label">{{ item.label }}</span>
-    <span *ngIf="showBadges && item.badge" [class]="getBadgeClasses()">
-      {{ item.badge }}
-    </span>
-    <i *ngIf="hasSubItems" class="pi pi-angle-right submenu-icon"></i>
-  </a>
+    <!-- Enlace interno -->
+    @if (item.routerLink && !item.disabled) {
+      <a 
+        [routerLink]="item.routerLink"
+        [class]="getLinkClasses()"
+        [attr.aria-label]="item.label"
+        class="menu-link"
+      >
+        @if (showIcons && item.icon) {
+          <i [class]="item.icon"></i>
+        }
+        <span class="menu-label">{{ item.label }}</span>
+        @if (showBadges && item.badge) {
+          <span [class]="getBadgeClasses()">
+            {{ item.badge }}
+          </span>
+        }
+        @if (hasSubItems) {
+          <i class="pi pi-angle-right submenu-icon"></i>
+        }
+      </a>
+    }
 
-  <!-- Enlace externo -->
-  <a 
-    *ngIf="item.url && !item.disabled"
-    [href]="item.url"
-    [target]="item.target || '_self'"
-    [class]="getLinkClasses()"
-    [attr.aria-label]="item.label"
-    class="menu-link"
-  >
-    <i *ngIf="showIcons && item.icon" [class]="item.icon"></i>
-    <span class="menu-label">{{ item.label }}</span>
-    <span *ngIf="showBadges && item.badge" [class]="getBadgeClasses()">
-      {{ item.badge }}
-    </span>
-    <i *ngIf="hasSubItems" class="pi pi-angle-right submenu-icon"></i>
-  </a>
+    <!-- Enlace externo -->
+    @if (item.url && !item.disabled) {
+      <a 
+        [href]="item.url"
+        [target]="item.target || '_self'"
+        [class]="getLinkClasses()"
+        [attr.aria-label]="item.label"
+        class="menu-link"
+      >
+        @if (showIcons && item.icon) {
+          <i [class]="item.icon"></i>
+        }
+        <span class="menu-label">{{ item.label }}</span>
+        @if (showBadges && item.badge) {
+          <span [class]="getBadgeClasses()">
+            {{ item.badge }}
+          </span>
+        }
+        @if (hasSubItems) {
+          <i class="pi pi-angle-right submenu-icon"></i>
+        }
+      </a>
+    }
 
-  <!-- Elemento sin enlace -->
-  <span 
-    *ngIf="!item.routerLink && !item.url"
-    [class]="getLinkClasses()"
-    [attr.aria-label]="item.label"
-    class="menu-link"
-  >
-    <i *ngIf="showIcons && item.icon" [class]="item.icon"></i>
-    <span class="menu-label">{{ item.label }}</span>
-    <span *ngIf="showBadges && item.badge" [class]="getBadgeClasses()">
-      {{ item.badge }}
-    </span>
-    <i *ngIf="hasSubItems" class="pi pi-angle-right submenu-icon"></i>
-  </span>
+    <!-- Elemento sin enlace -->
+    @if (!item.routerLink && !item.url) {
+      <span 
+        [class]="getLinkClasses()"
+        [attr.aria-label]="item.label"
+        class="menu-link"
+      >
+        @if (showIcons && item.icon) {
+          <i [class]="item.icon"></i>
+        }
+        <span class="menu-label">{{ item.label }}</span>
+        @if (showBadges && item.badge) {
+          <span [class]="getBadgeClasses()">
+            {{ item.badge }}
+          </span>
+        }
+        @if (hasSubItems) {
+          <i class="pi pi-angle-right submenu-icon"></i>
+        }
+      </span>
+    }
 
-  <!-- Submenús -->
-  <ul *ngIf="hasSubItems && !collapsed" class="submenu">
-    <app-menu-item1
-      *ngFor="let subItem of item.items"
-      [item]="subItem"
-      [showIcons]="showIcons"
-      [showBadges]="showBadges"
-      [collapsed]="collapsed"
-      [depth]="depth + 1"
-      [maxDepth]="maxDepth"
-      (menuEvent)="onSubMenuEvent($event)"
-    ></app-menu-item1>
-  </ul>
-</li>
+    <!-- Submenús -->
+    @if (hasSubItems && isItemExpanded) {
+      <ul class="submenu">
+        @for (subItem of item.items; track $index) {
+          <app-menu-item1
+            [item]="subItem"
+            [showIcons]="showIcons"
+            [showBadges]="showBadges"
+            [collapsed]="collapsed"
+            [isItemExpanded]="isItemExpanded"
+            [depth]="depth + 1"
+            [maxDepth]="maxDepth"
+            (menuEvent)="onSubMenuEvent($event)"
+          ></app-menu-item1>
+        }
+      </ul>
+    }
+  </li>
+}
 
 <!-- Separador -->
-<li *ngIf="item.separator" class="menu-separator"></li> 
+@if (item.separator) {
+  <li class="menu-separator"></li>
+} 

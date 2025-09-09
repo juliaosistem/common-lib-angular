@@ -54,6 +54,9 @@ nav {
   width: 0;
   opacity: 0;
   pointer-events: none;
+  .menu-list {
+    display: none;
+  }
 }
 
 .menu-list {

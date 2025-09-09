@@ -1,7 +1,8 @@
-<div class="dashboard-menu-container">
-  <div class="menu-container">
-    <!-- Controles de configuración -->
-    <!-- <div class="menu-controls" *ngIf="showControls">
+<div class="layout-sidebar">
+  <div class="dashboard-menu-container">
+    <div class="menu-container">
+      <!-- Controles de configuración -->
+      <!-- <div class="menu-controls" *ngIf="showControls">
         <div class="control-group">
           <label for="menuSelect">Seleccionar Menú:</label>
           <select id="menuSelect" (change)="onMenuChange($event)">
@@ -36,15 +37,15 @@
         </button>
       </div> -->
 
-    <!-- Menú dinámico -->
-    <div class="menu-wrapper">
-      <app-dynamic-menu1 [menuId]="menuId" [userPermissions]="userPermissions" [menuConfig]="menuConfig"
-        (menuEvent)="onMenuEvent($event)" (menuLoaded)="onMenuLoaded($event)"
-        (menuError)="onMenuError($event)"></app-dynamic-menu1>
-    </div>
+      <!-- Menú dinámico -->
+      <div class="menu-wrapper">
+        <app-dynamic-menu1 [menuId]="menuId" [userPermissions]="userPermissions" [menuConfig]="menuConfig"
+          (menuEvent)="onMenuEvent($event)" (menuLoaded)="onMenuLoaded($event)"
+          (menuError)="onMenuError($event)"></app-dynamic-menu1>
+      </div>
 
 
-    <!-- <div class="menu-info" *ngIf="showInfo">
+      <!-- <div class="menu-info" *ngIf="showInfo">
         <h3>Información del Menú</h3>
         <div class="info-content">
           <p><strong>ID del Menú:</strong> {{ menuId }}</p>
@@ -52,7 +53,7 @@
           <p><strong>Estado:</strong> {{ menuStatus }}</p>
         </div> -->
 
-    <!-- <div class="event-log" *ngIf="showEventLog">
+      <!-- <div class="event-log" *ngIf="showEventLog">
           <h4>Eventos del Menú</h4>
           <div class="log-container">
             <div *ngFor="let event of eventLog" class="log-entry">
@@ -64,8 +65,8 @@
         </div>
       </div> -->
 
-    <!-- Configuración personalizada -->
-    <!-- <div class="config-section" *ngIf="showConfig">
+      <!-- Configuración personalizada -->
+      <!-- <div class="config-section" *ngIf="showConfig">
         <h3>Configuración Personalizada</h3>
         <div class="config-form">
           <div class="form-group">
@@ -104,5 +105,6 @@
           </button>
         </div>
       </div> -->
+    </div>
   </div>
 </div>

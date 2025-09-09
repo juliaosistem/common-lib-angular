@@ -24,10 +24,11 @@ export class DynamicMenu1Component implements OnInit {
 
   config?: MenuConfig;
   menuItems: MenuItem[] = [];
-  collapsed = false;
+ collapsed = false;
   loading = false;
   error?: string;
   activeItemId?: string;
+  expandedItems: Set<string> = new Set(); // Rastrear elementos expandidos
 
   private menuManager?: MenuManager;
   private subscription?: unknown;
@@ -102,6 +103,7 @@ export class DynamicMenu1Component implements OnInit {
   toggleMenu() {
     if (this.config?.collapsible) {
       this.collapsed = !this.collapsed;
+      console.log('Menu Event toggleMenu:',this.collapsed);
       this.menuEvent.emit({
         type: this.collapsed ? 'collapse' : 'expand',
         item: { id: 'menu-toggle', label: 'Menu Toggle', type: 'item' }
@@ -111,18 +113,54 @@ export class DynamicMenu1Component implements OnInit {
 
   onMenuItemEvent(event: MenuEvent) {
     // Manejar eventos específicos del menú
+    console.log('Menu Event: onMenuItemEvent', event);
+    
     switch (event.type) {
       case 'click':
         this.activeItemId = event.item.id;
+        
+        // Si el item tiene submenús, toggle su estado expandido
+        if (this.hasSubItems(event.item)) {
+          this.toggleItemExpansion(event.item.id);
+        }
         break;
       case 'expand':
+        this.expandedItems.add(event.item.id);
+        break;
       case 'collapse':
-        // Manejar expansión/colapso de submenús
+        this.expandedItems.delete(event.item.id);
         break;
     }
 
     // Propagar evento hacia arriba
     this.menuEvent.emit(event);
+  }
+
+  // Verificar si un item tiene submenús
+  private hasSubItems(item: MenuItem): boolean {
+    return !!(item.items && item.items.length > 0);
+  }
+
+  // Toggle expansión de un item
+  private toggleItemExpansion(itemId: string) {
+    if (this.expandedItems.has(itemId)) {
+      this.expandedItems.delete(itemId);
+      this.menuEvent.emit({
+        type: 'collapse',
+        item: { id: itemId, label: '', type: 'item' }
+      });
+    } else {
+      this.expandedItems.add(itemId);
+      this.menuEvent.emit({
+        type: 'expand',
+        item: { id: itemId, label: '', type: 'item' }
+      });
+    }
+  }
+
+  // Método para verificar si un item está expandido (usar en template)
+  isItemExpanded(itemId: string): boolean {
+    return this.expandedItems.has(itemId);
   }
 
   // Métodos públicos para manipular el menú

@@ -27,6 +27,7 @@
           [showIcons]="config?.showIcons ?? true"
           [showBadges]="config?.showBadges ?? true"
           [collapsed]="collapsed"
+          [isItemExpanded]="isItemExpanded(item.id)"
           [depth]="0"
           [maxDepth]="config?.maxDepth ?? 3"
           [activeItemId]="activeItemId"

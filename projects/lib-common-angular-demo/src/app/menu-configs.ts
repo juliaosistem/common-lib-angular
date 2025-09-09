@@ -10,6 +10,7 @@ export const defaultMenuConfig: MenuConfig = {
           label: 'Home',
           icon: 'pi pi-fw pi-home',
           type: 'group',
+         
           order: 1,
           items: [
               {

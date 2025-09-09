@@ -18,6 +18,7 @@ export class MenuItem1Component implements OnInit {
   @Input() depth: number = 0;
   @Input() maxDepth: number = 3;
   @Input() activeItemId?: string;
+  @Input() isItemExpanded: boolean = false; // Nuevo input para controlar expansión
 
   @Output() menuEvent = new EventEmitter<MenuEvent>();
 

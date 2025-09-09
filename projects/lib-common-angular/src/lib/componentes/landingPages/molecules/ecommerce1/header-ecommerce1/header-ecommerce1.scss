@@ -1,0 +1,48 @@
+
+ .header-top {
+            background-color: #fbc30d; /* Nuevo color amarillo */
+            color: black; /* Texto en negro */
+        }
+        
+        .header-top a {
+             color: black;
+             transition: color 0.3s;
+        }
+
+        .header-top a:hover {
+            color: #4a4a4a;
+        }
+
+        .main-nav {
+            background-color: #0093e9; /* Nuevo color azul */
+            padding: 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin-top: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 90%;
+            width: 1000px;
+        }
+
+        .main-nav-ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            gap: 2rem;
+        }
+
+        .main-nav-link {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: white; /* Color de link blanco */
+            transition: color 0.3s;
+        }
+        
+        .main-nav-link:hover {
+            color: #fbc30d; /* Nuevo color de hover para los links */
+        }
+        
