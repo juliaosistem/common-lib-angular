@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { HeroSectionEcommerce1 } from "../../../molecules/hero-section-ecommerce1/hero-section-ecommerce1";
+import { HeroSectionEcommerce1 } from "../../../molecules/ecommerce1/hero-section-ecommerce1/hero-section-ecommerce1";
 import { SectionFiltersCategoriesProductos } from "../../../../shared/molecules/section-filters-categories-productos/section-filters-categories-productos";
 import { CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 import { CardProductos1Component } from "../../../../../../public-api";

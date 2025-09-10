@@ -14,53 +14,13 @@ export const defaultMenuConfig: MenuConfig = {
           order: 1,
           items: [
               {
-                  id: 'dashboard',
-                  label: 'Dashboard',
+                  id: 'dashboard 3',
+                  label: 'Dashboard 3',
                   icon: 'pi pi-fw pi-home',
                   routerLink: ['/'],
                   type: 'item',
                   order: 1
-              },
-              {
-                  id: 'crud',
-                  label: 'Crud',
-                  icon: 'pi pi-fw pi-pencil',
-                  routerLink: ['/pages/crud'],
-                  type: 'item',
-                  order: 1
-              },
-              {
-                    id: 'menu-navigation',
-                    label: 'Test Navigation',
-                    icon: 'pi pi-fw pi-pencil',
-                    routerLink: ['/pages/menu-navigation'],
-                    type: 'item',
-                    order: 1
-              },
-              {
-                id: 'admin',
-                label: 'Admin',
-                icon: 'pi pi-fw pi-pencil',
-                routerLink: ['/admin'],
-                type: 'item',
-                order: 1,
-              },
-              {
-                id: 'minimal',
-                label: 'Minimal',
-                icon: 'pi pi-fw pi-pencil',
-                routerLink: ['/minimal'],
-                type: 'item',
-                order: 1,
-              },
-              {
-              id: 'user',
-              label: 'User',
-              icon: 'pi pi-fw pi-pencil',
-              routerLink: ['/user'],
-              type: 'item',
-              order: 1,
-            }
+              },         
           ]
       },
       {
@@ -86,94 +46,61 @@ export const defaultMenuConfig: MenuConfig = {
                   type: 'item',
                   order: 2
               },
-              {
-                  id: 'input',
-                  label: 'Input',
-                  icon: 'pi pi-fw pi-check-square',
-                  routerLink: ['/uikit/input'],
-                  type: 'item',
-                  order: 3
-              },
-              {
-                  id: 'button',
-                  label: 'Button',
-                  icon: 'pi pi-fw pi-mobile',
-                  routerLink: ['/uikit/button'],
-                  type: 'item',
-                  order: 4
-              },
+           
               {
                   id: 'table',
                   label: 'Table',
                   icon: 'pi pi-fw pi-table',
                   routerLink: ['/uikit/table'],
+                  type: 'group',
+                  order: 5,   
+                 items:[
+                       {
+                  id: 'crud',
+                  label: 'Crud',
+                  icon: 'pi pi-fw pi-pencil',
+                  routerLink: ['/pages/crud'],
                   type: 'item',
-                  order: 5              },
-              {
-                  id: 'list',
-                  label: 'List',
-                  icon: 'pi pi-fw pi-list',
-                  routerLink: ['/uikit/list'],
-                  type: 'item',
-                  order: 6
-              },
-              {
-                  id: 'tree',
-                  label: 'Tree',
-                  icon: 'pi pi-fw pi-share-alt',
-                  routerLink: ['/uikit/tree'],
-                  type: 'item',
-                  order: 7
-              },
-              {
-                  id: 'panel',
-                  label: 'Panel',
-                  icon: 'pi pi-fw pi-tablet',
-                  routerLink: ['/uikit/panel'],
-                  type: 'item',
-                  order: 8
-              },
-              {
-                  id: 'overlay',
-                  label: 'Overlay',
-                  icon: 'pi pi-fw pi-clone',
-                  routerLink: ['/uikit/overlay'],
-                  type: 'item',
-                  order: 9
-              },
-              {
-                  id: 'media',
-                  label: 'Media',
-                  icon: 'pi pi-fw pi-image',
-                  routerLink: ['/uikit/media'],
-                  type: 'item',
-                  order: 10
-              },
+                  order: 3,
+                  permissions: ['pages.crud.read']
+              },  
+                 ]
+                },
+              
               {
                   id: 'menu',
                   label: 'Menu',
                   icon: 'pi pi-fw pi-bars',
-                  routerLink: ['/uikit/menu'],
-                  type: 'item',
-                  order: 11
+                  routerLink: ['/pages/menu-navigation'],
+                  type: 'group',
+                  order: 11,
+                  items: [
+                                    {
+                            id: 'admin',
+                            label: 'Admin',
+                            icon: 'pi pi-fw pi-pencil',
+                            routerLink: ['/admin'],
+                            type: 'item',
+                            order: 1,
+                          },
+                          {
+                            id: 'minimal',
+                            label: 'Minimal',
+                            icon: 'pi pi-fw pi-pencil',
+                            routerLink: ['/minimal'],
+                            type: 'item',
+                            order: 1,
+                          },
+                          {
+                          id: 'user',
+                          label: 'User',
+                          icon: 'pi pi-fw pi-pencil',
+                          routerLink: ['/user'],
+                          type: 'item',
+                          order: 1,
+                        }
+                  ]
               },
-              {
-                  id: 'message',
-                  label: 'Message',
-                  icon: 'pi pi-fw pi-comment',
-                  routerLink: ['/uikit/message'],
-                  type: 'item',
-                  order: 12
-              },
-              {
-                  id: 'file',
-                  label: 'File',
-                  icon: 'pi pi-fw pi-file',
-                  routerLink: ['/uikit/file'],
-                  type: 'item',
-                  order: 13
-              },
-
           ]
       },
       {
@@ -191,56 +118,8 @@ export const defaultMenuConfig: MenuConfig = {
                   type: 'item',
                   order: 1
               },
-              {
-                  id: 'auth',
-                  label: 'Auth',
-                  icon: 'pi pi-fw pi-user',
-                  type: 'group',
-                  order: 2,
-                  items: [
-                      {
-                          id: 'login',
-                          label: 'Login',
-                          icon: 'pi pi-fw pi-sign-in',
-                          routerLink: ['/auth/login'],
-                          type: 'item',
-                          order: 1
-                      },
-                      {
-                          id: 'error',
-                          label: 'Error',
-                          icon: 'pi pi-fw pi-times-circle',
-                          routerLink: ['/auth/error'],
-                          type: 'item',
-                          order: 2
-                      },
-                      {
-                          id: 'access-denied',
-                          label: 'Access Denied',
-                          icon: 'pi pi-fw pi-lock',
-                          routerLink: ['/auth/access'],
-                          type: 'item',
-                          order: 3
-                      }
-                  ]
-              },
-              {
-                  id: 'crud',
-                  label: 'Crud',
-                  icon: 'pi pi-fw pi-pencil',
-                  routerLink: ['/pages/crud'],
-                  type: 'item',
-                  order: 3,
-                  permissions: ['pages.crud.read']
-              },
-              {
-                  id: 'menu-demo',
-                  label: 'Menu Demo',
-                  icon: 'pi pi-fw pi-bars',
-                  routerLink: ['/menu-demo'],
-                  type: 'item',
-                  order: 4
-              },
+           
+            
               {
                   id: 'not-found',
                   label: 'Not Found',
@@ -249,132 +128,11 @@ export const defaultMenuConfig: MenuConfig = {
                   type: 'item',
                   order: 5
               },
-              {
-                  id: 'empty',
-                  label: 'Empty',
-                  icon: 'pi pi-fw pi-circle-off',
-                  routerLink: ['/pages/empty'],
-                  type: 'item',
-                  order: 6
-              }
           ]
       },
-      {
-          id: 'hierarchy',
-          label: 'Hierarchy',
-          icon: 'pi pi-fw pi-sitemap',
-          type: 'group',
-          order: 4,
-          items: [
-              {
-                  id: 'submenu-1',
-                  label: 'Submenu 1',
-                  icon: 'pi pi-fw pi-bookmark',
-                  type: 'group',
-                  order: 1,
-                  items: [
-                      {
-                          id: 'submenu-1-1',
-                          label: 'Submenu 1.1',
-                          icon: 'pi pi-fw pi-bookmark',
-                          type: 'group',
-                          order: 1,
-                          items: [
-                              {
-                                  id: 'submenu-1-1-1',
-                                  label: 'Submenu 1.1.1',
-                                  icon: 'pi pi-fw pi-bookmark',
-                                  type: 'item',
-                                  order: 1
-                              },
-                              {
-                                  id: 'submenu-1-1-2',
-                                  label: 'Submenu 1.1.2',
-                                  icon: 'pi pi-fw pi-bookmark',
-                                  type: 'item',
-                                  order: 2
-                              },
-                              {
-                                  id: 'submenu-1-1-3',
-                                  label: 'Submenu 1.1.3',
-                                  icon: 'pi pi-fw pi-bookmark',
-                                  type: 'item',
-                                  order: 3
-                              }
-                          ]
-                      },
-                      {
-                          id: 'submenu-1-2',
-                          label: 'Submenu 1.2',
-                          icon: 'pi pi-fw pi-bookmark',
-                          type: 'group',
-                          order: 2,
-                          items: [
-                              {
-                                  id: 'submenu-1-2-1',
-                                  label: 'Submenu 1.2.1',
-                                  icon: 'pi pi-fw pi-bookmark',
-                                  type: 'item',
-                                  order: 1
-                              }
-                          ]
-                      }
-                  ]
-              },
-              {
-                  id: 'submenu-2',
-                  label: 'Submenu 2',
-                  icon: 'pi pi-fw pi-bookmark',
-                  type: 'group',
-                  order: 2,
-                  items: [
-                      {
-                          id: 'submenu-2-1',
-                          label: 'Submenu 2.1',
-                          icon: 'pi pi-fw pi-bookmark',
-                          type: 'group',
-                          order: 1,
-                          items: [
-                              {
-                                  id: 'submenu-2-1-1',
-                                  label: 'Submenu 2.1.1',
-                                  icon: 'pi pi-fw pi-bookmark',
-                                  type: 'item',
-                                  order: 1
-                              },
-                              {
-                                  id: 'submenu-2-1-2',
-                                  label: 'Submenu 2.1.2',
-                                  icon: 'pi pi-fw pi-bookmark',
-                                  type: 'item',
-                                  order: 2
-                              }
-                          ]
-                      },
-                      {
-                          id: 'submenu-2-2',
-                          label: 'Submenu 2.2',
-                          icon: 'pi pi-fw pi-bookmark',
-                          type: 'group',
-                          order: 2,
-                          items: [
-                              {
-                                  id: 'submenu-2-2-1',
-                                  label: 'Submenu 2.2.1',
-                                  icon: 'pi pi-fw pi-bookmark',
-                                  type: 'item',
-                                  order: 1
-                              }
-                          ]
-                      }
-                  ]
-              }
-          ]
-      },
-   
   ],
   theme: 'light',
-  orientation: 'vertical',
+  orientation: 'horizontal',
   collapsible: true,
   showIcons: true,
   showBadges: true,

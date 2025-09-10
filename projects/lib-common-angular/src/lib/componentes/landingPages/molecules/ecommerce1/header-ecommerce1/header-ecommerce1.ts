@@ -32,7 +32,7 @@ export class HeaderEcommerce1Component implements OnInit {
         id: 'home',
         label: 'Home',
         type: 'link',
-        routerLink: ['/pages/ecomerce1'],
+        routerLink: ['/pages/ecommerce1'],
         icon: 'fas fa-home',
         visible: true,
         order: 1,
@@ -42,7 +42,7 @@ export class HeaderEcommerce1Component implements OnInit {
         id: 'about',
         label: 'About',
         type: 'link',
-        routerLink: ['/about'],
+        routerLink: ['/pages/ecommerce1/about'],
         visible: true,
         order: 2,
         permissions: ["*"]
@@ -59,7 +59,7 @@ export class HeaderEcommerce1Component implements OnInit {
         id: 'login',
         label: 'Login',
         type: 'link',
-        routerLink: ['/pages/ecomerce1/login'],
+        routerLink: ['/pages/ecommerce1/login'],
         icon: 'fas fa-sign-in-alt',
         visible: true,
         order: 4,
@@ -69,7 +69,7 @@ export class HeaderEcommerce1Component implements OnInit {
         id: 'register',
         label: 'Register',
         type: 'link',
-        routerLink: ['/pages/ecomerce1/register'],
+        routerLink: ['/pages/ecommerce1/register'],
         icon: 'fas fa-user-plus',
         visible: true,
         order: 5,
@@ -79,6 +79,7 @@ export class HeaderEcommerce1Component implements OnInit {
   };
 
   // Menú final que se usará en el template
+  
   currentMenu: MenuConfig = this.defaultMenuConfig;
 
   ngOnInit(): void {

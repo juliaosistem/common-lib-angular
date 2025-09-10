@@ -4,13 +4,11 @@ import { RegisterEcommerce1 } from '../../landingPages/pages/ecommerce1/register
 import { Ecommerce1 } from '../../landingPages/pages/ecommerce1/ecommerce1';
 import { HomeEcommerce1 } from '../../landingPages/pages/ecommerce1/home-ecommerce1/home-ecommerce1';
 
-export default [
-  { path: '', redirectTo: 'Home', pathMatch: 'full' },
-  { path: 'Home', component: Ecommerce1, children: [
+export const ecomerce1Routes: Routes = [
+  { path: '', component: Ecommerce1, children: [
       { path: '', component: HomeEcommerce1 },
       { path: 'login', component: LoginEcommerce1 },
       { path: 'register', component: RegisterEcommerce1 }
     ]
-  },
-  { path: '**', redirectTo: 'login' }
+  }
 ] as Routes;

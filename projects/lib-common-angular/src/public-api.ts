@@ -56,7 +56,6 @@ export * from './lib/componentes/landingPages/pages/ecommerce1/register-ecommerc
 export * from './lib/componentes/landingPages/atoms/ecommerce1/buttons-socialmedia-login/buttons-socialmedia-login';
 export * from './lib/componentes/landingPages/atoms/ecommerce1/inputs-login-ecommerce1/inputs-login-ecommerce1';
 export * from './lib/componentes/landingPages/atoms/ecommerce1/inputs-register-ecommerce1/inputs-register-ecommerce1';
-export * from './lib/componentes/landingPages/atoms/ecommerce1/buttons-socialmedia-login/buttons-socialmedia-login';
         // Molecules
 export * from './lib/componentes/landingPages/molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1';
 export * from './lib/componentes/landingPages/molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1';
