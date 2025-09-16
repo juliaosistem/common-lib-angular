@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
-import { CrudComponent } from './pages/crud/crud.component';
-import { MenuNavigationComponent } from './pages/menu-navigation/menu-navigation.component';
+import { CrudComponent } from './componentes/crud/crud.component';
+import { MenuNavigationComponent } from './componentes/menu-navigation/menu-navigation.component';
 import { Notfound ,ecomerce1Routes} from 'lib-common-angular';
 
 export default [

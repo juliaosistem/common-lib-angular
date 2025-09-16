@@ -1,0 +1,60 @@
+<!-- Demo de configuración de menús - No renderizar el menú real aquí -->
+<div class="menu-navigation">
+  <h2>Navegación de Menús</h2>
+  <p>Selecciona una ruta para ver diferentes configuraciones de menú:</p>
+
+  <div class="navigation-buttons">
+    <a routerLink="/" class="nav-button">
+      <i class="pi pi-home"></i>
+      <span>Menú por Defecto</span>
+      <p>Este es el que usa este dashboard</p>
+    </a>
+
+    <a routerLink="/admin" class="nav-button">
+      <i class="pi pi-cog"></i>
+      <span>Menú de Administrador</span>
+    </a>
+
+    <a routerLink="/minimal" class="nav-button">
+      <i class="pi pi-list"></i>
+      <span>Menú Minimalista</span>
+    </a>
+
+  </div>
+
+  <div class="relative">
+    <p>Ejemplo de configuraciones de menú:</p>
+    <lib-terminal [code]="menuPrivateConfig" language="typescript"> </lib-terminal>
+  </div>
+
+  <div class="info-panel">
+    <h3>Información de Configuración</h3>
+
+    <p><strong>Configuración de menú:</strong> Se carga automáticamente desde los datos de la ruta</p>
+
+    <lib-terminal [code]="codeExample" language="typescript"> </lib-terminal>
+    <p><strong>Permisos:</strong> Se aplican según el tipo de usuario se configuran de la siguiente forma </p>
+    <lib-terminal [code]="permisos" language="typescript"> </lib-terminal>
+
+    <p><strong>Como queda en la interfaz</strong> Se requiere llenar una interfaz para cargar la configuración del menú
+    </p>
+
+    <!-- Demo visual del menú -->
+    <app-menu-demo-visual [menuConfig]="userMenuConfig" [userPermissions]="permissionConfigs.custom">
+    </app-menu-demo-visual>
+
+    <a routerLink="/user" class="nav-button">
+      <i class="pi pi-user"></i>
+      <span>Menú de Usuario</span>
+    </a>
+    <p>Ejemplo de Router</p>
+
+    <div class="relative">
+
+      <lib-terminal [code]="router" language="typescript"> </lib-terminal>
+
+
+    </div>
+
+  </div>
+</div>
