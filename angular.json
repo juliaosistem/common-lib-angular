@@ -63,11 +63,14 @@
               }
             ],
             "styles": [
+              "node_modules/prismjs/themes/prism.css",
               "node_modules/tailwindcss/index.css",
               "projects/lib-common-angular-demo/src/styles.scss"
-    
           ],
-            "scripts": []
+            "scripts": [  
+              "node_modules/prismjs/prism.js",
+              "node_modules/prismjs/components/prism-typescript.min.js"
+            ]
     
           },
           "configurations": {

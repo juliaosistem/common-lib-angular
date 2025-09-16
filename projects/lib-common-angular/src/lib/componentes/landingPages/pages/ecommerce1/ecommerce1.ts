@@ -45,6 +45,9 @@ export class Ecommerce1 implements OnInit, OnDestroy {
     }
   }
 
+  ngAfterViewInit(): void {
+    this.handleWhatsappButtonVisibility();
+  }
   ngOnDestroy(): void {
     this.cleanup();
   }

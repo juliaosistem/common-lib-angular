@@ -37,6 +37,7 @@ export * from './lib/componentes/daskboards/daskboard3/moleculas/app.topbar';
 export * from './lib/componentes/daskboards/daskboard3/moleculas/app.footer';
 export * from './lib/componentes/daskboards/daskboard3/dashboard3-menu.config';
 export * from './lib/componentes/daskboards/daskboard3/daskboard3';
+export * from './lib/componentes/daskboards/daskboard3/moleculas/menu/menu.component';
 
 //dashboard1 y sus componentes
 export * from './lib/componentes/daskboards/daskboard1/componentes/pages/index1/index1.component';
@@ -45,6 +46,8 @@ export * from './lib/componentes/daskboards/daskboard1/componentes/pages/index1/
 export * from './lib/componentes/shared/molecules/productos/detalle-carrito-1/detalle-carrito-1.component';
 export * from './lib/componentes/shared/molecules/productos/card-productos1/card-productos1.component';
 export * from './lib/componentes/shared/molecules/section-filters-categories-productos/section-filters-categories-productos';
+export * from './lib/componentes/shared/terminal/terminal';
+
 
 // Landing Pages
      // Ecommerce 1

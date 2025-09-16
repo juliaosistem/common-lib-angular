@@ -1,4 +1,4 @@
-   /* Estilo para el botón flotante de WhatsApp */
+/* Estilo para el botón flotante de WhatsApp */
         .whatsapp-float {
             position: fixed;
             bottom: 1.5rem;
@@ -46,6 +46,10 @@
             z-index: 1000;
         }
 
+        .modal-overlay.show {
+            display: flex;
+        }
+
         .modal-content {
             background-color: #ffffff;
             padding: 2rem;
@@ -69,6 +73,10 @@
             font-size: 1.5rem;
             color: #aaa;
             cursor: pointer;
+
+            &:hover {
+                color: #666;
+            }
         }
         
         /* Estilos para las nuevas secciones de Login y Registro (paginas separadas) */
@@ -252,4 +260,17 @@
         /* Footer con texto en negro */
         .footer-top {
             color: black;
+        }
+
+        // Estilos adicionales para SVG de WhatsApp
+        .whatsapp-float {
+          svg {
+            display: block;
+            width: 2.5rem;
+            height: 2.5rem;
+          }
+        }
+
+        .modal-content svg {
+          display: block;
         }
