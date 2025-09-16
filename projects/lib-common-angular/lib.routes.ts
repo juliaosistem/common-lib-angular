@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { Index2Component } from './src/public-api';
-import { DaskBoard3 } from './src/lib/componentes/daskboards/daskboard3/componentes/daskboard3';
+import { DaskBoard3 } from './src/lib/componentes/daskboards/daskboard3/daskboard3';
 import { Notfound } from './src/lib/componentes/shared/pages/notfound/notfound';
 
 
@@ -11,14 +11,17 @@ export const routes: Routes = [
         path: '',
         component: DaskBoard3,
         children: [
-            { path: 'pages', loadChildren: () => import('./src/lib/componentes/shared/pages/pages.routes') }
+            { path: 'pages', loadChildren: () => import('./src/lib/componentes/shared/routes/pages.routes')
+            
+            
+             }
         ]
     },
     {
         path: '',
         component: DaskBoard3,
         children: [
-            { path: 'componentes', loadChildren: () => import('./src/lib/componentes/shared/pages/componentes.routes') }
+            { path: 'componentes', loadChildren: () => import('./src/lib/componentes/shared/routes/componentes.routes') }
         ]
     },
 

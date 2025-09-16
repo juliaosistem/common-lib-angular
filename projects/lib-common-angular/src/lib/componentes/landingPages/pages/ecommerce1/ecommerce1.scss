@@ -1,0 +1,255 @@
+   /* Estilo para el botón flotante de WhatsApp */
+        .whatsapp-float {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+        }
+
+        .whatsapp-float.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .whatsapp-float a {
+            display: block;
+            background-color: #25d366;
+            color: white;
+            padding: 1rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1-px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .whatsapp-float a:hover {
+            transform: scale(1.1);
+        }
+
+        .whatsapp-float .fa-whatsapp {
+            font-size: 2.5rem;
+        }
+        
+        /* Modal styling (solo para el de WhatsApp) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 400px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5rem;
+            color: #aaa;
+            cursor: pointer;
+        }
+        
+        /* Estilos para las nuevas secciones de Login y Registro (paginas separadas) */
+        .auth-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 2rem 0;
+        }
+
+        .auth-section {
+            background-color: #ffffff;
+            padding: 4rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 500px;
+            margin: 4rem auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Animaciones para los elementos al hacer scroll */
+        .animate-scroll {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+
+        .animate-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Animación del titulo */
+        .animate-title-initial {
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        .animate-title-final {
+            transition: opacity 1s ease-out, transform 1s ease-out;
+        }
+
+        .animate-title-initial.is-visible {
+            opacity: 1;
+            transform: translateX(0);
+            animation: rotate360 1s ease-out forwards;
+            animation-iteration-count: 2; /* Gira dos veces */
+        }
+
+        @keyframes rotate360 {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+     
+       
+        /* Animación de las tarjetas de categoría */
+        .category-card-animation {
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+
+        .category-card-animation.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Animación para la seccion "Nuestra Historia" */
+        .animate-history-section {
+            opacity: 0;
+            transform: translateY(100px);
+            transition: opacity 2s ease-out, transform 2s ease-out;
+        }
+        .animate-history-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    
+        /* Animación para el newsletter */
+        .animate-newsletter-section {
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+        .animate-newsletter-section.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* Estilos del nuevo encabezado */
+        .header-top {
+            background-color: #fbc30d; /* Nuevo color amarillo */
+            color: black; /* Texto en negro */
+        }
+        
+        .header-top a {
+             color: black;
+             transition: color 0.3s;
+        }
+
+        .header-top a:hover {
+            color: #4a4a4a;
+        }
+
+        .main-nav {
+            background-color: #0093e9; /* Nuevo color azul */
+            padding: 1.5rem;
+            border-radius: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin-top: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 90%;
+            width: 1000px;
+        }
+
+        .main-nav-ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            gap: 2rem;
+        }
+
+        .main-nav-link {
+            font-size: 1.125rem; /* text-lg */
+            font-weight: 600; /* font-semibold */
+            color: white; /* Color de link blanco */
+            transition: color 0.3s;
+        }
+        
+        .main-nav-link:hover {
+            color: #fbc30d; /* Nuevo color de hover para los links */
+        }
+        
+        /* Tamaño de la fuente ajustado */
+        .logo-center {
+            font-size: 2.5rem; /* Reducido de 3rem a 2.5rem */
+            font-weight: 700;
+            color: black;
+            text-shadow: 1px 1px 2px #fbc30d; /* Nuevo color para la sombra del logo */
+        }
+        
+        /* Animación del logo ya no tiene infinite */
+        .logo-rotate {
+            animation: rotate360 2s ease-out;
+        }
+
+        /* Estilos para el nuevo menú hamburguesa */
+        .hamburger-menu {
+            display: none;
+            cursor: pointer;
+            z-index: 50;
+        }
+        
+        @media (max-width: 767px) {
+            .hamburger-menu {
+                display: block;
+            }
+        }
+        
+        /* Ajuste para el encabezado en móvil para que el nombre de Zigma Inflables sea visible */
+        .mobile-header {
+            background-color: #0093e9; /* Mismo fondo que el desktop */
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .mobile-header .logo-center {
+             font-size: 2rem;
+        }
+        
+        /* Footer con texto en negro */
+        .footer-top {
+            color: black;
+        }

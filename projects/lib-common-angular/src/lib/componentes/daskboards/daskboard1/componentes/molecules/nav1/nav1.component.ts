@@ -2,8 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { IonicModule, Platform } from '@ionic/angular';
 import { ContenidoNavComponent } from '../contenido-nav/contenido-nav.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
+import { ComponentesDTO, PlantillaDTO } from '@juliaosistem/core-dtos';
 import { StyleClassModule } from 'primeng/styleclass';
 
 @Component({

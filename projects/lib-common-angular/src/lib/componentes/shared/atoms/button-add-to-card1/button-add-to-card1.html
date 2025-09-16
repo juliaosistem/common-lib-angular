@@ -1,0 +1,29 @@
+  <!-- Botón inicial de Agregar al carrito -->
+                @if (!showQuantitySelector) {
+                    <p-button 
+                        label="Agregar al carrito"
+                        icon="pi pi-shopping-cart"
+                        (onClick)="handleAddToCart()"
+                        class="flex-1  text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
+                    </p-button>
+                }
+
+                <!-- Selector de cantidad -->
+                @if (showQuantitySelector) {
+                    <div class="flex-1 flex items-center justify-between bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md">
+                        <p-button 
+                            icon="pi pi-minus" 
+                            [text]="true"
+                            (onClick)="decrementQuantity()"
+                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
+                        </p-button>
+                        <span class="text-xl font-bold">{{ selectedQuantity }}</span>
+                        <p-button 
+                            icon="pi pi-plus" 
+                            [text]="true"
+                            (onClick)="incrementQuantity()"
+                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
+                        </p-button>
+                    </div>
+                }
+                

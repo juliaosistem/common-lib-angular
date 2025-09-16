@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import{ImagenDTO} from 'juliaositembackenexpress/dist/api/dtos/bussines/ImagenDTO';
-import { ProductoDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/productoDTO';
+import { ImagenDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 
 @Injectable({
   providedIn: 'root'

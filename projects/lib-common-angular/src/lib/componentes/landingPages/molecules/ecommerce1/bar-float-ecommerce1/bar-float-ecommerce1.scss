@@ -1,0 +1,10 @@
+    .animate-hero-section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+        
+        .animate-hero-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }

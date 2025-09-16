@@ -9,7 +9,7 @@ import { Footer1Component } from '../../molecules/footer1/footer1.component';
 import { ServicesSection1Component } from '../../molecules/services-section1/services-section1.component';
 import { GallerySection1Component } from '../../molecules/gallery-section1/gallery-section1.component';
 
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
+import { PlantillaDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-index1',
