@@ -75,12 +75,14 @@ export * from './lib/modulos/core.lib.module';
 
 //servicios
 export * from './lib/componentes/shared/services/product.service';
+export * from './lib/componentes/shared/services/categorias-productos.service';
+
 
 // Estados y acciones
 export * from './lib/assets/state/productos.state';
-
 export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/generic-crud.state';
+export * from './lib/assets/state/categorias-productos.state'
 
 //routes
 export * from './lib/componentes/shared/routes/ecomerce1.routes';

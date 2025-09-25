@@ -51,7 +51,7 @@ export const defaultMenuConfig: MenuConfig = {
                   id: 'table',
                   label: 'Table',
                   icon: 'pi pi-fw pi-table',
-                  routerLink: ['/uikit/table'],
+                  routerLink: ['/componentes/crud'],
                   type: 'group',
                   order: 5,   
                  items:[
@@ -59,9 +59,9 @@ export const defaultMenuConfig: MenuConfig = {
                   id: 'crud',
                   label: 'Crud',
                   icon: 'pi pi-fw pi-pencil',
-                  routerLink: ['/pages/crud'],
+                  routerLink: ['/componentes/crud'],
                   type: 'item',
-                  order: 3,
+                  order: 1,
                   permissions: ['pages.crud.read']
               },  
                  ]
@@ -270,7 +270,7 @@ export const userMenuConfig: MenuConfig = {
           id: 'crud',
           label: 'Crud',
           icon: 'pi pi-fw pi-pencil',
-          routerLink: ['/pages/crud'],
+          routerLink: ['/componentes/crud'],
           type: 'item',
           order: 1
         },
