@@ -27,7 +27,7 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DataViewModule } from 'primeng/dataview';
 import { ImageModule } from 'primeng/image';
-
+import { StepperModule } from 'primeng/stepper';
 @NgModule({
   declarations: [],
   imports: [
@@ -59,6 +59,7 @@ import { ImageModule } from 'primeng/image';
    TieredMenuModule,
    FileUploadModule,
    DataViewModule,
+   StepperModule,
   ],
   exports:[
     ButtonModule,
@@ -87,7 +88,8 @@ import { ImageModule } from 'primeng/image';
   TieredMenuModule,
   FileUploadModule,
   DataViewModule,
-  ImageModule
+  ImageModule,
+  StepperModule,
   ]
 })
 export class PrimegModule { }

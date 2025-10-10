@@ -2,8 +2,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ProductoDTO } from '@juliaosistem/core-dtos';
-import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
 import { LibConfigService } from '../../../config/lib-config.service';
+import { JuliaoSystemCrudHttpService } from '../../../config/JuliaoSystemCrudHttpService';
 
 export interface Product {
     id?: string;

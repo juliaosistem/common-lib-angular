@@ -50,6 +50,7 @@ export * from './lib/componentes/shared/terminal/terminal';
 
 
 // Landing Pages
+export * from './lib/componentes/landingPages/pages/ecommerce1/ecommerce1';
      // Ecommerce 1
          // Pages
 export * from './lib/componentes/landingPages/pages/ecommerce1/home-ecommerce1/home-ecommerce1';

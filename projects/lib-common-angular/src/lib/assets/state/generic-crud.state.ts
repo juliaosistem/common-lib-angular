@@ -2,8 +2,9 @@
 import { Injectable } from '@angular/core';
 import { StateContext, Selector, Action } from '@ngxs/store';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
-import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
+
 import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
+import { JuliaoSystemCrudHttpService } from '../../config/JuliaoSystemCrudHttpService';
 
 
 export interface GenericCrudActions<RQ> {

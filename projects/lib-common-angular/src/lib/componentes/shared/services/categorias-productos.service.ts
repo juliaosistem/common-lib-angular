@@ -1,10 +1,10 @@
 import { CategoriaDTO, TipoCategoriaDTO } from '@juliaosistem/core-dtos';
 import { Injectable } from '@angular/core';
-import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
 import { LibConfigService } from '../../../config/lib-config.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ImagenDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/ImagenDTO';
+import { JuliaoSystemCrudHttpService } from '../../../config/JuliaoSystemCrudHttpService';
 
 @Injectable({
   providedIn: 'root'
