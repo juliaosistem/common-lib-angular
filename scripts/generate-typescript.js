@@ -554,8 +554,17 @@ function createJavaFiles(ramlObj, outputDir) {
 
 // eslint-disable-next-line max-lines-per-function
 async function generateDTOs() {
+  // La fuente RAML puede estar en lib-core-dtos dentro de este repo
   const ramlFile = path.join(__dirname, '../lib-core-dtos/api.raml');
-  const outputFile = path.join(__dirname, '../node_modules/@juliaosistem/core-dtos/index.ts');
+
+  // Directorio de salida: proyecto consumidor (cwd) por defecto,
+  // configurable con DTOS_OUTPUT_DIR
+  const consumerRoot = process.cwd();
+  const outputBaseDir = process.env.DTOS_OUTPUT_DIR
+    ? path.resolve(process.env.DTOS_OUTPUT_DIR)
+    : path.join(consumerRoot, 'node_modules', '@juliaosistem', 'core-dtos');
+
+  const outputFile = path.join(outputBaseDir, 'index.ts');
   
   const ramlObj = await raml2obj.parse(ramlFile);
   

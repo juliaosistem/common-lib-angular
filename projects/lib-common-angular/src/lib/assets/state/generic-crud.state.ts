@@ -2,14 +2,17 @@
 import { Injectable } from '@angular/core';
 import { StateContext, Selector, Action } from '@ngxs/store';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
-import { JuliaoSystemCrudHttpService } from 'juliaositembackenexpress/dist/utils/JuliaoSystemCrudHttpService';
+
 import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
+import { JuliaoSystemCrudHttpService } from '../../config/JuliaoSystemCrudHttpService';
+
 
 export interface GenericCrudActions<RQ> {
   All: new (payload: QueryParams, filters?: Map<string, string>) => any;
   Add: new (payload: RQ, queryParams: QueryParams) => any;
   Update: new (payload: RQ, queryParams: QueryParams) => any;
   Delete: new ( queryParams: QueryParams) => any;
+  LoadMock: new () => any;
 }
 
 /**
@@ -103,5 +106,37 @@ export abstract class GenericCrudState<RES, RQ> {
         setState(updatedState);
       }
     });
+  }
+
+  // Nueva acción para cargar datos mock
+  // eslint-disable-next-line max-lines-per-function
+  @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.LoadMock; } as any)
+  loadMock(ctx: StateContext<PlantillaResponse<RES>>) {
+    try {
+      const service = this.service as any;
+      if (service.getMockData && typeof service.getMockData === 'function') {
+        const mockData = service.getMockData();
+        ctx.patchState({
+          data: undefined,
+          dataList: mockData,
+          message: 'Datos mock cargados correctamente',
+          rta: true,
+        });
+      } else {
+        ctx.patchState({
+          data: undefined,
+          dataList: [],
+          message: 'No hay datos mock disponibles',
+          rta: false,
+        });
+      }
+    } catch (error) {
+      ctx.patchState({
+        data: undefined,
+        dataList: [],
+        message: 'Error al cargar datos mock ' + error,
+        rta: false,
+      });
+    }
   }
 }

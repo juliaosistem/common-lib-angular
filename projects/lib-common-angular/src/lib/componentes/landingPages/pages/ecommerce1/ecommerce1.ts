@@ -1,17 +1,27 @@
-import { Component, OnDestroy, OnInit, ElementRef, ViewChild, Renderer2, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ElementRef, ViewChild, Renderer2, PLATFORM_ID, Inject, Input, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { HeaderEcommerce1Component } from "../../molecules/ecommerce1/header-ecommerce1/header-ecommerce1";
 import { BarFloatEcommerce1 } from "../../molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1";
 import { FooterEcommerce1 } from "../../molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1";
 import { RouterOutlet } from '@angular/router';
+import { ProductoDTO ,CategoriaDTO} from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-ecommerce1',
   imports: [BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet],
   templateUrl: './ecommerce1.html',
   styleUrl: './ecommerce1.scss'
 })
-export class Ecommerce1 implements OnInit, OnDestroy {
+export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
+
+  // El usuario inicio sesion o no
+  @Input() isLogin: boolean = false;
+
+  // Productos a mostrar
+  @Input() Products !: ProductoDTO [];
+  // Categorias a mostrar
+  @Input() Categorias!: CategoriaDTO [];
+
   @ViewChild('whatsappButton', { static: false }) whatsappButton!: ElementRef;
   @ViewChild('whatsappModal', { static: false }) whatsappModal!: ElementRef;
   @ViewChild('productGrid', { static: false }) productGrid!: ElementRef;
@@ -43,6 +53,15 @@ export class Ecommerce1 implements OnInit, OnDestroy {
       this.setupWhatsappModal();
       this.setupScrollListener();
     }
+  }
+
+  ngOnChanges(): void {
+    // Los datos han cambiado, aquí puedes actualizar cualquier lógica necesaria
+    console.log('Datos actualizados:', {
+      productos: this.Products?.length || 0,
+      categorias: this.Categorias?.length || 0,
+      isLogin: this.isLogin
+    });
   }
 
   ngAfterViewInit(): void {

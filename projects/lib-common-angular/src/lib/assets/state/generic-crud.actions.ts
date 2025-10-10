@@ -23,12 +23,17 @@ export function createGenericCrudActions<RQ>(entityName: string) {
     constructor(public queryParams: QueryParams) {}
   }
 
- 
+  // Nueva acción para cargar datos mock en demos
+  class LoadMock {
+    static readonly type = `[${entityName}] LOAD_MOCK`;
+    constructor() {}
+  }
 
   return {
     All,
     Add,
     Update,
     Delete,
+    LoadMock,
   };
 }
