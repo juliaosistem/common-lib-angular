@@ -22,6 +22,10 @@ export class LibConfigService {
     apiVersion: 'v1',
     timeout: 30000
   };
+///// esto va en envoroment 
+
+
+
 
   constructor(@Optional() @Inject(LIB_COMMON_CONFIG) private injectedConfig: LibCommonConfig) {
     if (injectedConfig) {

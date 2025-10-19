@@ -13,12 +13,14 @@ import { CategoriasProductosState } from 'lib-common-angular';
 
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
+import { MessageService } from 'primeng/api';
 
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     provideHttpClient(),
     provideAnimations(),
+    MessageService,
     // Configurar NGXS
     importProvidersFrom(
       NgxsModule.forRoot([
