@@ -12,6 +12,11 @@ export * from './lib/assets/state/tabla1.actions'; */
 
 // componentes 
 
+
+
+export * from './lib/componentes/shared/pages/crud/crud.component';
+export * from './lib/componentes/shared/pages/crud/doc/crud-doc.component';
+
 export * from './lib/componentes/shared/atoms/select-input1/select-input1.component'
 export * from './lib/componentes/shared/atoms/button-action-edit1/button-action-edit1.component'
 export * from './lib/componentes/shared/atoms/button-action-delete1/button-action-delete1.component'
@@ -21,7 +26,6 @@ export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
 export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.component';
 export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
 export * from './lib/componentes/shared/services/dynamic-field.service';
-export * from './lib/componentes/shared/pages/crud/crud.component';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
 export * from './lib/componentes/shared/pages/notfound/notfound';
 
@@ -77,12 +81,14 @@ export * from './lib/modulos/core.lib.module';
 //servicios
 export * from './lib/componentes/shared/services/product.service';
 export * from './lib/componentes/shared/services/categorias-productos.service';
+export * from './lib/componentes/shared/services/meta-data.service.ts/meta-data.service';
 
 
 // Estados y acciones
-export * from './lib/assets/state/productos.state';
-export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/generic-crud.state';
+export * from './lib/assets/state/productos.state';
+export * from './lib/assets/state/business.state';
+export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/categorias-productos.state'
 
 //routes

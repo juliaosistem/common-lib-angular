@@ -41,7 +41,7 @@ export class Crud implements OnInit {
     @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personal
     @Input() fieldOrder: string[] = [];                       // Orden de columnas
     @Input() excludeFields: string[] = ['id'];                // Campos a excluir
-    @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
+@Input() fieldSelectOptions: Record<string, { label: string; value: string | number | boolean }[]> = {};
 
     // Propiedades del paginador
     @Input() rows: number = 10;                               // Filas por página

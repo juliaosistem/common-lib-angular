@@ -28,8 +28,10 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { DataViewModule } from 'primeng/dataview';
 import { ImageModule } from 'primeng/image';
 import { StepperModule } from 'primeng/stepper';
+import { MessageService } from 'primeng/api';
 @NgModule({
   declarations: [],
+  providers: [MessageService],
   imports: [
     CommonModule,
     ImageModule,
