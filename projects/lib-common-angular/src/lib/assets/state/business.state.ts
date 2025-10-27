@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import { CategoriaDTO } from '@juliaosistem/core-dtos';
+import { State, Action, StateContext } from '@ngxs/store';
+import { BusinessDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { createGenericCrudActions } from './generic-crud.actions';
 import { GenericCrudState } from './generic-crud.state';
-import { State, Action, StateContext } from '@ngxs/store';
 import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
 import { HttpClient } from '@angular/common/http';
 import { LibConfigService } from '../../config/lib-config.service';
 import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
 
-// 🔹 Crear acciones genéricas para Categorias
-const categoriasActions = createGenericCrudActions<CategoriaDTO>('Categoria');
+// 🔹 Crear acciones genéricas para Business
+const businessActions = createGenericCrudActions<BusinessDTO>('Business');
 
-@State<PlantillaResponse<CategoriaDTO>>({
-  name: 'categoriasProductos',
+@State<PlantillaResponse<BusinessDTO>>({
+  name: 'business',
   defaults: {
     data: undefined,
     dataList: [],
@@ -22,45 +22,45 @@ const categoriasActions = createGenericCrudActions<CategoriaDTO>('Categoria');
   },
 })
 @Injectable()
-export class CategoriasProductosState extends GenericCrudState<CategoriaDTO, CategoriaDTO> {
+export class BusinessState extends GenericCrudState<BusinessDTO, BusinessDTO> {
   constructor(
     http: HttpClient,
     config: LibConfigService,
     meta: MetaDataService
   ) {
-    const genericService = new GenericCrudHttpService<CategoriaDTO>(
+    const genericService = new GenericCrudHttpService<BusinessDTO>(
       http,
       config,
       meta,
-      'baseUrlCategories' // Endpoint configurado en LibConfigService
+      'baseUrlBusiness' // Key del endpoint en LibConfigService
     );
-    super(genericService, categoriasActions);
+    super(genericService, businessActions);
   }
 
-  //  Acción opcional para cargar datos mock específicos
-  @Action(categoriasActions.LoadMock)
-  loadMockCategorias(ctx: StateContext<PlantillaResponse<CategoriaDTO>>) {
+  // 🔹 Acción opcional para cargar datos mock específicos
+  @Action(businessActions.LoadMock)
+  loadMockBusiness(ctx: StateContext<PlantillaResponse<BusinessDTO>>) {
     try {
-      const service = this.service as GenericCrudHttpService<CategoriaDTO>;
+      const service = this.service as GenericCrudHttpService<BusinessDTO>;
       const mockData = service.getMockData?.() || [];
       ctx.patchState({
         data: undefined,
         dataList: mockData,
         message: mockData.length
-          ? 'Categorías mock cargadas correctamente'
-          : 'No hay categorías mock disponibles',
+          ? 'Business mock cargados correctamente'
+          : 'No hay datos mock disponibles',
         rta: mockData.length > 0,
       });
     } catch (error) {
       ctx.patchState({
         data: undefined,
         dataList: [],
-        message: 'Error al cargar categorías mock',
+        message: 'Error al cargar datos mock',
         rta: false,
       });
     }
   }
 }
 
-// Exportar acciones para usarlas en componentes
-export const CategoriasActions = categoriasActions;
+// Exportar acciones para usar en componentes
+export const BusinessActions = businessActions;

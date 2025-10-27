@@ -14,7 +14,6 @@ export * from './lib/assets/state/tabla1.actions'; */
 
 
 
-export * from './lib/componentes/shared/molecules/upload-files/upload-files-modal.component';
 export * from './lib/componentes/shared/pages/crud/crud.component';
 export * from './lib/componentes/shared/pages/crud/doc/crud-doc.component';
 
@@ -82,12 +81,14 @@ export * from './lib/modulos/core.lib.module';
 //servicios
 export * from './lib/componentes/shared/services/product.service';
 export * from './lib/componentes/shared/services/categorias-productos.service';
+export * from './lib/componentes/shared/services/meta-data.service.ts/meta-data.service';
 
 
 // Estados y acciones
-export * from './lib/assets/state/productos.state';
-export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/generic-crud.state';
+export * from './lib/assets/state/productos.state';
+export * from './lib/assets/state/business.state';
+export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/categorias-productos.state'
 
 //routes

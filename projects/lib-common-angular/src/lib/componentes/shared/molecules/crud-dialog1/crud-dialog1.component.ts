@@ -27,7 +27,7 @@ export class CrudDialog1Component implements OnChanges {
   @Input() visible: boolean = false;
   @Input() displayFields: DynamicField[] = [];
   @Input() currentItem: Record<string, unknown> = {};
-  @Input() fieldSelectOptions: Record<string, string[]> = {};
+  @Input() fieldSelectOptions: Record<string, { label: string; value: string | number | boolean }[]> = {};
   @Input() isDefaultContent: boolean = true;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() body: TemplateRef<any> | undefined;
@@ -124,10 +124,10 @@ export class CrudDialog1Component implements OnChanges {
   }
 
   // ✅ Obtener opciones para campos de tipo select
-  getSelectOptions(fieldKey: string): { label: string; value: string }[] {
-    const options = this.fieldSelectOptions[fieldKey] || [];
-    return options.map((option) => ({ label: option, value: option }));
-  }
+getSelectOptions(fieldKey: string): { label: string; value: string | number | boolean }[] {
+  return this.fieldSelectOptions[fieldKey] || [];
+}
+
 
   hideDialog() {
     this.visible = false;

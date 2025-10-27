@@ -24,7 +24,7 @@ export class Tabla1Component implements OnInit {
   @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas
   @Input() fieldOrder: string[] = [];                       // Orden de columnas
   @Input() excludeFields: string[] = ['id'];                // Campos a excluir
-  @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
+@Input() fieldSelectOptions: Record<string, { label: string; value: string | number | boolean }[]> = {};
   @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
 
   @Input() showDefaultHeader: boolean = true;               // Mostrar encabezado por defecto
