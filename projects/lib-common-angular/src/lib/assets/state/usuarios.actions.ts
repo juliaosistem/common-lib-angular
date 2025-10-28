@@ -1,5 +1,5 @@
 import { DatesUserDTO } from '@juliaosistem/core-dtos';
-import { createGenericCrudActions } from './generic-crud.actions';
+import { createGenericCrudActions } from './state-generic/generic-crud.actions';
 
 // Crear todas las acciones CRUD para usuarios
 const userActions = createGenericCrudActions< DatesUserDTO>('usuarios');

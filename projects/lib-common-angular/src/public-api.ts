@@ -85,8 +85,9 @@ export * from './lib/componentes/shared/services/meta-data.service.ts/meta-data.
 
 
 // Estados y acciones
-export * from './lib/assets/state/generic-crud.state';
+export * from './lib/assets/state/state-generic/generic-crud.state';
 export * from './lib/assets/state/productos.state';
+export * from './lib/assets/state/currency.state';
 export * from './lib/assets/state/business.state';
 export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/categorias-productos.state'

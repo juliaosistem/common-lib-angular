@@ -20,6 +20,8 @@ export class LibConfigService {
     baseUrlAuth: 'http://localhost:3000/auth',
     baseUrlUsers: 'http://localhost:3000/users',
     baseUrlBusiness: 'http://localhost:3000/Business',
+    baseUrlCurrency: 'http://localhost:3000/Currency',
+    baseUrlCategoryProduct: 'http://localhost:3000/category-products',
     apiVersion: 'v1',
     timeout: 30000
   };
