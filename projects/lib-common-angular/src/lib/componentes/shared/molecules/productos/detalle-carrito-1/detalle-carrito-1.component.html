@@ -62,10 +62,10 @@
                     <div class="flex items-center space-x-4 mb-8">
                         @if(isLogin){
                         @if(product.descuento != undefined && product.descuento > 0) {
-                        <span class="old-price">{{ product.precio[0].precio | currency:product.precio[0].codigo_iso :'code' }}</span>
+                        <span class="old-price">{{ product.precios[0].precio | currency:product.precios[0].codigo_iso :'code' }}</span>
                         <span class="discount-label">{{ product.descuento}}% OFF</span>
                         }
-                        <span class="current-price">{{ discount | currency:product.precio[0].codigo_iso :'code'}}</span>
+                        <span class="current-price">{{ discount | currency:product.precios[0].codigo_iso :'code'}}</span>
                         } @else {
                             <span class="current-price">Iniciar Sesión</span>
                         }
