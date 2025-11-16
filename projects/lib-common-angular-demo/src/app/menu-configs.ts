@@ -51,7 +51,7 @@ export const defaultMenuConfig: MenuConfig = {
                   id: 'table',
                   label: 'Table',
                   icon: 'pi pi-fw pi-table',
-                  routerLink: ['/uikit/table'],
+                  routerLink: ['/componentes/crud'],
                   type: 'group',
                   order: 5,   
                  items:[
@@ -59,9 +59,9 @@ export const defaultMenuConfig: MenuConfig = {
                   id: 'crud',
                   label: 'Crud',
                   icon: 'pi pi-fw pi-pencil',
-                  routerLink: ['/pages/crud'],
+                  routerLink: ['/componentes/crud'],
                   type: 'item',
-                  order: 3,
+                  order: 1,
                   permissions: ['pages.crud.read']
               },  
                  ]
@@ -130,6 +130,40 @@ export const defaultMenuConfig: MenuConfig = {
               },
           ]
       },
+
+        {
+      id: 'doc',
+      label: 'Documentación',
+      icon: 'pi pi-fw pi-book',
+      type: 'group',
+      order: 3,
+      items: [
+        {
+          id: 'crud-doc',
+          label: 'Crud',
+          icon: 'pi pi-fw pi-file',
+          routerLink: ['/documentation/crud'],
+          type: 'item',
+          order: 1
+        },
+/*         {
+          id: 'table-doc',
+          label: 'Table Docs',
+          icon: 'pi pi-fw pi-table',
+          routerLink: ['/doc/table'],
+          type: 'item',
+          order: 2
+        }, */
+   /*      {
+          id: 'form-doc',
+          label: 'Form Docs',
+          icon: 'pi pi-fw pi-file-edit',
+          routerLink: ['/doc/form'],
+          type: 'item',
+          order: 3
+        } */
+      ]
+    }
   ],
   theme: 'light',
   orientation: 'horizontal',
@@ -270,7 +304,7 @@ export const userMenuConfig: MenuConfig = {
           id: 'crud',
           label: 'Crud',
           icon: 'pi pi-fw pi-pencil',
-          routerLink: ['/pages/crud'],
+          routerLink: ['/componentes/crud'],
           type: 'item',
           order: 1
         },

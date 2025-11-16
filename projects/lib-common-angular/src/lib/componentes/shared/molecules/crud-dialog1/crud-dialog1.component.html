@@ -10,91 +10,110 @@
   (visibleChange)="onVisibilityChange($event)"
 >
   <ng-template #content>
-  
-      
-    
-   <ng-container 
-          *ngTemplateOutlet="body || defaultbody; ">
-        </ng-container>
-    
-      </ng-template>
-      <ng-template #defaultbody>
-          <form [formGroup]="itemForm">
-        @for (field of displayFields; track field.key) {
-          <div class="field">
-            <label [for]="field.key">
-              {{ field.label }}
-            </label>
+    <ng-container *ngTemplateOutlet="body || defaultbody"> </ng-container>
+  </ng-template>
+  <ng-template #defaultbody>
+    <form [formGroup]="itemForm">
+      @for (field of displayFields; track field.key) {
+        <div class="field">
+          <label [for]="field.key">
+            {{ field.label }}
+          </label>
 
-            @switch (field.type) {
-              @case ("text") {
-                <input
-                  pInputText
-                  [id]="field.key"
-                  [formControlName]="field.key"
-                  [placeholder]="'Enter ' + field.label"
-                />
-              }
-              @case ("number") {
-                <p-inputNumber
-                  [id]="field.key"
-                  [formControlName]="field.key"
-                  mode="decimal"
-                  [placeholder]="'Enter ' + field.label"
-                />
-              }
-              @case ("checkbox") {
-                <p-checkbox
-                  [id]="field.key"
-                  [formControlName]="field.key"
-                  [binary]="true"
-                  class="flex align-items-center gap-2"
-                />
-              }
-              @case ("select") {
-                <p-select
-                  [id]="field.key"
-                  [formControlName]="field.key"
-                  [options]="getSelectOptions(field.key)"
-                  optionLabel="label"
-                  optionValue="value"
-                  [placeholder]="'Select ' + field.label"
-                  [showClear]="true"
-                />
-              }
-              @case ("img") {
-                <!-- ✅ FileUpload de PrimeNG para imágenes -->
-                <div class="file-upload-container">
-                  <p-fileUpload
-                    [multiple]="false"
-                    [accept]="field.accept || 'image/*'"
-                    [maxFileSize]="field.maxFileSize || 5242880"
-                    [showUploadButton]="false"
-                    [showCancelButton]="false"
-                    [chooseLabel]="'Choose ' + field.label"
-                    [chooseIcon]="'pi pi-upload'"
-                    [auto]="false"
-                    (onSelect)="onFileSelect($event, field.key)"
-                    (onRemove)="onFileRemove(field.key)"
-                    styleClass="w-full"
-                  >
-                  </p-fileUpload>
-                </div>
-              }
-              @default {
-                <input
-                  pInputText
-                  [id]="field.key"
-                  [formControlName]="field.key"
-                  [placeholder]="'Enter ' + field.label"
-                />
-              }
+          @switch (field.type) {
+            @case ("text") {
+              <input
+                pInputText
+                [id]="field.key"
+                [formControlName]="field.key"
+                [placeholder]="'Enter ' + field.label"
+              />
             }
-          </div>
-        }
-      </form>
-    
-        </ng-template>
+            @case ("number") {
+              <p-inputNumber
+                [id]="field.key"
+                [formControlName]="field.key"
+                mode="decimal"
+                [placeholder]="'Enter ' + field.label"
+              />
+            }
+            @case ("checkbox") {
+              <p-checkbox
+                [id]="field.key"
+                [formControlName]="field.key"
+                [binary]="true"
+                class="flex align-items-center gap-2"
+              />
+            }
+            @case ("select") {
+              <p-select
+                [id]="field.key"
+                [formControlName]="field.key"
+                [options]="getSelectOptions(field.key)"
+                optionLabel="label"
+                optionValue="value"
+                [placeholder]="'Select ' + field.label"
+                [showClear]="true"
+              />
+            }
+            @case ("img") {
+              <!-- ✅ FileUpload de PrimeNG para imágenes -->
+              <div class="file-upload-container">
+                <p-fileUpload
+                  [multiple]="false"
+                  [accept]="field.accept || 'image/*'"
+                  [maxFileSize]="field.maxFileSize || 5242880"
+                  [showUploadButton]="false"
+                  [showCancelButton]="false"
+                  [chooseLabel]="'Choose ' + field.label"
+                  [chooseIcon]="'pi pi-upload'"
+                  [auto]="false"
+                  (onSelect)="onFileSelect($event, field.key)"
+                  (onRemove)="onFileRemove(field.key)"
+                  styleClass="w-full"
+                >
+                </p-fileUpload>
+              </div>
+            }
+            @case ("file") {
+              <!-- FileUpload de PrimeNG para PDF, Excel, etc. -->
+              <div class="file-upload-container">
+                <p-fileUpload
+                  [multiple]="false"
+                  [accept]="field.accept || '.pdf,.xls,.xlsx'"
+                  [maxFileSize]="field.maxFileSize || 10485760"
+                  [showUploadButton]="false"
+                  [showCancelButton]="false"
+                  [chooseLabel]="'Seleccionar ' + field.label"
+                  [chooseIcon]="'pi pi-upload'"
+                  [auto]="false"
+                  (onSelect)="onFileSelect($event, field.key)"
+                  (onRemove)="onFileRemove(field.key)"
+                  styleClass="w-full"
+                ></p-fileUpload>
+
+                <!--  Mostrar nombre del archivo seleccionado -->
+                @if (itemForm.get(field.key)?.value) {
+                  <small class="text-gray-500">
+                    Archivo: {{ itemForm.get(field.key)?.value }}
+                  </small>
+                }
+              </div>
+            }
+
+            @default {
+              <input
+                pInputText
+                [id]="field.key"
+                [formControlName]="field.key"
+                [placeholder]="'Enter ' + field.label"
+              />
+            }
+          }
+        </div>
+      }
+    </form>
+  </ng-template>
 
   <ng-template #footer>
     <p-button

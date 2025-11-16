@@ -1,18 +1,19 @@
 import { Component,OnInit, ViewChild } from '@angular/core';
 import { Crud, CrudDialog1Component, ProductDialog1Component } from 'lib-common-angular';
 import { FieldType } from '@juliaosistem/core-dtos';
-import { Product, ProductService } from '../../core/services/product.service';
+import { Product } from '../../core/services/product.service';
 import { Table } from 'primeng/table';
 import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
-import { MessageService, ConfirmationService } from 'primeng/api';
+
 import { Menu } from 'primeng/menu';
 
 @Component({
   selector: 'app-crud',
-  imports: [Crud, CrudDialog1Component, ProductDialog1Component], 
+  imports: [CrudDialog1Component, ProductDialog1Component,Crud], 
   templateUrl: './crud.component.html',
   styleUrl: './crud.component.scss',
-  standalone: true
+  standalone: true,
+  providers: [] // Sin providers específicos por ahora
 
 })
 export class CrudComponent implements  OnInit {
@@ -36,9 +37,7 @@ export class CrudComponent implements  OnInit {
  tablaDataSharedDTO: TablaDataSharedDTO<Menu, Product> = new TablaDataSharedDTO<Menu, Product>();
   
  constructor(
-          private productService: ProductService,
-          private messageService: MessageService,
-          private confirmationService: ConfirmationService
+         
       ) {}
 
   exportCSV() {
