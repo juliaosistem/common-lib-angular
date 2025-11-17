@@ -19,6 +19,7 @@ import { SelectModule } from 'primeng/select';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
+import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -36,6 +37,7 @@ import { MessageService } from 'primeng/api';
     CommonModule,
     ImageModule,
     ButtonModule,
+    CardModule,
     AutoCompleteModule,
     CascadeSelectModule,
     CheckboxModule,
@@ -65,6 +67,7 @@ import { MessageService } from 'primeng/api';
   ],
   exports:[
     ButtonModule,
+    CardModule,
     AutoCompleteModule,
     CascadeSelectModule,
     CheckboxModule,
