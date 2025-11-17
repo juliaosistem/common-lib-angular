@@ -3,6 +3,15 @@
   "version": "0.0.1",
   "description": "Librería común de Angular para proyectos",
   "type": "module",
+  "files": [
+    "fesm2022/",
+    "src/",
+    "index.d.ts",
+    "package.json",
+    "README.md"
+  ],
+
+  
   "scripts": {
     "ng": "ng",
     "start": "lint && tsc  ng serve ",
@@ -28,7 +37,7 @@
   "private": false,
   "dependencies": {
     "@angular/platform-server": "^20.1.6",
-    "@angular/ssr": "^20.3.3",
+    "@angular/ssr": "^20.1.5",
     "@ngx-translate/core": "^17.0.0",
     "@ngx-translate/http-loader": "^17.0.0",
     "@ngxs/devtools-plugin": "^20.1.0",
@@ -46,13 +55,13 @@
     "primeclt": "^0.1.5",
     "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
-    "primeng": "^20.0.1",
+    "primeng": "^20.2.0",
     "prismjs": "^1.30.0",
     "quill": "^2.0.3",
     "swiper": "^11.2.10",
     "tailwindcss-primeui": "^0.6.1",
     "xlsx": "^0.18.5",
-    "zone.js": "~0.15.0"
+    "zone.js": "~0.15.1"
   },
   "peerDependencies": {
     "@angular/animations": "^20.1.6",
