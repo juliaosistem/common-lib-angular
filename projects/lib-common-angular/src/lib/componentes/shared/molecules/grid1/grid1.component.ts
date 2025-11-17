@@ -52,6 +52,13 @@ export class Grid1Component implements OnInit {
 
   ngOnInit() {
     this.initFields();
+
+      // Filtrar displayFields según excludeFields
+  if (this.displayFields?.length) {
+    this.displayFields = this.displayFields.filter(
+      f => !this.excludeFields.includes(f.key)
+    );
+  }
   }
 
   initFields() {

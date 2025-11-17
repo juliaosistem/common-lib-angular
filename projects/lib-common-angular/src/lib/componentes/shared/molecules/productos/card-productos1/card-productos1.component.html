@@ -74,9 +74,9 @@
         <div class="mt-auto">
             <div class="flex items-end mb-4">
                 @if(product.descuento != undefined && product.descuento > 0) {
-                    <span class="old-price text-sm mr-2">{{product.precio[0].precio | currency:product.precio[0].codigo_iso :'code'}}</span>
+                    <span class="old-price text-sm mr-2">{{product.precios[0].precio | currency:product.precios[0].codigo_iso :'code'}}</span>
                 }
-                <span class="text-2xl font-bold text-gray-900">{{ discount | currency:product.precio[0].codigo_iso :'code'}}</span>
+                <span class="text-2xl font-bold text-gray-900">{{ discount | currency:product.precios[0].codigo_iso :'code'}}</span>
             </div>
             
             <!-- Botones de acción y cuotas -->

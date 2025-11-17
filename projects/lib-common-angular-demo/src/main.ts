@@ -9,8 +9,8 @@ import { importProvidersFrom } from '@angular/core';
 
 // Importar los states
 import { ProductosState } from 'lib-common-angular';
-import { CategoriasProductosState } from 'lib-common-angular';
-
+/* import { CategoriasProductosState } from 'lib-common-angular';
+ */
 import { AppComponent } from './app/app.component';
 import { routes } from './app/app.routes';
 import { MessageService } from 'primeng/api';
@@ -25,8 +25,8 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(
       NgxsModule.forRoot([
         ProductosState,
-        CategoriasProductosState
-      ], {
+/*         CategoriasProductosState
+ */      ], {
         developmentMode: true, // Solo en desarrollo
         selectorOptions: {
           suppressErrors: false,
