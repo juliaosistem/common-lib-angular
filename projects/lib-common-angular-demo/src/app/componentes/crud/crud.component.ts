@@ -23,7 +23,7 @@ export class CrudComponent implements  OnInit {
     showDialog: boolean = false;
     dialogCurrentItem: Record<string, unknown> = {};
     dialogDisplayFields: unknown[] = [];
-    dialogFieldSelectOptions: Record<string, string[]> = {};
+dialogFieldSelectOptions: Record<string, { label: string; value: string }[]> = {};
 
 // aqui tienes q implementar la logica para el crud 
 // traerte los servicios de la libreria
@@ -118,10 +118,27 @@ this.loaded = false;
     };
 
     // ✅ Configuración de opciones para campos de tipo select
-    fieldSelectOptions: Record<string, string[]> = {
-        inventoryStatus: ['INSTOCK', 'LOWSTOCK', 'OUTOFSTOCK'],
-        category: ['Accessories', 'Clothing', 'Electronics', 'Fitness']
-    };
+fieldSelectOptions: Record<string, { label: string; value: string }[]> = {
+    inventoryStatus: [
+        { label: 'INSTOCK', value: 'INSTOCK' },
+        { label: 'LOWSTOCK', value: 'LOWSTOCK' },
+        { label: 'OUTOFSTOCK', value: 'OUTOFSTOCK' }
+    ],
+    category: [
+        { label: 'Accessories', value: 'Accessories' },
+        { label: 'Clothing', value: 'Clothing' },
+        { label: 'Electronics', value: 'Electronics' },
+        { label: 'Fitness', value: 'Fitness' }
+    ]
+};
+
+private mapSelectOptions(options: Record<string, string[]>): Record<string, { label: string; value: string }[]> {
+  const mapped: Record<string, { label: string; value: string }[]> = {};
+  Object.keys(options).forEach(key => {
+    mapped[key] = options[key].map(opt => ({ label: opt, value: opt }));
+  });
+  return mapped;
+}
 
     // ✅ Etiquetas personalizadas
     fieldLabels: Record<string, string> = {
@@ -156,19 +173,19 @@ this.loaded = false;
     }
 
     // ✅ Métodos para manejar los eventos del dialog
-    onEditItemRequest(item: Record<string, unknown>) {
-        this.dialogCurrentItem = { ...item };
-        this.dialogDisplayFields = this.createDisplayFields();
-        this.dialogFieldSelectOptions = { ...this.fieldSelectOptions };
-        this.showDialog = true;
-    }
+  onEditItemRequest(item: Record<string, unknown>) {
+    this.dialogCurrentItem = { ...item };
+    this.dialogDisplayFields = this.createDisplayFields();
+this.dialogFieldSelectOptions = this.fieldSelectOptions;
+    this.showDialog = true;
+}
 
     onNewItemRequest() {
-        this.dialogCurrentItem = {};
-        this.dialogDisplayFields = this.createDisplayFields();
-        this.dialogFieldSelectOptions = { ...this.fieldSelectOptions };
-        this.showDialog = true;
-    }
+    this.dialogCurrentItem = {};
+    this.dialogDisplayFields = this.createDisplayFields();
+this.dialogFieldSelectOptions = this.fieldSelectOptions;
+    this.showDialog = true;
+}
 
     onDialogSave(savedItem: Record<string, unknown>) {
         // Procesar el guardado localmente por ahora
