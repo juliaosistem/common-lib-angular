@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { State, Selector, Action, StateContext } from '@ngxs/store';
-import { CategoriaDTO, ProductoDTO } from '@juliaosistem/core-dtos';
+import { CategoriaDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { createGenericCrudActions } from './state-generic/generic-crud.actions';
 import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
@@ -10,7 +10,7 @@ import { LibConfigService } from '../../config/lib-config.service';
 import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
 import { tap } from 'rxjs';
 import { GenericCrudActions, GenericCrudState } from './state-generic/generic-crud.state';
-import { MonedaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/modenaDTO';
+
 
 // Crear acciones genéricas para ProductoDTO
 const categoriaproductoActions = createGenericCrudActions<CategoriaDTO>('categoriaproducto');

@@ -106,7 +106,7 @@ export class JuliaoSystemCrudHttpService<RES, RQ> {
         if (queryParams.dominio) headers = headers.append('dominio', queryParams.dominio) ;
         if (queryParams.usuario)   headers = headers.append('usuario', queryParams.usuario);
         
-        if (queryParams.idbusiness) headers = headers.append('idBusiness', queryParams.idbusiness.toString());
+        if (queryParams.idBusiness) headers = headers.append('idBusiness', queryParams.idBusiness.toString());
     
         if (queryParams.proceso) headers = headers.append('proceso', queryParams.proceso);
         

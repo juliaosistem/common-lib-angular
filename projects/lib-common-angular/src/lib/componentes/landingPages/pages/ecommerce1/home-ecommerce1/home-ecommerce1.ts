@@ -1,4 +1,7 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
 import { HeroSectionEcommerce1 } from "../../../molecules/ecommerce1/hero-section-ecommerce1/hero-section-ecommerce1";
 import { SectionFiltersCategoriesProductos } from "../../../../shared/molecules/section-filters-categories-productos/section-filters-categories-productos";
 import { CardProductos1Component } from "../../../../../../public-api";
@@ -8,6 +11,9 @@ import { CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dt
 @Component({
   selector: 'lib-home-ecommerce1',
   imports: [
+    CommonModule,
+    ButtonModule,
+    InputTextModule,
     HeroSectionEcommerce1,
     SectionFiltersCategoriesProductos,
     CardProductos1Component,

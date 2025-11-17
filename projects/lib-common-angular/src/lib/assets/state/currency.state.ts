@@ -10,7 +10,7 @@ import { LibConfigService } from '../../config/lib-config.service';
 import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
 import { tap } from 'rxjs';
 import { GenericCrudActions, GenericCrudState } from './state-generic/generic-crud.state';
-import { MonedaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/modenaDTO';
+import { MonedaDTO } from '@juliaosistem/core-dtos';
 
 // Crear acciones genéricas para ProductoDTO
 const monedaActions = createGenericCrudActions<ProductoDTO>('moneda');

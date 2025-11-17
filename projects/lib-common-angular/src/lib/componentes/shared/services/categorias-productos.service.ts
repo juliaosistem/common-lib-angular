@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { LibConfigService } from '../../../config/lib-config.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ImagenDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/ImagenDTO';
+import { ImagenDTO } from '@juliaosistem/core-dtos';
 import { JuliaoSystemCrudHttpService } from '../../../config/JuliaoSystemCrudHttpService';
 
 @Injectable({
@@ -42,14 +42,14 @@ imagenCategoria2: ImagenDTO = {
 };
 
 categoriaDTO1 : CategoriaDTO = {
-  id: 1,
+  id: '1',
   nombreCategoria: 'Castillos',
   tipoCategoria: this.tipoCategorias[0],
   imagen: this.imagenCategoria1
 };
 
 categoriaDTO2 : CategoriaDTO = {
-  id: 2,
+  id: '2',
   nombreCategoria: 'Toboganes',
   tipoCategoria: this.tipoCategorias[1],
   imagen: this.imagenCategoria2
