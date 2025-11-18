@@ -13,7 +13,6 @@ export class InputsLoginEcommerce1 {
   
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onRememberChange(event: any): void {
-    // PrimeNG p-checkbox emits { originalEvent, checked }
     this.remember = !!event?.checked;
   }
 }

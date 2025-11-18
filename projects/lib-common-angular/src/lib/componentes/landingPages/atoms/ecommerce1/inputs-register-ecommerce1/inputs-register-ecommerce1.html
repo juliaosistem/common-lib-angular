@@ -1,24 +1,19 @@
-<div class="mb-6">
-    <label for="register-name" class="block text-gray-700 font-bold mb-2">Nombre completo</label>
-    <input type="text" id="register-name"
-        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]"
-        placeholder="John Doe" required />
+<div class="register-field">
+    <label for="register-name" class="register-label">Nombre completo</label>
+    <input id="register-name" type="text" pInputText class="register-input" placeholder="John Doe" required />
 </div>
-<div class="mb-6">
-    <label for="register-email" class="block text-gray-700 font-bold mb-2">Email</label>
-    <input type="email" id="register-email"
-        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]"
-        placeholder="ejemplo@correo.com" required />
+
+<div class="register-field">
+    <label for="register-email" class="register-label">Email</label>
+    <input id="register-email" type="email" pInputText class="register-input" placeholder="ejemplo@correo.com" required />
 </div>
-<div class="mb-6">
-    <label for="register-password" class="block text-gray-700 font-bold mb-2">Contraseña</label>
-    <input type="password" id="register-password"
-        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]"
-        placeholder="********" required />
+
+<div class="register-field">
+    <label for="register-password" class="register-label">Contraseña</label>
+    <p-password inputId="register-password" [feedback]="false" [toggleMask]="true" class="register-password"></p-password>
 </div>
-<div class="mb-6">
-    <label for="register-confirm-password" class="block text-gray-700 font-bold mb-2">Confirmar Contraseña</label>
-    <input type="password" id="register-confirm-password"
-        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]"
-        placeholder="********" required />
+
+<div class="register-field">
+    <label for="register-confirm-password" class="register-label">Confirmar Contraseña</label>
+    <p-password inputId="register-confirm-password" [feedback]="false" [toggleMask]="true" class="register-password"></p-password>
 </div>

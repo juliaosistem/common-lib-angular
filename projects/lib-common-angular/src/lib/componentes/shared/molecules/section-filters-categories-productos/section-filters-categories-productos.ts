@@ -1,9 +1,10 @@
-import { Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CategoriaDTO, ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-section-filters-categories-productos',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './section-filters-categories-productos.html',
   styleUrl: './section-filters-categories-productos.scss'
 })
@@ -20,5 +21,14 @@ export class SectionFiltersCategoriesProductos {
     // Categorias a mostrar
     @Input() categorias: CategoriaDTO[] = [];
     @Input() titleComponent: string = "Todos Las Categorias";
+
+    @Output() categorySelected: EventEmitter<string> = new EventEmitter<string>();
+
+    selectedCategory = 'all';
+
+    selectCategory(category: string): void {
+      this.selectedCategory = category;
+      this.categorySelected.emit(category);
+    }
 
 }
