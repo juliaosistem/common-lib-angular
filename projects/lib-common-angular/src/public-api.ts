@@ -28,7 +28,7 @@ export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
 export * from './lib/componentes/shared/services/dynamic-field.service';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
 export * from './lib/componentes/shared/pages/notfound/notfound';
-
+export * from './lib/componentes/shared/molecules/inflatable-customizer/customizer.component';
 // Menú dinámico
 export * from './lib/componentes/shared/interfaces/menu.interface';
 export * from './lib/componentes/shared/atoms/menu-item1/menu-item1.component';

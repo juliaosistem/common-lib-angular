@@ -9,12 +9,11 @@
                         <div id="product-grid" class="product-grid">
                                 <div class="product-card">
                                     @for (product of Products; track $index) {
-                                        <lib-card-productos1 [product]="product"></lib-card-productos1>
+                                        <lib-card-productos1   [product]="product"     (addToCart)="onAddToCart($event)"></lib-card-productos1>
                                     }
                             </div>
                         </div>
                 </main>
-
         <!-- Seccion "Nuestra Historia" (PrimeNG-only, sin Tailwind) -->
         <section class="history-section" style="background-image: url('https://placehold.co/1400x600/b0b0b0/ffffff?text=Our+Story+Background+Image');">
             <div class="history-overlay"></div>
