@@ -1,0 +1,12 @@
+/* Styles replacing Tailwind utilities for category filters */
+.filters-bar{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin:2rem 0; }
+.filters-title{ font-size:1.75rem; font-weight:700; margin:0; color:#111827; }
+.filters-list{ display:flex; gap:.5rem; align-items:center; }
+.filter-btn{ border-radius:999px; padding:.5rem .9rem; border:1px solid transparent; background:transparent; color:#374151; }
+.filter-btn:hover{ opacity:.9; }
+.filter-btn.active{ background:#fbc30d; color:#111827; border-color:transparent; }
+
+@media(max-width:600px){
+	.filters-bar{ flex-direction:column; align-items:flex-start; }
+}
+

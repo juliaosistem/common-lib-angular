@@ -108,7 +108,7 @@ export class CardProductos1Component implements OnInit, OnDestroy {
 
 
   shareProductOnWhatsapp(): void {
-    const text = `¡Mira esto! ${this.product.name} por solo $${this.currencyPipe.transform(this.discount, this.product.precio[0].codigo_iso ,'code')}`;
+    const text = `¡Mira esto! ${this.product.name} por solo $${this.currencyPipe.transform(this.discount, this.product.precios[0].codigo_iso ,'code')}`;
     const url = window.location.href;
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`;
     window.open(whatsappUrl, '_blank');

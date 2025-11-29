@@ -2,9 +2,9 @@
     <section class="auth-section">
         <lib-section-header-forms-login-ecomerce1 [titulo]="'Iniciar Sesión'" [subtitulo]="'Bienvenido de nuevo'"></lib-section-header-forms-login-ecomerce1>
         <lib-form-auth-eccomerce1 [isRegistering]="false" [isLogout]="false"></lib-form-auth-eccomerce1>
-        <div class="text-center p-8 border-t border-gray-200">
-            <p class="text-gray-600">¿No tienes una cuenta? 
-                <a [routerLink]="['register']" class="text-gray-800 font-bold hover:underline">Regístrate</a>
+        <div class="auth-footer">
+            <p>¿No tienes una cuenta?
+                <button pButton type="button" label="Regístrate" class="p-button-text" [routerLink]="['register']"></button>
             </p>
         </div>
     </section>

@@ -35,7 +35,7 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
             id: '550e8400-e29b-41d4-a716-446655440000',
             name: "Maleta Viaje Mediana Con Ruedas Resistente Moderna 20-22kg",
 
-            precio: [{
+            precios: [{
                 codigo_iso: "COP",
                 nombreMoneda: "Peso colombiano",
                 precio: 350000
@@ -87,7 +87,7 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
             id: '550e8400-e29b-41d4-a716-446655440000',
             name: "Mini Piscina ",
 
-            precio: [{
+            precios: [{
                 codigo_iso: "COP",
                 nombreMoneda: "Peso colombiano",
                 precio: 3500000
@@ -133,7 +133,7 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
         {
             id: '550e8400-e29b-41d4-a716-446655440001',
             name: "Mini Tobogán Inflable ",
-            precio: [{
+            precios: [{
                 codigo_iso: "COP",
                 nombreMoneda: "Peso colombiano",
                 precio: 6200000
@@ -1419,9 +1419,9 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
     calculateDiscount(product: ProductoDTO): number {
         if(product){
             if (product.descuento && product.descuento > 0)
-                return product.precio[0].precio - (product.precio[0].precio * product.descuento / 100);
+                return product.precios[0].precio - (product.precios[0].precio * product.descuento / 100);
             else
-                return product.precio[0].precio;
+                return product.precios[0].precio;
         }else{
             return 0;
         }

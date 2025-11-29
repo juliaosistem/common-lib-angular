@@ -19,9 +19,16 @@ export class LibConfigService {
     baseUrlProducts: 'http://localhost:3000/products',
     baseUrlAuth: 'http://localhost:3000/auth',
     baseUrlUsers: 'http://localhost:3000/users',
+    baseUrlBusiness: 'http://localhost:3000/Business',
+    baseUrlCurrency: 'http://localhost:3000/Currency',
+    baseUrlCategoryProduct: 'http://localhost:3000/category-products',
     apiVersion: 'v1',
     timeout: 30000
   };
+///// esto va en envoroment 
+
+
+
 
   constructor(@Optional() @Inject(LIB_COMMON_CONFIG) private injectedConfig: LibCommonConfig) {
     if (injectedConfig) {

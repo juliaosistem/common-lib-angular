@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit, ElementRef, ViewChild, Renderer2, PLATFORM_ID, Inject, Input, OnChanges } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { DialogModule } from 'primeng/dialog';
+import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
-import { isPlatformBrowser } from '@angular/common';
 import { HeaderEcommerce1Component } from "../../molecules/ecommerce1/header-ecommerce1/header-ecommerce1";
 import { BarFloatEcommerce1 } from "../../molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1";
 import { FooterEcommerce1 } from "../../molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1";
@@ -8,7 +10,7 @@ import { RouterOutlet } from '@angular/router';
 import { ProductoDTO ,CategoriaDTO} from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-ecommerce1',
-  imports: [BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet],
+  imports: [CommonModule, DialogModule, ButtonModule, BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet],
   templateUrl: './ecommerce1.html',
   styleUrl: './ecommerce1.scss'
 })
@@ -23,7 +25,6 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
   @Input() Categorias!: CategoriaDTO [];
 
   @ViewChild('whatsappButton', { static: false }) whatsappButton!: ElementRef;
-  @ViewChild('whatsappModal', { static: false }) whatsappModal!: ElementRef;
   @ViewChild('productGrid', { static: false }) productGrid!: ElementRef;
   @ViewChild('mobileMenu', { static: false }) mobileMenu!: ElementRef;
 
@@ -265,11 +266,7 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
   }
 
   // ===== EVENTOS DEL TEMPLATE =====
-  onModalOverlayClick(event: MouseEvent): void {
-    if (event.target === this.whatsappModal?.nativeElement) {
-      this.hideWhatsappModal();
-    }
-  }
+  // Nota: con PrimeNG `p-dialog` manejamos el hide mediante `(onHide)`
 
   onLanguageChange(language: string): void {
     console.log('Language changed to:', language);

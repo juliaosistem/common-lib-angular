@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { State, Selector, Action, StateContext } from '@ngxs/store';
-import { CategoriaDTO } from '@juliaosistem/core-dtos';
+import { ProductoDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { createGenericCrudActions } from './state-generic/generic-crud.actions';
 import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
@@ -10,14 +10,14 @@ import { LibConfigService } from '../../config/lib-config.service';
 import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
 import { tap } from 'rxjs';
 import { GenericCrudActions, GenericCrudState } from './state-generic/generic-crud.state';
-
+import { MonedaDTO } from '@juliaosistem/core-dtos';
 
 // Crear acciones genéricas para ProductoDTO
-const categoriaproductoActions = createGenericCrudActions<CategoriaDTO>('categoriaproducto');
-export const CategoriaproductoActions = categoriaproductoActions;
+const monedaActions = createGenericCrudActions<ProductoDTO>('moneda');
+export const MonedaActions = monedaActions;
 
-@State<PlantillaResponse<CategoriaDTO>>({
-  name: 'categoriaproducto',
+@State<PlantillaResponse<MonedaDTO>>({
+  name: 'moneda',
   defaults: {
     data: undefined,
     dataList: [],
@@ -26,28 +26,28 @@ export const CategoriaproductoActions = categoriaproductoActions;
   },
 })
 @Injectable()
-export class CategoriaProductoState extends GenericCrudState<CategoriaDTO, CategoriaDTO> {
+export class MonedaState extends GenericCrudState<MonedaDTO, MonedaDTO> {
   constructor(
     private http: HttpClient,
     private config: LibConfigService,
     private meta: MetaDataService
   ) {
-    const service = new GenericCrudHttpService<CategoriaDTO>(
+    const service = new GenericCrudHttpService<MonedaDTO>(
       http,
       config,
       meta,
-      'baseUrlCategoryProduct'
+      'baseUrlCurrency'
     );
-    super(service, CategoriaproductoActions as unknown as GenericCrudActions<CategoriaDTO>);
+    super(service, MonedaActions as unknown as GenericCrudActions<MonedaDTO>);
   }
 
   @Selector()
-  static getProductos(state: PlantillaResponse<CategoriaDTO>) {
+  static getProductos(state: PlantillaResponse<MonedaDTO>) {
     return state.dataList;
   }
 
-  @Action(CategoriaproductoActions.All)
-  all(ctx: StateContext<PlantillaResponse<CategoriaDTO>>, action: any) {
+  @Action(MonedaActions.All)
+  all(ctx: StateContext<PlantillaResponse<MonedaDTO>>, action: any) {
     return this.service.all(action.payload).pipe(
       tap(res => ctx.setState(res))
     );

@@ -25,7 +25,7 @@ export class Grid1Component implements OnInit {
   @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas
   @Input() fieldOrder: string[] = [];                       // Orden de columnas
   @Input() excludeFields: string[] = ['id'];                // Campos a excluir
-  @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
+@Input() fieldSelectOptions: Record<string, { label: string; value: string | number | boolean }[]> = {};
   @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
 
   @Input() showDefaultGrid: boolean = true;                 // Mostrar grid por defecto
@@ -52,6 +52,13 @@ export class Grid1Component implements OnInit {
 
   ngOnInit() {
     this.initFields();
+
+      // Filtrar displayFields según excludeFields
+  if (this.displayFields?.length) {
+    this.displayFields = this.displayFields.filter(
+      f => !this.excludeFields.includes(f.key)
+    );
+  }
   }
 
   initFields() {

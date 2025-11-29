@@ -1,16 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
+import { State, Selector, Action, StateContext } from '@ngxs/store';
 import { ProductoDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
-import { createGenericCrudActions } from './generic-crud.actions';
-import { GenericCrudState } from './generic-crud.state';
-import { State, Action, StateContext } from '@ngxs/store';
-import { ProductService } from '../../componentes/shared/services/product.service';
+import { createGenericCrudActions } from './state-generic/generic-crud.actions';
+import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
+import { HttpClient } from '@angular/common/http';
+import { LibConfigService } from '../../config/lib-config.service';
+import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
+import { tap } from 'rxjs';
+import {
+  GenericCrudActions,
+  GenericCrudState,
+} from './state-generic/generic-crud.state';
 
-// Definimos acciones específicas para Productos
-const productosActions = createGenericCrudActions<ProductoDTO>('ProductoDTO');
-
+// Crear acciones genéricas para ProductoDTO
+const productosActions = createGenericCrudActions<ProductoDTO>('producto');
+export const ProductosActions = productosActions;
 @State<PlantillaResponse<ProductoDTO>>({
-  name: 'productos',
+  name: 'producto',
   defaults: {
     data: undefined,
     dataList: [],
@@ -20,47 +28,91 @@ const productosActions = createGenericCrudActions<ProductoDTO>('ProductoDTO');
 })
 @Injectable()
 export class ProductosState extends GenericCrudState<ProductoDTO, ProductoDTO> {
-  constructor(private productService: ProductService) {
-  
-    super(productService, productosActions);
-  }
-
-  // Acción específica para cargar datos mock - sobrescribe la genérica
-  @Action(productosActions.LoadMock)
-  loadMockProductos(ctx: StateContext<PlantillaResponse<ProductoDTO>>) {
-    try {
-      // Usar el método específico del ProductService
-      const mockData = this.productService.mockProductosInflablesDTO();
-      this.handleMockSuccess(ctx, mockData);
-    } catch (error) {
-      this.handleMockError(ctx, error);
-    }
-  }
-
-  private handleMockSuccess(
-    ctx: StateContext<PlantillaResponse<ProductoDTO>>, 
-    mockData: ProductoDTO[]
+  constructor(
+    private http: HttpClient,
+    private config: LibConfigService,
+    private meta: MetaDataService,
   ) {
-    ctx.patchState({
-      data: undefined,
-      dataList: mockData,
-      message: 'Productos mock cargados correctamente',
-      rta: true,
-    });
+    const service = new GenericCrudHttpService<ProductoDTO>(
+      http,
+      config,
+      meta,
+      'baseUrlProducts',
+    );
+    super(
+      service,
+      ProductosActions as unknown as GenericCrudActions<ProductoDTO>,
+    );
   }
 
-  private handleMockError(
-    ctx: StateContext<PlantillaResponse<ProductoDTO>>, 
-    error: unknown
-  ) {
-    ctx.patchState({
-      data: undefined,
-      dataList: [],
-      message: 'Error al cargar productos mock' + error,
-      rta: false,
-    });
+  // Selector para lista de productos
+  @Selector()
+  static getProductos(state: PlantillaResponse<ProductoDTO>) {
+    return state.dataList;
   }
+
+  // Acción All
+  @Action(ProductosActions.All)
+  all(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
+    return this.service
+      .all(action.payload)
+      .pipe(tap((res) => ctx.setState(res)));
+  }
+@Action(ProductosActions.Add)
+override add(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
+  return this.service.add(action.payload, action.queryParams).pipe(
+    tap((res) => {
+      const state = ctx.getState();
+      const newItem = res.data;
+      if (newItem && state.dataList) {
+        ctx.setState({
+          ...state,
+          dataList: [...state.dataList, newItem],
+          data: newItem,
+          message: res.message,
+          rta: true,
+        });
+      }
+    })
+  );
 }
 
-// Exportar las acciones para usarlas en componentes
-export const ProductosActions = productosActions;
+@Action(ProductosActions.Update)
+override update(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
+  return this.service.update(action.payload, action.queryParams).pipe(
+    tap((res) => {
+      const state = ctx.getState();
+      const updatedItem = res.data;
+      if (updatedItem && state.dataList) {
+        ctx.setState({
+          ...state,
+          dataList: state.dataList.map((item: any) =>
+            item.id === updatedItem.id ? updatedItem : item
+          ),
+          data: updatedItem,
+          message: res.message,
+          rta: true,
+        });
+      }
+    })
+  );
+}
+
+@Action(ProductosActions.Delete)
+override delete(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
+  return this.service.delete(action.queryParams).pipe(
+    tap((res) => {
+      const state = ctx.getState();
+      if (state.dataList) {
+        ctx.setState({
+          ...state,
+          dataList: state.dataList.filter((item: any) => item.id !== action.id),
+          message: res.message,
+          rta: true,
+        });
+      }
+    })
+  );
+}
+
+}

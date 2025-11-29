@@ -1,3 +1,40 @@
+/* Styles to replace Tailwind utilities in product card */
+.product-card{ background:#fff; border-radius:12px; box-shadow:0 10px 20px rgba(0,0,0,0.06); overflow:hidden; display:flex; flex-direction:column; height:100%; }
+.main-image-container{ position:relative; }
+.image-slider{ position:relative; }
+.image-main{ width:100%; height:auto; display:block; transition:opacity .5s ease; cursor:pointer; }
+.image-overlay{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.35); opacity:0; transition:opacity .25s ease; }
+.main-image-container:hover .image-overlay{ opacity:1; }
+.magnify-icon{ background:rgba(255,255,255,0.95); border-radius:999px; padding:.5rem; font-size:1.25rem; }
+.slider-controls{ position:absolute; top:50%; left:.5rem; right:.5rem; display:flex; justify-content:space-between; transform:translateY(-50%); pointer-events:none; }
+.control-btn{ pointer-events:auto; }
+.share-btn{ position:absolute; top:.5rem; right:.5rem; }
+.thumbnail-gallery{ display:flex; gap:.5rem; padding:.5rem; overflow-x:auto; }
+.thumbnail-container{ flex:0 0 auto; cursor:pointer; }
+.thumbnail{ border-radius:8px; overflow:hidden; border:2px solid transparent; }
+.thumbnail.active{ border-color:#fbbf24; }
+.thumbnail img{ display:block; width:72px; height:72px; object-fit:cover; }
+
+.product-content{ padding:1rem; display:flex; flex-direction:column; flex-grow:1; color:#111827; }
+.product-title{ font-size:1rem; font-weight:700; margin:0 0 .5rem 0; }
+.product-seller{ margin:0 0 .5rem 0; color:#6b7280; font-size:.875rem; }
+.product-meta{ display:flex; justify-content:space-between; gap:1rem; color:#6b7280; font-size:.875rem; margin-bottom:.75rem; }
+
+.price-area{ margin-top:auto; display:flex; align-items:flex-end; gap:.75rem; }
+.old-price{ text-decoration:line-through; color:#6b7280; }
+.price{ font-size:1.25rem; font-weight:800; color:#111827; }
+
+.action-row{ margin-top:1rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+.discount-badge{ background:#f87171; color:#fff; padding:.25rem .5rem; border-radius:999px; font-size:.75rem; font-weight:700; }
+.action-buttons{ display:flex; gap:.75rem; align-items:center; }
+.share-button{ min-width:120px; }
+
+.no-product{ padding:1rem; background:#fff7ed; color:#92400e; border-radius:8px; text-align:center; }
+
+@media(min-width:768px){
+  .product-title{ font-size:1.125rem; }
+  .thumbnail img{ width:86px; height:86px; }
+}
 .product-card {
             width: 100%;
             max-width: 384px; /* Tamaño de tarjeta */

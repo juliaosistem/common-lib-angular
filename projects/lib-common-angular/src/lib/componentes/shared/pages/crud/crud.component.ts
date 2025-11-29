@@ -41,7 +41,7 @@ export class Crud implements OnInit {
     @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personal
     @Input() fieldOrder: string[] = [];                       // Orden de columnas
     @Input() excludeFields: string[] = ['id'];                // Campos a excluir
-    @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
+@Input() fieldSelectOptions: Record<string, { label: string; value: string | number | boolean }[]> = {};
 
     // Propiedades del paginador
     @Input() rows: number = 10;                               // Filas por página
@@ -55,12 +55,13 @@ export class Crud implements OnInit {
     @Output() newItemRequest = new EventEmitter<void>();
     @Output() itemSaved = new EventEmitter<Record<string, unknown>>();
     @Output() dialogCanceled = new EventEmitter<void>();
+    @Input() displayFields: DynamicField[] = [];            
+@Output() deleteItemRequest = new EventEmitter<Record<string, unknown>>();
 
     // ✅ Propiedades para el manejo del CRUD
     currentItem: Record<string, unknown> = {};
     selectedItems: Record<string, unknown>[] = [];
     fields: DynamicField[] = [];
-    displayFields: DynamicField[] = [];
 
     componente: ComponentesDTO = {
         id: 21,
@@ -78,20 +79,26 @@ export class Crud implements OnInit {
     ngOnInit() {
         this.initFields();
     }
-
-    initFields() {
-        // Inicializar campos dinámicos si no se han generado
-        if (this.fields.length === 0) {
-            this.fields = this.dynamicFieldService.generateFieldsFromData({
-                data: this.data,
-                fieldTypeConfig: this.fieldTypeConfig,
-                fieldLabels: this.fieldLabels,
-                fieldOrder: this.fieldOrder,
-                excludeFields: this.excludeFields
-            });
-            this.displayFields = [...this.fields];
-        }
+initFields() {
+    // Inicializar campos dinámicos si no se han generado
+    if (this.fields.length === 0) {
+        this.fields = this.dynamicFieldService.generateFieldsFromData({
+            data: this.data,
+            fieldTypeConfig: this.fieldTypeConfig,
+            fieldLabels: this.fieldLabels,
+            fieldOrder: this.fieldOrder,
+            excludeFields: this.excludeFields
+        });
+        this.displayFields = [...this.fields];
     }
+
+    // 🔹 Filtrar displayFields según excludeFields siempre
+    if (this.displayFields?.length) {
+        this.displayFields = this.displayFields.filter(
+            f => !this.excludeFields.includes(f.key)
+        );
+    }
+}
 
     // ✅ Método para abrir el diálogo de edición
     editItem(item: Record<string, unknown>) {
@@ -123,36 +130,45 @@ export class Crud implements OnInit {
     }
 
     // ✅ Eliminar item con confirmación
-    deleteItem(item: Record<string, unknown>) {
-        const itemName = String(item['name'] || 'this item');
-        this.confirmationService.confirm({
-            message: 'Are you sure you want to delete ' + itemName + '?',
-            header: 'Confirm',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => this.executeItemsDeletion([item], 1),
-        });
-    }
+deleteItem(item: Record<string, unknown>) {
+    const itemName = String(item['name'] || 'this item');
+    this.confirmationService.confirm({
+        message: 'Are you sure you want to delete ' + itemName + '?',
+        header: 'Confirm',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            this.executeItemsDeletion([item], 1);
+            this.deleteItemRequest.emit(item); // ✅ ahora sí llega al padre
+        },
+    });
+}
 
     // ✅ Eliminar elementos seleccionados con confirmación
-    deleteSelectedItems() {
-        if (!this.selectedItems || this.selectedItems.length === 0) {
-            this.messageService.add({
-                severity: 'warn',
-                summary: 'Warning',
-                detail: 'No items selected',
-                life: 3000,
-            });
-            return;
-        }
-
-        const selectedCount = this.selectedItems.length;
-        this.confirmationService.confirm({
-            message: `Are you sure you want to delete ${selectedCount} selected item${selectedCount > 1 ? 's' : ''}?`,
-            header: 'Confirm Deletion',
-            icon: 'pi pi-exclamation-triangle',
-            accept: () => this.executeItemsDeletion(this.selectedItems, selectedCount),
+deleteSelectedItems() {
+    if (!this.selectedItems || this.selectedItems.length === 0) {
+        this.messageService.add({
+            severity: 'warn',
+            summary: 'Warning',
+            detail: 'No items selected',
+            life: 3000,
         });
+        return;
     }
+
+    const selectedCount = this.selectedItems.length;
+    const itemsToDelete = [...this.selectedItems]; // Copia para emitir
+    this.confirmationService.confirm({
+        message: `Are you sure you want to delete ${selectedCount} selected item${selectedCount > 1 ? 's' : ''}?`,
+        header: 'Confirm Deletion',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => {
+            this.executeItemsDeletion(itemsToDelete, selectedCount);
+            // Emitir al componente padre
+            itemsToDelete.forEach(item => this.deleteItemRequest.emit(item));
+        },
+    });
+}
+
 
     private executeItemsDeletion(itemsToDelete: Record<string, unknown>[], count: number) {
         const idsToDelete = itemsToDelete.map(item => item['id']);

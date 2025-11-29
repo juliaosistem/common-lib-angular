@@ -1,0 +1,20 @@
+<lib-crud-doc
+  [component]="Crud"
+  [title]="'lib-crud Demo Completo'"
+  [description]="'CRUD dinámico con tabla/grid, sin modal externo.'"
+  [exampleCode]="exampleCode"
+  [inputsDocs]="inputsDocs"
+  [outputsDocs]="outputsDocs"
+  [demoInputs]="{
+    data: users(),
+    rows: 5,
+    paginator: true,
+    tableType: 'table'
+  }"
+  [demoOutputs]="{
+    newItemRequest: onNewItem.bind(this),
+    editItemRequest: onEditItem.bind(this),
+    itemSaved: onItemSaved.bind(this),
+    dialogCanceled: onDialogCanceled.bind(this)
+  }">
+</lib-crud-doc>
