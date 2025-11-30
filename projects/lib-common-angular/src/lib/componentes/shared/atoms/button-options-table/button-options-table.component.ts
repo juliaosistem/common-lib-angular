@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
 import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-button-options-table',
   imports: [PrimegModule, FormsModule],
   templateUrl: './button-options-table.component.html',
   styleUrl: './button-options-table.component.scss',
+  standalone: true,
 })
 export class ButtonOptionsTableComponent implements OnInit {
 

@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { PrimegModule } from '../../../../modulos/primeg.module';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-button-action-delete1',

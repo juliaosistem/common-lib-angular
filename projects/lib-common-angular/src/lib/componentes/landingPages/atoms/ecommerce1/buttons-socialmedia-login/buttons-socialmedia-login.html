@@ -1,0 +1,19 @@
+<div class="social-buttons">
+    <button pButton type="button" class="social-btn social-google" aria-label="Google">
+        <i class="fab fa-google social-icon"></i>
+        @if (isRegistering && isLogout) {
+            <span>Registrarse con Google</span>
+        } @else {
+            <span>Iniciar sesión con Google</span>
+        }
+    </button>
+
+    <button pButton type="button" class="social-btn social-facebook" aria-label="Facebook">
+        <i class="fab fa-facebook-f social-icon"></i>
+        @if (isRegistering && isLogout) {
+            <span>Registrarse con Facebook</span>
+        } @else {
+            <span>Iniciar sesión con Facebook</span>
+        }
+    </button>
+</div>

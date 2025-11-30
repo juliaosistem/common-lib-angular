@@ -1,0 +1,17 @@
+<div class="input-group">
+    <label for="login-email" class="input-label">Email</label>
+    <input pInputText id="login-email" type="email" class="input-field" placeholder="ejemplo@correo.com" required />
+</div>
+
+<div class="input-group">
+    <label for="login-password" class="input-label">Contraseña</label>
+    <p-password inputId="login-password" placeholder="********" [toggleMask]="true" appendTo="body" class="input-field"></p-password>
+</div>
+
+<div class="form-row">
+    <div class="remember">
+        <p-checkbox inputId="remember-me" binary="true" (onChange)="onRememberChange($event)"></p-checkbox>
+        <label for="remember-me" class="remember-label">Recordarme</label>
+    </div>
+    <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+</div>

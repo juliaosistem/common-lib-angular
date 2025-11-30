@@ -1,0 +1,70 @@
+<div class="product-card">
+    @if (product) {
+        <!-- Contenedor de la imagen principal y la galería de miniaturas -->
+        <div class="main-image-container" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
+            <!-- Slider de imágenes -->
+            <div class="image-slider">
+                <img [src]="currentImageUrl" [alt]="product.name" class="image-main" />
+
+                <!-- Overlay con icono de lupa -->
+                <div class="image-overlay" (click)="navigateToProductDetail()">
+                    <div class="magnify-icon"><i class="pi pi-search"></i></div>
+                </div>
+            </div>
+
+            <!-- Controles del slider -->
+            <div class="slider-controls">
+                <p-button icon="pi pi-chevron-left" class="control-btn" (click)="prevImage()"></p-button>
+                <p-button  icon="pi pi-chevron-right" class="control-btn" (click)="nextImage()"></p-button>
+            </div>
+
+            <!-- Botón de compartir por WhatsApp -->
+            <p-button icon="pi pi-whatsapp" class="share-btn" (click)="shareProductOnWhatsapp()"></p-button>
+
+            <!-- Galería de miniaturas -->
+            <div class="thumbnail-gallery">
+                @for (image of product.imagen; track $index) {
+                    <div class="thumbnail-container" (click)="selectImage($index)">
+                        <div class="thumbnail" [class.active]="isActiveThumbnail($index)">
+                            <img [src]="image.url" [alt]="image.alt" />
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Contenido del producto -->
+        <div class="product-content">
+            <h3 class="product-title">{{ product.name }}</h3>
+            <p class="product-seller">Por {{ product.idBusiness }}</p>
+
+            <div class="product-meta">
+                <span class="product-category">Categoría: {{ product.idCategoria }}</span>
+                <span class="product-stock">Cantidad disponible: {{ product.cantidad }}</span>
+            </div>
+
+            <!-- Precios y descuento -->
+            <div class="price-area">
+                @if(product.descuento != undefined && product.descuento > 0) {
+                    <span class="old-price">{{product.precios[0].precio | currency:product.precios[0].codigo_iso :'code'}}</span>
+                }
+                <span class="price">{{ discount | currency:product.precios[0].codigo_iso :'code'}}</span>
+            </div>
+
+            <div class="action-row">
+                @if(product.descuento != undefined && product.descuento > 0) {
+                    <span class="discount-badge">{{ product.descuento }}% OFF</span>
+                }
+
+                <div class="action-buttons">
+                    <lib-button-add-to-card1 [product]="product"></lib-button-add-to-card1>
+                    <p-button label="Compartir" icon="pi pi-share-alt" class="share-button" (click)="shareProduct()"></p-button>
+                </div>
+            </div>
+        </div>
+    } @else {
+        <div class="no-product">
+            <p>Producto no disponible</p>
+        </div>
+    }
+</div>

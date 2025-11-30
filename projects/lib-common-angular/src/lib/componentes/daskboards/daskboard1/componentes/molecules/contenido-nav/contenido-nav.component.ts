@@ -2,10 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
-import { BusinessDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/businessDTO';
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
-
+import {BusinessDTO, ComponentesDTO, PlantillaDTO} from '@juliaosistem/core-dtos'
 
 @Component({
   selector: 'app-contenido-nav',

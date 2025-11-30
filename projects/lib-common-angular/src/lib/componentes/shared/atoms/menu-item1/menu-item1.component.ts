@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MenuItem, MenuEvent } from '../../interfaces/menu.interface';
+import { MenuItem, MenuEvent } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'app-menu-item1',
@@ -18,6 +18,8 @@ export class MenuItem1Component implements OnInit {
   @Input() depth: number = 0;
   @Input() maxDepth: number = 3;
   @Input() activeItemId?: string;
+  @Input() isItemExpanded: boolean = false;
+  @Input() expandedItems?: Set<string>; // Para acceder al Set de items expandidos
 
   @Output() menuEvent = new EventEmitter<MenuEvent>();
 
@@ -97,6 +99,8 @@ export class MenuItem1Component implements OnInit {
   onItemLeave(event: Event) {
     // Opcional: emitir evento de salida del hover
     if (this.item.disabled) {
+        // eslint-disable-next-line no-console
+      console.log('Elemento de menú deshabilitado', event);
       return;
     }
   }
@@ -104,5 +108,10 @@ export class MenuItem1Component implements OnInit {
   onSubMenuEvent(event: MenuEvent) {
     // Propagar eventos de submenús hacia arriba
     this.menuEvent.emit(event);
+  }
+
+  // Método para verificar si un subitem está expandido
+  isSubItemExpanded(itemId: string): boolean {
+    return this.expandedItems?.has(itemId) ?? false;
   }
 } 

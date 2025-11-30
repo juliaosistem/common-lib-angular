@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
+import { ComponentesDTO, PlantillaDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-footer1',

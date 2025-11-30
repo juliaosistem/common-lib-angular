@@ -1,0 +1,9 @@
+<div class="filters-bar">
+    <h2 class="filters-title">{{ titleComponent }}</h2>
+    <div class="filters-list">
+        <button pButton type="button" class="filter-btn" [ngClass]="{ 'active': selectedCategory === 'all' }" (click)="selectCategory('all')">Todos</button>
+        @for (categoria of categorias; track $index) {
+            <button pButton type="button" class="filter-btn" (click)="selectCategory(categoria.nombreCategoria)" [ngClass]="{ 'active': selectedCategory === categoria.nombreCategoria }">{{ categoria.nombreCategoria }}</button>
+        }
+    </div>
+</div>

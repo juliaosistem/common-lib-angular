@@ -2,7 +2,7 @@ import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angu
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-product-dialog1',

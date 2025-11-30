@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonTableView1Component } from '../../atoms/button-table-view1/button-table-view1.component';
 import { ButtonCardView1Component } from '../../atoms/button-card-view1/button-card-view1.component';
 import { FormsModule } from '@angular/forms';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-view-buttons-container1',

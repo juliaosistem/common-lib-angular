@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
+import { PlantillaDTO } from '@juliaosistem/core-dtos';
 
 
 @Component({

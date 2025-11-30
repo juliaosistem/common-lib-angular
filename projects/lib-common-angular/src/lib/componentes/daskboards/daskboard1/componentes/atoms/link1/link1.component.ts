@@ -1,9 +1,9 @@
 import { IonicModule } from '@ionic/angular';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
-import { MenuDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/menuDTO';
+import { MenuDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'app-link1',
@@ -34,14 +34,9 @@ export class Link1Component  implements OnInit {
   }
 
   loadMenu() {
-    debugger;
     this.translate.get(['index', 'menu.servicios']).subscribe(translations => {
-     console.log("index" ,translations['index'] )
-     console.log("Servicios" ,translations['menu.servicios'] );
-     let defualtMenu: MenuDTO [] = [
-        {  
-          id: '1',
-          url: 'index',
+     const defualtMenu: MenuDTO [] = [
+        {   id: '1', url: 'index',
           icon: 'N/A',
           itemName: translations['index'],
           subItemName: '',
@@ -65,9 +60,8 @@ export class Link1Component  implements OnInit {
   }
 
   updateMenuTranslations(): void {
-  debugger;
+ 
     this.translate.get(['index', 'menu.servicios']).subscribe(translations => {
-      debugger;
       this.menu?.forEach(item => {
         if (item.id === '1') {
           item.itemName = translations['index'];

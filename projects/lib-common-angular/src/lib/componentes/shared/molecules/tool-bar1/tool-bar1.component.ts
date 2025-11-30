@@ -5,7 +5,7 @@ import { ButtonAdd1Component } from '../../atoms/button-add1/button-add1.compone
 import { ButtonDelete1Component } from '../../atoms/button-delete1/button-delete1.component';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { ViewButtonsContainer1Component } from '../view-buttons-container1/view-buttons-container1.component';
-import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/componentesDTO';
+import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-tool-bar1',
@@ -19,6 +19,8 @@ import { ComponentesDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/
   ],
   templateUrl: './tool-bar1.component.html',
   styleUrl: './tool-bar1.component.scss',
+  standalone: true
+  
 })
 export class ToolBar1Component {
   @Input() currentView: 'table' | 'grid' = 'table';

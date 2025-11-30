@@ -1,0 +1,19 @@
+<div class="register-field">
+    <label for="register-name" class="register-label">Nombre completo</label>
+    <input id="register-name" type="text" pInputText class="register-input" placeholder="John Doe" required />
+</div>
+
+<div class="register-field">
+    <label for="register-email" class="register-label">Email</label>
+    <input id="register-email" type="email" pInputText class="register-input" placeholder="ejemplo@correo.com" required />
+</div>
+
+<div class="register-field">
+    <label for="register-password" class="register-label">Contraseña</label>
+    <p-password inputId="register-password" [feedback]="false" [toggleMask]="true" class="register-password"></p-password>
+</div>
+
+<div class="register-field">
+    <label for="register-confirm-password" class="register-label">Confirmar Contraseña</label>
+    <p-password inputId="register-confirm-password" [feedback]="false" [toggleMask]="true" class="register-password"></p-password>
+</div>

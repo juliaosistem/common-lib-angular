@@ -15,7 +15,6 @@
   },
   "ignorePatterns": ["dist/", "node_modules/"], // Ignora dist y node_modules
   "rules": {
-    "no-console": "error",
     "max-lines-per-function": ["error", { 
       "max":24, 
       "skipComments": true,
@@ -34,3 +33,4 @@
   ]
 
 }
+

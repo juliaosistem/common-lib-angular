@@ -9,7 +9,7 @@ import { Footer1Component } from '../../molecules/footer1/footer1.component';
 import { ServicesSection1Component } from '../../molecules/services-section1/services-section1.component';
 import { GallerySection1Component } from '../../molecules/gallery-section1/gallery-section1.component';
 
-import { PlantillaDTO } from 'juliaositembackenexpress/dist/api/dtos/bussines/PlantillaDTO';
+import { PlantillaDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-index1',
@@ -50,12 +50,13 @@ export class Index1Component {
  }
 
  configurarIdiomas(){
-  this.langs= this.translate.getLangs();
+  this.langs = [...this.translate.getLangs()];
   this.translate.addLangs(["es","en","de","pt"]);
-  let defualtBrowserLang = this.translate.getBrowserLang();
+  const defualtBrowserLang = this.translate.getBrowserLang();
   if(defualtBrowserLang) {
      this.translate.use(defualtBrowserLang);
   }else{
+       // eslint-disable-next-line @typescript-eslint/no-unused-expressions
        (this.negocio?.bussinesDTO?.lenguaje)
           ? this.translate.use(this.negocio.bussinesDTO.lenguaje)
           :this.translate.use("en")

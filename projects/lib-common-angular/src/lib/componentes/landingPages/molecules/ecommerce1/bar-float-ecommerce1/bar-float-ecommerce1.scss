@@ -1,0 +1,27 @@
+/* Styles to replace Tailwind utilities in bar-float hero */
+.bar-hero{
+  background-size:cover;
+  background-position:center;
+  min-height:500px;
+  position:relative;
+}
+.bar-hero-inner{ display:flex; align-items:center; justify-content:center; height:100%; padding:4rem 1rem; }
+.bar-hero-card{ background:rgba(255,255,255,0.9); backdrop-filter:blur(6px); padding:2rem; border-radius:1rem; max-width:900px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.08); }
+.hero-subtitle{ margin:0 0 .5rem 0; color:#6b7280; font-size:1rem; }
+.hero-title{ margin:0 0 1rem 0; font-size:2rem; font-weight:800; color:#111827; }
+.hero-cta{ border-radius:999px; padding:.75rem 1.25rem; }
+
+@media(min-width:768px){
+  .hero-title{ font-size:2.5rem; }
+  .bar-hero-inner{ padding-top:6rem; }
+}
+    .animate-hero-section {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+        
+        .animate-hero-section.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
