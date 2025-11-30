@@ -122,6 +122,7 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
             }
 
             ],
+            descuento:10,
             descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
             comision: 0,
             fechaCreacion: '',

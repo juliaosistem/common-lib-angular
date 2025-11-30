@@ -49,6 +49,8 @@ export class HomeEcommerce1 implements OnInit {
   onProductClick(product: ProductoDTO): void {
     this.productClicked.emit(product);
   }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 onAddToCart(event: any) {
   console.log("Evento recibido:", event);
 }

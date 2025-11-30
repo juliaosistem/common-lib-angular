@@ -21,6 +21,8 @@ export class CardProductos1Component implements OnInit, OnDestroy {
 
   discount = 0;
   currentImageIndex = 0;
+  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   autoSlideInterval: any;
 
   constructor(

@@ -7,25 +7,30 @@
             <img 
                 [src]="currentImageUrl" 
                 [alt]="product.name" 
-                class="h-full w-auto object-contain transition-transform duration-300 hover:scale-105 cursor-pointer"
+                class="h-full w-full object-cover transition-transform duration-300 hover:scale-105 cursor-pointer"
                 (click)="navigateToProductDetail()"
             />
 
-            <!-- Botón WhatsApp -->
+            <!-- Botón WhatsApp (Posicionado arriba a la derecha) -->
             <button 
                 (click)="shareProductOnWhatsapp()"
-                class="absolute bottom-3 right-3 bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg"
+                class="absolute top-3 right-3 bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg z-10"
             >
                 <i class="pi pi-whatsapp text-xl"></i>
             </button>
 
-            <!-- Thumbnails -->
-            <div class="absolute bottom-3 left-3 flex gap-2">
+        </div>
+
+        <!-- Contenido -->
+        <div class="p-4">
+
+            <!-- Thumbnails (Slider horizontal) -->
+            <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
                 @for (image of product.imagen; track $index) {
                     <img 
                         [src]="image.url"
                         (click)="selectImage($index)"
-                        class="h-12 w-12 object-cover rounded-md cursor-pointer border 
+                        class="h-12 w-12 object-cover rounded-md cursor-pointer border shrink-0
                         transition-all duration-200"
                         [class.border-black]="isActiveThumbnail($index)"
                         [class.opacity-60]="!isActiveThumbnail($index)"
@@ -33,22 +38,24 @@
                 }
             </div>
 
-        </div>
-
-        <!-- Contenido -->
-        <div class="p-4">
+            <!-- Separador -->
+            <hr class="border-gray-200 my-3">
 
             <h3 class="text-lg font-semibold text-gray-800 leading-tight">
                 {{ product.name }}
             </h3>
 
-            <p class="text-gray-500 text-sm">
-                Por {{ product.idBusiness }}
-            </p>
-
-            <div class="text-sm text-gray-600 mt-1">
-                <p><strong>Categoría:</strong> {{ product.idCategoria }}</p>
-                <p><strong>Disponibles:</strong> {{ product.cantidad }}</p>
+           
+            <!-- Detalles con fondo gris claro -->
+            <div class="bg-gray-50 p-3 rounded-lg border border-gray-100 text-sm text-gray-600 space-y-1 mb-3">
+                <div class="flex justify-between">
+                    <strong>Categoría:</strong> 
+                    <span>{{ product.idCategoria }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <strong>Disponibles:</strong> 
+                    <span>{{ product.cantidad }}</span>
+                </div>
             </div>
 
             <!-- Precios -->
@@ -70,8 +77,11 @@
                 </div>
             }
 
+            <!-- Separador antes de botones -->
+            <hr class="border-gray-200 my-4">
+
             <!-- Botones -->
-            <div class="flex flex-col gap-2 mt-4">
+            <div class="flex flex-col gap-2">
 
                 <!-- Personalizar (va al detalle) -->
                 <button
@@ -92,8 +102,8 @@
                 </button>
 
                 <!-- Add to cart -->
-                <lib-button-add-to-card1 
-                    class="w-full" 
+                <lib-button-add-to-card1
+                    class="w-full flex justify-center"
                     [product]="product" 
                     (addToCart)="onAddToCart($event)">
                 </lib-button-add-to-card1>
