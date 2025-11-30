@@ -1,70 +1,108 @@
-<div class="product-card">
+<div class="product-card shadow-md rounded-xl bg-white overflow-hidden transition-all duration-300 hover:shadow-lg">
     @if (product) {
-        <!-- Contenedor de la imagen principal y la galería de miniaturas -->
-        <div class="main-image-container" (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()">
-            <!-- Slider de imágenes -->
-            <div class="image-slider">
-                <img [src]="currentImageUrl" [alt]="product.name" class="image-main" />
 
-                <!-- Overlay con icono de lupa -->
-                <div class="image-overlay" (click)="navigateToProductDetail()">
-                    <div class="magnify-icon"><i class="pi pi-search"></i></div>
-                </div>
-            </div>
+        <!-- Imagen principal -->
+        <div class="relative bg-gray-100 h-72 flex items-center justify-center overflow-hidden">
 
-            <!-- Controles del slider -->
-            <div class="slider-controls">
-                <p-button icon="pi pi-chevron-left" class="control-btn" (click)="prevImage()"></p-button>
-                <p-button  icon="pi pi-chevron-right" class="control-btn" (click)="nextImage()"></p-button>
-            </div>
+            <img 
+                [src]="currentImageUrl" 
+                [alt]="product.name" 
+                class="h-full w-auto object-contain transition-transform duration-300 hover:scale-105 cursor-pointer"
+                (click)="navigateToProductDetail()"
+            />
 
-            <!-- Botón de compartir por WhatsApp -->
-            <p-button icon="pi pi-whatsapp" class="share-btn" (click)="shareProductOnWhatsapp()"></p-button>
+            <!-- Botón WhatsApp -->
+            <button 
+                (click)="shareProductOnWhatsapp()"
+                class="absolute bottom-3 right-3 bg-green-500 hover:bg-green-600 text-white p-3 rounded-full shadow-lg"
+            >
+                <i class="pi pi-whatsapp text-xl"></i>
+            </button>
 
-            <!-- Galería de miniaturas -->
-            <div class="thumbnail-gallery">
+            <!-- Thumbnails -->
+            <div class="absolute bottom-3 left-3 flex gap-2">
                 @for (image of product.imagen; track $index) {
-                    <div class="thumbnail-container" (click)="selectImage($index)">
-                        <div class="thumbnail" [class.active]="isActiveThumbnail($index)">
-                            <img [src]="image.url" [alt]="image.alt" />
-                        </div>
-                    </div>
+                    <img 
+                        [src]="image.url"
+                        (click)="selectImage($index)"
+                        class="h-12 w-12 object-cover rounded-md cursor-pointer border 
+                        transition-all duration-200"
+                        [class.border-black]="isActiveThumbnail($index)"
+                        [class.opacity-60]="!isActiveThumbnail($index)"
+                    />
                 }
             </div>
+
         </div>
 
-        <!-- Contenido del producto -->
-        <div class="product-content">
-            <h3 class="product-title">{{ product.name }}</h3>
-            <p class="product-seller">Por {{ product.idBusiness }}</p>
+        <!-- Contenido -->
+        <div class="p-4">
 
-            <div class="product-meta">
-                <span class="product-category">Categoría: {{ product.idCategoria }}</span>
-                <span class="product-stock">Cantidad disponible: {{ product.cantidad }}</span>
+            <h3 class="text-lg font-semibold text-gray-800 leading-tight">
+                {{ product.name }}
+            </h3>
+
+            <p class="text-gray-500 text-sm">
+                Por {{ product.idBusiness }}
+            </p>
+
+            <div class="text-sm text-gray-600 mt-1">
+                <p><strong>Categoría:</strong> {{ product.idCategoria }}</p>
+                <p><strong>Disponibles:</strong> {{ product.cantidad }}</p>
             </div>
 
-            <!-- Precios y descuento -->
-            <div class="price-area">
-                @if(product.descuento != undefined && product.descuento > 0) {
-                    <span class="old-price">{{product.precios[0].precio | currency:product.precios[0].codigo_iso :'code'}}</span>
+            <!-- Precios -->
+            <div class="mt-3">
+                @if(product.descuento && product.descuento > 0) {
+                    <p class="text-gray-400 line-through text-sm">
+                        {{ product.precios[0].precio | currency:product.precios[0].codigo_iso:'code' }}
+                    </p>
                 }
-                <span class="price">{{ discount | currency:product.precios[0].codigo_iso :'code'}}</span>
+
+                <p class="text-xl font-bold text-gray-900">
+                    {{ discount | currency:product.precios[0].codigo_iso:'code' }}
+                </p>
             </div>
 
-            <div class="action-row">
-                @if(product.descuento != undefined && product.descuento > 0) {
-                    <span class="discount-badge">{{ product.descuento }}% OFF</span>
-                }
-
-                <div class="action-buttons">
-                    <lib-button-add-to-card1 [product]="product"></lib-button-add-to-card1>
-                    <p-button label="Compartir" icon="pi pi-share-alt" class="share-button" (click)="shareProduct()"></p-button>
+            @if(product.descuento && product.descuento > 0) {
+                <div class="mt-2 inline-block bg-green-100 text-green-600 px-2 py-1 text-xs font-semibold rounded">
+                    {{ product.descuento }}% OFF
                 </div>
+            }
+
+            <!-- Botones -->
+            <div class="flex flex-col gap-2 mt-4">
+
+                <!-- Personalizar (va al detalle) -->
+                <button
+                    (click)="navigateToProductDetail()"
+                    class="w-full bg-black text-white py-2 rounded-lg text-sm font-medium 
+                    hover:bg-gray-900 transition-colors shadow"
+                >
+                    PERSONALIZAR
+                </button>
+
+                <!-- Compartir general -->
+                <button 
+                    (click)="shareProduct()"
+                    class="w-full bg-black text-white py-2 rounded-lg flex items-center justify-center gap-2 text-sm font-medium hover:bg-gray-900 transition-colors"
+                >
+                    <i class="pi pi-share-alt"></i>
+                    COMPARTIR
+                </button>
+
+                <!-- Add to cart -->
+                <lib-button-add-to-card1 
+                    class="w-full" 
+                    [product]="product" 
+                    (addToCart)="onAddToCart($event)">
+                </lib-button-add-to-card1>
+
             </div>
+
         </div>
+
     } @else {
-        <div class="no-product">
-            <p>Producto no disponible</p>
-        </div>
+        <div class="p-4 text-center text-gray-500">Producto no disponible</div>
     }
 </div>

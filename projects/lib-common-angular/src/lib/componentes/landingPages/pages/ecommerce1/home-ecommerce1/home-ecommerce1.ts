@@ -49,7 +49,9 @@ export class HomeEcommerce1 implements OnInit {
   onProductClick(product: ProductoDTO): void {
     this.productClicked.emit(product);
   }
-
+onAddToCart(event: any) {
+  console.log("Evento recibido:", event);
+}
   onCategoryFilter(category: string): void {
     this.categorySelected.emit(category);
   }

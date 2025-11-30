@@ -29,7 +29,7 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
   @ViewChild('mobileMenu', { static: false }) mobileMenu!: ElementRef;
 
   // Estado del componente
-  currentPage: 'home' | 'login' | 'register' = 'home';
+  currentPage: 'home' | 'login' | 'register'  = 'home';
   showWhatsappButton = false;
   showWhatsappModal = false;
   whatsappModalShown = false;
