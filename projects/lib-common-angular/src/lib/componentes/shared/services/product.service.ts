@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ProductoDTO } from '@juliaosistem/core-dtos';
+import { CategoriaDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 import { LibConfigService } from '../../../config/lib-config.service';
 import { JuliaoSystemCrudHttpService } from '../../../config/JuliaoSystemCrudHttpService';
 
@@ -81,6 +81,21 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
 
     }
 
+ mockCategoriaInflablesDTO(): CategoriaDTO []{
+        return [  
+
+            {
+                id: '550e8400-e29b-41d4-a716-446655440000',
+                nombreCategoria: "Castillos",
+                  tipoCategoria: {  id: 1, nombreTipoCategoria: "Inflables"  }                
+            },
+             {
+                id: '550e8400-e29b-41d4-a716-446655440002',
+                nombreCategoria: "Toboganes",
+                  tipoCategoria: {  id: 1, nombreTipoCategoria: "Inflables"  }                
+            }
+          ];
+ }
      mockProductosInflablesDTO(): ProductoDTO []{
         return [
             {
@@ -97,7 +112,247 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
                 precio: 1300
             }],
 
-            idCategoria: "Castillos",
+            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
+            cantidad: 15,
+            imagen: [{
+                id: "1",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Rosa",
+                idComponente: 0
+            }, {
+                id: "2",
+                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "3",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "4",
+                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
+                alt: "Maleta Beige",
+                idComponente: 0
+            }
+
+            ],
+            descuento:10,
+            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
+            comision: 0,
+            fechaCreacion: '',
+            fechaActualizacion: '',
+            estado: "Activo",
+            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
+            idBusiness: 1
+        },
+            {
+            id: '550e8400-e29b-41d4-a716-446655440000',
+            name: "Mini Piscina ",
+
+            precios: [{
+                codigo_iso: "COP",
+                nombreMoneda: "Peso colombiano",
+                precio: 3500000
+            }, {
+                codigo_iso: "USD",
+                nombreMoneda: "Dólar estadounidense",
+                precio: 1300
+            }],
+
+            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
+            cantidad: 15,
+            imagen: [{
+                id: "1",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Rosa",
+                idComponente: 0
+            }, {
+                id: "2",
+                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "3",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "4",
+                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
+                alt: "Maleta Beige",
+                idComponente: 0
+            }
+
+            ],
+            descuento:10,
+            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
+            comision: 0,
+            fechaCreacion: '',
+            fechaActualizacion: '',
+            estado: "Activo",
+            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
+            idBusiness: 1
+        },
+            {
+            id: '550e8400-e29b-41d4-a716-446655440000',
+            name: "Mini Piscina ",
+
+            precios: [{
+                codigo_iso: "COP",
+                nombreMoneda: "Peso colombiano",
+                precio: 3500000
+            }, {
+                codigo_iso: "USD",
+                nombreMoneda: "Dólar estadounidense",
+                precio: 1300
+            }],
+
+            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
+            cantidad: 15,
+            imagen: [{
+                id: "1",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Rosa",
+                idComponente: 0
+            }, {
+                id: "2",
+                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "3",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "4",
+                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
+                alt: "Maleta Beige",
+                idComponente: 0
+            }
+
+            ],
+            descuento:10,
+            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
+            comision: 0,
+            fechaCreacion: '',
+            fechaActualizacion: '',
+            estado: "Activo",
+            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
+            idBusiness: 1
+        },
+            {
+            id: '550e8400-e29b-41d4-a716-446655440000',
+            name: "Mini Piscina ",
+
+            precios: [{
+                codigo_iso: "COP",
+                nombreMoneda: "Peso colombiano",
+                precio: 3500000
+            }, {
+                codigo_iso: "USD",
+                nombreMoneda: "Dólar estadounidense",
+                precio: 1300
+            }],
+
+            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
+            cantidad: 15,
+            imagen: [{
+                id: "1",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Rosa",
+                idComponente: 0
+            }, {
+                id: "2",
+                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "3",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "4",
+                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
+                alt: "Maleta Beige",
+                idComponente: 0
+            }
+
+            ],
+            descuento:10,
+            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
+            comision: 0,
+            fechaCreacion: '',
+            fechaActualizacion: '',
+            estado: "Activo",
+            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
+            idBusiness: 1
+        },
+            {
+            id: '550e8400-e29b-41d4-a716-446655440000',
+            name: "Mini Piscina ",
+
+            precios: [{
+                codigo_iso: "COP",
+                nombreMoneda: "Peso colombiano",
+                precio: 3500000
+            }, {
+                codigo_iso: "USD",
+                nombreMoneda: "Dólar estadounidense",
+                precio: 1300
+            }],
+
+            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
+            cantidad: 15,
+            imagen: [{
+                id: "1",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Rosa",
+                idComponente: 0
+            }, {
+                id: "2",
+                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "3",
+                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
+                alt: "Maleta Amarilla",
+                idComponente: 0
+            }, {
+                id: "4",
+                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
+                alt: "Maleta Beige",
+                idComponente: 0
+            }
+
+            ],
+            descuento:10,
+            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
+            comision: 0,
+            fechaCreacion: '',
+            fechaActualizacion: '',
+            estado: "Activo",
+            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
+            idBusiness: 1
+        },
+            {
+            id: '550e8400-e29b-41d4-a716-446655440000',
+            name: "Mini Piscina ",
+
+            precios: [{
+                codigo_iso: "COP",
+                nombreMoneda: "Peso colombiano",
+                precio: 3500000
+            }, {
+                codigo_iso: "USD",
+                nombreMoneda: "Dólar estadounidense",
+                precio: 1300
+            }],
+
+            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
             cantidad: 15,
             imagen: [{
                 id: "1",
@@ -143,7 +398,7 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
                 nombreMoneda: "Dólar estadounidense",
                 precio: 2100
             }],
-            idCategoria: "Toboganes",
+            idCategoria: "550e8400-e29b-41d4-a716-446655440002",
             cantidad: 10,
             imagen: [{
                 id: "1",

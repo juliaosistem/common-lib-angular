@@ -2,17 +2,17 @@ import { Component, OnDestroy, OnInit, ElementRef, ViewChild, Renderer2, PLATFOR
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HeaderEcommerce1Component } from "../../molecules/ecommerce1/header-ecommerce1/header-ecommerce1";
 import { BarFloatEcommerce1 } from "../../molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1";
 import { FooterEcommerce1 } from "../../molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1";
 import { RouterOutlet } from '@angular/router';
-import { ProductoDTO ,CategoriaDTO} from '@juliaosistem/core-dtos';
+import { ProductoDTO ,CategoriaDTO, MenuConfig, MenuItem} from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-ecommerce1',
   imports: [CommonModule, DialogModule, ButtonModule, BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet],
   templateUrl: './ecommerce1.html',
-  styleUrl: './ecommerce1.scss'
+  styleUrl: './ecommerce1.scss',
 })
 export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
 
@@ -24,12 +24,22 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
   // Categorias a mostrar
   @Input() Categorias!: CategoriaDTO [];
 
+  // Rutas para navegación 
+  @Input() routePaths: { [key: string]: string } = {
+    home: './',
+    login: 'login',
+    register: 'register'
+  };
+
+  // Configuración del menú 
+    headerMenuConfig: MenuConfig | null = null;
+
   @ViewChild('whatsappButton', { static: false }) whatsappButton!: ElementRef;
   @ViewChild('productGrid', { static: false }) productGrid!: ElementRef;
   @ViewChild('mobileMenu', { static: false }) mobileMenu!: ElementRef;
 
   // Estado del componente
-  currentPage: 'home' | 'login' | 'register'  = 'home';
+  currentPage: string ='';
   showWhatsappButton = false;
   showWhatsappModal = false;
   whatsappModalShown = false;
@@ -43,6 +53,7 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
 
   constructor(
     private router: Router,
+    private route: ActivatedRoute,
     private renderer: Renderer2,
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     @Inject(PLATFORM_ID) private platformId: Object
@@ -54,6 +65,7 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
       this.setupWhatsappModal();
       this.setupScrollListener();
     }
+     this.updateMenuConfig();
   }
 
   ngOnChanges(): void {
@@ -72,22 +84,46 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
     this.cleanup();
   }
 
-  // ===== NAVEGACIÓN =====
-  navigateToPage(page: 'home' | 'login' | 'register'): void {
+   getItemsInHeaderMenu(): MenuItem[]  {
+    return  [
+        { id: 'home',label: 'Home',
+          type: 'link',
+          routerLink: [this.routePaths['home'] || './'],
+          icon: 'fas fa-home',visible: true, order: 1
+        },
+        {
+          id: 'login',
+          label: 'Login',
+          type: 'link',
+          routerLink: [this.routePaths['login'] || 'login'],
+          icon: 'fas fa-sign-in-alt', visible: true,  order: 4
+        },   {
+          id: 'register',
+          label: 'Register',
+          type: 'link',
+          routerLink: [this.routePaths['register'] || 'register'],
+          icon: 'fas fa-user-plus',visible: true,  order: 5
+        }
+      ]
+  }
+  
+  private updateMenuConfig(): void {
+    this.headerMenuConfig = {
+      name: 'Header Menu',
+      id: 'header-menu',
+      items: this.getItemsInHeaderMenu()
+    };
+  }
+      
+        // ===== NAVEGACIÓN =====
+  navigateToPage(page: string): void {
     this.currentPage = page;
     this.isMobileMenuOpen = false;
     
     // Usar Angular Router para navegación
-    switch (page) {
-      case 'home':
-        this.router.navigate(['/pages/ecomerce1/home']);
-        break;
-      case 'login':
-        this.router.navigate(['/pages/ecomerce1/login']);
-        break;
-      case 'register':
-        this.router.navigate(['/pages/ecomerce1/register']);
-        break;
+    const path = this.routePaths[page];
+    if (path !== undefined) {
+      this.router.navigate([path], { relativeTo: this.route });
     }
   }
 

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ComponentesDTO, PlantillaDTO } from '@juliaosistem/core-dtos';
+import { BusinessDTO, ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-footer1',
@@ -11,7 +11,7 @@ import { ComponentesDTO, PlantillaDTO } from '@juliaosistem/core-dtos';
 export class Footer1Component {
 
   @Input()
-  negocio: PlantillaDTO | undefined  ;
+  negocio: BusinessDTO | undefined  ;
   Year:string =  new Date().getFullYear().toString()
 
   componente:ComponentesDTO = {

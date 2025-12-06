@@ -5,7 +5,7 @@ import { ProductoDTO, CategoriaDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { Ecommerce1 } from "../../../../../lib-common-angular/src/lib/componentes/landingPages/pages/ecommerce1/ecommerce1";
 import { ProductosActions } from '../../../../../lib-common-angular/src/lib/assets/state/productos.state';
-import { CategoriasActions } from '../../../../../lib-common-angular/src/lib/assets/state/categorias-productos.state';
+import { CategoriaproductoActions } from '../../../../../lib-common-angular/src/lib/assets/state/categorias-productos.state';
 
 @Component({
   selector: 'app-ecommerce1-demo',
@@ -33,10 +33,9 @@ export class Ecommerce1Demo implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.setupSubscriptions();
+
     this.loadMockData();
-    this.productos$ = this.store.select(state => state.productos);
-    this.categorias$ = this.store.select(state => state.categoriasProductos);
+    
   }
 
   ngOnDestroy() {
@@ -68,12 +67,30 @@ export class Ecommerce1Demo implements OnInit, OnDestroy {
   private loadMockData() {
     // Despachar acciones para cargar datos mock
     this.store.dispatch(new ProductosActions.LoadMock());
-    this.store.dispatch(new CategoriasActions.LoadMock());
+    this.store.dispatch(new CategoriaproductoActions.LoadMock());
+    this.productos$ = this.store.select(state => state.producto);
+    this.categorias$ = this.store.select(state => state.categoriaproducto);
+
+    this.categorias$.subscribe(response => {
+        if (response?.rta && response.dataList) {
+          this.categorias = response.dataList;
+          this.checkLoadingComplete();
+        }
+      });
+
+    this.productos$.subscribe(response => {
+        if (response?.rta && response.dataList) {
+          this.productos = response.dataList;
+          this.checkLoadingComplete();
+        }
+      });
   }
 
   private checkLoadingComplete() {
     // El loading se completa cuando ambos arrays tienen datos
-    if (this.productos.length > 0 && this.categorias.length > 0) {
+    console.log('Productos cargados:', this.productos.length);
+    console.log('Categorías cargadas:', this.categorias.length);
+    if (this.productos.length > 0 || this.categorias.length > 0) {
       this.loading = false;
     }
   }

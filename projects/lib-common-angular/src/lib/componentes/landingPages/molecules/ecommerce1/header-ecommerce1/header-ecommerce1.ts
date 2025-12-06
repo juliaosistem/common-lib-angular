@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
 
@@ -7,7 +7,8 @@ import { ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
   selector: 'lib-header-ecommerce1',
   imports: [CommonModule,RouterModule],
   templateUrl: './header-ecommerce1.html',
-  styleUrls: ['./header-ecommerce1.scss']
+  styleUrls: ['./header-ecommerce1.scss'],
+  encapsulation: ViewEncapsulation.None 
 })
 export class HeaderEcommerce1Component implements OnInit {
 

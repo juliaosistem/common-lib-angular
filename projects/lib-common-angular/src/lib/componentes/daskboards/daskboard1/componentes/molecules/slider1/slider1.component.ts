@@ -3,7 +3,7 @@ import { register } from 'swiper/element/bundle';
 import { TranslateService } from '@ngx-translate/core';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { CommonModule } from '@angular/common';
-import { ComponentesDTO, PlantillaDTO, SliderDTO } from '@juliaosistem/core-dtos';
+import { BusinessDTO, ComponentesDTO, SliderDTO } from '@juliaosistem/core-dtos';
 
  register();
 
@@ -18,7 +18,7 @@ import { ComponentesDTO, PlantillaDTO, SliderDTO } from '@juliaosistem/core-dtos
 export class Slider1Component implements OnInit {
 
   @Input()
-  negocio :PlantillaDTO | undefined;
+  negocio :BusinessDTO | undefined;
 
   componente:ComponentesDTO = {
     id: 1,
@@ -39,7 +39,7 @@ export class Slider1Component implements OnInit {
 
   validarComponente() {
     if (this.negocio != undefined) {
-      this.negocio.bussinesDTO?.businessModule.forEach(modulo => {
+      this.negocio.businessModule.forEach(modulo => {
         modulo.modulosComponentes.forEach(componente => {
           if (componente.componente.sliderDTO && componente.id === this.componente.id) {
             this.slides =componente.componente.sliderDTO;

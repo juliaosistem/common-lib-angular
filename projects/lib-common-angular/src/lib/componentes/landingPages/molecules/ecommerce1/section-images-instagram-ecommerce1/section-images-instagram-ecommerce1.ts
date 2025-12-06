@@ -1,11 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-section-images-instagram-ecommerce1',
   imports: [],
   templateUrl: './section-images-instagram-ecommerce1.html',
-  styleUrl: './section-images-instagram-ecommerce1.scss'
+  styleUrl: './section-images-instagram-ecommerce1.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class SectionImagesInstagramEcommerce1 {
 
