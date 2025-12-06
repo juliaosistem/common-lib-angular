@@ -45,3 +45,38 @@
     .newsletter-text{ text-align:left; }
     .newsletter-right{ width:auto; }
 }
+
+
+/* --- 1. MÓVIL (Por defecto) --- */
+/* Pantallas pequeñas: Animación vertical suave para no salir de la pantalla */
+.product-card-animation {
+    opacity: 0;
+    transform: translateY(50px); /* Sube desde abajo */
+    transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+    will-change: opacity, transform;
+
+    &.is-visible {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+/* --- 2. TABLET (Entre 768px y 1024px) --- */
+/* @media (min-width: 768px) activa esto en tablets y superiores */
+@media (min-width: 768px) {
+    .product-card-animation {
+        /* Hacemos un movimiento lateral PERO CORTO (-50px) */
+        /* Así se ve el efecto de lado, pero garantizamos que el usuario lo vea */
+        transform: translateX(-50px); 
+    }
+}
+
+/* --- 3. ESCRITORIO (Pantallas Grandes) --- */
+/* @media (min-width: 1024px) activa esto solo en computadoras */
+@media (min-width: 1024px) {
+    .product-card-animation {
+        /* Aquí sí recuperamos tu efecto dramático largo */
+        transform: translateX(-400px); 
+        transition: opacity 2.5s ease-out, transform 2.5s ease-out;
+    }
+}

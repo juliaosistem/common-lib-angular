@@ -1,29 +1,40 @@
-  <!-- Botón inicial de Agregar al carrito -->
-                @if (!showQuantitySelector) {
-                    <p-button 
-                        label="Agregar al carrito"
-                        icon="pi pi-shopping-cart"
-                        (onClick)="handleAddToCart()"
-                        class="flex-1  text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
-                    </p-button>
-                }
+@if (!showQuantitySelector) {
+    <p-button 
+        label="Agregar al carrito"
+        icon="pi pi-shopping-cart"
+        (onClick)="handleAddToCart()"
+        styleClass="w-full font-bold border-round-lg shadow-3 py-3 hover-zoom" 
+        class="w-full">
+    </p-button>
+}
 
-                <!-- Selector de cantidad -->
-                @if (showQuantitySelector) {
-                    <div class="flex-1 flex items-center justify-between bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md">
-                        <p-button 
-                            icon="pi pi-minus" 
-                            [text]="true"
-                            (onClick)="decrementQuantity()"
-                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
-                        </p-button>
-                        <span class="text-xl font-bold">{{ selectedQuantity }}</span>
-                        <p-button 
-                            icon="pi pi-plus" 
-                            [text]="true"
-                            (onClick)="incrementQuantity()"
-                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
-                        </p-button>
-                    </div>
-                }
-                
+@if (showQuantitySelector) {
+    <div class="flex align-items-center justify-content-between surface-card p-2 border-round-xl shadow-3 w-full">
+        
+        <p-button 
+            icon="pi pi-minus" 
+            (onClick)="decrementQuantity()"
+            [rounded]="true"
+            [outlined]="true"
+            severity="secondary"
+            styleClass="w-3rem h-3rem border-2 border-400 text-500 p-0"
+        ></p-button>
+
+        <div class="flex align-items-center gap-2">
+            <span class="font-bold text-900">und.</span>
+            
+            <span class="w-3rem h-3rem text-900 flex align-items-center justify-content-center border-1 surface-border border-round text-xl font-semibold">
+                {{ selectedQuantity }}
+            </span>
+        </div>
+
+        <p-button 
+            icon="pi pi-plus" 
+            (onClick)="incrementQuantity()"
+            [rounded]="true"
+            [outlined]="true"
+            styleClass="w-3rem h-3rem border-2 border-orange-500 text-orange-500 p-0 hover:bg-orange-50"
+        ></p-button>
+
+    </div>
+}

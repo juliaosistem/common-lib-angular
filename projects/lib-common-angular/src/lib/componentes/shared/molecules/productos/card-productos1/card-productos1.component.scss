@@ -1,181 +1,22 @@
-/* === CARD BASE === */
-.product-card {
-  width: 100%;
-  max-width: 360px;
-  background: #fff;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-  transition: all .3s ease;
-  position: relative;
-
-  &:hover {
-    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    transform: translateY(-4px);
-  }
-}
-
-/* === IMAGEN PRINCIPAL === */
-.main-image-container,
-.product-card img {
-  user-select: none;
-}
-
-.main-image-container {
-  height: 280px;
-  position: relative;
-  background: #f6f6f6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.main-image-container img {
-  max-height: 100%;
-  width: auto;
-  transition: transform .35s ease;
-  cursor: pointer;
-
-  &:hover {
-    transform: scale(1.05);
-  }
-}
-
-/* === WHATSAPP BUTTON === */
-.share-btn {
-  position: absolute !important;
-  bottom: 12px;
-  right: 12px;
-  background: #25D366 !important;
-  color: #fff !important;
-  border-radius: 50% !important;
-  width: 48px;
-  height: 48px;
-  display: flex !important;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  transition: background .2s;
-
-  &:hover {
-    background: #1cb256 !important;
-  }
-}
-
-/* === THUMBNAILS === */
-.thumbnail-gallery {
-  display: flex;
-  gap: 8px;
-  position: absolute;
-  bottom: 12px;
-  left: 12px;
-}
-
-.thumbnail {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  overflow: hidden;
-  border: 2px solid transparent;
-  cursor: pointer;
-  transition: all .2s ease;
-
-  &.active {
-    border-color: #111;
-    transform: scale(1.05);
-  }
-
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: .85;
-    transition: opacity .2s ease;
-
-    .thumbnail:hover & {
-      opacity: 1;
+/* 1. Mueve la tarjeta hacia arriba al pasar el mouse (Tu efecto translateY) */
+.hover-effect {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    &:hover {
+        transform: translateY(-4px);
+        /* shadow-6 de primeflex ya se encarga de la sombra */
     }
-  }
 }
 
-/* === TEXTO Y CONTENIDOS === */
-.product-content {
-  padding: 18px;
+/* 2. Zoom suave en la imagen interna */
+.hover-zoom {
+    transition: transform 0.35s ease;
+    &:hover {
+        transform: scale(1.05);
+    }
 }
 
-.product-title {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: #222;
-  margin-bottom: 4px;
-}
-
-.product-seller {
-  color: #6b7280; /* gris bonito */
-  font-size: .9rem;
-}
-
-.product-meta {
-  margin-top: 6px;
-
-  span {
-    display: block;
-    color: #555;
-    font-size: .85rem;
-    margin-top: 2px;
-  }
-}
-
-/* === PRECIOS === */
-.price-area {
-  margin-top: 14px;
-
-  .old-price {
-    color: #a1a1a1;
-    text-decoration: line-through;
-    font-size: .9rem;
-  }
-
-  .price {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #111;
-  }
-}
-
-/* === DESCUENTO === */
-.discount-badge {
-  background: #d1fae5;
-  color: #059669;
-  padding: 4px 8px;
-  font-size: .78rem;
-  font-weight: 600;
-  border-radius: 6px;
-}
-
-/* === BOTONES === */
-.action-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 14px;
-}
-
-.action-buttons button,
-lib-button-add-to-card1 {
-  width: 100%;
-}
-
-.share-button {
-  background: #111 !important;
-  border: none !important;
-  padding: 10px 12px !important;
-  color: #fff !important;
-  font-weight: 500;
-  border-radius: 10px !important;
-  transition: background .25s ease;
-
-  &:hover {
-    background: #222 !important;
-  }
+/* 3. Ocultar scrollbar en miniaturas */
+.overflow-x-auto {
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 }

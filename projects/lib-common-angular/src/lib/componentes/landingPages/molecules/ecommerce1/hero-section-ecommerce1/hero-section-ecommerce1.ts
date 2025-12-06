@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 
@@ -6,9 +6,12 @@ import { PrimegModule } from '../../../../../modulos/primeg.module';
   selector: 'lib-hero-section-ecommerce1',
   imports: [PrimegModule],
   templateUrl: './hero-section-ecommerce1.html',
-  styleUrl: './hero-section-ecommerce1.css'
+  styleUrl: './hero-section-ecommerce1.css',
 })
-export class HeroSectionEcommerce1 {
+export class HeroSectionEcommerce1  implements OnInit {
+      ngOnInit(): void {
+       console.log('HeroSectionEcommerce1 component initialized');
+      }
 
   // Metadata del componente    
       componente:ComponentesDTO = {

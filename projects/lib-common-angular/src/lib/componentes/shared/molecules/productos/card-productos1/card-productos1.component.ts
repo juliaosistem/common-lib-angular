@@ -5,13 +5,14 @@ import { ProductoDTO, ImagenDTO } from '@juliaosistem/core-dtos';
 import { Router } from '@angular/router';
 import { ButtonAddToCard1 } from "../../../atoms/button-add-to-card1/button-add-to-card1";
 import { ProductService } from '../../../services/product.service';
+import { StyleClass } from "primeng/styleclass";
 
 @Component({
   selector: 'lib-card-productos1',
   standalone: true,
   templateUrl: './card-productos1.component.html',
   styleUrls: ['./card-productos1.component.scss'],
-  imports: [CommonModule, PrimegModule, ButtonAddToCard1],
+  imports: [CommonModule, PrimegModule, ButtonAddToCard1, StyleClass],
   providers: [CurrencyPipe]
 })
 export class CardProductos1Component implements OnInit, OnDestroy {
@@ -21,6 +22,8 @@ export class CardProductos1Component implements OnInit, OnDestroy {
 
   discount = 0;
   currentImageIndex = 0;
+  
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   autoSlideInterval: any;
 
   constructor(

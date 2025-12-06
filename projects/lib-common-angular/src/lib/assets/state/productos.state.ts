@@ -13,6 +13,7 @@ import {
   GenericCrudActions,
   GenericCrudState,
 } from './state-generic/generic-crud.state';
+import { ProductService } from '../../componentes/shared/services/product.service';
 
 // Crear acciones genéricas para ProductoDTO
 const productosActions = createGenericCrudActions<ProductoDTO>('producto');
@@ -32,7 +33,9 @@ export class ProductosState extends GenericCrudState<ProductoDTO, ProductoDTO> {
     private http: HttpClient,
     private config: LibConfigService,
     private meta: MetaDataService,
+    private productSvc: ProductService
   ) {
+  
     const service = new GenericCrudHttpService<ProductoDTO>(
       http,
       config,
@@ -112,7 +115,28 @@ override delete(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) 
         });
       }
     })
-  );
-}
+    );
+  }
+  @Action(ProductosActions.LoadMock)
+override loadMock(ctx: StateContext<PlantillaResponse<ProductoDTO>>) {
+    try {
+      const mockData = this.productSvc.mockProductosInflablesDTO();
+      ctx.patchState({
+        data: undefined,
+        dataList: mockData,
+        message: mockData.length
+          ? 'Datos mock cargados correctamente'
+          : 'No hay datos mock disponibles',
+        rta: !!mockData.length,
+      });
+    } catch (error) {
+      ctx.patchState({
+        data: undefined,
+        dataList: [],
+        message: 'Error al cargar datos mock ' + error,
+        rta: false,
+      });
+    }
+  }
 
 }

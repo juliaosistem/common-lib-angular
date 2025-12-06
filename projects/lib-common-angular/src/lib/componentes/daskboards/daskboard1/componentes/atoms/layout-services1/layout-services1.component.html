@@ -1,6 +1,6 @@
 <div class="container layout_padding2">
     <div class="row">
-      @for (producto of negocio.bussinesDTO?.productos ; track producto.id) {
+      @for (producto of negocio.productos ; track producto.id) {
         <div class="col-md-4">
           <div class="img_box">
             <img [src]="producto.imagen?producto.imagen:'../../../../../../assets/images/s-1.png'" alt="">

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -20,6 +21,8 @@ export interface Product {
     providedIn: 'root'
 })
 export class ProductService {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getProductsData() {
         return [
             {

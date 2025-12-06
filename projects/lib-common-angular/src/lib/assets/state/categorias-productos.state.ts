@@ -10,6 +10,7 @@ import { LibConfigService } from '../../config/lib-config.service';
 import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
 import { tap } from 'rxjs';
 import { GenericCrudActions, GenericCrudState } from './state-generic/generic-crud.state';
+import { ProductService } from '../../componentes/shared/services/product.service';
 
 
 // Crear acciones genéricas para ProductoDTO
@@ -30,7 +31,8 @@ export class CategoriaProductoState extends GenericCrudState<CategoriaDTO, Categ
   constructor(
     private http: HttpClient,
     private config: LibConfigService,
-    private meta: MetaDataService
+    private meta: MetaDataService,
+    private productSvc: ProductService,
   ) {
     const service = new GenericCrudHttpService<CategoriaDTO>(
       http,
@@ -51,5 +53,24 @@ export class CategoriaProductoState extends GenericCrudState<CategoriaDTO, Categ
     return this.service.all(action.payload).pipe(
       tap(res => ctx.setState(res))
     );
+  }
+  @Action(CategoriaproductoActions.LoadMock)
+  override loadMock(ctx: StateContext<PlantillaResponse<CategoriaDTO>>) {
+    try {
+      const mockData = this.productSvc.mockCategoriaInflablesDTO();
+      ctx.patchState({
+        data: undefined,
+        dataList: mockData,
+        message: mockData.length ? 'Datos mock cargados correctamente' : 'No hay datos mock disponibles',
+        rta: !!mockData.length,
+      });
+    } catch (error) {
+      ctx.patchState({
+        data: undefined,
+        dataList: [],
+        message: 'Error al cargar datos mock ' + error,
+        rta: false,
+      });
+    }
   }
 }

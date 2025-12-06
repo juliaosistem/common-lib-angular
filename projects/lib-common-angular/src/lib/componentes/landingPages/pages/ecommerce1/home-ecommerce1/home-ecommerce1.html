@@ -1,55 +1,65 @@
- <div id="home-page">
-        
-        <!-- Nueva Hero Section con animaciones, inspirada en la imagen -->
-        <lib-hero-section-ecommerce1></lib-hero-section-ecommerce1>
+<!--  Hero Section con animaciones-->
 
-                <!-- Product Grid Section -->
-                <main class="home-main">
-                        <lib-section-filters-categories-productos [categorias]="Categorias"></lib-section-filters-categories-productos>
-                        <div id="product-grid" class="product-grid">
-                                <div class="product-card">
-                                    @for (product of Products; track $index) {
-                                        <lib-card-productos1   [product]="product"     (addToCart)="onAddToCart($event)"></lib-card-productos1>
-                                    }
-                            </div>
-                        </div>
-                </main>
-        <!-- Seccion "Nuestra Historia" (PrimeNG-only, sin Tailwind) -->
-        <section class="history-section" style="background-image: url('https://placehold.co/1400x600/b0b0b0/ffffff?text=Our+Story+Background+Image');">
-            <div class="history-overlay"></div>
-            <div class="history-content">
-                <p class="history-pretitle">Sobre Nosotros</p>
-                <h2 class="history-title">Conoce Nuestra Historia</h2>
-                <p class="history-text">No hay una fórmula mágica para escribir un texto publicitario perfecto; se basa en varios factores, incluyendo la ubicación del anuncio, la demografía e incluso el estado de ánimo del consumidor.</p>
-                <button pButton type="button" class="p-button-rounded p-button-lg p-button-warning" icon="pi pi-play" aria-label="Ver video"></button>
-            </div>
-        </section>
+<lib-hero-section-ecommerce1></lib-hero-section-ecommerce1>
 
-        <!-- Nueva seccion de Instagram -->
-        <lib-section-images-instagram-ecommerce1></lib-section-images-instagram-ecommerce1>
+<!-- Product Grid Section -->
 
-        <!-- Nueva sección del Newsletter (sin Tailwind) -->
-        <section class="newsletter-section">
-            <div class="newsletter-container">
-                <div class="newsletter-card">
-                    <div class="newsletter-left">
-                        <div class="newsletter-icon">
-                            <svg class="newsletter-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                            </svg>
-                        </div>
-                        <div class="newsletter-text">
-                            <h3 class="newsletter-title">Suscríbete a nuestro boletín</h3>
-                            <p class="newsletter-subtitle">¡y obtén un 10% de descuento!</p>
-                        </div>
-                    </div>
-                    <div class="newsletter-right">
-                        <form id="newsletter-form" class="newsletter-form">
-                            <input pInputText type="email" id="email-input" name="email" placeholder="Ingresa tu correo electrónico" required />
-                            <button pButton type="submit" label="Suscribirme" class="p-button-warning"></button>
-                        </form>
-                    </div>
+<lib-section-filters-categories-productos [categorias]="Categorias"></lib-section-filters-categories-productos>
+<div class="grid align-items-center justify-content-center">
+    @for (product of Products; track $index) {
+    <div class="col-12 md:col-6 p-5 lg:p-3 lg:col-4 product-card-animation"
+        [style.transition-delay]="$index * 200 + 'ms'">
+        <lib-card-productos1 [product]="product" (addToCart)="onAddToCart($event)">
+        </lib-card-productos1>
+    </div>
+    }
+</div>
+
+<!-- Seccion "Nuestra Historia"-->
+<section class="history-section" style="
+    background-image: url(&quot;https://placehold.co/1400x600/b0b0b0/ffffff?text=Our+Story+Background+Image&quot;);
+  ">
+    <div class="history-overlay"></div>
+    <div class="history-content">
+        <p class="history-pretitle">Sobre Nosotros</p>
+        <h2 class="history-title">Conoce Nuestra Historia</h2>
+        <p class="history-text">
+            No hay una fórmula mágica para escribir un texto publicitario perfecto; se
+            basa en varios factores, incluyendo la ubicación del anuncio, la
+            demografía e incluso el estado de ánimo del consumidor.
+        </p>
+        <button pButton type="button" class="p-button-rounded p-button-lg p-button-warning" icon="pi pi-play"
+            aria-label="Ver video"></button>
+    </div>
+</section>
+
+<!-- Nueva seccion de Instagram -->
+<lib-section-images-instagram-ecommerce1></lib-section-images-instagram-ecommerce1>
+
+<!-- Nueva sección del Newsletter (sin Tailwind) -->
+<section class="newsletter-section">
+    <div class="newsletter-container">
+        <div class="newsletter-card">
+            <div class="newsletter-left">
+                <div class="newsletter-icon">
+                    <svg class="newsletter-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
+                </div>
+                <div class="newsletter-text">
+                    <h3 class="newsletter-title">Suscríbete a nuestro boletín</h3>
+                    <p class="newsletter-subtitle">¡y obtén un 10% de descuento!</p>
                 </div>
             </div>
-        </section>
-    </div> <!-- Fin de la seccion de la pagina principal -->
+            <div class="newsletter-right">
+                <form id="newsletter-form" class="newsletter-form">
+                    <input pInputText type="email" id="email-input" name="email"
+                        placeholder="Ingresa tu correo electrónico" required />
+                    <button pButton type="submit" label="Suscribirme" class="p-button-warning"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
