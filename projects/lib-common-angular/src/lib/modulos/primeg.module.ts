@@ -30,6 +30,7 @@ import { DataViewModule } from 'primeng/dataview';
 import { ImageModule } from 'primeng/image';
 import { StepperModule } from 'primeng/stepper';
 import { MessageService } from 'primeng/api';
+import { DrawerModule } from 'primeng/drawer';
 @NgModule({
   declarations: [],
   providers: [MessageService],
@@ -64,6 +65,7 @@ import { MessageService } from 'primeng/api';
    FileUploadModule,
    DataViewModule,
    StepperModule,
+   DrawerModule,
   ],
   exports:[
     ButtonModule,
@@ -95,6 +97,7 @@ import { MessageService } from 'primeng/api';
   DataViewModule,
   ImageModule,
   StepperModule,
+  DrawerModule,
   ]
 })
 export class PrimegModule { }
