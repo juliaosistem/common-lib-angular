@@ -1,18 +1,9 @@
-<header class="w-full">
+<header>
     
-    <div class="header-top py-2 px-4">
-        <div class="container mx-auto flex justify-between items-center text-sm flex-wrap">
-            <div class="flex items-center space-x-4">
-                <span>FAQs</span><span>|</span>
-                <span>Help</span><span>|</span>
-                <span>Support</span>
-            </div>
-            <div class="flex space-x-3 text-lg">
-                <a href="#"><i class="fab fa-facebook-f hover:text-gray-200 transition"></i></a>
-                <a href="#"><i class="fab fa-instagram hover:text-gray-200 transition"></i></a>
-            </div>
-        </div>
-    </div>
+ <lib-header-top-ecommerce1 
+    [facebookLink]="'https://www.facebook.com/yourpage'"
+    [instagramLink]="'https://www.instagram.com/yourprofile/'">
+ </lib-header-top-ecommerce1>
     
     <nav class="main-nav hidden md:block mt-4 mx-auto px-5 py-5 border-round-3xl shadow-4" style="max-width: 1000px; width: 90%; font-size: 1.125rem; font-weight: 600;">
         <div class="flex align-items-center justify-content-between">

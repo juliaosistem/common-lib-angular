@@ -1,0 +1,19 @@
+$brand-yellow: #fbc30d;
+// Usa ruta relativa hacia la carpeta `theme` en la raíz de la librería
+@use "../../../../../../../../../theme/_funtions.scss" as func;
+.header-top { background-color: $brand-yellow; }
+
+.iconos {
+
+    
+	@include func.responsive-down(sm) {
+		margin-left: 30%;
+	}
+    @include func.responsive-up(lg) {
+		margin-left: 80%;
+	}
+     @include func.responsive-up(md) {
+		margin-left: 70%;
+	}
+}
+

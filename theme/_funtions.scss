@@ -1,13 +1,40 @@
-$sizeScreen:(
-    sm:400px,
-    md:768px,
-    lg:1024px,
-);
-@mixin responsive ($size) {
-    @media screen and (max-width:map-get($sizeScreen,$size) ) {
-        @content;
-       } 
+@use "sass:map";
 
+// sm: ≥576px, md: ≥768px, lg: ≥992px, xl: ≥1200px, xxl: ≥1400px
+$pf-breakpoints: (
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1400px
+);
+
+// Compat: mapa previo (si alguien lo usa aún)
+$sizeScreen: (
+    sm: map.get($pf-breakpoints, sm),
+    md: map.get($pf-breakpoints, md),
+    lg: map.get($pf-breakpoints, lg)
+);
+
+// Media query hacia arriba (como PrimeFlex: min-width)
+@mixin responsive-up($size) {
+    @media screen and (min-width: map.get($pf-breakpoints, $size)) {
+        @content;
+    }
+}
+
+// Media query hacia abajo (máximo ancho)
+@mixin responsive-down($size) {
+    @media screen and (max-width: map.get($pf-breakpoints, $size)) {
+        @content;
+    }
+}
+
+// Mixin legacy para compatibilidad: usa max-width
+@mixin responsive($size) {
+    @media screen and (max-width: map.get($sizeScreen, $size)) {
+        @content;
+    }
 }
 
 @mixin grid($columnas,$fr:1fr ,$gap, $rows ) {
