@@ -4,7 +4,7 @@ import { Component, HostListener, Input, OnInit, ViewEncapsulation } from '@angu
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
+import { BusinessDTO, ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { IonicModule, MenuController } from '@ionic/angular';
@@ -26,7 +26,7 @@ export class HeaderEcommerce1Component implements OnInit {
           version: '1.0',
           descripcion: 'Componente para mostrar el encabezado en la página de ecommerce1'
         }
-  
+  @Input() DatosNegocio :BusinessDTO | null = null;
   @Input() logoText: string = 'Zigma Inflables';
   
   // Configuración del menú
