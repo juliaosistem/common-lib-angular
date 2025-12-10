@@ -1,0 +1,35 @@
+$sizeScreen:(
+    sm:400px,
+    md:768px,
+    lg:1024px,
+);
+@mixin responsive ($size) {
+    @media screen and (max-width:map-get($sizeScreen,$size) ) {
+        @content;
+       } 
+
+}
+
+@mixin grid($columnas,$fr:1fr ,$gap, $rows ) {
+    display: grid; 
+
+    grid-template-columns: repeat($columnas,$fr);
+    grid-template-rows: repeat($rows,$fr);
+ 
+   row-gap: $gap;
+   column-gap: $gap;
+    
+   // @include responsive($movil,$desk,$tablet);
+}
+
+@mixin  gridItem ($posC1,$posC2,$posR1,$posR2) {
+    grid-column: $posC1/$posC2;
+    grid-row: $posR1/$posR2;
+}
+@mixin flexbox($display,$direction:row, $corte:nowrap, $justify-content,$align-items) {
+    display: $display;
+    flex-flow: $direction $corte;
+    justify-content: $justify-content;
+    align-items: $align-items;
+}
+
