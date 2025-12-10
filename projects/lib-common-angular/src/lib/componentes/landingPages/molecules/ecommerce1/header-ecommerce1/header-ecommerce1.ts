@@ -8,10 +8,11 @@ import { ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { IonicModule, MenuController } from '@ionic/angular';
+import { HeaderTopEcommerce1 } from "../../../atoms/ecommerce1/header-top-ecommerce1/header-top-ecommerce1";
 
 @Component({
   selector: 'lib-header-ecommerce1',
-  imports: [CommonModule,RouterModule, FormsModule,PrimegModule,IonicModule],
+  imports: [CommonModule, RouterModule, FormsModule, PrimegModule, IonicModule, HeaderTopEcommerce1],
   templateUrl: './header-ecommerce1.html',
   styleUrls: ['./header-ecommerce1.scss'],
   encapsulation: ViewEncapsulation.None 
