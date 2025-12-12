@@ -5,9 +5,6 @@ $text-color: #333;
 
 $colorTextos3: #ffffff;
 $sombra1: 0 4px 15px rgba(0,0,0,0.1);
- 
-$colorTextos3: #ffffff;
-$sombra1: 0 4px 15px rgba(0,0,0,0.1);
 
 
 /* --- ESTILOS DEL NAVBAR DESKTOP (Ya existentes) --- */
@@ -20,7 +17,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
 }
 .header-top { background-color: $brand-yellow; color: black; }
 .main-nav-link {
-    color: white;
+   color: white;
     transition: color 0.2s ease, text-shadow 0.2s ease;
     font-size: 1.05rem; /* ligeramente más grande */
     letter-spacing: 0.2px;
@@ -38,7 +35,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
     letter-spacing: 0.4px;
 }
 
-/* --- ESTILOS DEL SIDEBAR MÓVIL (Adaptación de tu código) --- */
+/* --- ESTILOS DEL SIDEBAR MÓVIL (PrimeNG Drawer) --- */
 
 :host ::ng-deep .custom-sidebar, .custom-sidebar {
     /* OJO: En v18 la clase de contenido puede ser p-drawer-content */
@@ -50,10 +47,12 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
     .p-drawer-content {
         padding: 0 !important;
         overflow-x: hidden;
+        overflow-y: auto; /* Permitir scroll interno del contenido */
         min-height: 100%;
+        max-height: 100vh; /* Limitar al alto de la ventana */
     }
 
-    /* Asegurar overlay real */
+    /* Overlay y posicionamiento */
     .p-drawer {
         background-color: $brand-yellow !important;
         position: fixed !important;
@@ -71,8 +70,8 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
         backdrop-filter: blur(1px);
     }
     
-        /* Permite scroll vertical pero gestos horizontales desde el borde */
-        touch-action: pan-y;
+    /* Permite scroll vertical pero gestos horizontales desde el borde */
+    touch-action: pan-y;
     .p-drawer-close-button {
         color: white !important;
         z-index: 100;
@@ -153,7 +152,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
         cursor: pointer;
     }
 }
-/* TU CSS ADAPTADO */
+/* --- Encabezado dentro del menú móvil --- */
 .menu-header-bg {
     height: 180px;
     width: 350px; /* Un poco más ancho para asegurar cobertura */
@@ -205,6 +204,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
 .menu-items-container {
     flex-grow: 1; /* Ocupa el espacio disponible */
     padding: 0 10px;
+    padding-top: 40px; /* Bajar más el primer item para evitar solapamiento */
 }
 
 .menu-item-link {
@@ -257,167 +257,9 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
     }
 }
 
-
-
-/* Estilos Globales del Header */
-.bg-brand-blue { background-color: $brand-blue !important; }
-.main-nav { background-color: $brand-blue; }
-
-
-/* --- ESTILOS DEL MENÚ IONIC --- */
-.menu-header-bg {
-    height: 180px;
-    width: 350px;
-    background: $brand-blue;
-    box-shadow: $sombra1;
-    transform: rotate(-15deg);
-    border-radius: 10px 10px 10px 50px;
-    margin-left: -18px;
-    margin-top: -50px;
-    margin-bottom: 60px;
-    position: relative;
-}
-
-.header-content {
-    position: absolute;
-    top: 30px;
-    left: 15px;
-    display: flex;
-    align-items: center;
-    z-index: 10;
-    
-    img {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        margin-right: 14px;
-        border: 2px solid white;
-    }
-
-    h2 {
-        font-weight: 300;
-        color: $colorTextos3;
-        margin: 0;
-        font-size: 1.2rem;
-    }
-    p {
-        font-size: 12px;
-        color: #e4e4e4;
-        margin: 0;
-        letter-spacing: 0.4px;
+.shopping-cart{
+    color: #ffffff;
+    &:hover{
+        color: $brand-yellow;
     }
 }
-
-.menu-items {
-    margin: 0px;
-    padding-top: 20px;
-
-    ion-icon {
-        margin-right: 16px;
-        color: #86979f;
-        font-size: 1.4rem;
-    }
-}
-
-/* Estilo activo (cuando estás en la página) */
-.active {
-    border-left: 5px solid;
-    color: $brand-blue;
-    padding-left: 15px;
-    background: rgba(98, 140, 255, 0.05);
-    
-    ion-icon {
-        color: $brand-blue;
-    }
-}
-
-.lenguage {
-    width: 40%;
-    margin-left: 50%;
-    margin-top: 20px;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
-}
-
-.header-content{
-    position: absolute;
-    top: 30px;
-    left: 15px;
-    display: flex;
-    align-items: center;
- img{
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    margin-right: 14px;
-   }
-
-    h2{
-        font-weight: 300;
-        color: $colorTextos3
-    }
-
-    p{
-        font-size: 12px;
-        color: #e4e4e4;
-        font-weight: 100px;
-        letter-spacing: 0.4px;
-    }
-
-}
-
-    .action-button{
-        display: flex;
-        justify-content: center;
-        margin-bottom: 20px;
-
-        ion-button{
-            text-transform: capitalize;
-            font-weight: 300;
-            --background:$brand-blue;
-            --border-raius:7px;
-            --box-shadow:none;
-        }
-
-        ion-icon{
-            margin-right: 1px;
-        }
-    }
-
-    .menu-items{
-        margin: 0px;
-
-        ion-icon{
-            margin-left: 16%;
-            color: #86979f;
-        }
-    }
-
-    .active{
-        border-left: 5px solid;
-        color: $brand-blue;
-        padding-left: 15px;
-        
-        ion-icon{
-            color: $brand-blue;
-        }
-    }
-
-
-.lenguage{
-    width: 40%;
-    margin-left: 50%;
-}
-@media screen and (max-width: 800px) {
-    .lenguage{
-        width: 35%;
-        margin-left: 60%;
-    }
-  }
-
-  @media screen and (max-width:300px) {
-    .lenguage{
-        width: 35%;
-        margin-left: 40%;
-    }
-  }
