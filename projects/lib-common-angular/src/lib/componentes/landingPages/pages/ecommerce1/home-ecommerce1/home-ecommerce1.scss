@@ -1,13 +1,4 @@
-        .product-card {
-            opacity: 0;
-            transform: translateX(-400px); /* Movimiento más grande para que sea muy notorio */
-            transition: opacity 2.5s ease-out, transform 2.5s ease-out; /* Duración de la animación aumentada */
-        }
-
-        .product-card.is-visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
+ @use "../../../../../../../../../theme/funtions" as func;
 
 /* History section styles (replaces Tailwind utilities) */
 .history-section{
@@ -40,7 +31,7 @@
 .newsletter-form{ display:flex; gap:.75rem; width:100%; max-width:520px; }
 .newsletter-form input[pInputText]{ flex:1; padding:.75rem 1rem; border-radius:999px; border:1px solid #e5e7eb; }
 
-@media(min-width:768px){
+@include func.responsive-up(md){
     .newsletter-card{ flex-direction:row; justify-content:space-between; align-items:center; }
     .newsletter-text{ text-align:left; }
     .newsletter-right{ width:auto; }
@@ -62,8 +53,7 @@
 }
 
 /* --- 2. TABLET (Entre 768px y 1024px) --- */
-/* @media (min-width: 768px) activa esto en tablets y superiores */
-@media (min-width: 768px) {
+@include func.responsive-up(md) {
     .product-card-animation {
         /* Hacemos un movimiento lateral PERO CORTO (-50px) */
         /* Así se ve el efecto de lado, pero garantizamos que el usuario lo vea */
@@ -72,8 +62,7 @@
 }
 
 /* --- 3. ESCRITORIO (Pantallas Grandes) --- */
-/* @media (min-width: 1024px) activa esto solo en computadoras */
-@media (min-width: 1024px) {
+@include func.responsive-up(lg) {
     .product-card-animation {
         /* Aquí sí recuperamos tu efecto dramático largo */
         transform: translateX(-400px); 

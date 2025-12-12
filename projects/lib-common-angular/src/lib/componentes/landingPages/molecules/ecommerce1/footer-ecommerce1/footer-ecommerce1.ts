@@ -1,5 +1,5 @@
-import { Component, ViewEncapsulation } from '@angular/core';
-import { ComponentesDTO } from '@juliaosistem/core-dtos';
+import { Component, Input, ViewEncapsulation } from '@angular/core';
+import { BusinessDTO, ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-footer-ecommerce1',
@@ -10,10 +10,14 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
 })
 export class FooterEcommerce1 {
 
+
        componente:ComponentesDTO = {
                   id: 32,
                   nombreComponente: 'lib-footer-ecommerce1',
                   version: '1.0',
                   descripcion: 'Componente para mostrar el pie de página en la página de ecommerce1'
                 }
+
+  @Input() DatosNegocio :BusinessDTO | null = null;
+  
 }

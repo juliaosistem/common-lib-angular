@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
 import { Component, HostListener, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
 import { BusinessDTO, ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
@@ -45,7 +45,7 @@ export class HeaderEcommerce1Component implements OnInit {
         id: 'home',
         label: 'Home',
         type: 'link',
-        routerLink: ['/pages/ecommerce1'],
+        routerLink: ['/'],
         icon: 'pi-home',
         visible: true,
         order: 1,
@@ -55,7 +55,7 @@ export class HeaderEcommerce1Component implements OnInit {
         id: 'about',
         label: 'About',
         type: 'link',
-        routerLink: ['/pages/ecommerce1/about'],
+        routerLink: ['/about'],
         visible: true,
         order: 2,
         permissions: ["*"]
@@ -72,7 +72,7 @@ export class HeaderEcommerce1Component implements OnInit {
         id: 'login',
         label: 'Login',
         type: 'link',
-        routerLink: ['/pages/ecommerce1/login'],
+        routerLink: ['/login'],
         icon: 'fas fa-sign-in-alt',
         visible: true,
         order: 4,
@@ -82,7 +82,7 @@ export class HeaderEcommerce1Component implements OnInit {
         id: 'register',
         label: 'Register',
         type: 'link',
-        routerLink: ['/pages/ecommerce1/register'],
+        routerLink: ['/register'],
         icon: '',
         visible: true,
         order: 5,
@@ -102,7 +102,7 @@ export class HeaderEcommerce1Component implements OnInit {
   private readonly CLOSE_THRESHOLD = -80; // distancia para cerrar
   private readonly VERTICAL_TOLERANCE = 30; // tolerancia vertical para considerar swipe horizontal
 
-  constructor(    private translate: TranslateService, private menuCtrl: MenuController) {
+  constructor(    private translate: TranslateService, private menuCtrl: MenuController, private router: Router) {
     this.translate.addLangs(["es","en"]);
     this.translate.use('es');
     this.langs = [...this.translate.getLangs()]
@@ -200,6 +200,15 @@ export class HeaderEcommerce1Component implements OnInit {
 
   openMenu() {
     this.isMobileMenuOpen = true;
+    // Al abrir el menú en móvil, asegurar que el contenido del Drawer esté scrolleado al inicio
+    setTimeout(() => {
+      const drawerContent = document.querySelector('.custom-sidebar .p-drawer-content') as HTMLElement;
+      if (drawerContent) {
+        drawerContent.scrollTop = 0;
+      }
+      // Asegurar que la página no afecte la visualización del menú
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }, 0);
   }
   closeMenu() {
     this.isMobileMenuOpen = false;
@@ -247,9 +256,10 @@ export class HeaderEcommerce1Component implements OnInit {
 
   // Método para obtener items del menú izquierdo (primeros elementos)
   getLeftMenuItems(): MenuItem[] {
+    // Mostrar todos los items de navegación excepto los de auth en la izquierda
     return this.currentMenu.items.filter(item => 
       !item.separator && 
-      ['home', 'about'].includes(item.id)
+      !['login', 'register'].includes(item.id)
     );
   }
 
@@ -272,8 +282,26 @@ export class HeaderEcommerce1Component implements OnInit {
       event?.preventDefault();
       return;
     }
-    this.isMobileMenuOpen = false; // Cerrar menú al hacer click
-    console.log('Menu item clicked:', item);
+        // Si es el enlace a "Nosotros": si estamos en home, scroll; si no, navegar con fragment
+        if (item.id?.toLowerCase() === 'nosotros') {
+          event?.preventDefault();
+          const isHome = this.router.url === '/' || this.router.url.startsWith('/home');
+          if (isHome) {
+            const target = document.getElementById('nosotros');
+            if (target) {
+              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else {
+              // si no existe aún, usar fragment para que Angular lo maneje
+              this.router.navigate(['/'], { fragment: 'nosotros' });
+            }
+          } else {
+            this.router.navigate(['/'], { fragment: 'nosotros' });
+          }
+          this.isMobileMenuOpen = false;
+          return;
+        }
+      this.isMobileMenuOpen = false; // Cerrar menú al hacer click
+      console.log('Menu item clicked:', item);
   }
 
   

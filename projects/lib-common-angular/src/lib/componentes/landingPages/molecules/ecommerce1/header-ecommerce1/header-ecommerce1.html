@@ -11,11 +11,10 @@
             <ul class="main-nav-ul flex gap-4 list-none m-0 p-0">
                 @for (item of getLeftMenuItems(); track item.id) {
                     <li>
-                        <a [routerLink]="item.routerLink" class="main-nav-link text-white no-underline font-semibold cursor-pointer">
+                        <a [routerLink]="item.routerLink" routerLinkActive="active-route" [routerLinkActiveOptions]="{ exact: true }" (click)="onMenuItemClick(item, $event)" class="main-nav-link  no-underline font-semibold cursor-pointer">
                             @if (currentMenu.showIcons && item.icon) {
-                                <ion-icon name="accessibility-outline" style="margin-right:8px"></ion-icon>
-                                <!-- <i [class]="item.icon" si tyle="margin-right:8pxtyle="margin-right:8px" [class]="item.icon" ></i> -->
-                            }
+                            <i [class]="item.icon" style="margin-right:8px"></i>
+       }
                             {{ item.label }}
                         </a>
                     </li>
@@ -25,7 +24,7 @@
             <ul class="main-nav-ul flex gap-4 list-none m-0 p-0">
                 @for (item of getRightMenuItems(); track item.id) {
                     <li>
-                        <a [routerLink]="item.routerLink" class="main-nav-link text-white no-underline font-semibold cursor-pointer">
+                        <a [routerLink]="item.routerLink" routerLinkActive="active-route" [routerLinkActiveOptions]="{ exact: true }" (click)="onMenuItemClick(item, $event)" class="main-nav-link  cursor-pointer">
                             @if (currentMenu.showIcons && item.icon) {
                                 <i [class]="item.icon" style="margin-right:8px"></i>
                             }
@@ -34,7 +33,7 @@
                     </li>
                 }
                  <li class="flex items-center gap-3 ml-2">
-                    <i class="fas fa-shopping-cart text-white text-xl cursor-pointer hover:text-gray-200" (click)="openCart()"></i>
+                    <i class="fas fa-shopping-cart text-xl cursor-pointer shopping-cart" (click)="openCart()"></i>
                 </li>
             </ul>
         </div>
@@ -64,7 +63,6 @@
               [dismissible]="true"
               [blockScroll]="true"
               [autoZIndex]="true"
-              [appendTo]="'body'"
               (onHide)="isMobileMenuOpen = false"
               styleClass="w-20rem custom-sidebar">
         <ng-template pTemplate="content" style="background-color:#fbc30d !important;">
@@ -82,9 +80,9 @@
 
             <div class="menu-items-container">
                 @for (item of getMobileMenuItems(); track item.id) {
-                    <a [routerLink]="item.routerLink" 
-                       (click)="isMobileMenuOpen = false"
-                       routerLinkActive="active-route"
+                          <a [routerLink]="item.routerLink" 
+                              (click)="onMenuItemClick(item, $event)"
+                              routerLinkActive="active-route" [routerLinkActiveOptions]="{ exact: true }"
                        class="menu-item-link">
                         
                         @if (currentMenu.showIcons && item.icon) {
@@ -114,7 +112,6 @@
                             [dismissible]="true"
                             [blockScroll]="true"
                             [autoZIndex]="true"
-                            [appendTo]="'body'"
                             (onHide)="isCartOpen = false"
                             styleClass="w-22rem cart-sidebar">
             <ng-template pTemplate="header">
