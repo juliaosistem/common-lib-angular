@@ -72,9 +72,9 @@ export class HomeEcommerce1 implements OnInit , AfterViewInit {
     // Usamos setTimeout para asegurar que el @for ya terminó de renderizar
     setTimeout(() => {
       const tarjetas = document.querySelectorAll('.product-card-animation');
-      tarjetas.forEach((tarjeta) => {
-        observer.observe(tarjeta);
-      });
+      tarjetas.forEach((tarjeta) => observer.observe(tarjeta));
+      const newsletter = document.querySelectorAll('.animate-newsletter-section');
+      newsletter.forEach((sec) => observer.observe(sec));
     }, 100);
   }
 

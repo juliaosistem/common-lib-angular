@@ -78,6 +78,12 @@ export class DetalleCarrito1Component implements OnInit {
     this.isFavorite = !this.isFavorite;
   }
 
+  getWhatsAppLink(): string {
+    const base = 'https://wa.me/?text=';
+    const message = `Hola, estoy interesado en el producto: ${this.product?.name ?? ''}`;
+    return base + encodeURIComponent(message);
+  }
+
 
 /**
  * 

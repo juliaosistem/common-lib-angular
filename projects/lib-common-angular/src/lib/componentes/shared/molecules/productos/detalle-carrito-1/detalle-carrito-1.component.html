@@ -1,35 +1,30 @@
 @if (product) {
 <div id="product-container" class="container mx-auto max-w-7xl bg-white shadow-xl rounded-2xl p-6 md:p-12 lg:p-16">
         <!-- Contenedor principal de la página de detalle -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-            <!-- Columna de imágenes -->
-            <div class="space-y-6">
-                <!-- Imagen principal -->
-                <div class="bg-gray-100 rounded-lg p-4 flex justify-center items-center">
-                    
-                    <p-image 
-                        [src]="selectedImageUrl" 
-                        [alt]="product.imagen[0].alt || ''"
-                        class="main-image rounded-lg"
-                        [preview]="true">
-                    </p-image>
-                </div>
-                
-                <!-- Miniaturas de la galería -->
+        <div class="grid grid-cols-1 md:grid-cols-[104px_1fr] lg:grid-cols-[120px_1fr] gap-6 lg:gap-10">
+            <!-- Columna miniaturas (vertical) + imagen principal -->
+            <div class="grid grid-cols-[104px_1fr] lg:grid-cols-[120px_1fr] gap-4 lg:gap-6">
+                <!-- Miniaturas verticales -->
                 @if (product.imagen && product.imagen.length > 0) {
-                <div class="grid grid-cols-4 gap-4">
+                <div class="thumbnails-rail space-y-3 lg:space-y-4">
                     @for (imagen of product.imagen; track $index) {
-                        <div class="thumbnail-container p-1 rounded-lg cursor-pointer"
-                             (click)="updateMainImage(imagen.url)">
-                            <div 
-                                class="thumbnail"
-                                [class.thumbnail-active]="isActiveThumbnail(imagen.url)">
-                                <img [src]="imagen.url" alt="Miniatura {{ imagen.alt }}" class="w-full h-full object-cover rounded">
+                        <button type="button" class="thumbnail-container rounded-lg cursor-pointer" (click)="updateMainImage(imagen.url)">
+                            <div class="thumbnail" [class.thumbnail-active]="isActiveThumbnail(imagen.url)">
+                                <img [src]="imagen.url" alt="Miniatura {{ imagen.alt }}" />
                             </div>
-                        </div>
+                        </button>
                     }
                 </div>
                 }
+                <!-- Imagen principal -->
+                <div class="main-image-frame bg-gray-100 rounded-xl flex justify-center items-center">
+                    <p-image
+                        [src]="selectedImageUrl"
+                        [alt]="product.imagen[0].alt || product.name"
+                        class="main-image rounded-xl"
+                        [preview]="true">
+                    </p-image>
+                </div>
             </div>
 
             <!-- Columna de información del producto -->
@@ -57,22 +52,36 @@
                         <span class="text-gray-500 text-sm">({{ product.reviews }}) reseñas</span>
                     </div> -->
 
-                    <p class="text-gray-600 leading-relaxed mb-8">{{ product.descripcion }}</p>
+                    <p class="text-gray-600 leading-relaxed mb-6 lg:mb-8">{{ product.descripcion }}</p>
 
-                    <div class="flex items-center space-x-4 mb-8">
+                    <div class="flex items-center gap-4 mb-6 lg:mb-8">
                         @if(isLogin){
-                        @if(product.descuento != undefined && product.descuento > 0) {
-                        <span class="old-price">{{ product.precios[0].precio | currency:product.precios[0].codigo_iso :'code' }}</span>
-                        <span class="discount-label">{{ product.descuento}}% OFF</span>
-                        }
-                        <span class="current-price">{{ discount | currency:product.precios[0].codigo_iso :'code'}}</span>
+                            @if(product.descuento != undefined && product.descuento > 0) {
+                                <span class="old-price">{{ product.precios[0].precio | currency:product.precios[0].codigo_iso :'code' }}</span>
+                                <span class="discount-label">{{ product.descuento}}% OFF</span>
+                            }
+                            <span class="current-price">{{ discount | currency:product.precios[0].codigo_iso :'code'}}</span>
                         } @else {
-                            <span class="current-price">Iniciar Sesión</span>
+                            <a
+                                class="contact-btn"
+                                [href]="getWhatsAppLink()"
+                                target="_blank" rel="noopener noreferrer"
+                                aria-label="Contactar por WhatsApp">
+                                <i class="pi pi-whatsapp"></i>
+                                <span>Contactar</span>
+                            </a>
                         }
+                    </div>
+
+                    <!-- Badges informativos -->
+                    <div class="info-badges mb-6">
+                        <div class="badge"><i class="pi pi-shield"></i><span>Compra protegida</span></div>
+                        <div class="badge"><i class="pi pi-truck"></i><span>Entrega rápida</span></div>
+                        <div class="badge"><i class="pi pi-refresh"></i><span>Devolución 30 días</span></div>
                     </div>
                 </div>
 
-                <div>
+                <div class="cta-card">
                     <!-- <div class="flex items-center mb-8">
                         <label class="text-gray-700 font-medium mr-4">Cantidad:</label>
                         <div class="flex items-center space-x-2">

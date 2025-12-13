@@ -48,7 +48,7 @@ export class LayoutService {
 
     private configUpdate = new Subject<layoutConfig>();
 
-    private overlayOpen = new Subject<any>();
+    private overlayOpen = new Subject<unknown>();
 
     private menuSource = new Subject<MenuChangeEvent>();
 
@@ -156,11 +156,12 @@ export class LayoutService {
     }
 
     isDesktop() {
-        return window.innerWidth > 991;
+        // Usar matchMedia para detectar correctamente el breakpoint independientemente del zoom/UA
+        return !window.matchMedia('(max-width: 991px)').matches;
     }
 
     isMobile() {
-        return !this.isDesktop();
+        return window.matchMedia('(max-width: 991px)').matches;
     }
 
     onConfigUpdate() {

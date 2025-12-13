@@ -1,9 +1,8 @@
-@use "primeflex/primeflex.css";
-@use '/public/assets/layout/layout.scss';
-@use '/public/assets/demo/demo.scss';
-@use 'primeicons/primeicons.css';
+// Nota: Evita usar archivos .css o rutas absolutas con @use en Sass.
+// Importa estos CSS globales desde angular.json o estilos globales, no desde variables.scss.
 
-
+$brand-blue-zigma: #0093e9;
+$brand-yellow-zigma: #fbc30d;
 :root {
    
    --button-colors: linear-gradient(50deg, rgba(2,0,36,1) 0%, rgba(6,68,160,1) 29%, rgba(0,212,255,1) 83%, rgba(7,44,144,1) 100%, rgba(9,9,121,1) 100%);

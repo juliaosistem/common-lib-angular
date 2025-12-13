@@ -36,27 +36,24 @@
 <!-- Nueva seccion de Instagram -->
 <lib-section-images-instagram-ecommerce1></lib-section-images-instagram-ecommerce1>
 
-<!-- Nueva sección del Newsletter (sin Tailwind) -->
-<section class="newsletter-section">
-    <div class="newsletter-container">
-        <div class="newsletter-card">
-            <div class="newsletter-left">
-                <div class="newsletter-icon">
-                    <svg class="newsletter-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+<!-- Newsletter (PrimeFlex + animación on scroll) -->
+<section class="surface-section py-5 animate-newsletter-section">
+    <div class="mx-auto px-3 md:px-4" style="max-width: 1100px;">
+        <div class="newsletter-card surface-card border-round-2xl shadow-2 p-4 md:p-5 flex flex-column md:flex-row align-items-center gap-3 md:gap-4">
+            <div class="newsletter-left flex align-items-center gap-3 md:gap-4">
+                <div class="newsletter-icon flex align-items-center justify-content-center border-round-3xl" style="background:#fbc30d; width: 52px; height:52px;">
+                    <svg class="newsletter-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;color:#fff;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
                     </svg>
                 </div>
                 <div class="newsletter-text">
-                    <h3 class="newsletter-title">Suscríbete a nuestro boletín</h3>
-                    <p class="newsletter-subtitle">¡y obtén un 10% de descuento!</p>
+                    <h3 class="newsletter-title m-0 text-900 text-xl md:text-2xl">Suscríbete a nuestro boletín</h3>
+                    <p class="newsletter-subtitle m-0 text-600">¡y obtén un 10% de descuento!</p>
                 </div>
             </div>
-            <div class="newsletter-right">
-                <form id="newsletter-form" class="newsletter-form">
-                    <input pInputText type="email" id="email-input" name="email"
-                        placeholder="Ingresa tu correo electrónico" required />
+            <div class="newsletter-right flex justify-content-center md:justify-content-end w-full md:w-auto">
+                <form id="newsletter-form" class="newsletter-form flex gap-2 w-full md:w-auto" style="max-width:520px;">
+                    <input pInputText type="email" id="email-input" name="email" class="flex-1 p-inputtext-sm md:p-inputtext" placeholder="Ingresa tu correo electrónico" required />
                     <button pButton type="submit" label="Suscribirme" class="p-button-warning"></button>
                 </form>
             </div>
