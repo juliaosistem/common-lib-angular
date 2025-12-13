@@ -1,6 +1,12 @@
+@use '../../../../../../../../../theme/variables.scss' as vars;
 /* Variables de color (Hardcoded para asegurar el diseño) */
-$brand-blue: #0093e9;
-$brand-yellow: #fbc30d;
+
+$text-color: #333;
+
+$colorTextos3: #ffffff;
+$sombra1: 0 4px 15px rgba(0,0,0,0.1);
+/* Variables de color (Hardcoded para asegurar el diseño) */
+
 $text-color: #333;
 
 $colorTextos3: #ffffff;
@@ -8,14 +14,14 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
 
 
 /* --- ESTILOS DEL NAVBAR DESKTOP (Ya existentes) --- */
-.bg-brand-yellow { background-color: $brand-yellow !important; }
-.bg-brand-blue { background-color: $brand-blue !important; }
+.bg-brand-yellow { background-color: vars.$brand-yellow-zigma !important; }
+.bg-brand-blue { background-color: vars.$brand-blue-zigma !important; }
 .main-nav {
-    background-color: $brand-blue;
+    background-color: vars.$brand-blue-zigma;
     border-radius: 24px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.18);
 }
-.header-top { background-color: $brand-yellow; color: black; }
+.header-top { background-color: vars.$brand-yellow-zigma; color: black; }
 .main-nav-link {
    color: white;
     transition: color 0.2s ease, text-shadow 0.2s ease;
@@ -25,7 +31,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
     padding: 0.4rem 0.6rem; /* más aire alrededor del texto */
     border-radius: 12px;
     &:hover {
-        color: $brand-yellow;
+        color: vars.$brand-yellow-zigma;
         text-shadow: 0 2px 6px rgba(0,0,0,0.25);
         background: rgba(255,255,255,0.08);
     }
@@ -41,7 +47,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
     /* OJO: En v18 la clase de contenido puede ser p-drawer-content */
     /* Fuerza fondo amarillo en contenedor y contenido */
     .p-drawer, .p-drawer-content {
-        background-color: #fbc30d !important;
+        background-color: vars.$brand-yellow-zigma !important;
         color: #1a1a1a;
     }
     .p-drawer-content {
@@ -54,7 +60,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
 
     /* Overlay y posicionamiento */
     .p-drawer {
-        background-color: $brand-yellow !important;
+        background-color: vars.$brand-yellow-zigma !important;
         position: fixed !important;
         top: 0;
         left: 0;
@@ -103,7 +109,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
         align-items: center;
         justify-content: space-between;
         padding: 12px 16px;
-        background: $brand-blue;
+        background: vars.$brand-blue-zigma;
         color: #fff;
         font-weight: 600;
     }
@@ -146,7 +152,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
         padding: 10px 12px;
         border: none;
         border-radius: 8px;
-        background: $brand-blue;
+        background: vars.$brand-blue-zigma;
         color: #fff;
         font-weight: 600;
         cursor: pointer;
@@ -156,7 +162,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
 .menu-header-bg {
     height: 180px;
     width: 350px; /* Un poco más ancho para asegurar cobertura */
-    background: $brand-blue; /* Usando tu color azul */
+    background: vars.$brand-blue-zigma; /* Usando color azul de tema */
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     transform: rotate(-15deg);
     border-radius: 10px 10px 10px 50px;
@@ -228,12 +234,12 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
 
     /* Estado Activo (Router Link Active) */
     &.active-route {
-        background-color: rgba($brand-blue, 0.1);
-        color: $brand-blue;
-        border-left: 5px solid $brand-blue;
+        background-color: rgba(vars.$brand-blue-zigma, 0.1);
+        color: vars.$brand-blue-zigma;
+        border-left: 5px solid vars.$brand-blue-zigma;
         
         i {
-            color: $brand-blue;
+            color: vars.$brand-blue-zigma;
         }
     }
 
@@ -259,7 +265,7 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
 
 .shopping-cart{
     color: #ffffff;
-    &:hover{
-        color: $brand-yellow;
+    &:hover {
+        color: vars.$brand-yellow-zigma;
     }
 }
