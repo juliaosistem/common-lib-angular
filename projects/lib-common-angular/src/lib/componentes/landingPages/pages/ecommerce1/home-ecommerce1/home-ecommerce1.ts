@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, AfterViewInit, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -43,41 +43,75 @@ export class HomeEcommerce1 implements OnInit , AfterViewInit {
   @Output() productClicked = new EventEmitter<ProductoDTO>();
   @Output() categorySelected = new EventEmitter<string>();
 
-  constructor() {}
+  constructor(private el: ElementRef) {}
 
   ngOnInit(): void {}
   ngAfterViewInit() {
     this.iniciarAnimacionScroll();
   }
 
-  iniciarAnimacionScroll() {
-    // Configuramos el observador: se activa cuando el 10% del elemento es visible
-    const observerOptions = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 0.1 
-    };
+  /**
+   * Inicializa la animación de scroll configurando los observadores necesarios.
+   */
+  iniciarAnimacionScroll(): void {
+    const observer = this.createIntersectionObserver();
+    this.initialObservation(observer);
+    this.setupMutationObserver(observer);
+  }
 
-    const observer = new IntersectionObserver((entries) => {
+  /**
+   * Crea el IntersectionObserver para manejar la visibilidad de los elementos.
+   * @returns Instancia de IntersectionObserver configurada.
+   */
+  private createIntersectionObserver(): IntersectionObserver {
+    const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+    return new IntersectionObserver((entries, obs) => {
       entries.forEach((entry) => {
-        // Si el elemento entra en pantalla...
         if (entry.isIntersecting) {
-          // ...le agregamos la clase que lo hace visible
           entry.target.classList.add('is-visible');
-          // Y dejamos de observarlo para ahorrar memoria
-          observer.unobserve(entry.target);
+          obs.unobserve(entry.target);
         }
       });
     }, observerOptions);
+  }
 
-    // Seleccionamos todas las tarjetas y las empezamos a observar
-    // Usamos setTimeout para asegurar que el @for ya terminó de renderizar
+  /**
+   * Selecciona los elementos a animar y los añade al observador.
+   * @param observer El IntersectionObserver activo.
+   */
+  private observeElements(observer: IntersectionObserver): void {
+    const tarjetas = this.el.nativeElement.querySelectorAll('.product-card-animation');
+    tarjetas.forEach((tarjeta: Element) => observer.observe(tarjeta));
+    const newsletter = this.el.nativeElement.querySelectorAll('.animate-newsletter-section');
+    newsletter.forEach((sec: Element) => observer.observe(sec));
+  }
+
+  /**
+   * Realiza la observación inicial después de un breve retraso para asegurar el renderizado.
+   * @param observer El IntersectionObserver activo.
+   */
+  private initialObservation(observer: IntersectionObserver): void {
     setTimeout(() => {
-      const tarjetas = document.querySelectorAll('.product-card-animation');
-      tarjetas.forEach((tarjeta) => observer.observe(tarjeta));
-      const newsletter = document.querySelectorAll('.animate-newsletter-section');
-      newsletter.forEach((sec) => observer.observe(sec));
-    }, 100);
+      this.observeElements(observer);
+    }, 50);
+  }
+
+  /**
+   * Configura un MutationObserver para detectar cambios en la paginación y re-observar elementos.
+   * @param observer El IntersectionObserver activo.
+   */
+  private setupMutationObserver(observer: IntersectionObserver): void {
+    const mutationObserver = new MutationObserver((mutations) => {
+      const shouldUpdate = mutations.some(mutation => mutation.addedNodes.length > 0);
+      if (shouldUpdate) {
+        this.observeElements(observer);
+      }
+    });
+
+    const paginatorElement = this.el.nativeElement.querySelector('lib-paginator-pg');
+    if (paginatorElement) {
+      mutationObserver.observe(paginatorElement, { childList: true, subtree: true });
+    }
   }
 
   // ===== Métodos para interactuar con la app =====

@@ -34,6 +34,8 @@ export class HeaderEcommerce1Component implements OnInit {
 
   // Idioma
   seleccionada:string='es';
+
+  @Input() islogin: boolean = false;
   
   // Configuración por defecto
   defaultMenuConfig: MenuConfig = {
@@ -61,12 +63,22 @@ export class HeaderEcommerce1Component implements OnInit {
         permissions: ["*"]
       },
       {
+        id: 'categorias',
+        label: 'Categorías',
+        type: 'link',
+        routerLink: ['/'],
+        icon: 'pi pi-tags',
+        visible: true,
+        order: 3,
+        permissions: ["*"]
+      },
+      {
         id: 'auth-separator',
         label: '',
         type: 'separator',
         separator: true,
         visible: true,
-        order: 3
+        order: 4
       },
       {
         id: 'login',
@@ -75,7 +87,7 @@ export class HeaderEcommerce1Component implements OnInit {
         routerLink: ['/login'],
         icon: 'fas fa-sign-in-alt',
         visible: true,
-        order: 4,
+        order: 5,
         permissions: ["*"]
       },
       {
@@ -85,7 +97,7 @@ export class HeaderEcommerce1Component implements OnInit {
         routerLink: ['/register'],
         icon: '',
         visible: true,
-        order: 5,
+        order: 6,
         permissions: ["*"]
       }
     ]
@@ -120,9 +132,30 @@ export class HeaderEcommerce1Component implements OnInit {
   ];
 
   ngOnInit(): void {
+    /**
+     * Inicializa el componente:
+     * - Si `menuConfig` viene por input, lo utiliza como menú actual.
+     * - Filtra y ordena los ítems del menú por el campo `order`.
+     * - Habilita el menú de Ionic con id `headerMenu` para componentes anidados.
+     */
     // Si se proporciona una configuración personalizada, usarla
     if (this.menuConfig) {
       this.currentMenu = this.menuConfig;
+    }
+
+    // Asegurar que el item 'Categorías' exista aunque llegue un menuConfig externo
+    const hasCategorias = this.currentMenu.items.some(i => i.id?.toLowerCase() === 'categorias');
+    if (!hasCategorias) {
+      this.currentMenu.items.push({
+        id: 'categorias',
+        label: 'Categorías',
+        type: 'link',
+        routerLink: ['/'],
+        icon: 'pi pi-tags',
+        visible: true,
+        order: 3,
+        permissions: ["*"]
+      });
     }
     
     // Ordenar items por order si existe
@@ -138,16 +171,26 @@ export class HeaderEcommerce1Component implements OnInit {
 
   // Detectar cuando el dedo toca la pantalla
   @HostListener('document:touchstart', ['$event'])
+  /**
+   * Maneja el evento `touchstart` del documento.
+   * Guarda coordenadas iniciales y habilita el modo swipe si el toque inicia
+   * cerca del borde izquierdo o si el menú ya está abierto.
+   * @param e Evento táctil del documento.
+   */
   onTouchStart(e: TouchEvent) {
     const t = e.changedTouches[0];
     this.touchStartX = t.clientX;
     this.touchStartY = t.clientY;
     this.lastTouchX = t.clientX;
-    // Iniciar swipe solo si comienza en el borde izquierdo y el menú está cerrado
     this.isSwiping = (!this.isMobileMenuOpen && this.touchStartX <= this.EDGE_ZONE) || this.isMobileMenuOpen;
   }
 
   // Detectar cuando el dedo se levanta
+  /**
+   * Maneja el evento `touchend` del documento.
+   * Calcula desplazamiento total y decide abrir/cerrar mediante `handleSwipeGesture`.
+   * @param e Evento táctil del documento.
+   */
   @HostListener('document:touchend', ['$event'])
   onTouchEnd(e: TouchEvent) {
     const t = e.changedTouches[0];
@@ -157,6 +200,12 @@ export class HeaderEcommerce1Component implements OnInit {
   }
 
   // Seguimiento del movimiento para mejorar la detección de swipe
+  /**
+   * Maneja el evento `touchmove` del documento.
+   * Detecta desplazamiento horizontal significativo con tolerancia vertical.
+   * Abre/cierra el menú cuando supera los umbrales definidos.
+   * @param e Evento táctil del documento.
+   */
   @HostListener('document:touchmove', ['$event'])
   onTouchMove(e: TouchEvent) {
     if (!this.isSwiping) { return; }
@@ -182,6 +231,10 @@ export class HeaderEcommerce1Component implements OnInit {
     }
   }
 
+  /**
+   * Evalúa el desplazamiento entre `touchstart` y `touchend` para decidir
+   * apertura o cierre del menú móvil.
+   */
   handleSwipeGesture() {
     // Apertura: inicio en borde y desplazamiento hacia derecha suficiente
     if (!this.isMobileMenuOpen && this.touchStartX <= this.EDGE_ZONE) {
@@ -198,6 +251,10 @@ export class HeaderEcommerce1Component implements OnInit {
     }
   }
 
+  /**
+   * Abre el `Drawer` del menú móvil y asegura el scroll al inicio del contenido.
+   * También fuerza el scroll de la página al top para evitar solapamientos.
+   */
   openMenu() {
     this.isMobileMenuOpen = true;
     // Al abrir el menú en móvil, asegurar que el contenido del Drawer esté scrolleado al inicio
@@ -211,18 +268,26 @@ export class HeaderEcommerce1Component implements OnInit {
     }, 0);
   }
   closeMenu() {
+    /** Cierra el menú móvil. */
     this.isMobileMenuOpen = false;
   }
+  /** Abre el `Drawer` del carrito. */
   openCart() {
     this.isCartOpen = true;
   }
   closeCart() {
+    /** Cierra el `Drawer` del carrito. */
     this.isCartOpen = false;
   }
+  /**
+   * Calcula el total del carrito sumando `price * qty`.
+   * @returns Total acumulado.
+   */
   getCartTotal(): number {
     return this.cartItems.reduce((acc, it) => acc + (it.price * it.qty), 0);
   }
   goToCheckout() {
+    /** Acción placeholder para ir al checkout; cierra el carrito. */
     // Navegación simple: ajusta a tu ruta real de checkout
     console.log('Ir a checkout');
     this.isCartOpen = false;
@@ -230,6 +295,7 @@ export class HeaderEcommerce1Component implements OnInit {
   
 
  toggleMobileMenu() {
+    /** Toggle simple del menú móvil (abre/cierra). */
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
   }
 
@@ -237,12 +303,19 @@ export class HeaderEcommerce1Component implements OnInit {
   
   
   cambiaLang(event: any) {
+    /**
+     * Cambia el idioma activo usando `TranslateService`.
+     * @param event Idioma seleccionado (código ISO).
+     */
    
     this.translate.use(event)
      
    }
+   /**
+    * Configura idiomas disponibles y selecciona automáticamente
+    * según el lenguaje del navegador (`en`|`es`).
+    */
   configLangs() {
-    // Add languages
     this.translate.addLangs(['en', 'es']);
   
     if (this.translate.getBrowserLang() == 'en') {
@@ -255,6 +328,11 @@ export class HeaderEcommerce1Component implements OnInit {
       }
 
   // Método para obtener items del menú izquierdo (primeros elementos)
+  /**
+   * Retorna ítems visibles no relacionados con autenticación
+   * para mostrarlos en la zona izquierda del menú principal.
+   * @returns Array de `MenuItem` para el menú izquierdo.
+   */
   getLeftMenuItems(): MenuItem[] {
     // Mostrar todos los items de navegación excepto los de auth en la izquierda
     return this.currentMenu.items.filter(item => 
@@ -264,6 +342,7 @@ export class HeaderEcommerce1Component implements OnInit {
   }
 
   // Método para obtener items del menú derecho (últimos elementos)
+  /** Retorna los ítems de autenticación (login/register) para la zona derecha. */
   getRightMenuItems(): MenuItem[] {
     return this.currentMenu.items.filter(item => 
       !item.separator && 
@@ -272,36 +351,65 @@ export class HeaderEcommerce1Component implements OnInit {
   }
 
   // Método para obtener todos los items visibles para móvil
+  /** Retorna todos los ítems visibles para el menú móvil. */
   getMobileMenuItems(): MenuItem[] {
     return this.currentMenu.items
   }
 
   // Método para manejar clics en el menú
+  /**
+   * Maneja clics en ítems del menú:
+   * - Previene navegación si el ítem está deshabilitado.
+   * - Para `nosotros` y `categorias`, desplaza a la sección correspondiente
+   *   o navega con fragment si no se está en Home.
+   * - Cierra el menú móvil tras la acción.
+   */
  onMenuItemClick(item: MenuItem, event?: Event): void {
     if (item.disabled) {
       event?.preventDefault();
       return;
     }
-        // Si es el enlace a "Nosotros": si estamos en home, scroll; si no, navegar con fragment
-        if (item.id?.toLowerCase() === 'nosotros') {
-          event?.preventDefault();
-          const isHome = this.router.url === '/' || this.router.url.startsWith('/home');
-          if (isHome) {
-            const target = document.getElementById('nosotros');
-            if (target) {
-              target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else {
-              // si no existe aún, usar fragment para que Angular lo maneje
-              this.router.navigate(['/'], { fragment: 'nosotros' });
-            }
-          } else {
-            this.router.navigate(['/'], { fragment: 'nosotros' });
-          }
-          this.isMobileMenuOpen = false;
-          return;
-        }
-      this.isMobileMenuOpen = false; // Cerrar menú al hacer click
-      console.log('Menu item clicked:', item);
+
+    const id = item.id?.toLowerCase();
+    if (id === 'nosotros') {
+      event?.preventDefault();
+      this.handleSectionClick('nosotros');
+      return;
+    }
+
+    if (id === 'categorias') {
+      event?.preventDefault();
+      this.handleSectionClick('categorias');
+      return;
+    }
+
+    this.isMobileMenuOpen = false; // Cerrar menú al hacer click
+    console.log('Menu item clicked:', item);
+  }
+
+  /** Determina si la ruta actual corresponde al Home. */
+  private isHomeRoute(): boolean {
+    return this.router.url === '/' || this.router.url.startsWith('/home');
+  }
+
+  /**
+   * Gestiona la navegación/scroll hacia una sección identificada por `anchorId`.
+   * Si se está en Home y la sección existe, hace `scrollIntoView` suave.
+   * En caso contrario, navega a Home con `fragment`.
+   */
+  private handleSectionClick(anchorId: 'nosotros' | 'categorias'): void {
+    const isHome = this.isHomeRoute();
+    if (isHome) {
+      const target = document.getElementById(anchorId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        this.router.navigate(['/'], { fragment: anchorId });
+      }
+    } else {
+      this.router.navigate(['/'], { fragment: anchorId });
+    }
+    this.isMobileMenuOpen = false;
   }
 
   
