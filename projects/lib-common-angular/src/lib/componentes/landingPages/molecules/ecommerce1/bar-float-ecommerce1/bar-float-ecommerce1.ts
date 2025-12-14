@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 
@@ -6,7 +6,8 @@ import { PrimegModule } from '../../../../../modulos/primeg.module';
   selector: 'lib-bar-float-ecommerce1',
   imports: [PrimegModule],
   templateUrl: './bar-float-ecommerce1.html',
-  styleUrl: './bar-float-ecommerce1.scss'
+  styleUrl: './bar-float-ecommerce1.scss',
+  encapsulation: ViewEncapsulation.None
 })
 export class BarFloatEcommerce1 {
 

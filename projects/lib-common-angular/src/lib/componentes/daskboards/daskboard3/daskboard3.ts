@@ -61,19 +61,25 @@ export class DaskBoard3 implements OnInit {
     }
 
     ngOnInit() {
-        // Leer datos de la ruta si no se proporcionan como inputs
+        // Leer datos de la ruta y permitir que sobrescriban los inputs si vienen definidos en la ruta
         this.route.data.subscribe(data => {
-            if (data['menuConfig'] && !this.menuConfig) {
+            if (data['menuConfig']) {
                 this.menuConfig = data['menuConfig'];
                 // eslint-disable-next-line no-console
                 console.log('Dashboard3: MenuConfig cargado desde datos de ruta:', this.menuConfig);
             }
             
-            if (data['userPermissions'] && !this.userPermissions) {
+            if (data['userPermissions']) {
                 this.userPermissions = data['userPermissions'];
                 console.log('Dashboard3: UserPermissions cargados desde datos de ruta:', this.userPermissions);
             }
         });
+
+        // Listener explícito para cerrar al hacer click en la máscara en móviles
+        const maskEl = document.querySelector('.layout-mask');
+        if (maskEl) {
+            this.renderer.listen(maskEl, 'click', () => this.hideMenu());
+        }
 
         // Si no se proporciona menuConfig, usar configuración por defecto
         if (!this.menuConfig) {

@@ -1,0 +1,62 @@
+@use "sass:map";
+
+// sm: ≥576px, md: ≥768px, lg: ≥992px, xl: ≥1200px, xxl: ≥1400px
+$pf-breakpoints: (
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1400px
+);
+
+// Compat: mapa previo (si alguien lo usa aún)
+$sizeScreen: (
+    sm: map.get($pf-breakpoints, sm),
+    md: map.get($pf-breakpoints, md),
+    lg: map.get($pf-breakpoints, lg)
+);
+
+// Media query hacia arriba (como PrimeFlex: min-width)
+@mixin responsive-up($size) {
+    @media screen and (min-width: map.get($pf-breakpoints, $size)) {
+        @content;
+    }
+}
+
+// Media query hacia abajo (máximo ancho)
+@mixin responsive-down($size) {
+    @media screen and (max-width: map.get($pf-breakpoints, $size)) {
+        @content;
+    }
+}
+
+// Mixin legacy para compatibilidad: usa max-width
+@mixin responsive($size) {
+    @media screen and (max-width: map.get($sizeScreen, $size)) {
+        @content;
+    }
+}
+
+@mixin grid($columnas,$fr:1fr ,$gap, $rows ) {
+    display: grid; 
+
+    grid-template-columns: repeat($columnas,$fr);
+    grid-template-rows: repeat($rows,$fr);
+ 
+   row-gap: $gap;
+   column-gap: $gap;
+    
+   // @include responsive($movil,$desk,$tablet);
+}
+
+@mixin  gridItem ($posC1,$posC2,$posR1,$posR2) {
+    grid-column: $posC1/$posC2;
+    grid-row: $posR1/$posR2;
+}
+@mixin flexbox($display,$direction:row, $corte:nowrap, $justify-content,$align-items) {
+    display: $display;
+    flex-flow: $direction $corte;
+    justify-content: $justify-content;
+    align-items: $align-items;
+}
+

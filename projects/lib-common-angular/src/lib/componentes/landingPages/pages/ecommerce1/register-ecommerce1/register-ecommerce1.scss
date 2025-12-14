@@ -1,0 +1,19 @@
+ .auth-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 2rem 0;
+        }
+
+        .auth-section {
+            background-color: #ffffff;
+            padding: 4rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 500px;
+            margin: 4rem auto;
+            animation: fadeIn 0.5s ease-out;
+        }

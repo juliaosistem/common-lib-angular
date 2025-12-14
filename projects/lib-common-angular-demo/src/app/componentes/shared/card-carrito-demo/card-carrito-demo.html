@@ -1,0 +1,15 @@
+
+<div class="grid align-items-center justify-content-center gap-2 m-3">
+
+    @for (product of products; track $index) {
+        
+        @if (products) {
+            
+            <div class="col-12 md:col-6 lg:col-4">
+                <lib-card-productos1 [product]="product"></lib-card-productos1>
+            </div>
+        }
+        
+    }
+    
+</div>

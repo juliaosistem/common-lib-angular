@@ -9,7 +9,7 @@ import { Footer1Component } from '../../molecules/footer1/footer1.component';
 import { ServicesSection1Component } from '../../molecules/services-section1/services-section1.component';
 import { GallerySection1Component } from '../../molecules/gallery-section1/gallery-section1.component';
 
-import { PlantillaDTO } from '@juliaosistem/core-dtos';
+import { BusinessDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-index1',
@@ -32,8 +32,9 @@ export class Index1Component {
 
 
   @Input()
-  negocio: PlantillaDTO ={
-    id: ''
+  negocio: BusinessDTO ={
+    businessModule: [],
+    telefono: ''
   };
 
  constructor(private platform: Platform, 
@@ -57,8 +58,8 @@ export class Index1Component {
      this.translate.use(defualtBrowserLang);
   }else{
        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-       (this.negocio?.bussinesDTO?.lenguaje)
-          ? this.translate.use(this.negocio.bussinesDTO.lenguaje)
+       (this.negocio.lenguaje)
+          ? this.translate.use(this.negocio.lenguaje)
           :this.translate.use("en")
   }
  }

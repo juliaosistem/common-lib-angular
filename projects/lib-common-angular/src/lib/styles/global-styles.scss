@@ -1,1 +1,21 @@
 @import "primeflex/primeflex.css";
+
+// Importa desde la carpeta `theme` que ahora exporta la librería via ng-packagr
+@use "theme/_funtions.scss" as func;
+@use "theme/componentes/varthemes.scss" as vars;
+@import "@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "@ionic/angular/css/normalize.css";
+@import "@ionic/angular/css/structure.css";
+@import "@ionic/angular/css/typography.css";
+@import '@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "@ionic/angular/css/padding.css";
+@import "@ionic/angular/css/float-elements.css";
+@import "@ionic/angular/css/text-alignment.css";
+@import "@ionic/angular/css/text-transformation.css";
+@import "@ionic/angular/css/flex-utils.css";
+
+@import "primeicons/primeicons.css";

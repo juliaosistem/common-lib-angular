@@ -2,6 +2,7 @@
  * Public API Surface of common-lib
  */
 
+
 export * from './lib/common-lib.service';
 export * from './lib/common-lib.component';
 
@@ -28,7 +29,7 @@ export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
 export * from './lib/componentes/shared/services/dynamic-field.service';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
 export * from './lib/componentes/shared/pages/notfound/notfound';
-
+export * from './lib/componentes/shared/molecules/inflatable-customizer/customizer.component';
 // Menú dinámico
 export * from './lib/componentes/shared/interfaces/menu.interface';
 export * from './lib/componentes/shared/atoms/menu-item1/menu-item1.component';
@@ -52,6 +53,16 @@ export * from './lib/componentes/shared/molecules/productos/card-productos1/card
 export * from './lib/componentes/shared/molecules/section-filters-categories-productos/section-filters-categories-productos';
 export * from './lib/componentes/shared/terminal/terminal';
 
+// shared atomos
+export * from './lib/componentes/shared/atoms/loading-zigma/loading-zigma';
+export * from './lib/componentes/shared/atoms/button-action-delete1/button-action-delete1.component';
+export * from './lib/componentes/shared/atoms/button-action-edit1/button-action-edit1.component';
+export * from './lib/componentes/shared/atoms/button-add1/button-add1.component';
+
+// shared molecules
+export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.component';
+export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
+export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
 
 // Landing Pages
 export * from './lib/componentes/landingPages/pages/ecommerce1/ecommerce1';
@@ -64,11 +75,14 @@ export * from './lib/componentes/landingPages/pages/ecommerce1/register-ecommerc
 export * from './lib/componentes/landingPages/atoms/ecommerce1/buttons-socialmedia-login/buttons-socialmedia-login';
 export * from './lib/componentes/landingPages/atoms/ecommerce1/inputs-login-ecommerce1/inputs-login-ecommerce1';
 export * from './lib/componentes/landingPages/atoms/ecommerce1/inputs-register-ecommerce1/inputs-register-ecommerce1';
+export * from './lib/componentes/landingPages/atoms/ecommerce1/header-top-ecommerce1/header-top-ecommerce1';
         // Molecules
 export * from './lib/componentes/landingPages/molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1';
 export * from './lib/componentes/landingPages/molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1';
 export * from './lib/componentes/landingPages/molecules/ecommerce1/form-auth-eccomerce1/form-auth-eccomerce1';
 export * from './lib/componentes/landingPages/molecules/ecommerce1/header-ecommerce1/header-ecommerce1';
+export * from './lib/componentes/landingPages/molecules/ecommerce1/hero-section-ecommerce1/hero-section-ecommerce1';
+export * from './lib/componentes/landingPages/molecules/ecommerce1/section-images-instagram-ecommerce1/section-images-instagram-ecommerce1';
 
 // Configuration
 export * from './lib/config/lib-config.service';

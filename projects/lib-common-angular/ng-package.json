@@ -3,11 +3,15 @@
   "dest": "../../dist/lib-common-angular",
   "lib": {
     "entryFile": "./src/public-api.ts",
-    "styleIncludePaths": ["src/lib/styles"]
+    "styleIncludePaths": [
+      "src/lib/styles",
+      "./theme"
+    ]
   },
   "assets": [
     "./src/lib/assets",
-    "./src/lib/styles/global-styles.scss"
+    "./src/lib/styles/global-styles.scss",
+    "./theme"
   ],
   "allowedNonPeerDependencies": [
     "primeng",
