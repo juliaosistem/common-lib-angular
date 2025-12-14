@@ -6,6 +6,7 @@ import { HeroSectionEcommerce1 } from "../../../molecules/ecommerce1/hero-sectio
 import { SectionFiltersCategoriesProductos } from "../../../../shared/molecules/section-filters-categories-productos/section-filters-categories-productos";
 import { CardProductos1Component } from "../../../../shared/molecules/productos/card-productos1/card-productos1.component";
 import { SectionImagesInstagramEcommerce1 } from '../../../molecules/ecommerce1/section-images-instagram-ecommerce1/section-images-instagram-ecommerce1';
+import { PaginatorPgComponent } from '../../../../shared/atoms/paginator-pg/paginator-pg.component';
 import { CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 
 @Component({
@@ -17,7 +18,8 @@ import { CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dt
     HeroSectionEcommerce1,
     SectionFiltersCategoriesProductos,
     CardProductos1Component,
-    SectionImagesInstagramEcommerce1
+    SectionImagesInstagramEcommerce1,
+    PaginatorPgComponent
   ],
   templateUrl: './home-ecommerce1.html',
   styleUrls: ['./home-ecommerce1.scss']

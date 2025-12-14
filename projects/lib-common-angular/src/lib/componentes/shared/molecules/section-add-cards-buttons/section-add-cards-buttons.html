@@ -1,0 +1,7 @@
+@if (isLogin) {
+     <lib-button-add-to-card1 [product]="product" (addToCart)="onAddToCart($event)">
+    </lib-button-add-to-card1>
+} @else {
+    <lib-sh-wats-button-card [product]="product" [isLogin]="isLogin">
+    </lib-sh-wats-button-card>
+}

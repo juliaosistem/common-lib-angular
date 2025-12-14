@@ -2,329 +2,345 @@
 * Extraídas directamente de la imagen de referencia.
 */
 :host {
-   --color-red-tower: #c2333b;      /* Rojo oscuro de las torres laterales */
-   --color-yellow-main: #fec02c;   /* Amarillo brillante de la torre central y sombra de texto */
-   --color-blue-roof: #2e8bd7;     /* Azul brillante de los techos y contorno de la base */
-   --color-purple-base: #5a3c9b;   /* Morado oscuro de la base principal */
-   --color-text-fill: #272727;     /* Negro casi puro para el relleno de la letra */
-   --color-white-outline: #ffffff; /* Blanco para el contorno grueso */
-   --color-black-outline: #000000; /* Negro para el contorno fino */
-   --color-yellow-shadow: #fbaf00; /* Amarillo para la sombra 3D de la letra */
-   --color-orange-bg: #f9c112; /* Fondo naranja claro de la imagen */
+    --color-red-tower: #d33c56;     /* Rojo/Fucsia */
+            --color-yellow-main: #fec951;   /* Amarillo principal */
+            --color-blue-roof: #3d86cc;     /* Azul cúpulas */
+            --color-purple-base: #6a3493;   /* Morado base/almenas */
+            --color-blue-stripe: #3c54a3;   /* Azul oscuro de la franja central */
+            
+            --color-black-outline: #000000; 
+            --color-white: #ffffff;
+            --color-text-fill: #272727;     
+            --color-white-outline: var(--color-white); 
+            --color-orange-bg: #f9a825; /* Fondo Naranja/Amarillo */
+            --outline-width: 0px; 
+            --shadow-3d: 0 4px 10px rgba(0, 0, 0, 0.2), inset 0 -4px 5px rgba(0, 0, 0, 0.2);
 }
 
-.loading-container {
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   min-height: 70vh;
-   /* Color de fondo de la imagen */
-   margin: 0;
-   flex-direction: column;
-   overflow: hidden; 
-}
+body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--color-orange-bg); 
+            margin: 0;
+            flex-direction: column;
+            overflow-x: hidden; 
+            font-family: sans-serif;
+        }
 
-/* Contenedor principal de la animación */
-#castle-loader {
-   position: relative;
-   width: 320px; /* Ancho ajustado a la proporción del logo de la imagen */
-   height: 160px; /* Altura ajustada */
-   display: flex;
-   justify-content: center;
-   transform-style: preserve-3d;
-   margin-top: 20px; 
-   
-   /* Animación de balanceo: 1.6s para coincidir con la frecuencia de rebote de las letras */
-   animation: sway-y 1.6s ease-in-out 1.5s infinite alternate;
-}
+        /* Contenedor principal de la animación */
+        #castle-loader {
+            position: relative;
+            /* Ancho ajustado para compactar el diseño */
+            width: 260px; 
+            height: 200px; 
+            display: flex;
+            justify-content: center;
+            transform-style: preserve-3d;
+            
+            /* Animación de entrada inicial: Rueda desde abajo (ver @keyframes roll-in) */
+            opacity: 0;
+            animation: roll-in 0.8s ease-out forwards, sway-y 0.8s ease-in-out infinite alternate 0.8s;
+        }
 
-/* ------------------------- 1. BASE CENTRAL (Morada con sección azul y "ola") ------------------------- */
-.base {
-   position: absolute;
-   bottom: 30px;
-   width: 100%;
-   height: 35px; /* Ligeramente más alta */
-   background-color: var(--color-purple-base);
-   border-radius: 5px;
-   z-index: 10;
-   transform-origin: bottom;
-   transform: scaleY(0); 
-   animation: build-up 0.5s ease-out forwards;
-   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-   /* Sombra sutil inferior */
-   border-bottom: 2px solid rgba(0,0,0,0.1); 
-}
+        /* ------------------------- 1. BASE GEOMÉTRICA SIMPLE ------------------------- */
+        
+        /* Base (Morada, la pieza inferior más grande) */
+        .base {
+            position: absolute;
+            bottom: 30px;
+            width: 90%; 
+            max-width: 300px;
+            height: 40px; 
+            background-color: var(--color-purple-base);
+            border-radius: 5px; /* Pequeño redondeo para el efecto inflable */
+            z-index: 10;
+            transform-origin: bottom;
+            transform: scaleY(0); 
+            animation: build-up 0.5s ease-out forwards;
+            
+            box-shadow: var(--shadow-3d); /* Sombra 3D */
+            border: none;
+            overflow: hidden;
+        }
 
-/* Sección azul encima de la base morada */
-.base .blue-section {
-   position: absolute;
-   top: 0; /* Arriba de la base morada */
-   left: 0;
-   width: 100%;
-   height: 10px; /* Altura de la sección azul */
-   background-color: var(--color-blue-roof);
-   border-radius: 5px 5px 0 0; /* Bordes redondeados superiores */
-   /* Simular la "ola" en el borde superior (Mismo SVG que antes) */
-   mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,5 Q25,0 50,5 T100,5 L100,10 L0,10 Z" fill="black"/></svg>');
-   mask-size: 100% 100%;
-   mask-repeat: no-repeat;
-   mask-position: center;
-   -webkit-mask-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 10" xmlns="http://www.w3.org/2000/svg"><path d="M0,5 Q25,0 50,5 T100,5 L100,10 L0,10 Z" fill="black"/></svg>');
-   -webkit-mask-size: 100% 100%;
-   -webkit-mask-repeat: no-repeat;
-   -webkit-mask-position: center;
-}
+        /* Franja Azul (La banda horizontal sobre la base morada) */
+        .blue-stripe {
+            position: absolute;
+            bottom: 40px; 
+            width: 90%; 
+            max-width: 300px;
+            height: 10px; 
+            background-color: var(--color-blue-stripe); 
+            z-index: 11;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.3); /* Sombra interna para volumen */
+            border: none;
+            animation: build-up 0.5s ease-out forwards 0.1s;
+        }
+        
+        /* Almenas (Moradas, la sección dentada) */
+        .battlements {
+            position: absolute;
+            bottom: 50px; 
+            width: 90%;
+            max-width: 300px;
+            height: 20px;
+            background-color: var(--color-purple-base);
+            z-index: 12;
+            box-shadow: var(--shadow-3d); /* Sombra 3D */
+            border: none;
+            border-bottom: none;
+            border-radius: 0; 
 
-/* Almenas de la base (Color morado) */
-.base::before {
-   content: '';
-   position: absolute;
-   top: -10px; /* Sobre la sección azul */
-   left: 0;
-   right: 0;
-   height: 10px;
-   background-color: var(--color-purple-base); /* Almenas del mismo color que la base */
-   mask: repeating-linear-gradient(90deg, 
-       #000 0, #000 7%, 
-       transparent 7%, transparent 12%);
-}
-
-/* ------------------------- 2. TORRES LATERALES (Rojas) ------------------------- */
-.tower-side {
-   position: absolute;
-   bottom: 30px; 
-   width: 60px; 
-   height: 100px; 
-   background-color: var(--color-red-tower);
-   border-radius: 30px 30px 0 0; 
-   z-index: 5;
-   transform-origin: bottom;
-   transform: scaleY(0); 
-   animation: build-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
-   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.left { left: 0px; } 
-.right { right: 0px; } 
-
-/* Detalle azul superior */
-.tower-side .top-detail {
-   position: absolute;
-   top: -5px;
-   left: 50%;
-   transform: translateX(-50%);
-   width: 100%;
-   height: 10px;
-   background-color: var(--color-blue-roof); 
-   border-radius: 5px 5px 0 0;
-   z-index: 6;
-}
-
-/* Gorro de las Torres Latelales (Amarillo, más puntiagudo) */
-.tower-side .roof {
-   position: absolute;
-   top: -35px; 
-   left: 50%;
-   transform: translateX(-50%);
-   width: 70px; 
-   height: 40px; 
-   background-color: var(--color-yellow-main);
-   border-radius: 40px 40px 0 0; /* Forma cónica */
-   border-bottom: 5px solid #f39c12; 
-   overflow: hidden;
-   z-index: 7;
-}
-
-/* Bandera lateral (Triangular amarilla sobre poste) */
-.tower-side .flag {
-   position: absolute;
-   top: -50px; 
-   right: -10px; 
-   width: 0;
-   height: 0;
-   border-top: 8px solid transparent;
-   border-bottom: 8px solid transparent;
-   border-right: 12px solid var(--color-yellow-main); /* Triángulo */
-   z-index: 8;
-   transform-origin: 0 50%; /* Ondea desde el poste (izquierda) */
-   animation: flag-wave 2s infinite alternate 0.8s;
-   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2); 
-}
-.tower-side.right .flag { 
-   right: auto; 
-   left: -10px;
-   border-left: 12px solid var(--color-yellow-main); 
-   border-right: none;
-   transform-origin: 100% 50%; /* Ondea desde el poste (derecha) */
-} 
-/* Poste de la bandera lateral */
-.tower-side .flag::before {
-   content: '';
-   position: absolute;
-   top: -20px;
-   left: -1px;
-   width: 2px;
-   height: 20px;
-   background-color: var(--color-black-outline);
-}
-.tower-side.right .flag::before {
-   left: 10px;
-}
+            /* Máscara para las almenas */
+            mask: repeating-linear-gradient(90deg, 
+                #000 0, #000 8%, 
+                transparent 8%, transparent 12%);
+            -webkit-mask: repeating-linear-gradient(90deg, 
+                #000 0, #000 8%, 
+                transparent 8%, transparent 12%);
+            animation: build-up 0.5s ease-out forwards 0.2s;
+        }
 
 
-/* ------------------------- 3. TORRE CENTRAL (Amarilla) ------------------------- */
-.tower-center {
-   position: absolute;
-   bottom: 60px; 
-   width: 90px; 
-   height: 70px; 
-   background-color: var(--color-yellow-main);
-   border-radius: 5px 5px 0 0;
-   z-index: 15;
-   transform-origin: bottom;
-   transform: scaleY(0); 
-   animation: build-up 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
-   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
+        /* ------------------------- 2. TORRES LATERALES (Rojas y Amarillas) ------------------------- */
+        
+        /* Contenedor de torre (Cilindro rojo, ahora cuadrado) */
+        .tower-side {
+            position: absolute;
+            bottom: 70px; 
+            width: 60px; 
+            height: 70px; 
+            background-color: var(--color-red-tower);
+            border-radius: 0; 
+            z-index: 13; 
+            transform-origin: bottom;
+            transform: scaleY(0); 
+            animation: build-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s forwards;
+            
+            box-shadow: var(--shadow-3d); /* Sombra 3D */
+            border: none;
+        }
 
-/* Techo de la Torre Central (Azul, cónico) */
-.tower-center .roof {
-   position: absolute;
-   top: -45px;
-   left: 50%;
-   transform: translateX(-50%);
-   width: 100px; 
-   height: 70px; 
-   background-color: var(--color-blue-roof);
-   border-radius: 60% 60% 0 0; /* Forma cónica */
-   overflow: hidden;
-   border-bottom: 3px solid rgba(0,0,0,0.2);
-}
+        /* AJUSTE DE POSICIÓN: Pegadas al centro (30px) */
+        .left { left: 30px; } 
+        .right { right: 30px; } 
 
-/* Punta triangular amarilla en la cima de la torre central */
-.tower-center .roof .yellow-point {
-   position: absolute;
-   top: -10px; /* Sobre el techo azul */
-   left: 50%;
-   transform: translateX(-50%);
-   width: 0;
-   height: 0;
-   border-left: 10px solid transparent;
-   border-right: 10px solid transparent;
-   border-bottom: 15px solid var(--color-yellow-main); /* Triángulo amarillo */
-   z-index: 17;
-}
+        /* Línea AZUL CLARA en el borde inferior del techo amarillo (Torres Laterales) */
+        .tower-side::before {
+            content: '';
+            position: absolute;
+            top: -4px; 
+            left: -5px; 
+            width: 70px; 
+            height: 4px; 
+            background-color: var(--color-blue-roof); 
+            z-index: 14; 
+            display: block;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3); /* Pequeña sombra a la línea */
+        }
 
-/* Bandera de la Torre Central (Amarilla) */
-.tower-center .flag {
-   position: absolute;
-   top: -40px;
-   left: 50%;
-   transform: translateX(-50%);
-   width: 0;
-   height: 0;
-   border-top: 8px solid transparent;
-   border-bottom: 8px solid transparent;
-   border-right: 12px solid var(--color-yellow-main);
-   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2); 
-   z-index: 16;
-   animation: flag-wave 2s infinite alternate 0.8s;
-}
-/* Poste de la bandera central */
-.tower-center .flag::before {
-   content: '';
-   position: absolute;
-   top: -20px;
-   left: 6px; 
-   width: 2px;
-   height: 20px;
-   background-color: var(--color-black-outline);
-   transform: translateX(-50%);
-}
+        /* Gorro de las Torres Latelales (Techo triangular Amarillo) */
+        .tower-side .roof {
+            position: absolute;
+            top: -40px; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            border-bottom: 40px solid var(--color-yellow-main); /* Triángulo */
+            overflow: hidden;
+            z-index: 15;
+            box-shadow: none;
+        }
+        
+        /* Bandera lateral */
+        .tower-side .flag {
+            position: absolute;
+            top: -65px; 
+            right: -10px; 
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 8px solid var(--color-blue-roof); 
+            z-index: 17;
+            transform-origin: 0 50%; 
+            animation: flag-wave 0.6s infinite alternate;
+            box-shadow: none;
+            border: none; 
+        }
+        .tower-side.right .flag { 
+            right: auto; 
+            left: -10px;
+            border-left: 8px solid var(--color-blue-roof); 
+            border-right: none;
+            transform-origin: 100% 50%; 
+            animation: flag-wave 0.6s infinite alternate 0.1s; 
+        } 
+        /* Poste de la bandera lateral ELIMINADO */
+        .tower-side .flag::before {
+            content: none;
+        }
+        
 
-/* ------------------------- 4. TIPOGRAFÍA (MÁXIMA FIDELIDAD VISUAL) ------------------------- */
-.loading-text {
-   position: relative; 
-   margin-top: 20px;
-   /* Fuentes de sistema gruesas para simular la tipografía. */
-   font-family: Impact, 'Arial Black', 'Fredoka One', 'Rubik', sans-serif;
-   font-weight: 900; 
-   color: var(--color-text-fill); 
-   line-height: 0.8;
-   text-align: center;
-}
 
-.loading-text .word-zigma {
-   display: block;
-   font-size: 4.5em; 
-   /* Contorno Blanco (Grueso) y Negro (Fino), y Sombra 3D Amarilla: */
-   text-shadow: 
-       /* Contorno Blanco */
-       -6px -6px 0 var(--color-white-outline), 6px -6px 0 var(--color-white-outline), 
-       -6px 6px 0 var(--color-white-outline), 6px 6px 0 var(--color-white-outline),
-       0 -6px 0 var(--color-white-outline), 0 6px 0 var(--color-white-outline),
-       -6px 0 0 var(--color-white-outline), 6px 0 0 var(--color-white-outline),
+        /* ------------------------- 3. TORRE CENTRAL (Amarilla) ------------------------- */
+        .tower-center {
+            position: absolute;
+            bottom: 70px; 
+            width: 80px; 
+            height: 80px; 
+            background-color: var(--color-yellow-main);
+            border-radius: 0;
+            z-index: 18;
+            transform-origin: bottom;
+            transform: scaleY(0); 
+            animation: build-up 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s forwards;
+            
+            box-shadow: var(--shadow-3d); /* Sombra 3D */
+            border: none;
+        }
 
-       /* Contorno Negro */
-       -8px -8px 0 var(--color-black-outline), 8px -8px 0 var(--color-black-outline),
-       -8px 8px 0 var(--color-black-outline), 8px 8px 0 var(--color-black-outline),
-       0 -8px 0 var(--color-black-outline), 0 8px 0 var(--color-black-outline),
-       -8px 0 0 var(--color-black-outline), 8px 0 0 var(--color-black-outline),
+        /* LÍNEA ROJA BAJO EL TRIÁNGULO AZUL CENTRAL */
+        .tower-center::after {
+            content: '';
+            position: absolute;
+            top: -10px; 
+            left: 0;
+            width: 100%;
+            height: 5px; 
+            background-color: var(--color-red-tower);
+            z-index: 19;
+            box-sizing: content-box;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3); /* Pequeña sombra a la línea */
+            border: none;
+            border-radius: 0;
+        }
 
-       /* Sombra 3D Amarilla */
-       12px 12px 0 var(--color-yellow-shadow), 
-       14px 14px 0 var(--color-yellow-shadow), 
-       16px 16px 0 var(--color-yellow-shadow), 
-       
-       /* Sombra de relieve */
-       -1px 1px 2px rgba(0, 0, 0, 0.5); 
-   
-   animation: bounce-text 0.8s infinite alternate 1.5s; /* Animación de 0.8s */
-}
 
-.loading-text .word-inflables {
-   display: block;
-   font-size: 1.8em; 
-   margin-top: 5px;
-   /* Contorno de "INFLABLES" */
-   text-shadow: 
-       -2px -2px 0 var(--color-white-outline), 2px -2px 0 var(--color-white-outline), 
-       -2px 2px 0 var(--color-white-outline), 2px 2px 0 var(--color-white-outline),
-       
-       -4px -4px 0 var(--color-black-outline), 4px -4px 0 var(--color-black-outline), 
-       -4px 4px 0 var(--color-black-outline), 4px 4px 0 var(--color-black-outline),
+        /* Techo de la Torre Central (Azul, cónico) */
+        .tower-center .roof {
+            position: absolute;
+            top: -60px; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0; 
+            height: 0; 
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 60px solid var(--color-blue-roof); /* Triángulo */
+            overflow: hidden;
+            z-index: 20;
+            box-shadow: none;
+        }
 
-       6px 6px 0 var(--color-yellow-shadow);
+        /* Bandera de la Torre Central */
+        .tower-center .flag {
+            position: absolute;
+            top: -80px; 
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+            border-right: 8px solid var(--color-blue-roof); /* Bandera azul */
+            box-shadow: none; 
+            z-index: 21;
+            animation: flag-wave 0.6s infinite alternate 0.2s;
+            border: none; 
+        }
+        /* Poste de la bandera central ELIMINADO */
+        .tower-center .flag::before {
+            content: none;
+        }
+        
+        /* ------------------------- 4. TIPOGRAFÍA (Comic Sans MS) ------------------------- */
+        .loading-text {
+            position: absolute; 
+            bottom: -15px; 
+            width: 100%; 
+            font-family: 'Comic Sans MS', cursive, sans-serif; 
+            font-weight: 900; 
+            color: var(--color-text-fill); 
+            line-height: 0.8; 
+            text-align: center; 
+            z-index: 30; 
+        }
 
-   animation: bounce-text 0.8s infinite alternate 1.8s; /* Animación de 0.8s */
-}
+        .loading-text .word-zigma {
+            display: block; 
+            font-size: 3.8em; 
+            text-shadow: 
+                /* Contorno Blanco Grueso */
+                -3px -3px 0 var(--color-white-outline), 3px -3px 0 var(--color-white-outline), 
+                -3px 3px 0 var(--color-white-outline), 3px 3px 0 var(--color-white-outline),
+                0 -3px 0 var(--color-white-outline), 0 3px 0 var(--color-white-outline),
+                -3px 0 0 var(--color-white-outline), 3px 0 0 var(--color-white-outline),
+                
+                /* Sombra 3D Inflable (Amarillo principal) */
+                4px 4px 0 var(--color-yellow-main), 
+                
+                /* Sombra Exterior NEGRA */
+                6px 6px 6px rgba(0, 0, 0, 0.4); 
+            animation: bounce-text 0.4s infinite alternate; 
+        }
 
-/* Se eliminó .word-ventas */
+        .loading-text .word-inflables {
+            display: block; 
+            font-size: 1.6em; 
+            margin-top: 5px;
+            text-shadow: 
+                /* Contorno Blanco Delgado */
+                -2px -2px 0 var(--color-white-outline), 2px -2px 0 var(--color-white-outline), 
+                -2px 2px 0 var(--color-white-outline), 2px 2px 0 var(--color-white-outline),
+                
+                /* Sombra 3D Inflable (Rojo de torre) */
+                2px 2px 0 var(--color-red-tower), 
+                
+                /* Sombra Exterior NEGRA */
+                4px 4px 4px rgba(0, 0, 0, 0.3); 
+            animation: bounce-text 0.4s infinite alternate 0.1s; 
+        }
 
-/* ========================== KEYFRAMES ========================== */
-
-/* Animación para construir las piezas (las piezas suben) */
-@keyframes build-up {
-   0% { transform: scaleY(0); opacity: 0; }
-   100% { transform: scaleY(1); opacity: 1; }
-}
-
-/* Animación de rebote para el texto (0.8s) */
-@keyframes bounce-text {
-   0% { transform: translateY(0) scale(1); }
-   100% { transform: translateY(-5px) scale(1.01); }
-}
-
-/* Balanceo vertical del castillo (Sincronizado con el rebote de las letras) */
-@keyframes sway-y {
-   0% { transform: translateY(0); }
-   50% { transform: translateY(-2px); } /* Pequeño movimiento hacia arriba */
-   100% { transform: translateY(0); }
-}
-
-/* Animación de la bandera (ondeando) */
-@keyframes flag-wave {
-   0% { transform: rotateZ(0deg) }
-   50% { transform: rotateZ(10deg) }
-   100% { transform: rotateZ(-10deg) }
-}
+        /* ------------------------- KEYFRAMES ------------------------- */
+        @keyframes build-up { 
+            0% { transform: scaleY(0); opacity: 0; } 
+            100% { transform: scaleY(1); opacity: 1; } 
+        }
+        
+        @keyframes bounce-text { 
+            0% { transform: translateY(0) scale(1); } 
+            100% { transform: translateY(-8px) scale(1.02); } 
+        }
+        
+        @keyframes sway-y { 
+            0% { transform: translateY(0); } 
+            100% { transform: translateY(-8px); } 
+        }
+        
+        @keyframes flag-wave { 
+            0% { transform: rotateZ(0deg) } 
+            50% { transform: rotateZ(10deg) } 
+            100% { transform: rotateZ(-10deg) } 
+        }
+        
+        /* Animación de entrada: Rueda el castillo desde abajo */
+        @keyframes roll-in {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) rotateZ(-30deg);
+            }
+            70% {
+                opacity: 1;
+                transform: translateY(0) rotateZ(5deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) rotateZ(0deg);
+            }
+        }

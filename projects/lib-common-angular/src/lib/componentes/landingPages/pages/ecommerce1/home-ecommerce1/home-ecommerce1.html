@@ -5,15 +5,26 @@
 <!-- Product Grid Section -->
 
 <lib-section-filters-categories-productos [categorias]="Categorias"></lib-section-filters-categories-productos>
-<div class="grid align-items-center justify-content-center">
-    @for (product of Products; track $index) {
-    <div class="col-12 md:col-6 p-5 lg:p-3 lg:col-4 product-card-animation"
-        [style.transition-delay]="$index * 200 + 'ms'">
-        <lib-card-productos1 [product]="product" (addToCart)="onAddToCart($event)">
-        </lib-card-productos1>
+<ng-template #cards let-items>
+    <div class="grid align-items-center justify-content-center">
+        @for (product of items; track $index) {
+        <div class="col-12 md:col-6 p-5 lg:p-3 lg:col-4 product-card-animation"
+            [style.transition-delay]="$index * 200 + 'ms'">
+            <lib-card-productos1 [product]="product" (addToCart)="onAddToCart($event)">
+            </lib-card-productos1>
+        </div>
+        }
     </div>
-    }
-</div>
+</ng-template>
+
+<lib-paginator-pg
+  [data]="Products"
+  [rows]="9"
+  [rowsPerPageOptions]="[9,18,27,54,81]"
+  [showCurrentPageReport]="true"
+  [currentPageReportTemplate]="'Mostrando {first} a {last} de {totalRecords} ítems'"
+  [itemTemplate]="cards">
+</lib-paginator-pg>
 
 <!-- Seccion "Nuestra Historia"-->
 <section id="nosotros" class="history-section" style="

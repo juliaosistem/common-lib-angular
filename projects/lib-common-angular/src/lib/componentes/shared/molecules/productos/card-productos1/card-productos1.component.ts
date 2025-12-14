@@ -5,20 +5,22 @@ import { ProductoDTO, ImagenDTO } from '@juliaosistem/core-dtos';
 import { Router } from '@angular/router';
 import { ButtonAddToCard1 } from "../../../atoms/button-add-to-card1/button-add-to-card1";
 import { ProductService } from '../../../services/product.service';
-import { StyleClass } from "primeng/styleclass";
+import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";
+
 
 @Component({
   selector: 'lib-card-productos1',
   standalone: true,
   templateUrl: './card-productos1.component.html',
   styleUrls: ['./card-productos1.component.scss'],
-  imports: [CommonModule, PrimegModule, ButtonAddToCard1, StyleClass],
+  imports: [CommonModule, PrimegModule, ButtonAddToCard1, SectionAddCardsButtons],
   providers: [CurrencyPipe]
 })
 export class CardProductos1Component implements OnInit, OnDestroy {
 
   @Input() product!: ProductoDTO;
   @Output() addToCart = new EventEmitter<{ product: ProductoDTO, quantity: number }>();
+  @Input() isLogin: boolean = false;
 
   discount = 0;
   currentImageIndex = 0;
@@ -89,12 +91,19 @@ navigateToProductDetail(): void {
 
 
   shareProductOnWhatsapp(): void {
-    const text = `¡Mira esto! ${this.product.name} por solo ${this.currencyPipe.transform(this.discount, this.product.precios[0].codigo_iso, 'code')}`;
     const url = window.location.href;
+    let text = '';
+
+    if (this.isLogin) {
+      const precio = this.currencyPipe.transform(this.discount, this.product.precios[0].codigo_iso, 'code');
+      text = `¡Mira esto! ${this.product.name} por solo ${precio}`;
+    } else {
+      const id = this.product?.id ?? '';
+      text = `Hola, estoy interesado en el producto Referencia ${id}: ${this.product.name}`;
+    }
+
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
   }
 
-  shareProduct(): void {
-    console.log("Compartir...");
-  }
+
 }
