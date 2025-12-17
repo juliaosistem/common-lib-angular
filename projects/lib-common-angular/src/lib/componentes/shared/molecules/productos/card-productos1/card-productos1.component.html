@@ -1,116 +1,118 @@
-<div class="surface-card shadow-3 border-round-xl overflow-hidden relative transition-all transition-duration-300 hover:shadow-6 flex flex-column h-full hover-effect" 
-     style="min-height: 520px; max-width: 400px; margin: 0 auto;">
-    
+<div class="surface-card shadow-3 border-round-xl overflow-visible relative transition-all transition-duration-300 hover:shadow-6 flex flex-column h-full hover-effect"
+    style="min-height: 520px; max-width: 400px; margin: 0 auto">
     @if (product) {
+    <div class="relative surface-ground flex align-items-center justify-content-center overflow-hidden p-3 image-hover-container"
+        style="height: 280px">
+        <img [src]="currentImageUrl || product.imagen[0]?.url" [alt]="product.name"
+            loading="lazy" width="400" height="280"
+            class="max-w-full max-h-full object-contain cursor-pointer transition-transform transition-duration-300 hover-zoom"
+            (click)="navigateToProductDetail()" />
 
-        <div class="relative surface-ground flex align-items-center justify-content-center overflow-hidden p-3" style="height: 280px;">
-
-            <img 
-                [src]="currentImageUrl || product.imagen[0]?.url" 
-                [alt]="product.name" 
-                class="max-w-full max-h-full object-contain cursor-pointer transition-transform transition-duration-300 hover-zoom"
-                (click)="navigateToProductDetail()"
-            />
-
-            <button 
-                (click)="shareProductOnWhatsapp()"
-                class="absolute bottom-0 right-0 m-3 bg-green-500 border-none text-white w-3rem h-3rem border-circle shadow-4 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600 z-2"
-            >
-                <i class="pi pi-whatsapp text-2xl"></i>
+        <!-- Overlay con icono de ojo al hover -->
+        <div class="image-overlay">
+            <button pButton type="button" class="p-button-rounded p-button-info p-button-lg shadow-4"
+                    (click)="navigateToProductDetail()" pTooltip="Ver detalles" tooltipPosition="top">
+                <i class="pi pi-eye text-xl"></i>
             </button>
         </div>
 
-        <div class="p-3 flex flex-column flex-grow-1">
+        <button (click)="shareProductOnWhatsapp()"
+            class="absolute bottom-0 right-0 m-3 bg-green-500 border-none text-white w-3rem h-3rem border-circle shadow-4 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600 z-2">
+            <i class="pi pi-whatsapp text-2xl"></i>
+        </button>
+    </div>
 
-            <div class="flex gap-2 overflow-x-auto pb-2 mb-3 z-1">
-                @for (image of product.imagen; track $index) {
-                    <img 
-                        [src]="image.url"
-                        (click)="selectImage($index)"
-                        class="w-3rem h-3rem border-round border-2 cursor-pointer flex-shrink-0 transition-all transition-duration-200 object-cover"
-                        [class.border-900]="isActiveThumbnail($index)"
-                        [class.border-transparent]="!isActiveThumbnail($index)"
-                        [class.opacity-60]="!isActiveThumbnail($index)"
-                    />
+    <div class="p-3 flex flex-column flex-grow-1">
+        <div class="flex gap-2 overflow-x-auto pb-2 mb-3 z-1">
+            @for (image of product.imagen; track $index) {
+            <img [src]="image.url" (click)="selectImage($index)"
+                loading="lazy" width="48" height="48"
+                class="w-3rem h-3rem border-round border-2 cursor-pointer flex-shrink-0 transition-all transition-duration-200 object-cover"
+                [class.border-900]="isActiveThumbnail($index)" [class.border-transparent]="!isActiveThumbnail($index)"
+                [class.opacity-60]="!isActiveThumbnail($index)" />
+            }
+        </div>
+
+        <div class="surface-border border-top-1 w-full mb-3"></div>
+
+        <div class="flex justify-content-between align-items-start gap-2 mb-3">
+            <h3 class="text-xl font-semibold text-900 m-0 line-height-3 flex-grow-1 cursor-pointer hover:text-700 transition-colors"
+                (click)="navigateToProductDetail()" style="word-break: break-word">
+                {{ product.name }}
+            </h3>
+
+            <div class="flex gap-2 flex-shrink-0 mt-1" style="position: relative;">
+                @if (isLogin) {
+                <p-button (click)="navigateToProductDetail()" pTooltip="Personalizar" icon="pi pi-pencil"
+                    tooltipPosition="top"
+                    styleClass="bg-900 text-white w-2rem h-2rem border-circle border-none flex align-items-center justify-content-center cursor-pointer hover:bg-700 transition-colors shadow-1">
+                </p-button>
                 }
+                                <!-- Menú flotante de redes estilo PrimeNG -->
+                                <div class="relative" style="position: absolute; right: -0.75rem; top: -0.75rem; z-index: 10;">
+                                    <button (click)="toggleShareMenu()"
+                                        class="bg-green-500 border-none text-white w-2rem h-2rem border-circle shadow-2 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600">
+                                        <i class="pi" [ngClass]="{'pi-times': shareMenuOpen, 'pi-share-alt': !shareMenuOpen}"></i>
+                                    </button>
+                                    @if (shareMenuOpen) {
+                                        <div class="flex gap-2 absolute" style="right: 0; top: 2.6rem;">
+                                            <button (click)="touchRedes('whatsapp')" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#25D366;color:#fff">
+                                                <i class="pi pi-whatsapp"></i>
+                                            </button>
+                                            <button (click)="touchRedes('facebook')" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#1877F2;color:#fff">
+                                                <i class="pi pi-facebook"></i>
+                                            </button>
+                                           
+                                        </div>
+                                    }
+                                </div>
             </div>
+        </div>
 
-            <div class="surface-border border-top-1 w-full mb-3"></div>
-
-            <div class="flex justify-content-between align-items-start gap-2 mb-3">
-                
-                <h3 class="text-xl font-semibold text-900 m-0 line-height-3 flex-grow-1 cursor-pointer hover:text-700 transition-colors" 
-                    (click)="navigateToProductDetail()"
-                    style="word-break: break-word;">
-                    {{ product.name }}
-                </h3>
-
-                <div class="flex gap-2 flex-shrink-0 mt-1">
-                    <p-button 
-                        (click)="navigateToProductDetail()" 
-                        pTooltip="Personalizar"
-                        icon="pi pi-pencil"
-                        tooltipPosition="top"
-                        styleClass="bg-900 text-white w-2rem h-2rem border-circle border-none flex align-items-center justify-content-center cursor-pointer hover:bg-700 transition-colors shadow-1"
-                    >
-                    </p-button>
-
-                    <p-button 
-                        (click)="shareProduct()" 
-                        pTooltip="Compartir"
-                        tooltipPosition="top"
-                        icon="pi pi-share-alt text-sm"
-                        styleClass="surface-100 text-900 w-2rem h-2rem border-circle border-none flex align-items-center justify-content-center cursor-pointer hover:bg-200 transition-colors shadow-1"
-                    >
-                       
-                    </p-button>
-                </div>
+        <div class="surface-ground p-3 border-round-xl border-1 surface-border text-sm mb-4">
+            <div class="flex justify-content-between align-items-center mb-2">
+                <strong class="font-bold text-700">Categoría:</strong>
+                <span class="text-600 text-right overflow-hidden text-overflow-ellipsis" style="max-width: 60%">
+                    {{ product.nombreCategoria || 'Sin categoría' }}
+                </span>
             </div>
-           
-            <div class="surface-ground p-3 border-round-xl border-1 surface-border text-sm mb-4">
-                <div class="flex justify-content-between align-items-center mb-2">
-                    <strong class="font-bold text-700">Categoría:</strong> 
-                    <span class="text-600 text-right overflow-hidden text-overflow-ellipsis" style="max-width: 60%;">
-                        {{ product.idCategoria }}
-                    </span>
-                </div>
-                <div class="flex justify-content-between align-items-center">
-                    <strong class="font-bold text-700">Disponibles:</strong> 
-                    <span class="text-600 font-medium">{{ product.cantidad }}</span>
-                </div>
+            <div class="flex justify-content-between align-items-center">
+                <strong class="font-bold text-700">Disponibles:</strong>
+                <span class="text-600 font-medium">{{ product.cantidad }}</span>
             </div>
+        </div>
 
-            <div class="mt-auto"> 
-                <div class="flex align-items-end gap-2 mb-3 flex-wrap">
-                     @if(product.descuento && product.descuento > 0) {
+        <div class="mt-auto">
+
+
+            <div class="flex align-items-end gap-2 mb-3 flex-wrap">
+                @if(isLogin){
+                        @if (product.descuento && product.descuento > 0) {
                         <span class="text-500 line-through text-sm mb-1">
-                            {{ product.precios[0].precio | currency:product.precios[0].codigo_iso:'code' }}
+                            {{ product.precios[0].precio | currency: product.precios[0].codigo_iso : "code" }}
                         </span>
-                    }
-                    <span class="text-2xl font-bold text-900">
-                        {{ discount | currency:product.precios[0].codigo_iso:'code' }}
-                    </span>
+                        }
 
-                     @if(product.descuento && product.descuento > 0) {
+                        <span class="text-2xl font-bold text-900">
+                            {{ discount | currency: product.precios[0].codigo_iso : "code" }}
+                        </span>
+
+                        @if (product.descuento && product.descuento > 0) {
                         <div class="bg-green-100 text-green-700 px-2 py-1 text-xs font-bold border-round mb-1 ml-auto">
                             {{ product.descuento }}% OFF
                         </div>
-                    }
-                </div>
-
-                <div class="w-full">
-                    <lib-button-add-to-card1
-                        [product]="product" 
-                        (addToCart)="onAddToCart($event)">
-                    </lib-button-add-to-card1>
-                </div>
+                        }
+                } 
             </div>
 
-        </div>
+            <lib-section-add-cards-buttons [product]="product" [isLogin]="isLogin">
+            </lib-section-add-cards-buttons>
 
-    } @else {
-        <div class="flex align-items-center justify-content-center h-full text-500">
-            Producto no disponible
         </div>
+    </div>
+    } @else {
+    <div class="flex align-items-center justify-content-center h-full text-500">
+        Producto no disponible
+    </div>
     }
 </div>

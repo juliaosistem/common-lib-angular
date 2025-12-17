@@ -1,9 +1,9 @@
-<form class="p-8">
+<form class="p-4 flex flex-column gap-3">
     
     
+   <lib-buttons-socialmedia-login [isRegistering]="isRegistering" [isLogout]="isLogout"></lib-buttons-socialmedia-login>
     <lib-section-login-registro-ecomerce1></lib-section-login-registro-ecomerce1>
     <!-- Botones de Social Login -->
-    <lib-buttons-socialmedia-login [isRegistering]="isRegistering" [isLogout]="isLogout"></lib-buttons-socialmedia-login>
     
     <!-- Campos del formulario -->
      @if (isRegistering && isLogout) {
@@ -12,8 +12,8 @@
         <lib-inputs-login-ecommerce1></lib-inputs-login-ecommerce1>
      }
     
-    <button type="submit"
-        class="w-full bg-[#fbc30d] text-white font-bold py-3 px-4 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
-       {{isRegistering ? 'Registrarse' : 'Iniciar sesión'}}
-    </button>
+   <button pButton type="submit"
+      [label]="isRegistering ? 'Registrarse' : 'Iniciar sesión'"
+      class="w-full p-button-warning font-bold py-3 px-4 border-round-xl shadow-3">
+   </button>
 </form>

@@ -58,11 +58,22 @@ export * from './lib/componentes/shared/atoms/loading-zigma/loading-zigma';
 export * from './lib/componentes/shared/atoms/button-action-delete1/button-action-delete1.component';
 export * from './lib/componentes/shared/atoms/button-action-edit1/button-action-edit1.component';
 export * from './lib/componentes/shared/atoms/button-add1/button-add1.component';
+export * from './lib/componentes/shared/atoms/select-input1/select-input1.component';
+export * from './lib/componentes/shared/atoms/paginator-pg/paginator-pg.component';
+export * from './lib/componentes/shared/atoms/sh-wats-button-card/sh-wats-button-card';
+export * from './lib/componentes/shared/atoms/button-add-to-card1/button-add-to-card1';
+// shared pages
+export * from './lib/componentes/shared/pages/notfound/notfound';
 
 // shared molecules
 export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.component';
 export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
+export * from './lib/componentes/shared/molecules/inflatable-customizer/customizer.component';
+export * from './lib/componentes/shared/molecules/section-filters-categories-productos/section-filters-categories-productos';
+export * from './lib/componentes/shared/molecules/productos/detalle-carrito-1/detalle-carrito-1.component';
+export * from './lib/componentes/shared/molecules/productos/card-productos1/card-productos1.component';
+export * from './lib/componentes/shared/molecules/section-add-cards-buttons/section-add-cards-buttons';
 
 // Landing Pages
 export * from './lib/componentes/landingPages/pages/ecommerce1/ecommerce1';
@@ -71,6 +82,7 @@ export * from './lib/componentes/landingPages/pages/ecommerce1/ecommerce1';
 export * from './lib/componentes/landingPages/pages/ecommerce1/home-ecommerce1/home-ecommerce1';
 export * from './lib/componentes/landingPages/pages/ecommerce1/login-ecommerce1/login-ecommerce1';
 export * from './lib/componentes/landingPages/pages/ecommerce1/register-ecommerce1/register-ecommerce1';
+export * from './lib/componentes/landingPages/pages/ecommerce1/product-detail-lib/product-detail-lib';
          // Atoms
 export * from './lib/componentes/landingPages/atoms/ecommerce1/buttons-socialmedia-login/buttons-socialmedia-login';
 export * from './lib/componentes/landingPages/atoms/ecommerce1/inputs-login-ecommerce1/inputs-login-ecommerce1';

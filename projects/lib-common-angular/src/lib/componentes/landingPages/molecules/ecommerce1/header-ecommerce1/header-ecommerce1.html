@@ -20,7 +20,13 @@
                     </li>
                 }
             </ul>
-            <a [routerLink]="['/']" class="logo-center text-3xl font-bold text-900 no-underline">{{ logoText }}</a>
+            <a [routerLink]="['/']" class="logo-center text-3xl font-bold text-900 no-underline" aria-label="Home">
+                @if (logoUrl) {
+                    <img [src]="logoUrl" [alt]="logoAlt || logoText" class="h-3rem" />
+                } @else {
+                    {{ logoText }}
+                }
+            </a>
             <ul class="main-nav-ul flex gap-4 list-none m-0 p-0">
                 @for (item of getRightMenuItems(); track item.id) {
                     <li>
@@ -32,9 +38,11 @@
                         </a>
                     </li>
                 }
+                @if(islogin){
                  <li class="flex items-center gap-3 ml-2">
                     <i class="fas fa-shopping-cart text-xl cursor-pointer shopping-cart" (click)="openCart()"></i>
                 </li>
+}
             </ul>
         </div>
     </nav>
@@ -46,15 +54,20 @@
              <i class="fas fa-bars text-2xl"></i>
             </button>
          <div class="flex align-items-center gap-3">
-                <a [routerLink]="['/']" class="text-xl font-bold text-white no-underline line-height-2">
-                    {{ logoText }}
+                <a [routerLink]="['/']" class="text-xl font-bold text-white no-underline line-height-2" aria-label="Home">
+                    @if (logoUrl) {
+                        <img [src]="logoUrl" [alt]="logoAlt || logoText" class="h-2rem" />
+                    } @else {
+                        {{ logoText }}
+                    }
                 </a>
-                
         </div>
 
-        <div class="flex align-items-center">
-            <i class="fas fa-shopping-cart text-white text-xl cursor-pointer hover:text-gray-200 transition-colors" (click)="openCart()"></i>
-        </div>
+        @if(islogin){
+            <div class="flex align-items-center">
+                <i class="fas fa-shopping-cart text-white text-xl cursor-pointer hover:text-gray-200 transition-colors" (click)="openCart()"></i>
+            </div>
+        }
     </nav>
     
     <p-drawer [(visible)]="isMobileMenuOpen"
@@ -106,6 +119,7 @@
     </p-drawer>
 
         <!-- Drawer Carrito (derecha) -->
+         @if(islogin) {
         <p-drawer [(visible)]="isCartOpen"
                             position="right"
                             [modal]="true"
@@ -114,7 +128,8 @@
                             [autoZIndex]="true"
                             (onHide)="isCartOpen = false"
                             styleClass="w-22rem cart-sidebar">
-            <ng-template pTemplate="header">
+
+            <ng-template  pTemplate="header">
                 <div class="cart-header">
                     <span>Tu Carrito</span>
                     <button class="close-cart" (click)="closeCart()">×</button>
@@ -149,5 +164,5 @@
                 </div>
             </ng-template>
         </p-drawer>
-
+         }
 </header>

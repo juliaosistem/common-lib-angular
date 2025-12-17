@@ -1,21 +1,25 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { ComponentesDTO,ProductoDTO } from '@juliaosistem/core-dtos';
-import { ButtonAddToCard1 } from "../../../atoms/button-add-to-card1/button-add-to-card1";
+type ProductoView = ProductoDTO & { nombreCategoria?: string };
 import { ProductService } from '../../../services/product.service';
+import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";
 
 
 
 @Component({
   selector: 'lib-detalle-carrito-1',
-  imports: [CommonModule, PrimegModule, FormsModule, ButtonAddToCard1],
+  imports: [CommonModule, PrimegModule, FormsModule,  SectionAddCardsButtons],
   templateUrl: './detalle-carrito-1.component.html',
   styleUrls: ['./detalle-carrito-1.component.scss'],
   standalone: true
 })
 export class DetalleCarrito1Component implements OnInit {
+
+    @Output() addToCart = new EventEmitter<{ product: ProductoDTO; quantity: number }>();
+
   // Metadata del componente    
     componente:ComponentesDTO = {
             id: 27,
@@ -23,10 +27,10 @@ export class DetalleCarrito1Component implements OnInit {
             version: '1.0',
             descripcion: 'Componente para mostrar detalle de un producto'
           }
-  
+
   @Input()
   // Variable que recibe el producto a mostrar
-  product!: ProductoDTO;
+  product!: ProductoView;
 
   // Variable que determina si el usuario está logueado
   @Input()
@@ -43,6 +47,9 @@ export class DetalleCarrito1Component implements OnInit {
   showCartMessage: boolean = false;
   // Variable que indica si el producto es favorito
   isFavorite: boolean = false;
+
+  // Control para mostrar botón de personalización como en las cards
+  @Input() isPersonalizable: boolean = false;
 
   constructor(private productService: ProductService) {}
 
@@ -95,5 +102,12 @@ export class DetalleCarrito1Component implements OnInit {
     return this.selectedImageUrl === imageUrl;
   }
 
- 
+  onChildAddToCart(event: { product: ProductoDTO; quantity: number }) {
+    this.addToCart.emit(event);
+    this.showCartMessage = event.quantity > 0;
+  }
+
+  navigateToProductDetail(): void {
+    console.log('Navegando a la página de detalle del producto...');
+  }
 }
