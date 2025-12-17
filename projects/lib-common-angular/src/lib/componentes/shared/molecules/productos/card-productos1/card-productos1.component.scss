@@ -20,3 +20,23 @@
     scrollbar-width: none; /* Firefox */
     &::-webkit-scrollbar { display: none; } /* Chrome/Safari */
 }
+
+/* 4. Overlay de ojo en la imagen del producto */
+.image-hover-container {
+    position: relative;
+    .image-overlay {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.18);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity .25s ease;
+    }
+    &:hover .image-overlay {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}

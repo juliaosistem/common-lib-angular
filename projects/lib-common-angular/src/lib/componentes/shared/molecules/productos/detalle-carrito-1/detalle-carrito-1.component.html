@@ -5,12 +5,11 @@
             <!-- Bloque de imagen principal -->
             <div class="flex flex-column gap-2">
                 <div class="main-image-frame bg-gray-100 border-round-xl flex justify-content-center align-items-center">
-                    <p-image
+                    <img
                         [src]="selectedImageUrl"
                         [alt]="product.imagen[0].alt || product.name"
-                        class="main-image border-round-xl"
-                        [preview]="true">
-                    </p-image>
+                        loading="lazy" width="1024" height="520"
+                        class="main-image border-round-xl" />
                 </div>
 
                 <!-- Miniaturas debajo en móvil y tablet -->
@@ -19,7 +18,7 @@
                     @for (imagen of product.imagen; track $index) {
                         <button type="button" class="thumbnail-container border-round-lg cursor-pointer" (click)="updateMainImage(imagen.url)">
                             <div class="thumbnail" [class.thumbnail-active]="isActiveThumbnail(imagen.url)">
-                                <img [src]="imagen.url" alt="Miniatura {{ imagen.alt }}" />
+                                <img [src]="imagen.url" alt="Miniatura {{ imagen.alt }}" loading="lazy" width="88" height="88" />
                             </div>
                         </button>
                     }
@@ -54,6 +53,7 @@
 
                     <!-- Bloque descripción con fondo gris como card -->
                     <div class="surface-ground p-3 border-round-xl border-1 surface-border">
+                        <p class="text-700 line-height-3 m-0 font-bold">Descripción</p>
                         <p class="text-700 line-height-3 m-0">{{ product.descripcion }}</p>
                     </div>
 
@@ -81,7 +81,7 @@
                         <div class="flex justify-content-between align-items-center mb-2">
                             <strong class="font-bold text-700">Categoría:</strong>
                             <span class="text-600 text-right overflow-hidden text-overflow-ellipsis" style="max-width: 60%;">
-                                {{ product.nombreCategoria }}
+                                {{ product.nombreCategoria || 'Sin categoría' }}
                             </span>
                         </div>
                         <div class="flex justify-content-between align-items-center">
@@ -94,7 +94,6 @@
                     <div class="info-badges mb-4">
                         <div class="badge"><i class="pi pi-shield"></i><span>Compra protegida</span></div>
                         <div class="badge"><i class="pi pi-truck"></i><span>Entrega rápida</span></div>
-                        <div class="badge"><i class="pi pi-refresh"></i><span>Devolución 30 días</span></div>
                     </div>
                 </div>
 

@@ -1,11 +1,20 @@
-<div class="surface-card shadow-3 border-round-xl overflow-hidden relative transition-all transition-duration-300 hover:shadow-6 flex flex-column h-full hover-effect"
+<div class="surface-card shadow-3 border-round-xl overflow-visible relative transition-all transition-duration-300 hover:shadow-6 flex flex-column h-full hover-effect"
     style="min-height: 520px; max-width: 400px; margin: 0 auto">
     @if (product) {
-    <div class="relative surface-ground flex align-items-center justify-content-center overflow-hidden p-3"
+    <div class="relative surface-ground flex align-items-center justify-content-center overflow-hidden p-3 image-hover-container"
         style="height: 280px">
         <img [src]="currentImageUrl || product.imagen[0]?.url" [alt]="product.name"
+            loading="lazy" width="400" height="280"
             class="max-w-full max-h-full object-contain cursor-pointer transition-transform transition-duration-300 hover-zoom"
             (click)="navigateToProductDetail()" />
+
+        <!-- Overlay con icono de ojo al hover -->
+        <div class="image-overlay">
+            <button pButton type="button" class="p-button-rounded p-button-info p-button-lg shadow-4"
+                    (click)="navigateToProductDetail()" pTooltip="Ver detalles" tooltipPosition="top">
+                <i class="pi pi-eye text-xl"></i>
+            </button>
+        </div>
 
         <button (click)="shareProductOnWhatsapp()"
             class="absolute bottom-0 right-0 m-3 bg-green-500 border-none text-white w-3rem h-3rem border-circle shadow-4 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600 z-2">
@@ -17,6 +26,7 @@
         <div class="flex gap-2 overflow-x-auto pb-2 mb-3 z-1">
             @for (image of product.imagen; track $index) {
             <img [src]="image.url" (click)="selectImage($index)"
+                loading="lazy" width="48" height="48"
                 class="w-3rem h-3rem border-round border-2 cursor-pointer flex-shrink-0 transition-all transition-duration-200 object-cover"
                 [class.border-900]="isActiveThumbnail($index)" [class.border-transparent]="!isActiveThumbnail($index)"
                 [class.opacity-60]="!isActiveThumbnail($index)" />
@@ -31,16 +41,31 @@
                 {{ product.name }}
             </h3>
 
-            <div class="flex gap-2 flex-shrink-0 mt-1">
+            <div class="flex gap-2 flex-shrink-0 mt-1" style="position: relative;">
+                @if (isLogin) {
                 <p-button (click)="navigateToProductDetail()" pTooltip="Personalizar" icon="pi pi-pencil"
                     tooltipPosition="top"
                     styleClass="bg-900 text-white w-2rem h-2rem border-circle border-none flex align-items-center justify-content-center cursor-pointer hover:bg-700 transition-colors shadow-1">
                 </p-button>
-
-                <p-button (click)="shareProductOnWhatsapp()" pTooltip="Compartir" tooltipPosition="top"
-                    icon="pi pi-share-alt text-sm"
-                    styleClass="surface-100 text-900 w-2rem h-2rem border-circle border-none flex align-items-center justify-content-center cursor-pointer hover:bg-200 transition-colors shadow-1">
-                </p-button>
+                }
+                                <!-- Menú flotante de redes estilo PrimeNG -->
+                                <div class="relative" style="position: absolute; right: -0.75rem; top: -0.75rem; z-index: 10;">
+                                    <button (click)="toggleShareMenu()"
+                                        class="bg-green-500 border-none text-white w-2rem h-2rem border-circle shadow-2 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600">
+                                        <i class="pi" [ngClass]="{'pi-times': shareMenuOpen, 'pi-share-alt': !shareMenuOpen}"></i>
+                                    </button>
+                                    @if (shareMenuOpen) {
+                                        <div class="flex gap-2 absolute" style="right: 0; top: 2.6rem;">
+                                            <button (click)="touchRedes('whatsapp')" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#25D366;color:#fff">
+                                                <i class="pi pi-whatsapp"></i>
+                                            </button>
+                                            <button (click)="touchRedes('facebook')" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#1877F2;color:#fff">
+                                                <i class="pi pi-facebook"></i>
+                                            </button>
+                                           
+                                        </div>
+                                    }
+                                </div>
             </div>
         </div>
 

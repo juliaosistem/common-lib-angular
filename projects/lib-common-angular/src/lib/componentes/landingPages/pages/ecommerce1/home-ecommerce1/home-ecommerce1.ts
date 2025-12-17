@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, AfterViewInit, ElementRef } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, AfterViewInit, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -7,7 +7,7 @@ import { SectionFiltersCategoriesProductos } from "../../../../shared/molecules/
 import { CardProductos1Component } from "../../../../shared/molecules/productos/card-productos1/card-productos1.component";
 import { SectionImagesInstagramEcommerce1 } from '../../../molecules/ecommerce1/section-images-instagram-ecommerce1/section-images-instagram-ecommerce1';
 import { PaginatorPgComponent } from '../../../../shared/atoms/paginator-pg/paginator-pg.component';
-import { CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dtos';
+import { BusinessDTO, CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-home-ecommerce1',
@@ -24,7 +24,7 @@ import { CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dt
   templateUrl: './home-ecommerce1.html',
   styleUrls: ['./home-ecommerce1.scss']
 })
-export class HomeEcommerce1 implements OnInit , AfterViewInit {
+export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges {
 
   // Metadata del componente    
   componente: ComponentesDTO = {
@@ -36,8 +36,12 @@ export class HomeEcommerce1 implements OnInit , AfterViewInit {
 
   // ===== Inputs desde la app =====
   @Input() isLogin: boolean = false;
-  @Input() Products: ProductoDTO[] = [];
-  @Input() Categorias: CategoriaDTO[] = [];
+  @Input() bussinesDTO!: BusinessDTO ;
+  @Input() categorias: CategoriaDTO[] = [];
+  // Base de ruta para navegar al detalle desde las cards (controlado por el front)
+  @Input() detailRouteBase: string[] = ['detalle'];
+
+  filteredProducts: ProductoDTO[] = [];
 
   // ===== Outputs para eventos hacia la app =====
   @Output() productClicked = new EventEmitter<ProductoDTO>();
@@ -45,7 +49,16 @@ export class HomeEcommerce1 implements OnInit , AfterViewInit {
 
   constructor(private el: ElementRef) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.filteredProducts = this.getAllProducts();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ((changes['bussinesDTO'] && !changes['bussinesDTO'].firstChange) ||
+        (changes['categorias'] && !changes['categorias'].firstChange)) {
+      this.applyCategoryFilter('all');
+    }
+  }
   ngAfterViewInit() {
     this.iniciarAnimacionScroll();
   }
@@ -84,6 +97,8 @@ export class HomeEcommerce1 implements OnInit , AfterViewInit {
     tarjetas.forEach((tarjeta: Element) => observer.observe(tarjeta));
     const newsletter = this.el.nativeElement.querySelectorAll('.animate-newsletter-section');
     newsletter.forEach((sec: Element) => observer.observe(sec));
+    const genericos = this.el.nativeElement.querySelectorAll('.animate-scroll');
+    genericos.forEach((el: Element) => observer.observe(el));
   }
 
   /**
@@ -124,6 +139,22 @@ onAddToCart(event: any) {
   console.log("Evento recibido:", event);
 }
   onCategoryFilter(category: string): void {
+    this.applyCategoryFilter(category);
     this.categorySelected.emit(category);
+  }
+
+  private applyCategoryFilter(category: string): void {
+    const base = this.getAllProducts();
+    if (!category || category === 'all') {
+      this.filteredProducts = base;
+      return;
+    }
+    this.filteredProducts = base.filter(p => p.nombreCategoria === category);
+  }
+
+  private getAllProducts(): ProductoDTO[] {
+    return (this.bussinesDTO && this.bussinesDTO.productos && this.bussinesDTO.productos.length > 0)
+      ? this.bussinesDTO.productos
+      : [];
   }
 }

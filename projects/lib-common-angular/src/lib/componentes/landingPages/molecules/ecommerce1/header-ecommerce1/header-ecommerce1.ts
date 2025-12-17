@@ -27,7 +27,9 @@ export class HeaderEcommerce1Component implements OnInit {
           descripcion: 'Componente para mostrar el encabezado en la página de ecommerce1'
         }
   @Input() DatosNegocio :BusinessDTO | null = null;
-  @Input() logoText: string = 'Zigma Inflables';
+    @Input() logoText: string = 'Zigma Inflables';
+    @Input() logoUrl: string | null = null;
+    @Input() logoAlt: string = 'Logo';
   
   // Configuración del menú
   @Input() menuConfig: MenuConfig | null = null;

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { ComponentesDTO,ProductoDTO } from '@juliaosistem/core-dtos';
-import { ButtonAddToCard1 } from "../../../atoms/button-add-to-card1/button-add-to-card1";
+type ProductoView = ProductoDTO & { nombreCategoria?: string };
 import { ProductService } from '../../../services/product.service';
 import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";
 
@@ -11,7 +11,7 @@ import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-
 
 @Component({
   selector: 'lib-detalle-carrito-1',
-  imports: [CommonModule, PrimegModule, FormsModule, ButtonAddToCard1, SectionAddCardsButtons],
+  imports: [CommonModule, PrimegModule, FormsModule,  SectionAddCardsButtons],
   templateUrl: './detalle-carrito-1.component.html',
   styleUrls: ['./detalle-carrito-1.component.scss'],
   standalone: true
@@ -27,10 +27,10 @@ export class DetalleCarrito1Component implements OnInit {
             version: '1.0',
             descripcion: 'Componente para mostrar detalle de un producto'
           }
-  
+
   @Input()
   // Variable que recibe el producto a mostrar
-  product!: ProductoDTO;
+  product!: ProductoView;
 
   // Variable que determina si el usuario está logueado
   @Input()

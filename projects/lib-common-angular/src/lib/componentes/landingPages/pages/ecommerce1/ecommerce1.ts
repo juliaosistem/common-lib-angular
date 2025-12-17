@@ -7,7 +7,7 @@ import { HeaderEcommerce1Component } from "../../molecules/ecommerce1/header-eco
 import { BarFloatEcommerce1 } from "../../molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1";
 import { FooterEcommerce1 } from "../../molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1";
 import { RouterOutlet } from '@angular/router';
-import { ProductoDTO ,CategoriaDTO, MenuConfig, MenuItem, BusinessDTO} from '@juliaosistem/core-dtos';
+import { CategoriaDTO, MenuConfig, MenuItem, BusinessDTO} from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-ecommerce1',
   imports: [CommonModule, DialogModule, ButtonModule, BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet],
@@ -22,8 +22,6 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
    // Datos del negocio
   @Input() DatosNegocio :BusinessDTO | null = null;
 
-  // Productos a mostrar
-  @Input() Products !: ProductoDTO [];
   // Categorias a mostrar
   @Input() Categorias!: CategoriaDTO [];
 
@@ -74,11 +72,6 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(): void {
     // Los datos han cambiado, aquí puedes actualizar cualquier lógica necesaria
-    console.log('Datos actualizados:', {
-      productos: this.Products?.length || 0,
-      categorias: this.Categorias?.length || 0,
-      isLogin: this.isLogin
-    });
   }
 
   ngAfterViewInit(): void {
@@ -181,21 +174,13 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  hideWhatsappModal(): void {
-    this.showWhatsappModal = false;
-    // Al cerrar, volver al inicio de la página
-    if (isPlatformBrowser(this.platformId)) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
   openWhatsappChat(message?: string): void {
     const defaultMessage = 'Hola, estoy interesado en los productos de Zigma Inflables.';
     const whatsappNumber = this.DatosNegocio?.telefono || '3186956700'; // Reemplazar con número real
     const finalMessage = message || defaultMessage;
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(finalMessage)}`;
     window.open(whatsappUrl, '_blank');
-    this.hideWhatsappModal();
+    
   }
 
   // ===== NEWSLETTER =====
@@ -333,6 +318,12 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
     if (this.intersectionObserver) {
       this.intersectionObserver.disconnect();
     }
+
+    // Seguridad: asegurar que el body recupere el scroll si el diálogo quedó abierto
+    try {
+      document.body.classList.remove('p-overflow-hidden', 'overflow-hidden');
+    } catch(e){ console.error(e); }
+    this.showWhatsappModal = false;
   }
 
   // ===== EVENTOS DEL TEMPLATE =====

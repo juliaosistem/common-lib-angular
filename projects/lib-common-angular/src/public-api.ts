@@ -82,6 +82,7 @@ export * from './lib/componentes/landingPages/pages/ecommerce1/ecommerce1';
 export * from './lib/componentes/landingPages/pages/ecommerce1/home-ecommerce1/home-ecommerce1';
 export * from './lib/componentes/landingPages/pages/ecommerce1/login-ecommerce1/login-ecommerce1';
 export * from './lib/componentes/landingPages/pages/ecommerce1/register-ecommerce1/register-ecommerce1';
+export * from './lib/componentes/landingPages/pages/ecommerce1/product-detail-lib/product-detail-lib';
          // Atoms
 export * from './lib/componentes/landingPages/atoms/ecommerce1/buttons-socialmedia-login/buttons-socialmedia-login';
 export * from './lib/componentes/landingPages/atoms/ecommerce1/inputs-login-ecommerce1/inputs-login-ecommerce1';

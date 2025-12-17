@@ -5,13 +5,15 @@
 <!-- Product Grid Section -->
 
 <lib-section-filters-categories-productos id="categorias"
-[categorias]="Categorias"></lib-section-filters-categories-productos>
+    [categorias]="categorias"
+    (categorySelected)="onCategoryFilter($event)">
+</lib-section-filters-categories-productos>
 <ng-template #cards let-items>
     <div class="grid align-items-center justify-content-center">
         @for (product of items; track $index) {
         <div class="col-12 md:col-6 p-5 lg:p-3 lg:col-4 product-card-animation"
             [style.transition-delay]="($index * 30) + 'ms'">
-            <lib-card-productos1 [product]="product" (addToCart)="onAddToCart($event)">
+            <lib-card-productos1 [product]="product" [detailRouteBase]="detailRouteBase" (addToCart)="onAddToCart($event)">
             </lib-card-productos1>
         </div>
         }
@@ -19,7 +21,7 @@
 </ng-template>
 
 <lib-paginator-pg
-  [data]="Products"
+  [data]="filteredProducts"
   [rows]="9"
   [rowsPerPageOptions]="[9,18,27,54,81]"
   [showCurrentPageReport]="true"
