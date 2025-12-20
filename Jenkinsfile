@@ -34,7 +34,7 @@ pipeline {
         stage('Check Node Info') {
             steps {
                 sh '''
-                    echo "=== INFORMACIÓN DEL NODO ==="
+                    echo "=== INFORMACIÃ“N DEL NODO ==="
                     echo "NODE_NAME: $NODE_NAME"
                     echo "NODE_LABELS: $NODE_LABELS"
                     echo "WORKSPACE: $WORKSPACE"
@@ -55,29 +55,29 @@ pipeline {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                        // Validación en Groovy antes de ejecutar comandos con las credenciales
+                        // ValidaciÃ³n en Groovy antes de ejecutar comandos con las credenciales
                         def u = env.GIT_USER ?: ''
                         if (u.contains('@') || u.contains(' ') || u.contains(':')) {
-                            error("Credencial mal formada: Username contiene caracteres inválidos (${u}).\nAsegura en Jenkins que 'credenciales git' sea tipo 'Username with password' con:\n - Username = tu usuario de GitHub (ej. farius-red), NO el email\n - Password = token personal (PAT).")
+                            error("Credencial mal formada: Username contiene caracteres invÃ¡lidos (${u}).\nAsegura en Jenkins que 'credenciales git' sea tipo 'Username with password' con:\n - Username = tu usuario de GitHub (ej. farius-red), NO el email\n - Password = token personal (PAT).")
                         }
 
-                        // Hacer clone y sincronizar al workspace (no borrar tmp_checkout aún)
+                        // Hacer clone y sincronizar al workspace (no borrar tmp_checkout aÃºn)
                         sh '''
                           set -e
-                          echo "🔎 Validando acceso al repo principal..."
+                          echo "ðŸ”Ž Validando acceso al repo principal..."
                           if ! git ls-remote --heads "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" "${BRANCH_NAME:-develop}" >/dev/null 2>&1; then
                             echo "ERROR: no se pudo acceder al repo principal con las credenciales proporcionadas."
                             echo "Verifica 'credenciales git' en Jenkins: Username = tu usuario GitHub (no email), Password = token personal (PAT)."
                             exit 1
                           fi
-                          echo "📥 Clonando repo principal en tmp_checkout..."
+                          echo "ðŸ“¥ Clonando repo principal en tmp_checkout..."
                           rm -rf tmp_checkout
                           git clone --branch "${BRANCH_NAME:-develop}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" tmp_checkout
-                          echo "📤 Sincronizando contenido al workspace (excluyendo .git)..."
+                          echo "ðŸ“¤ Sincronizando contenido al workspace (excluyendo .git)..."
                           if command -v rsync >/dev/null 2>&1; then
                             rsync -a --delete --exclude='.git' tmp_checkout/ .
                           else
-                            echo "⚠️ rsync no disponible: usando git archive como fallback (no requiere rsync)"
+                            echo "âš ï¸ rsync no disponible: usando git archive como fallback (no requiere rsync)"
                             git -C tmp_checkout archive HEAD | tar -x -C .
                           fi
                         '''
@@ -89,14 +89,14 @@ pipeline {
                         env.DEMO_IMAGE_TAG = "${env.NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${env.BUILD_TAG}"
                         env.LIB_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
 
-                        // ahora sí limpiar el clone temporal
+                        // ahora sÃ­ limpiar el clone temporal
                         sh 'rm -rf tmp_checkout'
 
-                        echo "🚀 Build automático en multibranch"
-                        echo "📦 Rama: ${env.BRANCH_NAME}"
-                        echo "📝 Commit: ${env.GIT_COMMIT}"
-                        echo "🏷️ Versión librería: ${env.LIB_VERSION}"
-                        echo "🏷️ Tag imagen: ${env.BUILD_TAG}"
+                        echo "ðŸš€ Build automÃ¡tico en multibranch"
+                        echo "ðŸ“¦ Rama: ${env.BRANCH_NAME}"
+                        echo "ðŸ“ Commit: ${env.GIT_COMMIT}"
+                        echo "ðŸ·ï¸ VersiÃ³n librerÃ­a: ${env.LIB_VERSION}"
+                        echo "ðŸ·ï¸ Tag imagen: ${env.BUILD_TAG}"
                     }
                 }
             }
@@ -108,13 +108,13 @@ pipeline {
                     script {
                         sh '''
                           set -e
-                          echo "🔽 Preparando lib-core-dtos (clone limpio)"
+                          echo "ðŸ”½ Preparando lib-core-dtos (clone limpio)"
                           rm -rf lib-core-dtos
                           if ! git clone --branch develop "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos 2>/dev/null; then
-                              echo "⚠️ No se pudo clonar la rama 'develop' (posible que no exista); clonando la rama por defecto..."
+                              echo "âš ï¸ No se pudo clonar la rama 'develop' (posible que no exista); clonando la rama por defecto..."
                               git clone "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
                           fi
-                          echo "✅ lib-core-dtos listo"
+                          echo "âœ… lib-core-dtos listo"
                         '''
                     }
                 }
@@ -125,18 +125,18 @@ pipeline {
             steps {
                 script {
                     if (!fileExists('package.json')) {
-                        error("package.json no encontrado en workspace. Asegúrate de que el checkout se realizó correctamente.")
+                        error("package.json no encontrado en workspace. AsegÃºrate de que el checkout se realizÃ³ correctamente.")
                     }
                     sh '''
-                        echo "📦 Instalando dependencias usando registry público (npmjs.org)..."
+                        echo "ðŸ“¦ Instalando dependencias usando registry pÃºblico (npmjs.org)..."
 
-                        # Respaldar ~/.npmrc si existe (por ejemplo contiene configuración para Nexus)
+                        # Respaldar ~/.npmrc si existe (por ejemplo contiene configuraciÃ³n para Nexus)
                         if [ -f ~/.npmrc ]; then
-                            echo "🔒 Respaldando ~/.npmrc a ~/.npmrc.jenkins_backup"
+                            echo "ðŸ”’ Respaldando ~/.npmrc a ~/.npmrc.jenkins_backup"
                             mv ~/.npmrc ~/.npmrc.jenkins_backup || true
                         fi
 
-                        # Forzar registry público para instalar paquetes
+                        # Forzar registry pÃºblico para instalar paquetes
                         npm config set registry "https://registry.npmjs.org/"
                                                 npm config set legacy-peer-deps true
 
@@ -151,36 +151,36 @@ pipeline {
                                                     npm ci --legacy-peer-deps --no-audit --no-fund --prefer-offline
                                                     CI_STATUS=$?
                                                     if [ $CI_STATUS -ne 0 ]; then
-                                                        echo "⚠️ npm ci (legacy) falló (${CI_STATUS}), intentando npm ci estándar..."
+                                                        echo "âš ï¸ npm ci (legacy) fallÃ³ (${CI_STATUS}), intentando npm ci estÃ¡ndar..."
                                                         npm ci --no-audit --no-fund --prefer-offline || true
                                                     fi
                                                 else
                                                     npm install --legacy-peer-deps --no-audit --no-fund --prefer-offline
                                                     CI_STATUS=$?
                                                     if [ $CI_STATUS -ne 0 ]; then
-                                                        echo "⚠️ npm install (legacy) falló (${CI_STATUS}), intentando npm install estándar..."
+                                                        echo "âš ï¸ npm install (legacy) fallÃ³ (${CI_STATUS}), intentando npm install estÃ¡ndar..."
                                                         npm install --no-audit --no-fund --prefer-offline || true
                                                     fi
                                                 fi
                                                 set -e
 
-                        echo "✅ Dependencias instaladas"
+                        echo "âœ… Dependencias instaladas"
 
-                        echo "🔄 Generando DTOs y construyendo proyectos..."
+                        echo "ðŸ”„ Generando DTOs y construyendo proyectos..."
                         npm run generate:dtos
-                        echo "✅ DTOs generados"
-                        echo "🔨 Construyendo librería y demo..."
+                        echo "âœ… DTOs generados"
+                        echo "ðŸ”¨ Construyendo librerÃ­a y demo..."
                         npm run build:lib
-                        echo "✅ Librería construida"
+                        echo "âœ… LibrerÃ­a construida"
                         npm run build:demo
-                        echo "✅ Demo construida"
+                        echo "âœ… Demo construida"
 
-                        # Restaurar ~/.npmrc si existía
+                        # Restaurar ~/.npmrc si existÃ­a
                         if [ -f ~/.npmrc.jenkins_backup ]; then
-                            echo "🔓 Restaurando ~/.npmrc desde backup"
+                            echo "ðŸ”“ Restaurando ~/.npmrc desde backup"
                             mv ~/.npmrc.jenkins_backup ~/.npmrc || true
                         else
-                            # eliminar setting de registry local si no había ~/.npmrc
+                            # eliminar setting de registry local si no habÃ­a ~/.npmrc
                             npm config delete registry || true
                         fi
                     '''
@@ -192,7 +192,7 @@ pipeline {
         stage('Build Library') {
             steps {
                 sh '''
-                    echo "🔨 Construyendo librería..."
+                    echo "ðŸ”¨ Construyendo librerÃ­a..."
                     npm run build:lib
                 '''
             }
@@ -221,7 +221,7 @@ pipeline {
                     script {
                         sh '''
                             set -e
-                            echo "📤 Publicando librería v${LIB_VERSION} en Nexus NPM..."
+                            echo "ðŸ“¤ Publicando librerÃ­a v${LIB_VERSION} en Nexus NPM..."
                             # asegurar registry en npm config (no imprime secretos)
                             npm config set registry "$NEXUS_NPM_REGISTRY"
 
@@ -239,7 +239,7 @@ pipeline {
                             # forzar publish al registry de Nexus (evita publishConfig en package.json)
                             cd dist/lib-common-angular
                             npm publish --registry "$NEXUS_NPM_REGISTRY"
-                            echo "✅ Librería v${LIB_VERSION} publicada exitosamente en $NEXUS_NPM_REGISTRY"
+                            echo "âœ… LibrerÃ­a v${LIB_VERSION} publicada exitosamente en $NEXUS_NPM_REGISTRY"
                         '''
                     }
                 }
@@ -249,7 +249,7 @@ pipeline {
         stage('Build Demo App') {
             steps {
                 sh '''
-                    echo "🔨 Construyendo demo..."
+                    echo "ðŸ”¨ Construyendo demo..."
                     npm run build:demo
                 '''
             }
@@ -260,7 +260,7 @@ pipeline {
             }
         }
 
-        // NUEVO: Detectar si Kaniko o Docker están disponibles en el agente
+        // NUEVO: Detectar si Kaniko o Docker estÃ¡n disponibles en el agente
         stage('Detect Container Tools') {
             steps {
                 script {
@@ -298,7 +298,7 @@ pipeline {
                     def hasDocker = env.DOCKER_AVAILABLE == 'true'
 
                      if (hasDocker) {
-                        echo "🐳 Docker remoto disponible en ${env.DOCKER_HOST}: usando docker build/push"
+                        echo "ðŸ³ Docker remoto disponible en ${env.DOCKER_HOST}: usando docker build/push"
                         withCredentials([usernamePassword(
                             credentialsId: "${NEXUS_CREDENTIALS_ID}",
                             usernameVariable: 'NEXUS_USER',
@@ -316,23 +316,23 @@ pipeline {
                                 echo "Docker Host: ${DOCKER_HOST}"
                                 echo "Registry Host: ${REGISTRY_HOST}"
 
-                                echo "🔐 Logueando en registry..."
+                                echo "ðŸ” Logueando en registry..."
                                 echo "$NEXUS_PASS" | docker login --username "$NEXUS_USER" --password-stdin "$REGISTRY_HOST"
 
-                                echo "🔨 Construyendo imagen..."
+                                echo "ðŸ”¨ Construyendo imagen..."
                                 docker build -t "${IMAGE}" --build-arg APP_VERSION="${LIB_VERSION}" --build-arg BUILD_TAG="${BUILD_TAG}" --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" -f Dockerfile .
 
-                                echo "📤 Pushing..."
+                                echo "ðŸ“¤ Pushing..."
                                 docker push "${IMAGE}"
 
-                                echo "✅ Imagen publicada: ${IMAGE}"
+                                echo "âœ… Imagen publicada: ${IMAGE}"
 
                                 docker logout "$REGISTRY_HOST" || true
                             '''
                         }
                     } else {
-                        echo "❌ Docker no disponible en ${env.DOCKER_HOST}"
-                        echo "   Verifique que el daemon de Docker esté ejecutándose y accesible desde Jenkins."
+                        echo "âŒ Docker no disponible en ${env.DOCKER_HOST}"
+                        echo "   Verifique que el daemon de Docker estÃ© ejecutÃ¡ndose y accesible desde Jenkins."
                     }
                 }
             }
@@ -349,9 +349,9 @@ pipeline {
                 withCredentials([string(credentialsId: "${RANCHER_CREDENTIALS_ID}", variable: 'RANCHER_TOKEN')]) {
                     script {
                         sh """
-                            echo "🚀 Desplegando ${env.DEMO_IMAGE_TAG} en Rancher..."
-                            # Deploy logic aquí...
-                            echo "✅ Despliegue completado"
+                            echo "ðŸš€ Desplegando ${env.DEMO_IMAGE_TAG} en Rancher..."
+                            # Deploy logic aquÃ­...
+                            echo "âœ… Despliegue completado"
                         """
                     }
                 }
@@ -367,7 +367,7 @@ pipeline {
                 }
             }
             steps {
-                echo "🚀 Desplegando en entorno de desarrollo..."
+                echo "ðŸš€ Desplegando en entorno de desarrollo..."
             }
         }
 
@@ -379,7 +379,7 @@ pipeline {
             script {
                 node {
                     sh '''
-                        # Limpiar Docker si está disponible
+                        # Limpiar Docker si estÃ¡ disponible
                         if command -v docker >/dev/null 2>&1; then
                             docker system prune -f || true
                         else
@@ -394,23 +394,23 @@ pipeline {
             script {
                 def deployStatus = ""
                 if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main') {
-                    deployStatus = "🚀 Desplegado en PRODUCCIÓN"
+                    deployStatus = "ðŸš€ Desplegado en PRODUCCIÃ“N"
                 } else if (env.BRANCH_NAME == 'develop') {
-                    deployStatus = "🧪 Desplegado en desarrollo"
+                    deployStatus = "ðŸ§ª Desplegado en desarrollo"
                 } else if (env.BRANCH_NAME?.startsWith('feature/')) {
-                    deployStatus = "🔬 Desplegado en FEATURE env"
+                    deployStatus = "ðŸ”¬ Desplegado en FEATURE env"
                 } else if (env.BRANCH_NAME?.startsWith('desplieges')) {
-                    deployStatus = "🔬 Desplegado"
+                    deployStatus = "ðŸ”¬ Desplegado"
                 }
                  else {
-                    deployStatus = "📦 Solo build (no deploy)"
+                    deployStatus = "ðŸ“¦ Solo build (no deploy)"
                 }
 
-                echo """✅ Pipeline Exitoso - ${env.BRANCH_NAME}
-📦 Librería: v${env.LIB_VERSION}
-🐳 Docker: ${env.DEMO_IMAGE_TAG}
+                echo """âœ… Pipeline Exitoso - ${env.BRANCH_NAME}
+ðŸ“¦ LibrerÃ­a: v${env.LIB_VERSION}
+ðŸ³ Docker: ${env.DEMO_IMAGE_TAG}
 ${deployStatus}
-🔗 Build: ${env.BUILD_URL}
+ðŸ”— Build: ${env.BUILD_URL}
 """
 
                 // Notificar estado "success" a GitHub
@@ -430,9 +430,9 @@ ${deployStatus}
         failure {
             script {
                 node {
-                    echo """❌ Pipeline Falló - ${env.BRANCH_NAME}
-📝 Commit: ${env.GIT_COMMIT}
-🔗 Build: ${env.BUILD_URL}
+                    echo """âŒ Pipeline FallÃ³ - ${env.BRANCH_NAME}
+ðŸ“ Commit: ${env.GIT_COMMIT}
+ðŸ”— Build: ${env.BUILD_URL}
 """
                     // Notificar estado "failure" a GitHub
                       withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
@@ -443,7 +443,7 @@ ${deployStatus}
                               -H "Authorization: token ${GIT_PASS}" \
                               -H "Accept: application/vnd.github+json" \
                               "https://api.github.com/repos/${GITHUB_REPO}/statuses/${GIT_COMMIT}" \
-                              -d "{\"state\":\"failure\",\"target_url\":\"${BUILD_URL}\",\"description\":\"Jenkins pipeline falló\",\"context\":\"ci/jenkins/lib-common-angular\"}" || echo "⚠️ No se pudo publicar el estado de fallo en GitHub"
+                              -d "{\"state\":\"failure\",\"target_url\":\"${BUILD_URL}\",\"description\":\"Jenkins pipeline fallÃ³\",\"context\":\"ci/jenkins/lib-common-angular\"}" || echo "âš ï¸ No se pudo publicar el estado de fallo en GitHub"
                         '''
                     }
                 }
@@ -451,4 +451,4 @@ ${deployStatus}
         }
     }
 
-} // end pipeline
+}
