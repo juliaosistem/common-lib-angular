@@ -1,0 +1,53 @@
+<div class="p-4 bg-white rounded-xl shadow-md space-y-4">
+
+  <!-- Selector de partes -->
+  <div class="space-y-2">
+    <label class="font-semibold">Selecciona la parte a colorear:</label>
+    <div class="grid grid-cols-4 gap-2">
+      @for (part of [].constructor(project.product.parts); track $index; let i = $index) {
+        <button type="button"
+                pButton
+                label="Parte {{i + 1}}"
+                class="w-full"
+                [class.p-button-info]="selectedPart === i"
+                (click)="selectPart(i)">
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Select de colores -->
+  <div class="space-y-2">
+    <label class="font-semibold">Elige un color:</label>
+    <select [(ngModel)]="selectedColor" class="w-full border rounded-lg p-2">
+      @for (c of COLORS; track c.hex) {
+        <option [value]="c.hex">{{ c.name }}</option>
+      }
+    </select>
+    <button pButton type="button" label="Aplicar color" icon="pi pi-check" class="mt-2" (click)="applyColor()"></button>
+  </div>
+
+  <!-- Accesorios (usando checkbox nativo) -->
+  <div class="space-y-2">
+    <label class="font-semibold">Accesorios:</label>
+    @for (acc of ACCESSORIES; track acc.id) {
+      <div class="flex items-center gap-2">
+        <input type="checkbox"
+               [checked]="isAccessorySelected(acc)"
+               (change)="toggleAccessory(acc)"
+               id="{{acc.id}}">
+        <label for="{{acc.id}}">{{ acc.name }}</label>
+        <span class="ml-2 text-sm text-gray-500" *ngIf="acc.price > 0">+{{acc.price | currency:'COP':'symbol':'1.0-0'}}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Total -->
+  <div class="p-3 bg-gray-100 rounded-lg flex justify-between items-center font-bold">
+    <span>Total</span>
+    <span>{{ project.totalPrice | currency:'COP':'symbol':'1.0-0' }}</span>
+  </div>
+
+  <!-- Guardar -->
+  <button pButton type="button" label="Guardar Personalización" class="w-full p-button-success" (click)="saveProject()"></button>
+</div>

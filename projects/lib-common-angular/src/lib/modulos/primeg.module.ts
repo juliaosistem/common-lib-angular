@@ -19,6 +19,7 @@ import { SelectModule } from 'primeng/select';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
+import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -27,13 +28,17 @@ import { TieredMenuModule } from 'primeng/tieredmenu';
 import { FileUploadModule } from 'primeng/fileupload';
 import { DataViewModule } from 'primeng/dataview';
 import { ImageModule } from 'primeng/image';
-
+import { StepperModule } from 'primeng/stepper';
+import { MessageService } from 'primeng/api';
+import { DrawerModule } from 'primeng/drawer';
 @NgModule({
   declarations: [],
+  providers: [MessageService],
   imports: [
     CommonModule,
     ImageModule,
     ButtonModule,
+    CardModule,
     AutoCompleteModule,
     CascadeSelectModule,
     CheckboxModule,
@@ -59,9 +64,12 @@ import { ImageModule } from 'primeng/image';
    TieredMenuModule,
    FileUploadModule,
    DataViewModule,
+   StepperModule,
+   DrawerModule,
   ],
   exports:[
     ButtonModule,
+    CardModule,
     AutoCompleteModule,
     CascadeSelectModule,
     CheckboxModule,
@@ -87,7 +95,9 @@ import { ImageModule } from 'primeng/image';
   TieredMenuModule,
   FileUploadModule,
   DataViewModule,
-  ImageModule
+  ImageModule,
+  StepperModule,
+  DrawerModule,
   ]
 })
 export class PrimegModule { }

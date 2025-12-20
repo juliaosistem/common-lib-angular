@@ -7,6 +7,8 @@ export interface GenerateFieldsConfig {
   fieldLabels?: Record<string, string>;
   fieldOrder?: string[];
   excludeFields?: string[];
+  getValueFn?: (item: any, key: string) => any; // permite getter personalizado
+
 }
 
 export interface CreateFieldConfig {
@@ -52,6 +54,7 @@ export class DynamicFieldService {
         fieldLabels
       })
     );
+    
   }
 
   /**

@@ -1,152 +1,77 @@
- <div id="home-page">
-        
-        <!-- Nueva Hero Section con animaciones, inspirada en la imagen -->
-        <lib-hero-section-ecommerce1></lib-hero-section-ecommerce1>
+<!--  Hero Section con animaciones-->
 
-        <!-- Product Grid Section -->
-        <main class="container mx-auto p-6">
-            <lib-section-filters-categories-productos></lib-section-filters-categories-productos>
-            <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Tarjeta de Producto 1 -->
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Castillo+Clasico" alt="Castillo Inflable Clasico" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Castillo Clásico</h3>
-                    <span class="text-2xl font-bold text-gray-800">$300.00 USD</span>
-                </div>
+<lib-hero-section-ecommerce1></lib-hero-section-ecommerce1>
 
-                <!-- Tarjeta de Producto 2 -->
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Tobogan+Acuatico" alt="Tobogan Acuatico" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Tobogán Acuático</h3>
-                    <span class="text-2xl font-bold text-gray-800">$380.00 USD</span>
-                </div>
+<!-- Product Grid Section -->
 
-                <!-- Tarjeta de Producto 3 -->
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Inflable+con+Obstaculos" alt="Inflable con Obstaculos" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Inflable de Obstáculos</h3>
-                    <span class="text-2xl font-bold text-gray-800">$380.00 USD</span>
-                </div>
+<lib-section-filters-categories-productos id="categorias"
+    [categorias]="categorias"
+    (categorySelected)="onCategoryFilter($event)">
+</lib-section-filters-categories-productos>
+<ng-template #cards let-items>
+    <div class="grid align-items-center justify-content-center">
+        @for (product of items; track $index) {
+        <div class="col-12 md:col-6 p-5 lg:p-3 lg:col-4 product-card-animation"
+            [style.transition-delay]="($index * 30) + 'ms'">
+            <lib-card-productos1 [product]="product" [detailRouteBase]="detailRouteBase" (addToCart)="onAddToCart($event)">
+            </lib-card-productos1>
+        </div>
+        }
+    </div>
+</ng-template>
 
-                <!-- Tarjeta de Producto 4 -->
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Brinca+Brinca" alt="Brinca Brinca" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Brinca Brinca</h3>
-                    <span class="text-2xl font-bold text-gray-800">$240.00 USD</span>
+<lib-paginator-pg
+  [data]="filteredProducts"
+  [rows]="9"
+  [rowsPerPageOptions]="[9,18,27,54,81]"
+  [showCurrentPageReport]="true"
+  [currentPageReportTemplate]="'Mostrando {first} a {last} de {totalRecords} ítems'"
+  [itemTemplate]="cards">
+</lib-paginator-pg>
+
+<!-- Seccion "Nuestra Historia"-->
+<section id="nosotros" class="history-section" style="
+    background-image: url(&quot;https://placehold.co/1400x600/b0b0b0/ffffff?text=Our+Story+Background+Image&quot;);
+  ">
+    <div class="history-overlay"></div>
+    <div class="history-content">
+        <p class="history-pretitle">Sobre Nosotros</p>
+        <h2 class="history-title">Conoce Nuestra Historia</h2>
+        <p class="history-text">
+            No hay una fórmula mágica para escribir un texto publicitario perfecto; se
+            basa en varios factores, incluyendo la ubicación del anuncio, la
+            demografía e incluso el estado de ánimo del consumidor.
+        </p>
+        <button pButton type="button" class="p-button-rounded p-button-lg p-button-warning" icon="pi pi-play"
+            aria-label="Ver video"></button>
+    </div>
+</section>
+
+<!-- Nueva seccion de Instagram -->
+<lib-section-images-instagram-ecommerce1></lib-section-images-instagram-ecommerce1>
+
+<!-- Newsletter (PrimeFlex + animación on scroll) -->
+<section class="surface-section py-5 animate-newsletter-section">
+    <div class="mx-auto px-3 md:px-4" style="max-width: 1100px;">
+        <div class="newsletter-card surface-card border-round-2xl shadow-2 p-4 md:p-5 flex flex-column md:flex-row align-items-center gap-3 md:gap-4">
+            <div class="newsletter-left flex align-items-center gap-3 md:gap-4">
+                <div class="newsletter-icon flex align-items-center justify-content-center border-round-3xl" style="background:#fbc30d; width: 52px; height:52px;">
+                    <svg class="newsletter-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" xmlns="http://www.w3.org/2000/svg" style="width:28px;height:28px;color:#fff;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                    </svg>
                 </div>
-                
-                <!-- Más tarjetas de productos pueden ir aquí -->
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Inflable+Futbol" alt="Inflable de Futbol" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Inflable de Fútbol</h3>
-                    <span class="text-2xl font-bold text-gray-800">$240.00 USD</span>
-                </div>
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Castillo+Princesa" alt="Castillo Princesa" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Castillo Princesa</h3>
-                    <span class="text-2xl font-bold text-gray-800">$320.00 USD</span>
-                </div>
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Ring+Boxeo" alt="Ring de Boxeo" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Ring de Boxeo</h3>
-                    <span class="text-2xl font-bold text-gray-800">$160.00 USD</span>
-                </div>
-                <div class="product-card bg-white rounded-xl shadow-md p-4 transform hover:scale-105 transition-all duration-300">
-                    <img src="https://placehold.co/400x300/e0e0e0/ffffff?text=Tobogan+Gigante" alt="Tobogan Gigante" class="rounded-lg mb-4 w-full">
-                    <h3 class="text-xl font-semibold mb-1">Tobogán Gigante</h3>
-                    <span class="text-2xl font-bold text-gray-800">$270.00 USD</span>
+                <div class="newsletter-text">
+                    <h3 class="newsletter-title m-0 text-900 text-xl md:text-2xl">Suscríbete a nuestro boletín</h3>
+                    <p class="newsletter-subtitle m-0 text-600">¡y obtén un 10% de descuento!</p>
                 </div>
             </div>
-        </main>
-
-        <!-- Seccion "Nuestra Historia" -->
-        <section class="relative bg-cover bg-center min-h-[500px] flex items-center justify-center text-white px-6 my-12 animate-history-section" style="background-image: url('https://placehold.co/1400x600/b0b0b0/ffffff?text=Our+Story+Background+Image');">
-            <div class="absolute inset-0 bg-black/50"></div>
-            <div class="relative text-center max-w-3xl z-10">
-                <p class="text-lg font-light mb-2">Sobre Nosotros</p>
-                <h2 class="text-4xl md:text-6xl font-bold mb-4">Conoce Nuestra Historia</h2>
-                <p class="text-lg font-light mb-8">No hay una fórmula mágica para escribir un texto publicitario perfecto; se basa en varios factores, incluyendo la ubicación del anuncio, la demografía e incluso el estado de ánimo del consumidor.</p>
-                <button class="bg-[#fbc30d] text-white p-4 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
-                    <i class="fas fa-play text-2xl"></i>
-                </button>
+            <div class="newsletter-right flex justify-content-center md:justify-content-end w-full md:w-auto">
+                <form id="newsletter-form" class="newsletter-form flex gap-2 w-full md:w-auto" style="max-width:520px;">
+                    <input pInputText type="email" id="email-input" name="email" class="flex-1 p-inputtext-sm md:p-inputtext" placeholder="Ingresa tu correo electrónico" required />
+                    <button pButton type="submit" label="Suscribirme" class="p-button-warning"></button>
+                </form>
             </div>
-        </section>
+        </div>
+    </div>
+</section>
 
-        <!-- Nueva seccion de Instagram -->
-        <section class="py-16 bg-white animate-instagram-section">
-            <div class="container mx-auto px-6 text-center">
-                <span class="text-gray-500 font-semibold">@ZigmaInflables</span>
-                <h2 class="text-4xl font-bold text-gray-800 my-4">¡Estamos en Instagram!</h2>
-                <div class="flex flex-wrap justify-center gap-4 mt-8">
-                    <!-- Imagen de Instagram 1 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+1" alt="Instagram Picture 1" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                    <!-- Imagen de Instagram 2 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+2" alt="Instagram Picture 2" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                    <!-- Imagen de Instagram 3 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+3" alt="Instagram Picture 3" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                    <!-- Imagen de Instagram 4 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+4" alt="Instagram Picture 4" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                    <!-- Imagen de Instagram 5 -->
-                    <div class="w-full sm:w-1/2 md:w-1/3 lg:w-1/5">
-                        <a href="#" class="block rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                            <img src="https://placehold.co/300x300/e0e0e0/ffffff?text=Insta+Pic+5" alt="Instagram Picture 5" class="w-full h-auto object-cover">
-                        </a>
-                    </div>
-                </div>
-                <a href="#" class="inline-block mt-8 bg-[#fbc30d] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
-                    Ver más fotos
-                </a>
-            </div>
-        </section>
-
-        <!-- Nueva sección del Newsletter -->
-        <section class="py-16 px-6 my-12 animate-newsletter-section">
-            <div class="container mx-auto">
-                <div class="bg-white rounded-3xl shadow-xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between space-y-6 md:space-y-0 md:space-x-8">
-                    <div class="flex items-center space-x-6 flex-grow">
-                        <!-- Icono de avión de papel con fondo azul -->
-                        <div class="flex-shrink-0 bg-[#fbc30d] p-4 md:p-6 rounded-full shadow-md">
-                            <svg class="h-8 w-8 md:h-12 md:w-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-                            </svg>
-                        </div>
-                        <div class="text-gray-800 text-center md:text-left">
-                            <h3 class="text-xl md:text-2xl font-bold">Suscríbete a nuestro boletín</h3>
-                            <p class="text-sm md:text-lg text-gray-600">¡y obtén un 10% de descuento!</p>
-                        </div>
-                    </div>
-                    <div class="w-full md:w-auto flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-                        <form id="newsletter-form" class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
-                            <div class="relative flex-grow">
-                                <input type="email" id="email-input" name="email" placeholder="Ingresa tu correo electrónico" class="w-full pl-6 pr-12 py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#fbc30d]" required>
-                                <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z"></path>
-                                    </svg>
-                                </span>
-                            </div>
-                            <button type="submit" class="bg-[#fbc30d] text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-[#cda41a] transition-colors">
-                                Suscribirme
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </div> <!-- Fin de la seccion de la pagina principal -->

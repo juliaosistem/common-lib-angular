@@ -1,85 +1,113 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
+import { ComponentesDTO,ProductoDTO } from '@juliaosistem/core-dtos';
+type ProductoView = ProductoDTO & { nombreCategoria?: string };
+import { ProductService } from '../../../services/product.service';
+import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";
 
-interface Product {
-  name: string;
-  oldPrice: number;
-  price: number;
-  rating: number;
-  reviews: number;
-  description: string;
-  images: string[];
-}
+
 
 @Component({
   selector: 'lib-detalle-carrito-1',
-  imports: [CommonModule, PrimegModule,FormsModule],
+  imports: [CommonModule, PrimegModule, FormsModule,  SectionAddCardsButtons],
   templateUrl: './detalle-carrito-1.component.html',
-  styleUrl: './detalle-carrito-1.component.scss',
+  styleUrls: ['./detalle-carrito-1.component.scss'],
   standalone: true
 })
 export class DetalleCarrito1Component implements OnInit {
-  
-  product: Product = {
-    name: 'Maleta Viaje Mediana Con Ruedas Resistente Moderna 20-22kg',
-    oldPrice: 350000,
-    price: 262500,
-    rating: 5,
-    reviews: 1,
-    description: 'Una maleta de viaje robusta y moderna, perfecta para tus próximas vacaciones. Cuenta con ruedas de 360 grados y un candado de seguridad.',
-    images: [
-      'https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa',
-      'https://placehold.co/600x600/F0E68C/000?text=Maleta+Beige',
-      'https://placehold.co/600x600/36454F/FFF?text=Maleta+Negra',
-      'https://placehold.co/600x600/E94E5A/FFF?text=Maleta+Roja',
-      'https://placehold.co/600x600/1E3A8A/FFF?text=Maleta+Azul'
-    ]
-  };
 
-  currentQuantity: number = 1;
-  selectedImageUrl: string = '';
+    @Output() addToCart = new EventEmitter<{ product: ProductoDTO; quantity: number }>();
+
+  // Metadata del componente    
+    componente:ComponentesDTO = {
+            id: 27,
+            nombreComponente: 'lib-detalle-carrito-1',
+            version: '1.0',
+            descripcion: 'Componente para mostrar detalle de un producto'
+          }
+
+  @Input()
+  // Variable que recibe el producto a mostrar
+  product!: ProductoView;
+
+  // Variable que determina si el usuario está logueado
+  @Input()
+  isLogin: boolean = false;
+
+  // Variable que determina el descuento aplicado al producto
   discount: number = 0;
+
+  // Variable que determina la cantidad actual del producto
+  currentQuantity: number = 1;
+  // Variable que almacena la URL de la imagen seleccionada
+  selectedImageUrl: string = '';
+  // Variable que controla la visibilidad del mensaje de agregado al carrito
   showCartMessage: boolean = false;
+  // Variable que indica si el producto es favorito
   isFavorite: boolean = false;
 
+  // Control para mostrar botón de personalización como en las cards
+  @Input() isPersonalizable: boolean = false;
+
+  constructor(private productService: ProductService) {}
+
   ngOnInit(): void {
-    this.selectedImageUrl = this.product.images[0];
-    this.discount = Math.round(100 - (this.product.price / this.product.oldPrice) * 100);
+   this.checkIsProductExists();
   }
 
+/**
+ * Método para verificar si el producto existe y tiene imágenes
+ * Si el producto tiene imágenes, se selecciona la primera imagen por defecto
+ * y se calcula el descuento utilizando el servicio de productos.
+ */
+  checkIsProductExists(){
+    if(this.product && this.product?.imagen.length > 0) {
+      this.selectedImageUrl = this.product?.imagen[0].url
+      this.discount = this.productService.calculateDiscount(this.product);
+    }
+  }
+
+  /**
+   * 
+   * @param imageUrl URL de la imagen seleccionada
+   * Método para actualizar la imagen principal cuando se selecciona una miniatura
+   */
   updateMainImage(imageUrl: string): void {
     this.selectedImageUrl = imageUrl;
   }
 
-  decrementQuantity(): void {
-    if (this.currentQuantity > 1) {
-      this.currentQuantity--;
-    }
-  }
+  
 
-  incrementQuantity(): void {
-    this.currentQuantity++;
-  }
-
-  addToCart(): void {
-    this.showCartMessage = true;
-    setTimeout(() => {
-      this.showCartMessage = false;
-    }, 3000);
-  }
 
   toggleFavorite(): void {
     this.isFavorite = !this.isFavorite;
   }
 
+  getWhatsAppLink(): string {
+    const base = 'https://wa.me/?text=';
+    const message = `Hola, estoy interesado en el producto: ${this.product?.name ?? ''}`;
+    return base + encodeURIComponent(message);
+  }
+
+
+/**
+ * 
+ * @param imageUrl URL de la imagen a verificar
+ * Método para verificar si una miniatura es la imagen activa
+ * @returns 
+ */
   isActiveThumbnail(imageUrl: string): boolean {
     return this.selectedImageUrl === imageUrl;
   }
 
-  formatPrice(price: number): string {
-    return `$${price.toLocaleString('es-CO')}`;
+  onChildAddToCart(event: { product: ProductoDTO; quantity: number }) {
+    this.addToCart.emit(event);
+    this.showCartMessage = event.quantity > 0;
+  }
+
+  navigateToProductDetail(): void {
+    console.log('Navegando a la página de detalle del producto...');
   }
 }

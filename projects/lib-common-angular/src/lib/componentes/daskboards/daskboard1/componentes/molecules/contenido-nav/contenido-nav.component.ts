@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { IonicModule } from '@ionic/angular';
 import { TranslateModule } from '@ngx-translate/core';
-import {BusinessDTO, ComponentesDTO, PlantillaDTO} from '@juliaosistem/core-dtos'
+import {BusinessDTO, ComponentesDTO} from '@juliaosistem/core-dtos'
 
 @Component({
   selector: 'app-contenido-nav',
@@ -27,15 +27,14 @@ export class ContenidoNavComponent  implements OnInit {
 
   
   @Input()
-   negocio : PlantillaDTO  = {
-     id: '',
-     bussinesDTO: undefined,
-     menu: undefined
+   negocio : BusinessDTO  = {
+     businessModule: [],
+     telefono: ''
    }  
 
   constructor() {
-   if(this.negocio.bussinesDTO)
-     this.negocio.bussinesDTO.urlWhatssapp = this.generarUrlWhatsapp(this.negocio?.bussinesDTO);
+   if(this.negocio.urlWhatssapp)
+     this.negocio.urlWhatssapp = this.generarUrlWhatsapp(this.negocio);
    }
   
   ngOnInit(): void {

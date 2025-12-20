@@ -1,0 +1,15 @@
+/* Styles replacing Tailwind utilities for login inputs */
+.input-group{ margin-bottom:1.5rem; }
+.input-label{ display:block; font-weight:700; margin-bottom:.5rem; color:#374151; }
+.input-field{ width:100%; padding:.75rem 1rem; border-radius:12px; border:1px solid #d1d5db; }
+
+.form-row{ display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:1.5rem; }
+.remember{ display:flex; align-items:center; gap:.5rem; }
+.remember-label{ margin:0; font-size:.9rem; color:#111827; }
+.forgot-link{ color:#111827; font-weight:600; text-decoration:none; }
+.forgot-link:hover{ opacity:.85; }
+
+/* Adjust PrimeNG password/input internals if needed */
+:host ::ng-deep .p-password{ width:100%; }
+:host ::ng-deep .p-inputtext{ width:100%; }
+

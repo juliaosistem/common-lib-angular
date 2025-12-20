@@ -1,10 +1,8 @@
+/* eslint-disable max-lines-per-function */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
-interface InventoryStatus {
-    label: string;
-    value: string;
-}
+
 
 export interface Product {
     id?: string;
@@ -23,6 +21,8 @@ export interface Product {
     providedIn: 'root'
 })
 export class ProductService {
+    
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     getProductsData() {
         return [
             {

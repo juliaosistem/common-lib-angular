@@ -1,0 +1,6 @@
+
+/* Divider styles to replace Tailwind utilities */
+.divider-wrapper{ display:flex; align-items:center; gap:1rem; padding:1rem 0; }
+.divider-line{ flex:1; height:1px; background:rgba(0,0,0,0.12); }
+.divider-text{ color:rgba(0,0,0,0.5); padding:0 .5rem; font-weight:600; }
+

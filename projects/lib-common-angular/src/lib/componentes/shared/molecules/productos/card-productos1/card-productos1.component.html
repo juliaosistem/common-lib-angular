@@ -1,122 +1,118 @@
-<div class="product-card flex flex-col h-full rounded-xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden bg-white">
-    <!-- Contenedor de la imagen principal y la galería de miniaturas que se muestra con hover -->
-    <div class="main-image-container relative group" 
-         (mouseenter)="onMouseEnter()" 
-         (mouseleave)="onMouseLeave()">
-        
-        <!-- Slider de imágenes -->
-        <div class="image-slider">
-            <img [src]="currentImageUrl" 
-                 [alt]="product.name + ' - ' + currentColor" 
-                 class="transition-opacity duration-500 active">
-        </div>
-        
-        <!-- Información de la imagen (color) -->
-        <div class="image-info">
-            Color: <span>{{ currentColor }}</span>
+<div class="surface-card shadow-3 border-round-xl overflow-visible relative transition-all transition-duration-300 hover:shadow-6 flex flex-column h-full hover-effect"
+    style="min-height: 520px; max-width: 400px; margin: 0 auto">
+    @if (product) {
+    <div class="relative surface-ground flex align-items-center justify-content-center overflow-hidden p-3 image-hover-container"
+        style="height: 280px">
+        <img [src]="currentImageUrl || product.imagen[0]?.url" [alt]="product.name"
+            loading="lazy" width="400" height="280"
+            class="max-w-full max-h-full object-contain cursor-pointer transition-transform transition-duration-300 hover-zoom"
+            (click)="navigateToProductDetail()" />
+
+        <!-- Overlay con icono de ojo al hover -->
+        <div class="image-overlay">
+            <button pButton type="button" class="p-button-rounded p-button-info p-button-lg shadow-4"
+                    (click)="navigateToProductDetail()" pTooltip="Ver detalles" tooltipPosition="top">
+                <i class="pi pi-eye text-xl"></i>
+            </button>
         </div>
 
-        <!-- Controles del slider -->
-        <div class="slider-controls">
-            <p-button 
-                icon="pi pi-chevron-left" 
-                [text]="true" 
-                [rounded]="true"
-                (onClick)="prevImage()"
-                class="p-2">
-            </p-button>
-            <p-button 
-                icon="pi pi-chevron-right" 
-                [text]="true" 
-                [rounded]="true"
-                (onClick)="nextImage()"
-                class="p-2">
-            </p-button>
-        </div>
-        
-        <!-- Botón de compartir por WhatsApp -->
-        <p-button 
-            icon="pi pi-whatsapp" 
-            [text]="true" 
-            [rounded]="true"
-            (onClick)="shareProductOnWhatsapp()"
-            class="share-btn-whatsapp text-2xl">
-        </p-button>
-        
-        <!-- Galería de miniaturas que aparece al hacer hover -->
-        <div class="thumbnail-gallery grid grid-cols-5 gap-2 group-hover:flex">
-            @for (image of product.images; track $index) {
-                <div class="thumbnail-container rounded-lg cursor-pointer"
-                     (click)="selectImage($index)">
-                    <div class="thumbnail" [class.active]="isActiveThumbnail($index)">
-                        <img [src]="image.url" [alt]="'Miniatura de color ' + image.color">
-                    </div>
-                </div>
+        <button (click)="shareProductOnWhatsapp()"
+            class="absolute bottom-0 right-0 m-3 bg-green-500 border-none text-white w-3rem h-3rem border-circle shadow-4 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600 z-2">
+            <i class="pi pi-whatsapp text-2xl"></i>
+        </button>
+    </div>
+
+    <div class="p-3 flex flex-column flex-grow-1">
+        <div class="flex gap-2 overflow-x-auto pb-2 mb-3 z-1">
+            @for (image of product.imagen; track $index) {
+            <img [src]="image.url" (click)="selectImage($index)"
+                loading="lazy" width="48" height="48"
+                class="w-3rem h-3rem border-round border-2 cursor-pointer flex-shrink-0 transition-all transition-duration-200 object-cover"
+                [class.border-900]="isActiveThumbnail($index)" [class.border-transparent]="!isActiveThumbnail($index)"
+                [class.opacity-60]="!isActiveThumbnail($index)" />
             }
         </div>
-    </div>
 
-    <!-- Contenido del producto -->
-    <div class="flex-grow flex flex-col p-4 md:p-6 text-gray-800">
-        <h3 class="text-lg md:text-xl font-semibold mb-2 line-clamp-2">{{ product.name }}</h3>
-        <p class="text-sm text-gray-500 mb-2">Por {{ product.brand }}</p>
-        
-        <div class="flex items-center justify-between mb-4 text-sm text-gray-600">
-            <span class="font-medium">Categoría: {{ product.category }}</span>
-            <span class="font-medium text-green-600">Cantidad disponible: {{ product.stock }}</span>
-        </div>
+        <div class="surface-border border-top-1 w-full mb-3"></div>
 
-        <!-- Precios y descuento -->
-        <div class="mt-auto">
-            <div class="flex items-end mb-4">
-                <span class="old-price text-sm mr-2">${{ formatPrice(product.oldPrice) }}</span>
-                <span class="text-2xl font-bold text-gray-900">${{ formatPrice(product.price) }}</span>
-            </div>
-            
-            <!-- Botones de acción y cuotas -->
-            <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center space-y-2 md:space-y-0">
-                <span class="discount-badge text-xs font-semibold px-2 py-1 rounded-full">{{ discount }}% OFF</span>
-                <span class="text-xs text-green-600">3 cuotas de ${{ installmentPrice }} con 0% interés</span>
-            </div>
-            
-            <!-- Contenedor de botones de acción -->
-            <div class="flex flex-col md:flex-row md:space-x-4 space-y-4 md:space-y-0 mt-6">
-                <!-- Botón inicial de Agregar al carrito -->
-                @if (!showQuantitySelector) {
-                    <p-button 
-                        label="Agregar al carrito"
-                        icon="pi pi-shopping-cart"
-                        (onClick)="handleAddToCart()"
-                        class="flex-1  text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
-                    </p-button>
-                }
+        <div class="flex justify-content-between align-items-start gap-2 mb-3">
+            <h3 class="text-xl font-semibold text-900 m-0 line-height-3 flex-grow-1 cursor-pointer hover:text-700 transition-colors"
+                (click)="navigateToProductDetail()" style="word-break: break-word">
+                {{ product.name }}
+            </h3>
 
-                <!-- Selector de cantidad -->
-                @if (showQuantitySelector) {
-                    <div class="flex-1 flex items-center justify-between bg-blue-600 text-white font-bold py-3 px-4 rounded-lg shadow-md">
-                        <p-button 
-                            icon="pi pi-minus" 
-                            [text]="true"
-                            (onClick)="decrementQuantity()"
-                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
-                        </p-button>
-                        <span class="text-xl font-bold">{{ selectedQuantity }}</span>
-                        <p-button 
-                            icon="pi pi-plus" 
-                            [text]="true"
-                            (onClick)="incrementQuantity()"
-                            class="text-white hover:text-blue-200 focus:outline-none transition-colors">
-                        </p-button>
-                    </div>
-                }
-                
-                <p-button 
-                    label="Compartir   "
-                    icon="pi pi-share-alt"
-                    (onClick)="shareProduct()"
-                    class="flex-1 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors transform hover:scale-105">
+            <div class="flex gap-2 flex-shrink-0 mt-1" style="position: relative;">
+                @if (isLogin) {
+                <p-button (click)="navigateToProductDetail()" pTooltip="Personalizar" icon="pi pi-pencil"
+                    tooltipPosition="top"
+                    styleClass="bg-900 text-white w-2rem h-2rem border-circle border-none flex align-items-center justify-content-center cursor-pointer hover:bg-700 transition-colors shadow-1">
                 </p-button>
+                }
+                                <!-- Menú flotante de redes estilo PrimeNG -->
+                                <div class="relative" style="position: absolute; right: -0.75rem; top: -0.75rem; z-index: 10;">
+                                    <button (click)="toggleShareMenu()"
+                                        class="bg-green-500 border-none text-white w-2rem h-2rem border-circle shadow-2 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600">
+                                        <i class="pi" [ngClass]="{'pi-times': shareMenuOpen, 'pi-share-alt': !shareMenuOpen}"></i>
+                                    </button>
+                                    @if (shareMenuOpen) {
+                                        <div class="flex gap-2 absolute" style="right: 0; top: 2.6rem;">
+                                            <button (click)="touchRedes('whatsapp')" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#25D366;color:#fff">
+                                                <i class="pi pi-whatsapp"></i>
+                                            </button>
+                                            <button (click)="touchRedes('facebook')" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#1877F2;color:#fff">
+                                                <i class="pi pi-facebook"></i>
+                                            </button>
+                                           
+                                        </div>
+                                    }
+                                </div>
             </div>
         </div>
+
+        <div class="surface-ground p-3 border-round-xl border-1 surface-border text-sm mb-4">
+            <div class="flex justify-content-between align-items-center mb-2">
+                <strong class="font-bold text-700">Categoría:</strong>
+                <span class="text-600 text-right overflow-hidden text-overflow-ellipsis" style="max-width: 60%">
+                    {{ product.nombreCategoria || 'Sin categoría' }}
+                </span>
+            </div>
+            <div class="flex justify-content-between align-items-center">
+                <strong class="font-bold text-700">Disponibles:</strong>
+                <span class="text-600 font-medium">{{ product.cantidad }}</span>
+            </div>
+        </div>
+
+        <div class="mt-auto">
+
+
+            <div class="flex align-items-end gap-2 mb-3 flex-wrap">
+                @if(isLogin){
+                        @if (product.descuento && product.descuento > 0) {
+                        <span class="text-500 line-through text-sm mb-1">
+                            {{ product.precios[0].precio | currency: product.precios[0].codigo_iso : "code" }}
+                        </span>
+                        }
+
+                        <span class="text-2xl font-bold text-900">
+                            {{ discount | currency: product.precios[0].codigo_iso : "code" }}
+                        </span>
+
+                        @if (product.descuento && product.descuento > 0) {
+                        <div class="bg-green-100 text-green-700 px-2 py-1 text-xs font-bold border-round mb-1 ml-auto">
+                            {{ product.descuento }}% OFF
+                        </div>
+                        }
+                } 
+            </div>
+
+            <lib-section-add-cards-buttons [product]="product" [isLogin]="isLogin">
+            </lib-section-add-cards-buttons>
+
+        </div>
     </div>
+    } @else {
+    <div class="flex align-items-center justify-content-center h-full text-500">
+        Producto no disponible
+    </div>
+    }
 </div>

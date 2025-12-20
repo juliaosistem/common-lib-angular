@@ -1,0 +1,39 @@
+ @use '../../../../../../../../../theme/variables.scss' as vars;
+/* Animación para la seccion de Instagram */
+        .animate-instagram-section {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+        }
+        .animate-instagram-section.is-visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+.bg-brand-blue {
+    background-color: vars.$brand-blue-zigma;
+}
+
+
+/* Animación por tarjeta (stagger) */
+.social-card {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 600ms ease-out, transform 600ms ease-out;
+    background-color: vars.$brand-yellow-zigma !important;/* Fondo amarillo de marca */
+    color: #1a1a1a; /* Contraste de texto sobre amarillo */
+}
+.social-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animación por tarjeta de red social */
+.social-card {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.social-card.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}

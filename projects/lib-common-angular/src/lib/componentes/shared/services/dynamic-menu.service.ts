@@ -80,6 +80,7 @@ export class DynamicMenuService implements MenuService {
       await this.updateMenuConfig(menuId, config);
       console.log(`Elemento agregado al menú: ${menuId}`, item);
     } catch (error) {
+      console.error(error);
       throw new Error('Error al agregar elemento del menú');
     }
   }
@@ -102,6 +103,7 @@ export class DynamicMenuService implements MenuService {
       await this.updateMenuConfig(menuId, config);
       console.log(`Elemento eliminado del menú: ${menuId}, itemId: ${itemId}`);
     } catch (error) {
+      console.error(error);
       throw new Error('Error al eliminar elemento del menú');
     }
   }
@@ -124,6 +126,7 @@ export class DynamicMenuService implements MenuService {
       await this.updateMenuConfig(menuId, config);
       console.log(`Elemento actualizado en menú: ${menuId}, itemId: ${itemId}`, updates);
     } catch (error) {
+      console.error(error);
       throw new Error('Error al actualizar elemento del menú');
     }
   }
@@ -139,6 +142,7 @@ export class DynamicMenuService implements MenuService {
   }
 
   // Obtener configuración por defecto
+  // eslint-disable-next-line max-lines-per-function
   private getDefaultMenuConfig(menuId: string): MenuConfig {
     const defaultConfigs: Record<string, MenuConfig> = {
       'main-menu': {
@@ -408,6 +412,7 @@ export class DynamicMenuService implements MenuService {
       await this.updateMenuConfig(menuId, config);
       console.log(`Configuración importada para menú: ${menuId}`);
     } catch (error) {
+      console.error(error);
       throw new Error('Error al importar configuración del menú');
     }
   }

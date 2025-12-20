@@ -1,0 +1,29 @@
+ @use "../../../../../../../../../theme/variables" as var;
+ .auth-page {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 2rem 0;
+        }
+
+        .auth-section {
+            padding: 4rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 90%;
+            width: 500px;
+            margin: 4rem auto;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Hace que el header amarillo se "pegue" a los bordes redondeados de la card */
+        lib-section-header-forms-login-ecomerce1 {
+            display: block;
+            /* compensa el padding de .auth-section: 4rem vertical, 2rem horizontal */
+            margin: -4rem -2rem 2rem -2rem;
+            border-top-left-radius: 1rem;
+            border-top-right-radius: 1rem;
+            overflow: hidden; /* recorta el contenido al borde redondeado */
+        }

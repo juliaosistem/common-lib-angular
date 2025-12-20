@@ -24,7 +24,7 @@ export class Tabla1Component implements OnInit {
   @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas
   @Input() fieldOrder: string[] = [];                       // Orden de columnas
   @Input() excludeFields: string[] = ['id'];                // Campos a excluir
-  @Input() fieldSelectOptions: Record<string, string[]> = {}; // Opciones para campos select
+@Input() fieldSelectOptions: Record<string, { label: string; value: string | number | boolean }[]> = {};
   @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
 
   @Input() showDefaultHeader: boolean = true;               // Mostrar encabezado por defecto
@@ -91,4 +91,38 @@ export class Tabla1Component implements OnInit {
     this.selectedItems = newSelection;
     this.selectedItemsChange.emit(newSelection);
   }
+
+  // ✅ Obtener valores anidados como "cliente.direccion.ciudad" o "precios[0].monto"
+// ✅ Devuelve valor de campo, soportando anidados tipo "precios[0].precio"
+getValue(item: Record<string, any>, field: DynamicField) {
+  if (!field || !field.key) return undefined;
+
+  // Primero intenta acceso directo
+  if (item[field.key] !== undefined) return item[field.key];
+
+  // Si no existe, usa getNestedValue
+  return this.getNestedValue(item, field.key);
+}
+
+// Obtener valor anidado
+getNestedValue(item: Record<string, any>, path: string): any {
+  if (!path) return undefined;
+  return path
+    .replace(/\[(\d+)]/g, '.$1') // "precios[0]" → "precios.0"
+    .split('.')
+    .reduce((acc, part) => acc?.[part], item);
+}
+
+getFieldValue(item: Record<string, any>, key: string) {
+  if (!key) return undefined;
+
+  // Primero intento acceso directo
+  if (item[key] !== undefined) return item[key];
+
+  // Si no existe, uso path anidado
+  return key
+    .replace(/\[(\d+)]/g, '.$1') // "precios[0]" → "precios.0"
+    .split('.')
+    .reduce((acc, part) => acc?.[part], item);
+}
 }

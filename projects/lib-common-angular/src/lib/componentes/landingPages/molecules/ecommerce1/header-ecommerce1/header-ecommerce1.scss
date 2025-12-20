@@ -1,0 +1,287 @@
+@use '../../../../../../../../../theme/variables.scss' as vars;
+/* Variables de color (Hardcoded para asegurar el diseño) */
+
+$text-color: #333;
+
+$colorTextos3: #ffffff;
+$sombra1: 0 4px 15px rgba(0,0,0,0.1);
+/* Variables de color (Hardcoded para asegurar el diseño) */
+
+$text-color: #333;
+
+$colorTextos3: #ffffff;
+$sombra1: 0 4px 15px rgba(0,0,0,0.1);
+
+
+/* --- ESTILOS DEL NAVBAR DESKTOP (Ya existentes) --- */
+.bg-brand-yellow { background-color: vars.$brand-yellow-zigma !important; }
+.bg-brand-blue { background-color: vars.$brand-blue-zigma !important; }
+.main-nav {
+    background-color: vars.$brand-blue-zigma;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+}
+.header-top { background-color: vars.$brand-yellow-zigma; color: black; }
+.main-nav-link {
+   color: white;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+    font-size: 1.05rem; /* ligeramente más grande */
+    letter-spacing: 0.2px;
+    text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+    padding: 0.4rem 0.6rem; /* más aire alrededor del texto */
+    border-radius: 12px;
+    &:hover {
+        color: vars.$brand-yellow-zigma;
+        text-shadow: 0 2px 6px rgba(0,0,0,0.25);
+        background: rgba(255,255,255,0.08);
+    }
+}
+.logo-center {
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.25), -1px -1px 0 rgba(255,255,255,0.15);
+    letter-spacing: 0.4px;
+}
+
+/* Asegurar que el logo conserve colores originales y proporción */
+.logo-img {
+    height: 6rem;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    filter: none !important; /* Evitar filtros que alteren color */
+}
+.logo-img-mobile {
+    height: 4rem;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    filter: none !important;
+}
+
+/* --- ESTILOS DEL SIDEBAR MÓVIL (PrimeNG Drawer) --- */
+
+:host ::ng-deep .custom-sidebar, .custom-sidebar {
+    /* OJO: En v18 la clase de contenido puede ser p-drawer-content */
+    /* Fuerza fondo amarillo en contenedor y contenido */
+    .p-drawer, .p-drawer-content {
+        background-color: vars.$brand-yellow-zigma !important;
+        color: #1a1a1a;
+    }
+    .p-drawer-content {
+        padding: 0 !important;
+        overflow-x: hidden;
+        overflow-y: auto; /* Permitir scroll interno del contenido */
+        min-height: 100%;
+        max-height: 100vh; /* Limitar al alto de la ventana */
+    }
+
+    /* Overlay y posicionamiento */
+    .p-drawer {
+        background-color: vars.$brand-yellow-zigma !important;
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 1100;
+    }
+
+    .p-drawer-mask {
+        position: fixed !important;
+        inset: 0;
+        z-index: 1090;
+        background: rgba(0,0,0,0.35);
+        backdrop-filter: blur(1px);
+    }
+    
+    /* Permite scroll vertical pero gestos horizontales desde el borde */
+    touch-action: pan-y;
+    .p-drawer-close-button {
+        color: white !important;
+        z-index: 100;
+        position: absolute; /* Aseguramos posición */
+        top: 10px; 
+        right: 10px;
+        background: rgba(0,0,0,0.1);
+    }
+}
+
+/* Drawer Carrito (derecha) */
+:host ::ng-deep .cart-sidebar, .cart-sidebar {
+    .p-drawer {
+        position: fixed !important;
+        right: 0;
+        top: 0;
+        height: 100vh;
+        z-index: 1100;
+    }
+    .p-drawer-content {
+        background: #ffffff;
+        padding: 0 !important;
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+    }
+    .cart-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        background: vars.$brand-blue-zigma;
+        color: #fff;
+        font-weight: 600;
+    }
+    .close-cart {
+        background: transparent;
+        border: none;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+    }
+    .cart-items {
+        padding: 12px 12px 0 12px;
+        flex: 1;
+        overflow-y: auto;
+    }
+    .cart-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 8px;
+        border-bottom: 1px solid #eee;
+    }
+    .cart-item-info .name { font-weight: 600; }
+    .cart-item-info .meta { color: #888; margin-left: 8px; }
+    .cart-item-actions .price { font-weight: 600; }
+    .cart-empty { color: #666; padding: 16px; text-align: center; }
+    .cart-footer {
+        padding: 12px 16px 16px 16px;
+        border-top: 1px solid #eee;
+        background: #fafafa;
+    }
+    .cart-footer .total-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .cart-footer .actions .btn {
+        width: 100%;
+        padding: 10px 12px;
+        border: none;
+        border-radius: 8px;
+        background: vars.$brand-blue-zigma;
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+    }
+}
+/* --- Encabezado dentro del menú móvil --- */
+.menu-header-bg {
+    height: 180px;
+    width: 350px; /* Un poco más ancho para asegurar cobertura */
+    background: vars.$brand-blue-zigma; /* Usando color azul de tema */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transform: rotate(-15deg);
+    border-radius: 10px 10px 10px 50px;
+    margin-left: -18px;
+    margin-top: -50px;
+    margin-bottom: 20px; /* Reducido un poco */
+    position: relative;
+    z-index: 0;
+}
+
+.header-content {
+    position: absolute;
+    top: 40px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    z-index: 1; /* Encima del fondo */
+    
+    img {
+        width: 70px; /* Ajustado ligeramente */
+        height: 70px;
+        border-radius: 50%;
+        margin-right: 14px;
+        background: white;
+        padding: 2px;
+        object-fit: cover;
+    }
+
+    h2 {
+        font-weight: 600;
+        color: white; /* Texto blanco sobre fondo azul */
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    p {
+        font-size: 13px;
+        color: rgba(255,255,255,0.8);
+        margin: 2px 0 0 0;
+        letter-spacing: 0.4px;
+    }
+}
+
+/* Lista de items del menú */
+.menu-items-container {
+    flex-grow: 1; /* Ocupa el espacio disponible */
+    padding: 0 10px;
+    padding-top: 40px; /* Bajar más el primer item para evitar solapamiento */
+}
+
+.menu-item-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    color: #666;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+    border-radius: 0 25px 25px 0; /* Efecto redondeado a la derecha como Ionic */
+    margin-bottom: 5px;
+
+    i {
+        width: 25px;
+        text-align: center;
+        margin-right: 15px;
+        color: #86979f;
+        font-size: 1.2rem;
+    }
+
+    /* Estado Activo (Router Link Active) */
+    &.active-route {
+        background-color: rgba(vars.$brand-blue-zigma, 0.1);
+        color: vars.$brand-blue-zigma;
+        border-left: 5px solid vars.$brand-blue-zigma;
+        
+        i {
+            color: vars.$brand-blue-zigma;
+        }
+    }
+
+    &:hover {
+        background-color: #f5f5f5;
+    }
+}
+
+/* Selector de Lenguaje */
+.language-section {
+    padding: 20px;
+    border-top: 1px solid #f0f0f0;
+    
+    .custom-select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: white;
+        color: #555;
+    }
+}
+
+.shopping-cart{
+    color: #ffffff;
+    &:hover {
+        color: vars.$brand-yellow-zigma;
+    }
+}

@@ -1,0 +1,63 @@
+ @use "../../../../../../../../../theme/funtions" as func;
+
+/* History section styles (replaces Tailwind utilities) */
+.history-section{
+    position:relative;
+    background-size:cover;
+    background-position:center;
+    min-height:500px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:1.5rem 0;
+}
+.history-overlay{ position:absolute; inset:0; background:rgba(0,0,0,0.5); }
+.history-content{ position:relative; z-index:2; max-width:800px; text-align:center; color:#ffffff; padding:2rem; }
+.history-pretitle{ font-size:1rem; font-weight:300; margin-bottom:.5rem; }
+.history-title{ font-size:2.25rem; margin:0 0 1rem 0; font-weight:700; }
+.history-text{ font-size:1rem; margin-bottom:1rem; font-weight:300; }
+
+/* Newsletter styles (replaces Tailwind utilities) */
+.animate-newsletter-section { opacity: 0; }
+.animate-newsletter-section .newsletter-card { opacity: 0; transform: translateY(24px); transition: opacity 600ms ease-out, transform 600ms ease-out; }
+.animate-newsletter-section.is-visible { opacity: 1; }
+.animate-newsletter-section.is-visible .newsletter-card { opacity: 1; transform: translateY(0); }
+
+@include func.responsive-up(md){
+    .newsletter-card{ flex-direction:row; justify-content:space-between; align-items:center; }
+    .newsletter-text{ text-align:left; }
+    .newsletter-right{ width:auto; }
+}
+
+
+/* --- 1. MÓVIL (Por defecto) --- */
+/* Pantallas pequeñas: Animación vertical suave para no salir de la pantalla */
+.product-card-animation {
+    opacity: 0;
+    transform: translateY(50px); /* Sube desde abajo */
+    transition: opacity 1.0s ease-out, transform 1.0s ease-out;
+    will-change: opacity, transform;
+
+    &.is-visible {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
+/* --- 2. TABLET (Entre 768px y 1024px) --- */
+@include func.responsive-up(md) {
+    .product-card-animation {
+        /* Hacemos un movimiento lateral PERO CORTO (-50px) */
+        /* Así se ve el efecto de lado, pero garantizamos que el usuario lo vea */
+        transform: translateX(-50px); 
+    }
+}
+
+/* --- 3. ESCRITORIO (Pantallas Grandes) --- */
+@include func.responsive-up(lg) {
+    .product-card-animation {
+        /* Aquí sí recuperamos tu efecto dramático largo */
+        transform: translateX(-400px); 
+        transition: opacity 1.0s ease-out, transform 1.0s ease-out;
+    }
+}

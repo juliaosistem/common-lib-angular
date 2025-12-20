@@ -1,4 +1,3 @@
-<!-- Tabla -->
 <p-table
   #dt
   [value]="data"
@@ -15,48 +14,50 @@
   [rowsPerPageOptions]="rowsPerPageOptions"
 >
   <ng-template #header>
-    @if (showDefaultHeader) {
-      <tr>
-        <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
-        <th style="width: 8rem">Actions</th>
-        @for (field of displayFields; track field.key) {
-          <th style="min-width: 12rem">{{ field.label }}</th>
-        }
-      </tr>
-  }
+    <tr *ngIf="showDefaultHeader">
+      <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
+      <th style="width: 8rem">Actions</th>
+      <th *ngFor="let field of displayFields" style="min-width: 12rem">
+        {{ field.label }}
+      </th>
+    </tr>
   </ng-template>
-  
+
   <ng-template #body let-item>
-    @if (showDefaultBody) {
-    <tr>
+    <tr *ngIf="showDefaultBody">
       <td style="width: 3rem"><p-tableCheckbox [value]="item" /></td>
       <td style="width: 8rem">
         <div class="flex gap-2 items-center">
-          <lib-button-actions-row1 
-            [item]="item" 
-            (edit)="onEditItem($event)">
+          <lib-button-actions-row1 [item]="item" (edit)="onEditItem($event)">
           </lib-button-actions-row1>
         </div>
       </td>
-      @for (field of displayFields; track field.key) {
-        <td>
-          @switch (field.type) {
-            @case ('img') {
-              <img [src]="getImageUrl(field, item[field.key])" [alt]="getImageAltText(field, item)" style="width: 64px" class="rounded" />
-            }
-            @case ('checkbox') {
-               <span class="flex items-center gap-2">
-                  <i [class]="item[field.key] ? 'pi pi-check-circle text-green-500' : 'pi pi-times-circle text-red-500'"></i>
-                  <span>{{ item[field.key] ? 'Yes' : 'No' }}</span>
-                </span>
-            }
-            @default {
-              <span>{{ formatDynamicFieldValue(field, item[field.key]) }}</span>
-            }
-          }
-        </td>
-      }
+      <td *ngFor="let field of displayFields">
+        <ng-container [ngSwitch]="field.type">
+          <img
+            *ngSwitchCase="'img'"
+            [src]="getImageUrl(field, getValue(item, field))"
+            [alt]="getImageAltText(field, item)"
+            style="width: 64px"
+            class="rounded"
+          />
+
+          <span *ngSwitchCase="'checkbox'" class="flex items-center gap-2">
+            <i
+              [class]="
+                getValue(item, field)
+                  ? 'pi pi-check-circle text-green-500'
+                  : 'pi pi-times-circle text-red-500'
+              "
+            ></i>
+            <span>{{ getValue(item, field) ? 'Yes' : 'No' }}</span>
+          </span>
+
+          <span *ngSwitchDefault>
+            {{ formatDynamicFieldValue(field, getValue(item, field)) }}
+          </span>
+        </ng-container>
+      </td>
     </tr>
-  }
   </ng-template>
 </p-table>
