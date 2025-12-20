@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         NODE_VERSION = 'nodejs'
+        // Repo de GitHub (owner/repo) para notificar estado del commit
+        GITHUB_REPO = 'juliaosistem/common-lib-angular'
 
         // 🔄 Valores estáticos / configurables
         NEXUS_DOCKER_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/docker/'
@@ -136,9 +138,31 @@ pipeline {
 
                         # Forzar registry público para instalar paquetes
                         npm config set registry "https://registry.npmjs.org/"
+                                                npm config set legacy-peer-deps true
 
-                        # Instalar dependencias
-                        npm install
+                                                # Cache persistente y legacy peer deps
+                                                export NPM_CONFIG_CACHE="${JENKINS_HOME}/.npm/_cacache"
+                                                export NPM_CONFIG_LEGACY_PEER_DEPS=true
+                                                mkdir -p "$NPM_CONFIG_CACHE"
+
+                                                # Instalar dependencias con fallback
+                                                set +e
+                                                if [ -f package-lock.json ]; then
+                                                    npm ci --legacy-peer-deps --no-audit --no-fund --prefer-offline
+                                                    CI_STATUS=$?
+                                                    if [ $CI_STATUS -ne 0 ]; then
+                                                        echo "⚠️ npm ci (legacy) falló (${CI_STATUS}), intentando npm ci estándar..."
+                                                        npm ci --no-audit --no-fund --prefer-offline || true
+                                                    fi
+                                                else
+                                                    npm install --legacy-peer-deps --no-audit --no-fund --prefer-offline
+                                                    CI_STATUS=$?
+                                                    if [ $CI_STATUS -ne 0 ]; then
+                                                        echo "⚠️ npm install (legacy) falló (${CI_STATUS}), intentando npm install estándar..."
+                                                        npm install --no-audit --no-fund --prefer-offline || true
+                                                    fi
+                                                fi
+                                                set -e
 
                         echo "✅ Dependencias instaladas"
 
@@ -397,6 +421,32 @@ ${deployStatus}
 📝 Commit: ${env.GIT_COMMIT}
 🔗 Build: ${env.BUILD_URL}
 """
+                    // Notificar estado "failure" a GitHub
+                    withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                        sh '''
+                            set -e
+                            curl -sS -f -X POST \
+                              -H "Authorization: token ${GITHUB_TOKEN}" \
+                              -H "Accept: application/vnd.github+json" \
+                              "https://api.github.com/repos/${GITHUB_REPO}/statuses/${GIT_COMMIT}" \
+                              -d "{\"state\":\"failure\",\"target_url\":\"${BUILD_URL}\",\"description\":\"Jenkins pipeline falló\",\"context\":\"ci/jenkins/lib-common-angular\"}"
+                        '''
+                    }
+                }
+            }
+        }
+        success {
+            script {
+                // Notificar estado "success" a GitHub
+                withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                    sh '''
+                        set -e
+                        curl -sS -f -X POST \
+                          -H "Authorization: token ${GITHUB_TOKEN}" \
+                          -H "Accept: application/vnd.github+json" \
+                          "https://api.github.com/repos/${GITHUB_REPO}/statuses/${GIT_COMMIT}" \
+                          -d "{\"state\":\"success\",\"target_url\":\"${BUILD_URL}\",\"description\":\"Jenkins pipeline exitoso\",\"context\":\"ci/jenkins/lib-common-angular\"}"
+                    '''
                 }
             }
         }
