@@ -137,16 +137,8 @@ pipeline {
                         # Forzar registry público para instalar paquetes
                         npm config set registry "https://registry.npmjs.org/"
 
-                                                # Usar cache persistente en JENKINS_HOME para acelerar instalaciones
-                                                export NPM_CONFIG_CACHE="${JENKINS_HOME}/.npm/_cacache"
-                                                mkdir -p "$NPM_CONFIG_CACHE"
-
                         # Instalar dependencias
-                                                if [ -f package-lock.json ]; then
-                                                    npm ci --no-audit --no-fund --prefer-offline || npm ci --legacy-peer-deps --no-audit --no-fund
-                                                else
-                                                    npm install --no-audit --no-fund --prefer-offline || npm install --legacy-peer-deps --no-audit --no-fund
-                                                fi
+                        npm install
 
                         echo "✅ Dependencias instaladas"
 
