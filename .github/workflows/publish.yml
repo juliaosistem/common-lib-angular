@@ -2,9 +2,9 @@ name: Sync with Jenkins Multibranch
 
 on:
   push:
-    branches: ['**']  # Todas las ramas
+    branches: ['develop', 'master']  # Todas las ramas
   pull_request:
-    branches: ['**']  # Todos los PRs
+    branches: ['develop', 'master','despliegues']  # Todos los PRs
 
 jobs:
   notify-jenkins:
@@ -17,5 +17,25 @@ jobs:
           echo "📦 Rama: ${{ github.ref_name }}"
           echo "📝 Commit: ${{ github.sha }}"
           
-          # Opcional: webhook manual si necesitas notificación inmediata
-          # curl -X POST "${{ secrets.JENKINS_URL }}/git/notifyCommit?url=${{ github.repositoryUrl }}"
+          # Opcional: notificación manual inmediata a Jenkins (Git plugin)
+          # Requiere configurar secret JENKINS_URL (ej: https://jenkins.juliaosistem-server.in)
+          # y opcionalmente JENKINS_USER/JENKINS_TOKEN si tu Jenkins exige auth.
+          echo "📣 Notificando a Jenkins vía notifyCommit"
+          REPO_URL="${{ github.server_url }}/${{ github.repository }}"
+          JENKINS_URL="${{ secrets.JENKINS_URL }}"
+          if [ -n "$JENKINS_URL" ]; then
+            if [ -n "${{ secrets.JENKINS_USER }}" ] && [ -n "${{ secrets.JENKINS_TOKEN }}" ]; then
+              curl -sS -f -X POST "$JENKINS_URL/git/notifyCommit?url=$REPO_URL" \
+                -u "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }}" || echo "⚠️ notifyCommit respondió error"
+            else
+              curl -sS -f -X POST "$JENKINS_URL/git/notifyCommit?url=$REPO_URL" || echo "⚠️ notifyCommit respondió error"
+            fi
+          else
+            echo "ℹ️ JENKINS_URL no definido en secrets; omitiendo notifyCommit"
+          fi
+
+          # Ejemplo alternativo (comentado): webhook del plugin GitHub si lo necesitas
+          # curl -sS -f -X POST "$JENKINS_URL/github-webhook/" \
+          #   -H "Content-Type: application/json" \
+          #   -H "X-GitHub-Event: push" \
+          #   -d '{"ref":"${{ github.ref }}","repository":{"html_url":"'"$REPO_URL"'"}}' || true
