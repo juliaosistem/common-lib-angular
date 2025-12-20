@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DetalleCarrito1Component, MetaDataService } from 'lib-common-angular';
+import { DetalleCarrito1Component } from '../../../../shared/molecules/productos/detalle-carrito-1/detalle-carrito-1.component';
+import { MetaDataService } from '../../../../shared/services/meta-data.service.ts/meta-data.service';
 import { ProductoDTO,CategoriaDTO } from '@juliaosistem/core-dtos';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../../../shared/services/product.service';
