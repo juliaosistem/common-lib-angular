@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { StateContext, Selector, Action } from '@ngxs/store';
+import { StateContext, Selector, Action, createSelector } from '@ngxs/store';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { GenericCrudHttpService } from '../../../componentes/shared/services/generic-crud.service/generic-crud.service';
 import { tap } from 'rxjs';
@@ -23,6 +23,20 @@ export abstract class GenericCrudState<RES, RQ> {
   @Selector()
   static getResponse<RES>(state: PlantillaResponse<RES>): PlantillaResponse<RES> {
     return state;
+  }
+
+  /**
+   * Selector factory para obtener un elemento por id desde el estado genérico.
+   * Uso: store.selectSnapshot(YourState.selectById(id))
+   */
+  static selectById<RES>(id: string | number) {
+    return createSelector([
+      // Reutiliza el selector base que expone el response del estado
+      (this as unknown as typeof GenericCrudState).getResponse as (state: PlantillaResponse<RES>) => PlantillaResponse<RES>
+    ], (response: PlantillaResponse<RES>) => {
+      const list = (response?.dataList as unknown as Array<{ id?: string | number }> | undefined) ?? [];
+      return list.find((item) => String(item?.id ?? '') === String(id)) as unknown as RES | undefined;
+    });
   }
 
   @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.All; } as any)

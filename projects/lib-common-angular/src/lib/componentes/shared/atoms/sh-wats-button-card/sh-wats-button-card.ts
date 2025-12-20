@@ -9,6 +9,7 @@ import { CurrencyPipe } from '@angular/common';
   imports: [PrimegModule],
   templateUrl: './sh-wats-button-card.html',
   styleUrl: './sh-wats-button-card.css',
+  providers: [CurrencyPipe]
 })
 export class ShWatsButtonCard {
 

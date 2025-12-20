@@ -1,3 +1,9 @@
+/* Refuerza la sombra del contenedor principal para que no se pierda en pantallas grandes */
+#product-container {
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08), 0 2px 12px rgba(0, 0, 0, 0.04);
+  border-radius: 1rem;
+}
 // Estilos para la imagen principal
 .main-image-frame {
   min-height: 420px;
@@ -5,7 +11,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
 }
 
 .main-image {
@@ -13,6 +20,11 @@
   max-width: 640px;
   height: 100%;
   object-fit: contain;
+}
+
+@media (min-width: 1024px) {
+  .main-image-frame { height: 600px; box-shadow: 0 14px 40px rgba(0,0,0,0.10); }
+  .main-image { max-width: 860px; }
 }
 
 // Estilos para las miniaturas

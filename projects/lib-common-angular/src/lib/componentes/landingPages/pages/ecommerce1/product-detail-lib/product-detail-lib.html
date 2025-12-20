@@ -1,5 +1,20 @@
-<div class="surface-section py-4">
-  <div class="mx-auto" style="max-width: 1120px;">
-    <lib-detalle-carrito-1 [product]="product!" [isLogin]="isLogin"></lib-detalle-carrito-1>
-  </div>
+<div class="py-4 background-page mx-auto px-3">
+        <lib-detalle-carrito-1 [product]="product!" [isLogin]="isLogin"></lib-detalle-carrito-1>
+
+        @if (products && products.length > 0) {
+                <section class="mt-4 related-products">
+                        <h3 class="text-white font-semibold mb-2">Productos que te pueden gustar</h3>
+                        <swiper-container direction="horizontal" navigation="true" pagination="true" pagination-clickable="true" loop="true" autoplay="true"
+                                                autoplay-delay="6000" autoplay-disable-on-interaction="false" speed="600"
+                                                [slidesPerView]="slidesPerViewBase" [spaceBetween]="spaceBetweenBase"
+                                                [breakpoints]="breakpoints"
+                                                style="--swiper-navigation-color:#FFD600; --swiper-theme-color:#FFD600; --swiper-pagination-color:#FFD600; --swiper-pagination-bullet-inactive-color:#FFFFFF; --swiper-pagination-bullet-inactive-opacity:0.6; --swiper-pagination-bullet-size:8px; --swiper-pagination-bullet-horizontal-gap:6px;">
+                                @for (p of products; track p.id) {
+                                        <swiper-slide>
+                                                <lib-card-productos1 [product]="p" [isLogin]="isLogin"></lib-card-productos1>
+                                        </swiper-slide>
+                                }
+                        </swiper-container>
+                </section>
+        }
 </div>

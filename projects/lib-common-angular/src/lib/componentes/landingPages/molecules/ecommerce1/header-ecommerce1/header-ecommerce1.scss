@@ -41,6 +41,22 @@ $sombra1: 0 4px 15px rgba(0,0,0,0.1);
     letter-spacing: 0.4px;
 }
 
+/* Asegurar que el logo conserve colores originales y proporción */
+.logo-img {
+    height: 6rem;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    filter: none !important; /* Evitar filtros que alteren color */
+}
+.logo-img-mobile {
+    height: 4rem;
+    width: auto;
+    object-fit: contain;
+    display: block;
+    filter: none !important;
+}
+
 /* --- ESTILOS DEL SIDEBAR MÓVIL (PrimeNG Drawer) --- */
 
 :host ::ng-deep .custom-sidebar, .custom-sidebar {
