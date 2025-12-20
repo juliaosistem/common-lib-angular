@@ -2,9 +2,9 @@ name: Sync with Jenkins Multibranch
 
 on:
   push:
-    branches: ['develop', 'master']  # Todas las ramas
+    branches: ['**']  # Todas las ramas
   pull_request:
-    branches: ['develop', 'master','despliegues']  # Todos los PRs
+    branches: ['**']  # Todos los PRs
 
 jobs:
   notify-jenkins:
