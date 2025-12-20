@@ -13,6 +13,10 @@ pipeline {
 
         // Variables calculadas en runtime/etapas (no aquí)
         // BRANCH_NAME, GIT_COMMIT_SHORT, BUILD_TAG, LIB_VERSION, DEMO_IMAGE_TAG
+
+        // Forzar salida con colores (npm/Angular/otros)
+        FORCE_COLOR = '1'
+        NPM_CONFIG_COLOR = 'always'
     }
 
     tools {
@@ -133,6 +137,9 @@ pipeline {
 
                         # Forzar registry público para instalar paquetes
                         npm config set registry "https://registry.npmjs.org/"
+                        # Forzar colores en salida npm/CLI
+                        npm config set color always || true
+                        export FORCE_COLOR=1
 
                         # Instalar dependencias
                         npm install
@@ -165,6 +172,7 @@ pipeline {
         stage('Build Library') {
             steps {
                 sh '''
+                    export FORCE_COLOR=1
                     echo "🔨 Construyendo librería..."
                     npm run build:lib
                 '''
@@ -222,6 +230,7 @@ pipeline {
         stage('Build Demo App') {
             steps {
                 sh '''
+                    export FORCE_COLOR=1
                     echo "🔨 Construyendo demo..."
                     npm run build:demo
                 '''
