@@ -1,9 +1,51 @@
 pipeline {
-    agent any
+    agent {
+        kubernetes {
+            // Definimos el Pod con los contenedores necesarios y el montaje del socket de Docker
+            yaml '''
+            apiVersion: v1
+            kind: Pod
+            metadata:
+              labels:
+                app: jenkins-agent-builder
+            spec:
+              # Ejecutamos como root para evitar problemas de permisos con el socket
+              securityContext:
+                runAsUser: 0
+                fsGroup: 0
+              containers:
+              # 1. Contenedor para Node/Angular (Builds)
+              - name: nodejs
+                image: node:20-alpine
+                command: ['cat']
+                tty: true
+                resources:
+                  limits:
+                    memory: "2Gi"
+                    cpu: "1000m"
+                  requests:
+                    memory: "1Gi"
+                    cpu: "500m"
+                    
+              # 2. Contenedor para Docker CLI (Build de Imagen)
+              - name: docker
+                image: docker:24-cli
+                command: ['cat']
+                tty: true
+                volumeMounts:
+                - name: dockersock
+                  mountPath: /var/run/docker.sock
+              
+              # Montamos el socket del host físico dentro del Pod
+              volumes:
+              - name: dockersock
+                hostPath:
+                  path: /var/run/docker.sock
+            '''
+        }
+    }
 
     environment {
-        NODE_VERSION = 'nodejs'
-
         // 🔄 Valores estáticos / configurables
         NEXUS_DOCKER_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/docker/'
         NEXUS_NPM_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/npm/'
@@ -11,85 +53,53 @@ pipeline {
         NEXUS_CREDENTIALS_ID = 'nexus-credentials'
         RANCHER_CREDENTIALS_ID = 'rancher-api-credentials'
 
-        // Variables calculadas en runtime/etapas (no aquí)
-        // BRANCH_NAME, GIT_COMMIT_SHORT, BUILD_TAG, LIB_VERSION, DEMO_IMAGE_TAG
-
-        // Forzar salida con colores (npm/Angular/otros)
+        // Forzar salida con colores
         FORCE_COLOR = '1'
         NPM_CONFIG_COLOR = 'always'
     }
 
-    tools {
-        nodejs "${NODE_VERSION}"
-        // Docker se maneja como comando directo, no como herramienta de Jenkins
-    }
-
     options {
-        // Evitar checkout automático; hacemos checkout explícito dentro del pipeline
         skipDefaultCheckout()
+        // Establecer un timeout por seguridad
+        timeout(time: 1, unit: 'HOURS') 
     }
 
     stages {
-        stage('Check Node Info') {
-            steps {
-                sh '''
-                    echo "=== INFORMACIÓN DEL NODO ==="
-                    echo "NODE_NAME: $NODE_NAME"
-                    echo "NODE_LABELS: $NODE_LABELS"
-                    echo "WORKSPACE: $WORKSPACE"
-                    echo "JENKINS_HOME: $JENKINS_HOME"
-                    echo "=== HERRAMIENTAS DISPONIBLES ==="
-                    which docker || echo "Docker no encontrado"
-                    which node || echo "Node.js no encontrado"
-                    which npm || echo "NPM no encontrado"
-                    which java || echo "Java no encontrado"
-                    echo "=== SISTEMA ==="
-                    uname -a
-                    echo "=== FIN ==="
-                '''
-            }
-        }
-        // REEMPLAZADO: Checkout & Info (clonar en tmp y copiar para evitar "destination path '.' already exists")
         stage('Checkout & Info') {
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                        // Validación en Groovy antes de ejecutar comandos con las credenciales
+                        
+                        // Validación rápida de credenciales
                         def u = env.GIT_USER ?: ''
-                        if (u.contains('@') || u.contains(' ') || u.contains(':')) {
-                            error("Credencial mal formada: Username contiene caracteres inválidos (${u}).\nAsegura en Jenkins que 'credenciales git' sea tipo 'Username with password' con:\n - Username = tu usuario de GitHub (ej. farius-red), NO el email\n - Password = token personal (PAT).")
+                        if (u.contains('@')) {
+                            error("Credencial mal formada: El usuario contiene '@'. Usa tu usuario de GitHub, no el correo.")
                         }
 
-                        // Hacer clone y sincronizar al workspace (no borrar tmp_checkout aún)
                         sh '''
                           set -e
                           echo "🔎 Validando acceso al repo principal..."
-                          if ! git ls-remote --heads "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" "${BRANCH_NAME:-develop}" >/dev/null 2>&1; then
-                            echo "ERROR: no se pudo acceder al repo principal con las credenciales proporcionadas."
-                            echo "Verifica 'credenciales git' en Jenkins: Username = tu usuario GitHub (no email), Password = token personal (PAT)."
-                            exit 1
-                          fi
-                          echo "📥 Clonando repo principal en tmp_checkout..."
+                          # Limpiar workspace previo si existe
                           rm -rf tmp_checkout
+                          
+                          echo "📥 Clonando repo..."
                           git clone --branch "${BRANCH_NAME:-develop}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" tmp_checkout
-                          echo "📤 Sincronizando contenido al workspace (excluyendo .git)..."
-                          if command -v rsync >/dev/null 2>&1; then
-                            rsync -a --delete --exclude='.git' tmp_checkout/ .
-                          else
-                            echo "⚠️ rsync no disponible: usando git archive como fallback (no requiere rsync)"
-                            git -C tmp_checkout archive HEAD | tar -x -C .
-                          fi
+                          
+                          echo "📤 Sincronizando..."
+                          # Usamos cp -r si rsync no está disponible (alpine base a veces no tiene rsync)
+                          cp -r tmp_checkout/. .
+                          rm -rf tmp_checkout
                         '''
 
-                        // Obtener commit desde el clone temporal antes de borrar tmp_checkout
-                        env.GIT_COMMIT = sh(script: 'git -C tmp_checkout rev-parse HEAD', returnStdout: true).trim()
+                        env.GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
                         env.GIT_COMMIT_SHORT = env.GIT_COMMIT.take(7)
                         env.BUILD_TAG = "${env.BRANCH_NAME ?: 'no-branch'}-${env.BUILD_NUMBER ?: 'no-build'}-${env.GIT_COMMIT_SHORT}"
                         env.DEMO_IMAGE_TAG = "${env.NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${env.BUILD_TAG}"
-                        env.LIB_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
-
-                        // ahora sí limpiar el clone temporal
-                        sh 'rm -rf tmp_checkout'
+                        
+                        // Usamos el contenedor nodejs solo para leer el package.json
+                        container('nodejs') {
+                            env.LIB_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
+                        }
 
                         echo "🚀 Build automático en multibranch"
                         echo "📦 Rama: ${env.BRANCH_NAME}"
@@ -101,350 +111,167 @@ pipeline {
             }
         }
 
-        stage('preparar dtos') {
+        stage('Preparar dependencias (Git)') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     script {
                         sh '''
                           set -e
-                          echo "🔽 Preparando lib-core-dtos (clone limpio)"
+                          echo "🔽 Clonando lib-core-dtos..."
                           rm -rf lib-core-dtos
                           if ! git clone --branch develop "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos 2>/dev/null; then
-                              echo "⚠️ No se pudo clonar la rama 'develop' (posible que no exista); clonando la rama por defecto..."
+                              echo "⚠️ Rama develop no encontrada, clonando default..."
                               git clone "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
                           fi
-                          echo "✅ lib-core-dtos listo"
                         '''
                     }
                 }
             }
         }
 
-        stage('Install dependencies') {
+        stage('Install & Build (Angular)') {
             steps {
-                script {
-                    if (!fileExists('package.json')) {
-                        error("package.json no encontrado en workspace. Asegúrate de que el checkout se realizó correctamente.")
+                // EJECUTAMOS DENTRO DEL CONTENEDOR NODEJS
+                container('nodejs') {
+                    script {
+                        if (!fileExists('package.json')) {
+                            error("package.json no encontrado.")
+                        }
+                        
+                        // Asegurar que git esté instalado en alpine si npm lo necesita para dependencias
+                        sh 'apk add --no-cache git || true'
+
+                        sh '''
+                            echo "📦 Configurando NPM..."
+                            # Configuración de registro y colores
+                            npm config set registry "https://registry.npmjs.org/"
+                            npm config set color always || true
+                            export FORCE_COLOR=1
+
+                            echo "📦 Instalando dependencias..."
+                            npm install
+
+                            echo "🔄 Generando DTOs..."
+                            npm run generate:dtos
+                            
+                            echo "🔨 Construyendo librería..."
+                            npm run build:lib
+                            
+                            echo "🔨 Construyendo demo..."
+                            npm run build:demo
+                        '''
                     }
-                    sh '''
-                        echo "📦 Instalando dependencias usando registry público (npmjs.org)..."
-
-                        # Respaldar ~/.npmrc si existe (por ejemplo contiene configuración para Nexus)
-                        if [ -f ~/.npmrc ]; then
-                            echo "🔒 Respaldando ~/.npmrc a ~/.npmrc.jenkins_backup"
-                            mv ~/.npmrc ~/.npmrc.jenkins_backup || true
-                        fi
-
-                        # Forzar registry público para instalar paquetes
-                        npm config set registry "https://registry.npmjs.org/"
-                        # Forzar colores en salida npm/CLI
-                        npm config set color always || true
-                        export FORCE_COLOR=1
-
-                        # Instalar dependencias
-                        npm install
-
-                        echo "✅ Dependencias instaladas"
-
-                        echo "🔄 Generando DTOs y construyendo proyectos..."
-                        npm run generate:dtos
-                        echo "✅ DTOs generados"
-                        echo "🔨 Construyendo librería y demo..."
-                        npm run build:lib
-                        echo "✅ Librería construida"
-                        npm run build:demo
-                        echo "✅ Demo construida"
-
-                        # Restaurar ~/.npmrc si existía
-                        if [ -f ~/.npmrc.jenkins_backup ]; then
-                            echo "🔓 Restaurando ~/.npmrc desde backup"
-                            mv ~/.npmrc.jenkins_backup ~/.npmrc || true
-                        else
-                            # eliminar setting de registry local si no había ~/.npmrc
-                            npm config delete registry || true
-                        fi
-                    '''
                 }
-            }
-        }
-
-
-        stage('Build Library') {
-            steps {
-                sh '''
-                    export FORCE_COLOR=1
-                    echo "🔨 Construyendo librería..."
-                    npm run build:lib
-                '''
             }
             post {
                 success {
                     archiveArtifacts artifacts: 'dist/lib-common-angular/**/*', fingerprint: true
-                }
-            }
-        }
-   stage('Publicar en Nexus NPM') {
-            when {
-                anyOf {
-                    branch 'master'
-                    branch 'main'
-                    branch 'develop'
-                    branch 'release/*'
-                    branch 'desplieges'
-                }
-            }
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: "${NEXUS_CREDENTIALS_ID}",
-                    usernameVariable: 'NEXUS_USER',
-                    passwordVariable: 'NEXUS_PASS'
-                )]) {
-                    script {
-                        sh '''
-                            set -e
-                            echo "📤 Publicando librería v${LIB_VERSION} en Nexus NPM..."
-                            # asegurar registry en npm config (no imprime secretos)
-                            npm config set registry "$NEXUS_NPM_REGISTRY"
-
-                            # calcular host+path (ej: nexus.juliaosistem-server.in/repository/npm) desde la URL
-                            hostpath=$(echo "$NEXUS_NPM_REGISTRY" | sed -E 's|https?://||; s|/$||')
-
-                            # crear .npmrc usando variables de shell (no interpolar secretos con Groovy)
-                            # auth en base64 user:pass; always-auth para que npm use credenciales
-                            printf "registry=%s\n//%s/:_auth=%s\n//%s/:always-auth=true\n" \
-                                "$NEXUS_NPM_REGISTRY" \
-                                "$hostpath" \
-                                "$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)" \
-                                "$hostpath" > ~/.npmrc
-
-                            # forzar publish al registry de Nexus (evita publishConfig en package.json)
-                            cd dist/lib-common-angular
-                            npm publish --registry "$NEXUS_NPM_REGISTRY"
-                            echo "✅ Librería v${LIB_VERSION} publicada exitosamente en $NEXUS_NPM_REGISTRY"
-                        '''
-                    }
-                }
-            }
-        }
-
-        stage('Build Demo App') {
-            steps {
-                sh '''
-                    export FORCE_COLOR=1
-                    echo "🔨 Construyendo demo..."
-                    npm run build:demo
-                '''
-            }
-            post {
-                success {
                     archiveArtifacts artifacts: 'dist/lib-common-angular-demo/**/*', fingerprint: true
                 }
             }
         }
 
-        // NUEVO: Detectar si Kaniko o Docker están disponibles en el agente
-        stage('Detect Container Tools') {
+        stage('Publicar en Nexus NPM') {
+            when {
+                anyOf {
+                    branch 'master'; branch 'main'; branch 'develop'; branch 'release/*'; branch 'desplieges'
+                }
+            }
             steps {
-                script {
-                    env.KANIKO_AVAILABLE = sh(script: 'if [ -x /kaniko/executor ]; then echo true; else echo false; fi', returnStdout: true).trim()
-                    env.DOCKER_AVAILABLE = sh(script: 'if command -v docker >/dev/null 2>&1; then echo true; else echo false; fi', returnStdout: true).trim()
-                    echo "KANIKO_AVAILABLE=${env.KANIKO_AVAILABLE} DOCKER_AVAILABLE=${env.DOCKER_AVAILABLE}"
+                container('nodejs') {
+                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDENTIALS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                        script {
+                            sh '''
+                                set -e
+                                echo "📤 Publicando librería v${LIB_VERSION}..."
+                                
+                                # Configurar auth Nexus
+                                hostpath=$(echo "$NEXUS_NPM_REGISTRY" | sed -E 's|https?://||; s|/$||')
+                                printf "registry=%s\n//%s/:_auth=%s\n//%s/:always-auth=true\n" \
+                                    "$NEXUS_NPM_REGISTRY" \
+                                    "$hostpath" \
+                                    "$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)" \
+                                    "$hostpath" > ~/.npmrc
+
+                                cd dist/lib-common-angular
+                                npm publish --registry "$NEXUS_NPM_REGISTRY"
+                            '''
+                        }
+                    }
                 }
             }
         }
 
         stage('Docker Build & Push') {
-            // Ejecutar solo en ramas deseadas Y solo si hay Kaniko o Docker disponible
             when {
-                allOf {
-                    anyOf {
-                        branch 'master'
-                        branch 'main'
-                        branch 'develop'
-                        branch 'release/*'
-                        branch 'desplieges'
-                    }
-                    expression {
-                        return env.KANIKO_AVAILABLE == 'true' || env.DOCKER_AVAILABLE == 'true'
-                    }
+                anyOf {
+                    branch 'master'; branch 'main'; branch 'develop'; branch 'release/*'; branch 'desplieges'
                 }
             }
             steps {
-                script {
-                    // Usar las variables detectadas en la etapa anterior
-                    def hasKaniko = env.KANIKO_AVAILABLE == 'true'
-                    def hasDocker = env.DOCKER_AVAILABLE == 'true'
-
-                    if (hasKaniko) {
-                        echo "🐳 Kaniko detectado: usando Kaniko para build y push"
-                        withCredentials([usernamePassword(
-                            credentialsId: "${NEXUS_CREDENTIALS_ID}",
-                            usernameVariable: 'NEXUS_USER',
-                            passwordVariable: 'NEXUS_PASS'
-                        )]) {
+                // EJECUTAMOS DENTRO DEL CONTENEDOR DOCKER
+                container('docker') {
+                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDENTIALS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                        script {
                             sh '''
                                 set -eu
-                                echo "🐳 Preparando config.json de Docker para Kaniko desde credenciales de Jenkins..."
+                                echo "🐳 Iniciando Docker Build..."
+                                
+                                # Limpiar URL para login
+                                REGISTRY_URL=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')
+                                REGISTRY_CLEAN="${NEXUS_DOCKER_REGISTRY%/}"
+                                
+                                IMAGE="${REGISTRY_CLEAN}/lib-common-angular-demo:${BUILD_TAG}"
+                                
+                                echo "🔐 Login en $REGISTRY_URL..."
+                                echo "$NEXUS_PASS" | docker login --username "$NEXUS_USER" --password-stdin "$REGISTRY_URL"
 
-                                hostpath=$(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||')
-
-                                auth=$(printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64 -w0 2>/dev/null || printf "%s:%s" "${NEXUS_USER}" "${NEXUS_PASS}" | base64)
-                                cat > "${WORKSPACE}/kaniko-config.json" <<EOF
-{
-  "auths": {
-    "${hostpath}": {
-      "username": "${NEXUS_USER}",
-      "password": "${NEXUS_PASS}",
-      "auth": "${auth}"
-    }
-  }
-}
-EOF
-
-                                mkdir -p /kaniko/.docker || true
-                                cp "${WORKSPACE}/kaniko-config.json" /kaniko/.docker/config.json || true
-                                chmod 600 /kaniko/.docker/config.json || true
-
-                                REGISTRY="${NEXUS_DOCKER_REGISTRY%/}"
-                                DEST="${REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
-                                echo "Destino: ${DEST}"
-
-                                /kaniko/executor \
-                                  --context "${WORKSPACE}" \
-                                  --dockerfile "${WORKSPACE}/Dockerfile" \
-                                  --destination "${DEST}" \
-                                  --build-arg APP_VERSION="${LIB_VERSION}" \
-                                  --build-arg BUILD_TAG="${BUILD_TAG}" \
-                                  --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" \
-                                  --verbosity info
-
-                                echo "✅ Imagen publicada: ${DEST}"
-
-                                rm -f "${WORKSPACE}/kaniko-config.json" || true
-                                rm -f /kaniko/.docker/config.json" || true
-                            '''
-                        }
-                    } else if (hasDocker) {
-                        echo "🐳 Docker disponible en el agente: usando docker build/push"
-                        withCredentials([usernamePassword(
-                            credentialsId: "${NEXUS_CREDENTIALS_ID}",
-                            usernameVariable: 'NEXUS_USER',
-                            passwordVariable: 'NEXUS_PASS'
-                        )]) {
-                            sh '''
-                                set -eu
-                                REGISTRY="${NEXUS_DOCKER_REGISTRY%/}"
-                                IMAGE="${REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
-                                echo "Destino: ${IMAGE}"
-
-                                echo "🔐 Logueando en registry..."
-                                docker login --username "$NEXUS_USER" --password-stdin $(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||') <<< "$NEXUS_PASS"
-
-                                echo "🔨 Construyendo imagen..."
-                                docker build -t "${IMAGE}" --build-arg APP_VERSION="${LIB_VERSION}" --build-arg BUILD_TAG="${BUILD_TAG}" --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" -f Dockerfile .
+                                echo "🔨 Building $IMAGE..."
+                                docker build -t "${IMAGE}" \
+                                    --build-arg APP_VERSION="${LIB_VERSION}" \
+                                    --build-arg BUILD_TAG="${BUILD_TAG}" \
+                                    --build-arg GIT_COMMIT="${GIT_COMMIT_SHORT}" \
+                                    -f Dockerfile .
 
                                 echo "📤 Pushing..."
                                 docker push "${IMAGE}"
-
-                                echo "✅ Imagen publicada: ${IMAGE}"
-
-                                docker logout $(echo "${NEXUS_DOCKER_REGISTRY}" | sed -E 's|https?://||; s|/$||') || true
+                                
+                                echo "✅ Docker Push exitoso"
                             '''
                         }
-                    } else {
-                        echo "⚠️ Ni Kaniko ni Docker están disponibles en este nodo. Saltando Docker Build & Push."
-                        echo "   Si necesita publicar imágenes desde este pipeline, habilite un agente con Docker o Kaniko."
                     }
                 }
             }
         }
 
-        stage('Deploy to Production') {
-            when {
-                anyOf {
-                    branch 'master'
-                   
-                }
-            }
+        stage('Deploy to Rancher') {
+            when { branch 'master' }
             steps {
-                withCredentials([string(credentialsId: "${RANCHER_CREDENTIALS_ID}", variable: 'RANCHER_TOKEN')]) {
-                    script {
-                        sh """
-                            echo "🚀 Desplegando ${env.DEMO_IMAGE_TAG} en Rancher..."
-                            # Deploy logic aquí...
-                            echo "✅ Despliegue completado"
-                        """
+                container('nodejs') { // O un contenedor con kubectl/rancher-cli si lo necesitas
+                     withCredentials([string(credentialsId: "${RANCHER_CREDENTIALS_ID}", variable: 'RANCHER_TOKEN')]) {
+                        sh 'echo "🚀 Implementar lógica de despliegue aquí (kubectl set image / helm upgrade)..."'
                     }
                 }
             }
         }
-
-        stage('Deploy entorno de desarrollo') {
-            when {
-                anyOf {
-                    branch 'develop'
-                    branch 'desplieges'
-                    branch 'feature/*'
-                }
-            }
-            steps {
-                echo "🚀 Desplegando en entorno de desarrollo..."
-            }
-        }
-
-
     } // end stages
 
     post {
         always {
             script {
-                node {
-                    sh '''
-                        # Limpiar Docker si está disponible
-                        if command -v docker >/dev/null 2>&1; then
-                            docker system prune -f || true
-                        else
-                            echo "Docker no disponible, saltando limpieza"
-                        fi
-                    '''
-                    cleanWs()
-                }
+                // Limpieza básica
+                cleanWs()
             }
         }
         success {
             script {
-                def deployStatus = ""
-                if (env.BRANCH_NAME == 'master' || env.BRANCH_NAME == 'main') {
-                    deployStatus = "🚀 Desplegado en PRODUCCIÓN"
-                } else if (env.BRANCH_NAME == 'develop') {
-                    deployStatus = "🧪 Desplegado en desarrollo"
-                } else if (env.BRANCH_NAME?.startsWith('feature/')) {
-                    deployStatus = "🔬 Desplegado en FEATURE env"
-                } else if (env.BRANCH_NAME?.startsWith('desplieges')) {
-                    deployStatus = "🔬 Desplegado"
-                }
-                 else {
-                    deployStatus = "📦 Solo build (no deploy)"
-                }
-
-                echo """✅ Pipeline Exitoso - ${env.BRANCH_NAME}
-📦 Librería: v${env.LIB_VERSION}
-🐳 Docker: ${env.DEMO_IMAGE_TAG}
-${deployStatus}
-🔗 Build: ${env.BUILD_URL}
-"""
+               echo "✅ Pipeline completado exitosamente para ${env.BRANCH_NAME}"
             }
         }
         failure {
             script {
-                node {
-                    echo """❌ Pipeline Falló - ${env.BRANCH_NAME}
-📝 Commit: ${env.GIT_COMMIT}
-🔗 Build: ${env.BUILD_URL}
-"""
-                }
+               echo "❌ Pipeline falló en ${env.BRANCH_NAME}"
             }
         }
     }
-
-} // end pipeline
+}
