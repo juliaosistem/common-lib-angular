@@ -106,7 +106,10 @@ pipeline {
                         apk add --no-cache git
                         
                         echo "📦 Instalando dependencias..."
-                        npm install
+                        npm ci 
+
+                        echo "🔨 Construyendo core libDto..."}
+                        npm run generate:dtos
                         
                         echo "🔨 Construyendo librería..."
                         npm run build:lib
