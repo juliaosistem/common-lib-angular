@@ -68,7 +68,7 @@ pipeline {
         stage('Checkout & Info') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'credenciales git', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: 'credencialesgit', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                         
                         // Validación rápida de credenciales
                         def u = env.GIT_USER ?: ''
