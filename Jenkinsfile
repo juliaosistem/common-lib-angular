@@ -44,28 +44,43 @@ pipeline {
         NEXUS_CREDS_ID = 'nexus-credentials'
     }
 
+    options {
+        // Evita el choque de directorios que causó el error anterior
+        skipDefaultCheckout() 
+        timeout(time: 1, unit: 'HOURS')
+    }
+
     stages {
         stage('Checkout & Tagging') {
             steps {
                 script {
+                    // Limpieza total del espacio de trabajo
+                    sh "rm -rf ./* ./.* || true"
+                    
                     withCredentials([usernamePassword(credentialsId: "${GIT_CREDS_ID}", usernameVariable: 'U', passwordVariable: 'P')]) {
-                        sh "git clone --branch ${BRANCH_NAME} https://$U:$P@github.com/juliaosistem/common-lib-angular.git ."
+                        // Clonación manual limpia
+                        sh """
+                            git clone --depth 1 --branch ${BRANCH_NAME} https://${U}:${P}@github.com/juliaosistem/common-lib-angular.git .
+                            git clone --depth 1 https://${U}:${P}@github.com/juliaosistem/lib-core-dtos.git lib-core-dtos
+                        """
                     }
                     def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
                     
-                    // Lógica de nombres solicitada: rama-build-commit
+                    // Formato solicitado: rama-buildID-commitID
                     env.CUSTOM_TAG = "${BRANCH_NAME}-${BUILD_ID}-${commitId}"
-                    echo "🏷️ Tag generado: ${env.CUSTOM_TAG}"
+                    echo "🏷️ Tag generado para este build: ${env.CUSTOM_TAG}"
                 }
             }
         }
 
-        stage('Build') {
+        stage('Build Angular') {
             steps {
                 container('nodejs') {
                     sh '''
                         apk add --no-cache git
-                        npm ci --prefer-offline
+                        # Uso del cache persistente de 15Gi para velocidad
+                        npm ci --prefer-offline --no-audit
+                        npm run generate:dtos
                         npm run build:lib
                         npm run build:demo
                     '''
@@ -78,16 +93,12 @@ pipeline {
             steps {
                 container('nodejs') {
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                        script {
-                            // En master subimos versión real (patch) y creamos tag en Git
-                            sh '''
-                                npm config set registry ${NEXUS_NPM_HOSTED}
-                                # Sube versión oficial (ej: 1.0.1 -> 1.0.2)
-                                npm version patch -m "Release stable: %s [skip ci]"
-                                npm publish
-                            '''
-                            // Aquí podrías añadir git push para el tag si lo deseas
-                        }
+                        sh '''
+                            npm config set registry ${NEXUS_NPM_HOSTED}
+                            # Sube versión oficial (patch)
+                            npm version patch -m "Release stable: %s [skip ci]"
+                            npm publish
+                        '''
                     }
                 }
             }
@@ -100,7 +111,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         sh '''
                             cd dist/lib-common-angular
-                            # Usamos el nombre solicitado: desplieges-12-gefe45
+                            # Naming: desplieges-12-gefe45
                             npm version ${CUSTOM_TAG} --no-git-tag-version
                             npm publish --registry ${NEXUS_NPM_HOSTED}
                         '''
@@ -116,15 +127,19 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         sh '''
                             IMAGE_TAGGED="${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG}"
+                            
                             echo "$PASS" | docker login --username "$USER" --password-stdin "${NEXUS_DOCKER_REGISTRY}"
+                            
                             docker build -t "$IMAGE_TAGGED" .
                             docker push "$IMAGE_TAGGED"
                         '''
                         
-                        // Automatización: Actualiza Rancher instantáneamente
+                        // Actualización automática del Deployment en Rancher
+                        // Requiere credencial 'kubeconfig-rancher' tipo Secret File
                         withCredentials([file(credentialsId: 'kubeconfig-rancher', variable: 'KUBECONFIG')]) {
                             sh "export KUBECONFIG=${KUBECONFIG}"
                             sh "kubectl set image deployment/demo-angular-app demo=${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG} -n develop"
+                            sh "kubectl rollout status deployment/demo-angular-app -n develop"
                         }
                     }
                 }
@@ -134,14 +149,14 @@ pipeline {
 
     post {
         always {
-            cleanWs() // Borra el código del agente para no llenar el disco
-            echo "🏁 Finalizado proceso para: ${env.CUSTOM_TAG}"
+            cleanWs() 
+            echo "🏁 Proceso terminado para: ${env.CUSTOM_TAG}"
         }
         success {
             echo "✅ Pipeline exitoso: ${env.CUSTOM_TAG}"
         }
         failure {
-            echo "❌ Pipeline falló en la rama ${BRANCH_NAME}"
+            echo "❌ El Pipeline falló en la rama ${BRANCH_NAME}"
         }
     }
 }
