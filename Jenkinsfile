@@ -1,10 +1,15 @@
 pipeline {
     agent {
         kubernetes {
-            yaml '''
+            // Sustituye 172.17.0.3 por la IP real interna de tu servidor Ubuntu
+            yaml """
             apiVersion: v1
             kind: Pod
             spec:
+              hostAliases:
+              - ip: "172.17.0.3" 
+                hostnames:
+                - "nexus.juliaosistem-server.in"
               securityContext:
                 runAsUser: 0
               containers:
@@ -31,19 +36,20 @@ pipeline {
               - name: node-cache
                 persistentVolumeClaim:
                   claimName: node-pvc
-            '''
+            """
         }
     }
 
     environment {
         NEXUS_DOMAIN = 'nexus.juliaosistem-server.in'
-        // Puerto 30500 mapeado al 5000 del hosted docker
-        NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOMAIN}/repository/docker-hosted/"
-        // Puerto 30080 mapeado al 8081 de Nexus
-        NEXUS_NPM_HOSTED = "http://${env.NEXUS_DOMAIN}/repository/npm-private/"
+        // Docker Registry: Dominio + Puerto NodePort (Sin paths /repository/...)
+        NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOMAIN}:30500"
+        // NPM Registry: URL Completa al Hosted
+        NEXUS_NPM_REGISTRY = "http://${env.NEXUS_DOMAIN}:30080/repository/npm-private/"
         
         GIT_CREDS_ID = 'credencialesgit'
         NEXUS_CREDS_ID = 'nexus-credentials'
+        RANCHER_CREDS_ID = 'rancher-api-credentials'
     }
 
     options {
@@ -56,23 +62,17 @@ pipeline {
             steps {
                 script {
                     sh "rm -rf ./* ./.* || true"
-                    
                     withCredentials([usernamePassword(credentialsId: "${GIT_CREDS_ID}", usernameVariable: 'U', passwordVariable: 'P')]) {
                         sh """
                             git clone --depth 1 --branch ${BRANCH_NAME} https://${U}:${P}@github.com/juliaosistem/common-lib-angular.git .
                             git clone --depth 1 https://${U}:${P}@github.com/juliaosistem/lib-core-dtos.git lib-core-dtos
                         """
                     }
-
                     container('nodejs') {
-                        // Leemos la versión base del package.json
                         env.PACKAGE_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
                     }
-
                     def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-                    // Tag SemVer compatible: 0.0.1-desplieges-8-abc123
                     env.CUSTOM_TAG = "${env.PACKAGE_VERSION}-${BRANCH_NAME}-${BUILD_ID}-${commitId}"
-                    
                     echo "🏷️ Tag generado: ${env.CUSTOM_TAG}"
                 }
             }
@@ -96,27 +96,33 @@ pipeline {
             when { anyOf { branch 'master'; branch 'develop'; branch 'desplieges' } }
             steps {
                 container('nodejs') {
-                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                    // Usamos la lógica de tu pipeline anterior que tanto te gustaba
+                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
                         sh '''
+                            set -e
                             cd dist/lib-common-angular
                             
-                            # Generamos el token de autenticación Base64 para Nexus
-                            AUTH_64=$(echo -n "${USER}:${PASS}" | base64)
-                            # Extraemos el host sin http:// para el archivo .npmrc
-                            REGISTRY_HOST="nexus.juliaosistem-server.in:30080/repository/npm-private/"
+                            echo "📤 Preparando publicación de v${CUSTOM_TAG}..."
+                            
+                            # Calculamos hostpath dinámicamente como en tu versión anterior
+                            hostpath=$(echo "$NEXUS_NPM_REGISTRY" | sed -E 's|https?://||; s|/$||')
 
-                            # Creamos el archivo .npmrc local para autorizar la publicación
-                            echo "registry=http://${REGISTRY_HOST}" > .npmrc
-                            echo "//${REGISTRY_HOST}:_auth=${AUTH_64}" >> .npmrc
-                            echo "//${REGISTRY_HOST}:always-auth=true" >> .npmrc
+                            # Creamos el .npmrc (usamos HOME para asegurar persistencia en el stage)
+                            printf "registry=%s\n//%s/:_auth=%s\n//%s/:always-auth=true\n" \
+                                "$NEXUS_NPM_REGISTRY" \
+                                "$hostpath" \
+                                "$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)" \
+                                "$hostpath" > .npmrc
 
+                            # Aplicamos la versión dinámica antes de subir
                             if [ "$BRANCH_NAME" = "master" ]; then
-                                npm version patch -m "Release stable: %s [skip ci]"
+                                npm version patch --no-git-tag-version
                             else
                                 npm version ${CUSTOM_TAG} --no-git-tag-version --allow-same-version
                             fi
-                            
+
                             npm publish --userconfig .npmrc
+                            echo "✅ Publicación completada en Nexus"
                         '''
                     }
                 }
@@ -129,6 +135,7 @@ pipeline {
                 container('docker') {
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         sh '''
+                            # Docker necesita el Registry sin protocolos ni paths
                             IMAGE_TAGGED="${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG}"
                             
                             echo "$PASS" | docker login --username "$USER" --password-stdin "${NEXUS_DOCKER_REGISTRY}"
@@ -137,8 +144,7 @@ pipeline {
                             docker push "$IMAGE_TAGGED"
                         '''
                         
-                        // Actualización automática en Rancher (Deployment: demo-angular-app)
-                        withCredentials([file(credentialsId: 'rancher-api-credentials', variable: 'KUBECONFIG')]) {
+                        withCredentials([file(credentialsId: "${RANCHER_CREDS_ID}", variable: 'KUBECONFIG')]) {
                             sh """
                                 export KUBECONFIG=${KUBECONFIG}
                                 kubectl set image deployment/demo-angular-app demo=${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG} -n develop
@@ -157,6 +163,6 @@ pipeline {
             echo "🏁 Proceso terminado para: ${env.CUSTOM_TAG}"
         }
         success { echo "✅ Pipeline exitoso: ${env.CUSTOM_TAG}" }
-        failure { echo "❌ El Pipeline falló en la rama ${BRANCH_NAME}" }
+        failure { echo "❌ El Pipeline falló" }
     }
 }
