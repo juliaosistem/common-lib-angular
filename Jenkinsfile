@@ -38,9 +38,9 @@ pipeline {
     environment {
         NEXUS_DOMAIN = 'nexus.juliaosistem-server.in'
         // Puerto 30500 mapeado al 5000 del hosted docker
-        NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOMAIN}:30500"
+        NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOMAIN}/repository/docker-hosted/"
         // Puerto 30080 mapeado al 8081 de Nexus
-        NEXUS_NPM_HOSTED = "http://${env.NEXUS_DOMAIN}:30080/repository/npm-private/"
+        NEXUS_NPM_HOSTED = "http://${env.NEXUS_DOMAIN}/repository/npm-private/"
         
         GIT_CREDS_ID = 'credencialesgit'
         NEXUS_CREDS_ID = 'nexus-credentials'
