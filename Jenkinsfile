@@ -45,7 +45,7 @@ pipeline {
         // Docker Registry: Dominio + Puerto NodePort
         NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOMAIN}:30500"
         // NPM Registry: URL Completa
-        NEXUS_NPM_REGISTRY = "http://${env.NEXUS_DOMAIN}:30080/repository/npm-private/"
+        NEXUS_NPM_REGISTRY = "http://${env.NEXUS_DOMAIN}/repository/npm-private/"
         
         GIT_CREDS_ID = 'credencialesgit'
         NEXUS_CREDS_ID = 'nexus-credentials'
