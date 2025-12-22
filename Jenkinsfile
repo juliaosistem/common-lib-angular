@@ -1,13 +1,13 @@
 pipeline {
     agent {
         kubernetes {
-            // Sustituye 172.17.0.3 por la IP real interna de tu servidor Ubuntu
+            // Usamos tu IP 192.168.1.254 para que el Pod encuentre a Nexus localmente
             yaml """
             apiVersion: v1
             kind: Pod
             spec:
               hostAliases:
-              - ip: "172.17.0.3" 
+              - ip: "192.168.1.254"
                 hostnames:
                 - "nexus.juliaosistem-server.in"
               securityContext:
@@ -42,9 +42,9 @@ pipeline {
 
     environment {
         NEXUS_DOMAIN = 'nexus.juliaosistem-server.in'
-        // Docker Registry: Dominio + Puerto NodePort (Sin paths /repository/...)
+        // Docker Registry: Dominio + Puerto NodePort
         NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOMAIN}:30500"
-        // NPM Registry: URL Completa al Hosted
+        // NPM Registry: URL Completa
         NEXUS_NPM_REGISTRY = "http://${env.NEXUS_DOMAIN}:30080/repository/npm-private/"
         
         GIT_CREDS_ID = 'credencialesgit'
@@ -72,6 +72,7 @@ pipeline {
                         env.PACKAGE_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
                     }
                     def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    // Tag SemVer: version-rama-build-commit
                     env.CUSTOM_TAG = "${env.PACKAGE_VERSION}-${BRANCH_NAME}-${BUILD_ID}-${commitId}"
                     echo "🏷️ Tag generado: ${env.CUSTOM_TAG}"
                 }
@@ -96,25 +97,22 @@ pipeline {
             when { anyOf { branch 'master'; branch 'develop'; branch 'desplieges' } }
             steps {
                 container('nodejs') {
-                    // Usamos la lógica de tu pipeline anterior que tanto te gustaba
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
                         sh '''
                             set -e
                             cd dist/lib-common-angular
                             
-                            echo "📤 Preparando publicación de v${CUSTOM_TAG}..."
-                            
-                            # Calculamos hostpath dinámicamente como en tu versión anterior
+                            # Calculamos hostpath para el .npmrc
                             hostpath=$(echo "$NEXUS_NPM_REGISTRY" | sed -E 's|https?://||; s|/$||')
 
-                            # Creamos el .npmrc (usamos HOME para asegurar persistencia en el stage)
+                            # Generamos el .npmrc con el token base64
                             printf "registry=%s\n//%s/:_auth=%s\n//%s/:always-auth=true\n" \
                                 "$NEXUS_NPM_REGISTRY" \
                                 "$hostpath" \
                                 "$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)" \
                                 "$hostpath" > .npmrc
 
-                            # Aplicamos la versión dinámica antes de subir
+                            # Versionado
                             if [ "$BRANCH_NAME" = "master" ]; then
                                 npm version patch --no-git-tag-version
                             else
@@ -122,7 +120,6 @@ pipeline {
                             fi
 
                             npm publish --userconfig .npmrc
-                            echo "✅ Publicación completada en Nexus"
                         '''
                     }
                 }
@@ -135,7 +132,6 @@ pipeline {
                 container('docker') {
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         sh '''
-                            # Docker necesita el Registry sin protocolos ni paths
                             IMAGE_TAGGED="${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG}"
                             
                             echo "$PASS" | docker login --username "$USER" --password-stdin "${NEXUS_DOCKER_REGISTRY}"
@@ -160,9 +156,7 @@ pipeline {
     post {
         always {
             cleanWs() 
-            echo "🏁 Proceso terminado para: ${env.CUSTOM_TAG}"
+            echo "🏁 Proceso terminado: ${env.CUSTOM_TAG}"
         }
-        success { echo "✅ Pipeline exitoso: ${env.CUSTOM_TAG}" }
-        failure { echo "❌ El Pipeline falló" }
     }
 }
