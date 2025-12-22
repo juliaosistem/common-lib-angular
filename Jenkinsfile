@@ -1,32 +1,23 @@
 pipeline {
     agent {
         kubernetes {
-            // Definimos el Pod con los contenedores necesarios
             yaml '''
             apiVersion: v1
             kind: Pod
-            metadata:
-              labels:
-                app: jenkins-agent-builder
             spec:
               securityContext:
                 runAsUser: 0
-                fsGroup: 0
               containers:
-              # 1. Contenedor para Node/Angular (Subimos a 4Gi para evitar OOM en Angular)
               - name: nodejs
                 image: node:20-alpine
                 command: ['cat']
                 tty: true
+                volumeMounts:
+                - name: node-cache
+                  mountPath: /root/.npm
                 resources:
-                  limits:
-                    memory: "4Gi"
-                    cpu: "1000m"
-                  requests:
-                    memory: "2Gi"
-                    cpu: "500m"
-                    
-              # 2. Contenedor para Docker CLI
+                  limits: { memory: "4Gi", cpu: "2000m" }
+                  requests: { memory: "2Gi", cpu: "1000m" }
               - name: docker
                 image: docker:24-cli
                 command: ['cat']
@@ -34,144 +25,108 @@ pipeline {
                 volumeMounts:
                 - name: dockersock
                   mountPath: /var/run/docker.sock
-              
               volumes:
               - name: dockersock
-                hostPath:
-                  path: /var/run/docker.sock
+                hostPath: { path: /var/run/docker.sock }
+              - name: node-cache
+                persistentVolumeClaim:
+                  claimName: node-pvc
             '''
         }
     }
 
     environment {
-        // 🔄 URLs de tus repositorios en Nexus
-        NEXUS_DOCKER_REGISTRY = 'nexus.juliaosistem-server.in:5000' // Puerto del hosted docker
-        NEXUS_NPM_REGISTRY = 'https://nexus.juliaosistem-server.in/repository/npm-private/'
+        NEXUS_DOMAIN = 'nexus.juliaosistem-server.in'
+        NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOMAIN}:30500"
+        NEXUS_NPM_HOSTED = "http://${env.NEXUS_DOMAIN}:30080/repository/npm-private/"
         
-        // IDs de credenciales unificados (como en tus capturas)
         GIT_CREDS_ID = 'credencialesgit'
         NEXUS_CREDS_ID = 'nexus-credentials'
-        RANCHER_CREDS_ID = 'rancher-api-credentials'
-
-        FORCE_COLOR = '1'
-    }
-
-    options {
-        skipDefaultCheckout()
-        timeout(time: 1, unit: 'HOURS') 
     }
 
     stages {
-        stage('Checkout & Info') {
+        stage('Checkout & Tagging') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: "${GIT_CREDS_ID}", usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                        sh '''
-                          set -e
-                          echo "🔎 Limpiando y clonando repo principal..."
-                          rm -rf *
-                          git clone --branch "${BRANCH_NAME}" "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/common-lib-angular.git" .
-                        '''
-
-                        env.GIT_COMMIT = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-                        env.GIT_COMMIT_SHORT = env.GIT_COMMIT.take(7)
-                        env.BUILD_TAG = "${BRANCH_NAME}-${BUILD_NUMBER}-${env.GIT_COMMIT_SHORT}"
-                        
-                        container('nodejs') {
-                            env.LIB_VERSION = sh(script: "node -p \"require('./package.json').version\"", returnStdout: true).trim()
-                        }
+                    withCredentials([usernamePassword(credentialsId: "${GIT_CREDS_ID}", usernameVariable: 'U', passwordVariable: 'P')]) {
+                        sh "git clone --branch ${BRANCH_NAME} https://$U:$P@github.com/juliaosistem/common-lib-angular.git ."
                     }
+                    def commitId = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+                    
+                    // Lógica de nombres solicitada: rama-build-commit
+                    env.CUSTOM_TAG = "${BRANCH_NAME}-${BUILD_ID}-${commitId}"
+                    echo "🏷️ Tag generado: ${env.CUSTOM_TAG}"
                 }
             }
         }
 
-        stage('Preparar dependencias (Git)') {
-            steps {
-                withCredentials([usernamePassword(credentialsId: "${GIT_CREDS_ID}", usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
-                    sh '''
-                      set -e
-                      echo "🔽 Clonando lib-core-dtos..."
-                      rm -rf lib-core-dtos
-                      git clone "https://${GIT_USER}:${GIT_PASS}@github.com/juliaosistem/lib-core-dtos.git" lib-core-dtos
-                    '''
-                }
-            }
-        }
-
-        stage('Install & Build (Angular)') {
+        stage('Build') {
             steps {
                 container('nodejs') {
                     sh '''
-                        echo "📦 Instalando git para dependencias npm..."
                         apk add --no-cache git
-                        
-                        echo "📦 Instalando dependencias..."
-                        npm ci 
-
-                        echo "🔨 Construyendo core libDto..."}
-                        npm run generate:dtos
-                        
-                        echo "🔨 Construyendo librería..."
+                        npm ci --prefer-offline
                         npm run build:lib
-                        
-                        echo "🔨 Construyendo demo..."
                         npm run build:demo
                     '''
                 }
             }
         }
 
-        stage('Publicar en Nexus NPM') {
-            when { branch 'develop' } // Ajusta según tu flujo
+        stage('Publish Master (Stable)') {
+            when { branch 'master' }
             steps {
                 container('nodejs') {
-                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
-                        sh '''
-                            set -e
-                            hostpath=$(echo "$NEXUS_NPM_REGISTRY" | sed -E 's|https?://||; s|/$||')
-                            printf "registry=%s\n//%s/:_auth=%s\n//%s/:always-auth=true\n" \
-                                "$NEXUS_NPM_REGISTRY" \
-                                "$hostpath" \
-                                "$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)" \
-                                "$hostpath" > ~/.npmrc
+                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                        script {
+                            // En master subimos versión real (patch) y creamos tag en Git
+                            sh '''
+                                npm config set registry ${NEXUS_NPM_HOSTED}
+                                # Sube versión oficial (ej: 1.0.1 -> 1.0.2)
+                                npm version patch -m "Release stable: %s [skip ci]"
+                                npm publish
+                            '''
+                            // Aquí podrías añadir git push para el tag si lo deseas
+                        }
+                    }
+                }
+            }
+        }
 
+        stage('Publish Develop/Desplieges (Dev)') {
+            when { anyOf { branch 'develop'; branch 'desplieges' } }
+            steps {
+                container('nodejs') {
+                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                        sh '''
                             cd dist/lib-common-angular
-                            npm publish --registry "$NEXUS_NPM_REGISTRY"
+                            # Usamos el nombre solicitado: desplieges-12-gefe45
+                            npm version ${CUSTOM_TAG} --no-git-tag-version
+                            npm publish --registry ${NEXUS_NPM_HOSTED}
                         '''
                     }
                 }
             }
         }
 
-        stage('Docker Build & Push') {
-            when { branch 'develop' }
+        stage('Docker Push & Deploy') {
+            when { anyOf { branch 'develop'; branch 'desplieges'; branch 'master' } }
             steps {
                 container('docker') {
-                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         sh '''
-                            set -eu
-                            IMAGE="${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${BUILD_TAG}"
-                            
-                            echo "🔐 Login en Nexus Docker..."
-                            echo "$NEXUS_PASS" | docker login --username "$NEXUS_USER" --password-stdin "${NEXUS_DOCKER_REGISTRY}"
-
-                            echo "🔨 Building $IMAGE..."
-                            docker build -t "${IMAGE}" .
-
-                            echo "📤 Pushing..."
-                            docker push "${IMAGE}"
+                            IMAGE_TAGGED="${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG}"
+                            echo "$PASS" | docker login --username "$USER" --password-stdin "${NEXUS_DOCKER_REGISTRY}"
+                            docker build -t "$IMAGE_TAGGED" .
+                            docker push "$IMAGE_TAGGED"
                         '''
+                        
+                        // Automatización: Actualiza Rancher instantáneamente
+                        withCredentials([file(credentialsId: 'kubeconfig-rancher', variable: 'KUBECONFIG')]) {
+                            sh "export KUBECONFIG=${KUBECONFIG}"
+                            sh "kubectl set image deployment/demo-angular-app demo=${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG} -n develop"
+                        }
                     }
-                }
-            }
-        }
-
-        stage('Deploy to Rancher') {
-            when { branch 'develop' }
-            steps {
-                withCredentials([string(credentialsId: "${RANCHER_CREDS_ID}", variable: 'RANCHER_TOKEN')]) {
-                    echo "🚀 Disparando despliegue en Rancher para: ${BUILD_TAG}"
-                    // Aquí puedes usar una imagen con kubectl o curl para avisar a Rancher
                 }
             }
         }
@@ -179,13 +134,14 @@ pipeline {
 
     post {
         always {
-            cleanWs()
+            cleanWs() // Borra el código del agente para no llenar el disco
+            echo "🏁 Finalizado proceso para: ${env.CUSTOM_TAG}"
         }
         success {
-            echo "✅ Pipeline exitoso: ${env.BUILD_TAG}"
+            echo "✅ Pipeline exitoso: ${env.CUSTOM_TAG}"
         }
         failure {
-            echo "❌ Pipeline falló"
+            echo "❌ Pipeline falló en la rama ${BRANCH_NAME}"
         }
     }
 }
