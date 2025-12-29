@@ -54,34 +54,36 @@ jobs:
         # Asegúrate de que los archivos generados estén en .gitignore.
 
 
-      - name: Build
-        run: npm run build lib-common-angular
-       
-      - name: Incrementa versión y hace Push (Patch)
+
+      - name: Incrementa versión (patch)
         run: |
           echo "🆙 Incrementando versión (patch)..."
-          
-          # 1. Aseguramos config de git (por si acaso)
           git config --global user.email "zigmainflables@gmail.com"
           git config --global user.name "Daniel Juliao"
-          
-          # 2. Mostramos qué archivos están 'sucios' (para depuración en los logs)
           echo "📂 Estado de Git antes de versionar:"
           git status -s
-
-          # 3. Usamos --force para incluir los DTOs generados o package-lock.json actualizado en el commit de la versión
           npm version patch --force -m "chore(release): %s [skip ci]"
-          
-          echo "⬆️ Subiendo cambios a master..."
-          git push origin master --follow-tags
-      
+
+      - name: Build
+        run: npm run build lib-common-angular
+
       - name: Publica en npm
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           echo "📦 Publicando en npm..."
-          # Agregamos --provenance para certificar que viene de GitHub Actions
           npm publish --access public --provenance
+
+      - name: Crea rama y PR de release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          BRANCH=release-auto-${{ github.run_id }}
+          git checkout -b $BRANCH
+          git push origin $BRANCH --follow-tags
+          echo "🔀 Creando Pull Request hacia master..."
+          gh pr create --base master --head $BRANCH --title "Release auto ${{ github.run_id }}" --body "Release generado automáticamente por CI"
+          echo "ℹ️ Espera la aprobación y merge del PR para completar el release."
 
       - name: Notify Jenkins (al final)
         if: always()
