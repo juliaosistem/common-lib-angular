@@ -55,7 +55,7 @@ jobs:
 
 
       - name: Build
-        run: npm run build
+        run: ng build lib-common-angular
        
       - name: Incrementa versión y hace Push (Patch)
         run: |
