@@ -1,19 +1,21 @@
-<div class="register-field">
-    <label for="register-name" class="register-label">Nombre completo</label>
-    <input id="register-name" type="text" pInputText class="register-input" placeholder="John Doe" required />
-</div>
+<div class="grid formgrid p-fluid">
+    <div class="col-12 field">
+        <label for="register-name" class="input-label">Nombre completo</label>
+        <input id="register-name" type="text" pInputText placeholder="John Doe" required />
+    </div>
 
-<div class="register-field">
-    <label for="register-email" class="register-label">Email</label>
-    <input id="register-email" type="email" pInputText class="register-input" placeholder="ejemplo@correo.com" required />
-</div>
+    <div class="col-12 field">
+        <label for="register-email" class="input-label">Email</label>
+        <input id="register-email" type="email" pInputText placeholder="ejemplo@correo.com" required />
+    </div>
 
-<div class="register-field">
-    <label for="register-password" class="register-label">Contraseña</label>
-    <p-password inputId="register-password" [feedback]="false" [toggleMask]="true" class="register-password"></p-password>
-</div>
+    <div class="col-12 field">
+        <label for="register-password" class="input-label">Contraseña</label>
+        <p-password inputId="register-password" placeholder="********" [toggleMask]="true" appendTo="body"></p-password>
+    </div>
 
-<div class="register-field">
-    <label for="register-confirm-password" class="register-label">Confirmar Contraseña</label>
-    <p-password inputId="register-confirm-password" [feedback]="false" [toggleMask]="true" class="register-password"></p-password>
+    <div class="col-12 field">
+        <label for="register-confirm-password" class="input-label">Confirmar Contraseña</label>
+        <p-password inputId="register-confirm-password" [feedback]="false" [toggleMask]="true"></p-password>
+    </div>
 </div>

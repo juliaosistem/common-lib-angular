@@ -1,21 +1,99 @@
-name: Sync with Jenkins Multibranch
+name: Publicar en npm con Auto-Version
 
 on:
   push:
-    branches: ['**']  # Todas las ramas
-  pull_request:
-    branches: ['**']  # Todos los PRs
+    branches:
+      - master
 
 jobs:
-  notify-jenkins:
+  publish:
     runs-on: ubuntu-latest
     
+    # 🔐 IMPORTANTE: Permiso de escritura necesario para hacer git push
+    permissions:
+      contents: write  # Necesario para 'git push' (npm version)
+      id-token: write  # NECESARIO para 'npm publish --provenance' (OIDC)
+
     steps:
-      - name: Notify Jenkins
+      - name: Checkout del código fuente
+        uses: actions/checkout@v4
+        with:
+          # Necesitamos el historial completo y el token para hacer push
+          fetch-depth: 0 
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configura Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.12.0'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Configura Git
         run: |
-          echo "🔄 Jenkins Multibranch detectará este push automáticamente"
+          git config --global user.email "zigmainflables@gmail.com"
+          git config --global user.name "Daniel Juliao"
+      
+      - name: Clona lib-core-dtos (Dependencia Privada)
+        run: |
+          rm -rf lib-core-dtos
+          if [ -n "${{ secrets.LIB_CORE_DTOS_PAT }}" ]; then
+            echo "🔐 Clonando lib-core-dtos con token secreto"
+            git clone --depth 1 https://x-access-token:${{ secrets.LIB_CORE_DTOS_PAT }}@github.com/juliaosistem/lib-core-dtos.git lib-core-dtos
+          else
+            echo "⚠️ secrets.LIB_CORE_DTOS_PAT no configurado."
+            git clone --depth 1 https://github.com/juliaosistem/lib-core-dtos.git lib-core-dtos || echo "Fallo clonación pública."
+          fi
+
+      - name: Instala las dependencias
+        run: npm ci
+
+      - name: Genera DTOs
+        run: npm run generate:dtos
+        # NOTA: Si este paso modifica archivos rastreados por git, 
+        # 'npm version' fallará porque el directorio no estará limpio.
+        # Asegúrate de que los archivos generados estén en .gitignore.
+
+      - name: Ejecuta las pruebas
+        run: npm test
+
+      - name: Build
+        run: npm run build
+       
+      - name: Incrementa versión y hace Push (Patch)
+        run: |
+          echo "🆙 Incrementando versión (patch)..."
+          
+          # 1. Aseguramos config de git (por si acaso)
+          git config --global user.email "zigmainflables@gmail.com"
+          git config --global user.name "Daniel Juliao"
+          
+          # 2. Mostramos qué archivos están 'sucios' (para depuración en los logs)
+          echo "📂 Estado de Git antes de versionar:"
+          git status -s
+
+          # 3. Usamos --force para incluir los DTOs generados o package-lock.json actualizado en el commit de la versión
+          npm version patch --force -m "chore(release): %s [skip ci]"
+          
+          echo "⬆️ Subiendo cambios a master..."
+          git push origin master --follow-tags
+      
+      - name: Publica en npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: |
+          echo "📦 Publicando en npm..."
+          # Agregamos --provenance para certificar que viene de GitHub Actions
+          npm publish --access public --provenance
+
+      - name: Notify Jenkins (al final)
+        if: always()
+        run: |
+          echo "🔄 Jenkins Multibranch será notificado (post-publicación)"
           echo "📦 Rama: ${{ github.ref_name }}"
           echo "📝 Commit: ${{ github.sha }}"
-          
-          # Opcional: webhook manual si necesitas notificación inmediata
-          # curl -X POST "${{ secrets.JENKINS_URL }}/git/notifyCommit?url=${{ github.repositoryUrl }}"
+          if [ -n "${{ secrets.JENKINS_URL }}" ]; then
+            echo "📣 Enviando notifyCommit a Jenkins: ${{ secrets.JENKINS_URL }}"
+            curl -sS -X POST "${{ secrets.JENKINS_URL }}/git/notifyCommit?url=${{ github.server_url }}/${{ github.repository }}" || true
+          else
+            echo "ℹ️ secrets.JENKINS_URL no está definido; omitiendo webhook"
+          fi

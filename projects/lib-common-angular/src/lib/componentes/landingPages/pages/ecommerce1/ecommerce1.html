@@ -14,8 +14,8 @@
 
     <!-- WhatsApp Modal reemplazado por PrimeNG Dialog -->
     <p-dialog [(visible)]="showWhatsappModal"
-              modal="false"
-              [blockScroll]="false"
+              modal="true"
+              [blockScroll]="true"
               [closable]="true"
               [draggable]="false"
               [focusOnShow]="false"
@@ -24,7 +24,6 @@
               [style]="{ width: '360px' }"
               [dismissableMask]="false"
               [closeOnEscape]="false"
-              (onHide)="hideWhatsappModal()"
               appendTo="body">
         <div class="p-text-center" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.75rem;">
             <div style="background:#25d366;color:white;width:72px;height:72px;border-radius:36px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:1rem;">
@@ -40,7 +39,7 @@
         </div>
     </p-dialog>
 
-    <lib-header-ecommerce1 [menuConfig]="headerMenuConfig"></lib-header-ecommerce1>
+    <lib-header-ecommerce1 [menuConfig]="headerMenuConfig" [DatosNegocio]="DatosNegocio"></lib-header-ecommerce1>
     <lib-bar-float-ecommerce1 ></lib-bar-float-ecommerce1>
   
         <router-outlet></router-outlet>

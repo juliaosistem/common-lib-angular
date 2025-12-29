@@ -81,344 +81,565 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
 
     }
 
+    /**
+     * Método para Agregarle el nombre de la categoría a cada producto
+     * @param products Lista de productos a los cuales se les va a agregar el nombre de la categoría
+     * @param categorias Lista de categorías disponibles
+     * @return Lista de productos con el nombre de la categoría agregado
+     */
+    addNameCategoriaToProducts(products: ProductoDTO[], categorias: CategoriaDTO[]): ProductoDTO[] {
+        return products.map(product => {
+            const categoria = categorias.find(c => c.id === product.idCategoria);
+            if (categoria) {
+                product.nombreCategoria = categoria.nombreCategoria;
+            }
+            return product;
+        });
+    }
+
  mockCategoriaInflablesDTO(): CategoriaDTO []{
         return [  
 
             {
-                id: '550e8400-e29b-41d4-a716-446655440000',
+                id: 'MCAS',
+                nombreCategoria: "Mini Castillos",
+                  tipoCategoria: {  id: 1, nombreTipoCategoria: "Inflables"  }                
+            },
+            {
+                id: 'CAS',
                 nombreCategoria: "Castillos",
                   tipoCategoria: {  id: 1, nombreTipoCategoria: "Inflables"  }                
             },
              {
-                id: '550e8400-e29b-41d4-a716-446655440002',
+                id: 'TOB',
                 nombreCategoria: "Toboganes",
                   tipoCategoria: {  id: 1, nombreTipoCategoria: "Inflables"  }                
-            }
+            },
+             {
+                id: 'MTOB',
+                nombreCategoria: "Mini Toboganes",
+                  tipoCategoria: {  id: 1, nombreTipoCategoria: "Inflables"  }                
+            },
+             {
+                id: 'DES',
+                nombreCategoria: "Diseños Especiales",
+                  tipoCategoria: {  id: 1, nombreTipoCategoria: "Inflables"  }                
+            },
+            {
+                id: 'PUB',
+                nombreCategoria: "Publicitarios",
+                  tipoCategoria: {  id: 1, nombreTipoCategoria: "Inflables"  }                
+            },
+            
           ];
  }
-     mockProductosInflablesDTO(): ProductoDTO []{
-        return [
-            {
-            id: '550e8400-e29b-41d4-a716-446655440000',
-            name: "Mini Piscina ",
+     // Interfaces asumidas: ProductoDTO, MonedaDTO, ImagenDTO
 
-            precios: [{
-                codigo_iso: "COP",
-                nombreMoneda: "Peso colombiano",
-                precio: 3500000
-            }, {
-                codigo_iso: "USD",
-                nombreMoneda: "Dólar estadounidense",
-                precio: 1300
-            }],
+mockProductosInflablesDTO(): ProductoDTO[] {
+  return [
+    {
+      id: 'MCAS25-001',
+      name: 'PISCINA DE PELOTAS 3X3',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3100000 }],
+      descuento: 0,
+      cantidad: 15,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '1', url: 'https://drive.google.com/file/d/1bvUYjg5pAVCoUV8pgivUej1QNaVcEhdR/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: 'MINI CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO IMPRESIONES OPCIONALES DE 50 X 70',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+      id: 'MCAS25-002',
+      name: 'CASTILLO MALLAS',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3100000 }],
+      descuento: 0,
+      cantidad: 15,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '2', url: 'https://drive.google.com/file/d/1Kv_0hwdmKOSBPM2Tc8YBdqFt2W7C6hKv/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: 'MINI CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO IMPRESIONES OPCIONALES DE 50 X 70',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+      id: 'MCAS25-003',
+      name: 'CASTILLO RESBALADERO',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3100000 }],
+      descuento: 0,
+      cantidad: 15,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '3', url: 'https://drive.google.com/file/d/1rESa51mTMOkwfMFRck2u2rh6gePoMRIM/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: 'MINI CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO IMPRESIONES OPCIONALES DE 50 X 70',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+      id: 'MCAS25-004',
+      name: 'COCODRILO',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 4699000 }],
+      descuento: 0,
+      cantidad: 10,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '4', url: 'https://drive.google.com/file/d/1vVF_uOXj5WKJRmKjWaostKAKiZONI-Mv/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: 'MINI CASTILLO 2.50 ALTO X 4 DE ANCHO X 4 DE FONDO CABEZA DE COCODRILO SIN IMPRESIONES',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+      id: 'MCAS25-005',
+      name: 'CASTILLO MINI LEGO',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 4799000 }],
+      descuento: 0,
+      cantidad: 10,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '5', url: 'https://drive.google.com/file/d/1igto2LItg_YOH67C33KLN9KEr0V79Pg-/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: 'MINI CASTILLO 2 ALTO X 4.20 DE ANCHO X 2.80 DE FONDO SIN IMPRESIONES',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+      id: 'MCAS25-006',
+      name: 'COCODRILO PALMERAS',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 4950000 }],
+      descuento: 0,
+      cantidad: 10,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '6', url: 'https://drive.google.com/file/d/1cO465kNABoYCtJfhWah31D8aUlb6TFkF/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: 'MINI CASTILLO 2.20 ALTO X 4.50 DE ANCHO X 4 DE FONDO SIN IMPRESIONES',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+      id: 'MCAS25-007',
+      name: 'HIPOPOTAMO',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5100000 }],
+      descuento: 0,
+      cantidad: 8,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '7', url: 'https://drive.google.com/file/d/1pHMB_50b1mdzeMCTxFhFl3X4tYkb-5uN/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: 'MINI CASTILLO 2 ALTO X 4 DE ANCHO X 4 DE FONDO IMPRESIONES OPCIONALES',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+      id: 'MCAS25-008',
+      name: 'MINI ZIGMA',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 2300000 }],
+      descuento: 0,
+      cantidad: 20,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '8', url: 'https://drive.google.com/file/d/1srxXIRMwzn_TgNXdFV28zYpvBe9d8CrF/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: '2 X 2 METROS (COLORES E IMPRESIÓN FRONTAL PERSONALIZABLE) (SIN PISCINA DE PELOTAS)',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+      id: 'MCAS25-009',
+      name: 'MINI ZIGMA BALL POOL',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 2600000 }],
+      descuento: 0,
+      cantidad: 20,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '9', url: 'https://drive.google.com/file/d/1PWiq10DrH7XA97MZpyekdboSL8NEvGRu/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: '2 X 2 METROS (COLORES E IMPRESIÓN FRONTAL PERSONALIZABLE) + PISCINA DE PELOTAS',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+      id: 'MCAS25-010',
+      name: 'MINI PATROL',
+      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3400000 }],
+      descuento: 0,
+      cantidad: 12,
+      idBusiness: 1,
+      idCategoria: 'MCAS',
+      nombreCategoria: '',
+      imagen: [{ id: '10', url: 'https://drive.google.com/file/d/1eMqzqQBYH5ewcKdVBqA3_M3RS4iFZw2m/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      estado: 'Activo',
+      descripcion: 'MINI CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO IMPRESIÓN DE LA TOTALIDAD DEL FRENTE',
+      comision: 0,
+      fechaCreacion: '',
+      fechaActualizacion: '',
+      idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+    {
+  id: 'CAS25-001',
+  name: '0’',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 4899000 }],
+  descuento: 0,
+  cantidad: 10,
+  idBusiness: 1,
+  idCategoria: 'CAS',
+  nombreCategoria: '',
+  imagen: [{
+    id: '1',
+    url: 'https://drive.google.com/file/d/1GgA8XdkTZOPXkgZ1ufIQeNDp1GBovxcY/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'CASTILLO 2.50 ALTO X 4 DE ANCHO X 4 DE FONDO IMPRESION FRONTAL PERSONALIZABLE',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'CAS25-002',
+  name: 'CASTILLO ALADINO 4X4',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 4799000 }],
+  descuento: 0,
+  cantidad: 10,
+  idBusiness: 1,
+  idCategoria: 'CAS',
+  nombreCategoria: '',
+  imagen: [{
+    id: '2',
+    url: 'https://drive.google.com/file/d/1QHGz5Ex0z2QIJVopCMDuGJSPVq9BxRx3/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'CASTILLO 2.50 ALTO X 4 DE ANCHO X 4 DE FONDO SIN IMPRESIONES',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'CAS25-003',
+  name: 'CASTILLO MINIPARQUE',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5300000 }],
+  descuento: 0,
+  cantidad: 8,
+  idBusiness: 1,
+  idCategoria: 'CAS',
+  nombreCategoria: '',
+  imagen: [{
+    id: '3',
+    url: 'https://drive.google.com/file/d/1_JO6BeLOCgmtS_stTQn3uVF-OnBZvo9B/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'CASTILLO 2.60 ALTO X 4.50 DE ANCHO X 4.50 DE FONDO SIN IMPRESIONES',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'CAS25-004',
+  name: 'CASTILLO LEGO',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5100000 }],
+  descuento: 0,
+  cantidad: 8,
+  idBusiness: 1,
+  idCategoria: 'CAS',
+  nombreCategoria: '',
+  imagen: [{
+    id: '4',
+    url: 'https://drive.google.com/file/d/191Ya70oOtS30hJJX4FTfujT6fDJqqmZ1/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO SIN IMPRESIONES',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'CAS25-005',
+  name: 'CASTILLO PALMERAS',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5300000 }],
+  descuento: 0,
+  cantidad: 8,
+  idBusiness: 1,
+  idCategoria: 'CAS',
+  nombreCategoria: '',
+  imagen: [{
+    id: '5',
+    url: 'https://drive.google.com/file/d/16trPA0UrmplvXkP8tgl6JYNNWGSfYe6J/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'CASTILLO 2.70 ALTO X 5 DE ANCHO X 5 DE FONDO SIN IMPRESIONES TORRES EN FORMA DE PALMERAS',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},{
+  id: 'MTOB25-001',
+  name: 'MINI TOBOGAN COCODRILO Y PALMERAS',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6800000 }],
+  descuento: 0,
+  cantidad: 8,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '1',
+    url: 'https://drive.google.com/file/d/1kLTJjAMHSrpYB6glbjDu3kUthgJWPmVq/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO SIN IMPRESIONES ENTRADA CABEZA FORMA DE COCODRILO',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'MTOB25-002',
+  name: 'MINI TOBOGAN DISNEY',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5999000 }],
+  descuento: 0,
+  cantidad: 8,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '2',
+    url: 'https://drive.google.com/file/d/1C_6RPI3Z4-qIeN5bLL6MkR4ZneVO_jY1/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO 2 IMPRESIONES FRONTALES, IMPRESIONES TROQUELADAS EN TORRES, PEDESTAL Y ARCOS',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'MTOB25-003',
+  name: 'MINI TOBOGAN MARVEL',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5999000 }],
+  descuento: 0,
+  cantidad: 8,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '3',
+    url: 'https://drive.google.com/file/d/1LPDwvgFZq5azSCYMBB_zZkX_Y3U5-Qut/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO 3 IMPRESIONES FRONTALES, COLCHONES IMPRESOS EN TORRES Y PEDESTAL, ARCOS IMPRESOS',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'MTOB25-004',
+  name: 'MINI TOBOGAN MARVEL 2',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6500000 }],
+  descuento: 0,
+  cantidad: 6,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '4',
+    url: 'https://drive.google.com/file/d/1q5EalGuF9Nu70XbmlaGliGJ3hf4rZjX5/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: '3.50 ALTO X 4 DE ANCHO X 6 DE FONDO IMPRESIONES FRONTALES Y EN ARCOS Y PEDESTAL',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'MTOB25-005',
+  name: 'MINI TOBOGAN SUPER MARIO',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5999000 }],
+  descuento: 0,
+  cantidad: 6,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '5',
+    url: 'https://drive.google.com/file/d/1P36rzlCNbcoS90Rp6aMEcte0BIcg24uh/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO 3 IMPRESIONES FRONTALES, COLCHON IMPRESO EN PEDESTAL',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'MTOB25-006',
+  name: 'MINI TOBOGAN TORRE ALTA',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6500000 }],
+  descuento: 0,
+  cantidad: 6,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '6',
+    url: 'https://drive.google.com/file/d/1tDpZ6d54qCGmzqKYxQ0AQmPOeWYRPtP7/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO SIN IMPRESIONES, MALLAS A LOS LADOS DE LA ENTRADA',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'MTOB25-007',
+  name: 'MINI TOBOGAN JUMBO',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6500000 }],
+  descuento: 0,
+  cantidad: 6,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '7',
+    url: 'https://drive.google.com/file/d/1oiWtIBvD-oQZ8tVVPxPxYpJT6hQLm42_/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: '4 ALTO X 5.30 DE ANCHO X 4.50 DE FONDO 3 IMPRESIONES FRONTALES Y 1 EN TOBOGAN',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'MTOB25-008',
+  name: 'MINI TOBOGAN JUMBO 2',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6900000 }],
+  descuento: 0,
+  cantidad: 0,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '8',
+    url: 'https://drive.google.com/file/d/1nYIoUKm-mYFy1O0gcDS1f3uleSIMJUOb/view?usp=drive_link',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: '4.50 ALTO X 5.30 DE ANCHO X 4.50 DE FONDO 2 MUÑECOS 3D EN CADA ESQUINA 3 IMPRESIONES FRONTALES 1 EN TOBOGAN Y 1 EN ENTRADA',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'MTOB25-009',
+  name: 'MINI TOBOGAN MICKEY',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6500000 }],
+  descuento: 0,
+  cantidad: 0,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '9',
+    url: 'https://drive.google.com/file/d/1nzBYU-wXSk3fIISoPrPCHokpgPxqOXSH/view?usp=drivesdk',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 LARGO, 1 SUBIDA, DOS DESLIZADEROS, ZONA DE BRINCO, 1 MUÑECO 3D E IMPRESIONES FRONTALES A GUSTO',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+{
+  id: 'MTOB25-010',
+  name: 'MINI TOBOGAN COLORES',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5700000 }],
+  descuento: 0,
+  cantidad: 5,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [{
+    id: '10',
+    url: '',
+    alt: 'inflables recreativos',
+    idComponente: 0
+  }],
+  estado: 'Activo',
+  descripcion: '',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+}
 
-            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
-            cantidad: 15,
-            imagen: [{
-                id: "1",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Rosa",
-                idComponente: 0
-            }, {
-                id: "2",
-                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "3",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "4",
-                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
-                alt: "Maleta Beige",
-                idComponente: 0
-            }
 
-            ],
-            descuento:10,
-            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
-            comision: 0,
-            fechaCreacion: '',
-            fechaActualizacion: '',
-            estado: "Activo",
-            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
-            idBusiness: 1
-        },
-            {
-            id: '550e8400-e29b-41d4-a716-446655440000',
-            name: "Mini Piscina ",
-
-            precios: [{
-                codigo_iso: "COP",
-                nombreMoneda: "Peso colombiano",
-                precio: 3500000
-            }, {
-                codigo_iso: "USD",
-                nombreMoneda: "Dólar estadounidense",
-                precio: 1300
-            }],
-
-            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
-            cantidad: 15,
-            imagen: [{
-                id: "1",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Rosa",
-                idComponente: 0
-            }, {
-                id: "2",
-                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "3",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "4",
-                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
-                alt: "Maleta Beige",
-                idComponente: 0
-            }
-
-            ],
-            descuento:10,
-            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
-            comision: 0,
-            fechaCreacion: '',
-            fechaActualizacion: '',
-            estado: "Activo",
-            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
-            idBusiness: 1
-        },
-            {
-            id: '550e8400-e29b-41d4-a716-446655440000',
-            name: "Mini Piscina ",
-
-            precios: [{
-                codigo_iso: "COP",
-                nombreMoneda: "Peso colombiano",
-                precio: 3500000
-            }, {
-                codigo_iso: "USD",
-                nombreMoneda: "Dólar estadounidense",
-                precio: 1300
-            }],
-
-            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
-            cantidad: 15,
-            imagen: [{
-                id: "1",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Rosa",
-                idComponente: 0
-            }, {
-                id: "2",
-                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "3",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "4",
-                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
-                alt: "Maleta Beige",
-                idComponente: 0
-            }
-
-            ],
-            descuento:10,
-            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
-            comision: 0,
-            fechaCreacion: '',
-            fechaActualizacion: '',
-            estado: "Activo",
-            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
-            idBusiness: 1
-        },
-            {
-            id: '550e8400-e29b-41d4-a716-446655440000',
-            name: "Mini Piscina ",
-
-            precios: [{
-                codigo_iso: "COP",
-                nombreMoneda: "Peso colombiano",
-                precio: 3500000
-            }, {
-                codigo_iso: "USD",
-                nombreMoneda: "Dólar estadounidense",
-                precio: 1300
-            }],
-
-            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
-            cantidad: 15,
-            imagen: [{
-                id: "1",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Rosa",
-                idComponente: 0
-            }, {
-                id: "2",
-                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "3",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "4",
-                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
-                alt: "Maleta Beige",
-                idComponente: 0
-            }
-
-            ],
-            descuento:10,
-            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
-            comision: 0,
-            fechaCreacion: '',
-            fechaActualizacion: '',
-            estado: "Activo",
-            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
-            idBusiness: 1
-        },
-            {
-            id: '550e8400-e29b-41d4-a716-446655440000',
-            name: "Mini Piscina ",
-
-            precios: [{
-                codigo_iso: "COP",
-                nombreMoneda: "Peso colombiano",
-                precio: 3500000
-            }, {
-                codigo_iso: "USD",
-                nombreMoneda: "Dólar estadounidense",
-                precio: 1300
-            }],
-
-            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
-            cantidad: 15,
-            imagen: [{
-                id: "1",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Rosa",
-                idComponente: 0
-            }, {
-                id: "2",
-                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "3",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "4",
-                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
-                alt: "Maleta Beige",
-                idComponente: 0
-            }
-
-            ],
-            descuento:10,
-            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
-            comision: 0,
-            fechaCreacion: '',
-            fechaActualizacion: '',
-            estado: "Activo",
-            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
-            idBusiness: 1
-        },
-            {
-            id: '550e8400-e29b-41d4-a716-446655440000',
-            name: "Mini Piscina ",
-
-            precios: [{
-                codigo_iso: "COP",
-                nombreMoneda: "Peso colombiano",
-                precio: 3500000
-            }, {
-                codigo_iso: "USD",
-                nombreMoneda: "Dólar estadounidense",
-                precio: 1300
-            }],
-
-            idCategoria: "550e8400-e29b-41d4-a716-446655440000",
-            cantidad: 15,
-            imagen: [{
-                id: "1",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Rosa",
-                idComponente: 0
-            }, {
-                id: "2",
-                url: "https://placehold.co/600x600/FFFF33/000?text=Maleta+Amarilla",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "3",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Maleta+Rosa",
-                alt: "Maleta Amarilla",
-                idComponente: 0
-            }, {
-                id: "4",
-                url: "https://placehold.co/600x600/FFFFCC/000?text=Maleta+beige",
-                alt: "Maleta Beige",
-                idComponente: 0
-            }
-
-            ],
-            descuento:10,
-            descripcion: 'Mini piscina inflable para niños de 3x4 mts ',
-            comision: 0,
-            fechaCreacion: '',
-            fechaActualizacion: '',
-            estado: "Activo",
-            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
-            idBusiness: 1
-        },
-        {
-            id: '550e8400-e29b-41d4-a716-446655440001',
-            name: "Mini Tobogán Inflable ",
-            precios: [{
-                codigo_iso: "COP",
-                nombreMoneda: "Peso colombiano",
-                precio: 6200000
-            }, {
-                codigo_iso: "USD",
-                nombreMoneda: "Dólar estadounidense",
-                precio: 2100
-            }],
-            idCategoria: "550e8400-e29b-41d4-a716-446655440002",
-            cantidad: 10,
-            imagen: [{
-                id: "1",
-                url: "https://placehold.co/600x600/F5C7A5/000?text=Tobogán+Inflable",
-                alt: "Tobogán Inflable",
-                idComponente: 0
-            }],
-            descripcion: 'Tobogán inflable de 5 metros de largo x 4.5 mts de alto x 4 de ancho',
-            comision: 0,
-            fechaCreacion: '',
-            fechaActualizacion: '',
-            estado: "Activo",
-            idDatosUsuario: "550e8400-e29b-41d4-a716-446655440000",
-            idBusiness: 1
-        }
-        
-    
-    ];
-
-    }
+  ];
+}
 
     getProductsData() {
         return [

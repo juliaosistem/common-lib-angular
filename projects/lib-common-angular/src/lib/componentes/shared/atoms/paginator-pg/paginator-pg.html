@@ -1,0 +1,26 @@
+@if (data && data.length) {
+	<ng-container
+		*ngTemplateOutlet="itemTemplate; context: { $implicit: data.slice(first, first + rows) }">
+	</ng-container>
+
+	<p-paginator
+		[rows]="rows"
+		[totalRecords]="data.length"
+		[first]="first"
+		[rowsPerPageOptions]="rowsPerPageOptions"
+		[showCurrentPageReport]="showCurrentPageReport"
+		[currentPageReportTemplate]="currentPageReportTemplate"
+		(onPageChange)="onPage($event)">
+	</p-paginator>
+} @else {
+	<div class="text-center text-gray-500 py-6">No hay datos para mostrar</div>
+	<p-paginator
+		[rows]="rows"
+		[totalRecords]="0"
+		[first]="0"
+		[rowsPerPageOptions]="rowsPerPageOptions"
+		[showCurrentPageReport]="showCurrentPageReport"
+		[currentPageReportTemplate]="currentPageReportTemplate">
+	</p-paginator>
+}
+
