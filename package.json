@@ -126,10 +126,10 @@
     "url": "https://github.com/juliaosistem/common-lib-angular"
   },
   "main": "dist/lib-common-angular/bundles/lib-common-angular.umd.js",
-  "module": "dist/lib-common-angular/fesm2015/lib-common-angular.js",
+  "module": "dist/lib-common-angular/fesm2022/lib-common-angular.js",
   "exports": {
     ".": {
-      "import": "./dist/lib-common-angular/fesm2015/lib-common-angular.js",
+      "import": "./dist/lib-common-angular/fesm2022/lib-common-angular.js",
       "require": "./dist/lib-common-angular/bundles/lib-common-angular.umd.js"
     }
   }
