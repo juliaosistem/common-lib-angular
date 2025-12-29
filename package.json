@@ -1,6 +1,6 @@
 {
   "name": "lib-common-angular",
-  "version": "0.0.2",
+  "version": "0.0.0",
   "description": "Librería común de Angular para proyectos",
   "type": "module",
   "files": [
