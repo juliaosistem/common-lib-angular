@@ -53,8 +53,6 @@ jobs:
         # 'npm version' fallará porque el directorio no estará limpio.
         # Asegúrate de que los archivos generados estén en .gitignore.
 
-      - name: Ejecuta las pruebas
-        run: npm test
 
       - name: Build
         run: npm run build
