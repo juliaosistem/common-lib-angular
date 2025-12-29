@@ -1,9 +1,13 @@
 name: Publicar en npm con Auto-Version
 
+
 on:
   push:
     branches:
       - master
+    # Evita que el workflow se ejecute en ramas de release
+    # Solo ejecuta en master, no en release-auto-*
+    # Si necesitas permitir otros triggers, agrégalos aquí
 
 jobs:
   publish:
