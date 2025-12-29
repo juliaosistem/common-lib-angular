@@ -1,9 +1,10 @@
 {
   "name": "lib-common-angular",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Librería común de Angular para proyectos",
   "type": "module",
   "files": [
+    "dist/lib-common-angular",
     "fesm2022/",
     "src/",
     "index.d.ts",
