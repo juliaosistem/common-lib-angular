@@ -68,8 +68,12 @@ jobs:
           git status -s
           npm version patch --force -m "chore(release): %s [skip ci]"
 
+
       - name: Build
         run: npm run build lib-common-angular
+
+      - name: Copia package.json corregido a dist/lib-common-angular
+        run: cp package.json dist/lib-common-angular/package.json
 
       - name: Publica en npm
         env:
