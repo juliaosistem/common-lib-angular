@@ -76,7 +76,9 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           echo "📦 Publicando en npm..."
-          npm publish --access public --provenance
+          cd dist/lib-common-angular
+          npm publish  --access public --provenance
+          echo "✅ Publicación completada."
 
       - name: Crea rama y PR de release
         env:
