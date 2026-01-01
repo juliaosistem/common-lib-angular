@@ -80,7 +80,6 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           echo "📦 Publicando en npm..."
-          cd dist/lib-common-angular
           npm publish  --access public --provenance
           echo "✅ Publicación completada."
 
