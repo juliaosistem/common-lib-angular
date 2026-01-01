@@ -72,8 +72,8 @@ jobs:
       - name: Build
         run: npm run build lib-common-angular
 
-      - name: Copia package.json corregido a dist/lib-common-angular
-        run: cp package.json dist/lib-common-angular/package.json
+      # - name: Copia package.json corregido a dist/lib-common-angular
+      #   run: cp package.json dist/lib-common-angular/package.json
 
       - name: Publica en npm
         env:
