@@ -70,7 +70,7 @@ jobs:
 
 
       - name: Build
-        run: npm run build lib-common-angular
+        run: npm run build:lib
 
       # - name: Copia package.json corregido a dist/lib-common-angular
       #   run: cp package.json dist/lib-common-angular/package.json
@@ -80,7 +80,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           echo "📦 Publicando en npm..."
-          npm publish  --access public --provenance
+          npm run publish:npm
           echo "✅ Publicación completada."
 
       - name: Crea rama y PR de release
