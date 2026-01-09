@@ -1,54 +1,62 @@
-<!--  Hero Section con animaciones-->
 
-<lib-hero-section-ecommerce1></lib-hero-section-ecommerce1>
+<!-- Hero principal -->
+<section role="region" aria-label="Banner principal Zigma Inflables">
+    <lib-hero-section-ecommerce1></lib-hero-section-ecommerce1>
+</section>
 
-<!-- Product Grid Section -->
+<!-- Encabezado SEO principal -->
+<h1 class="text-center text-3xl md:text-4xl font-bold my-6" style="color:#222">Catálogo de Inflables y Productos inflables</h1>
 
-<lib-section-filters-categories-productos id="categorias"
-    [categorias]="categorias"
-    (categorySelected)="onCategoryFilter($event)">
-</lib-section-filters-categories-productos>
-<ng-template #cards let-items>
-    <div class="grid align-items-center justify-content-center">
-        @for (product of items; track $index) {
-        <div class="col-12 md:col-6 p-5 lg:p-3 lg:col-4 product-card-animation"
-            [style.transition-delay]="($index * 30) + 'ms'">
-            <lib-card-productos1 [product]="product" [detailRouteBase]="detailRouteBase" (addToCart)="onAddToCart($event)">
-            </lib-card-productos1>
-        </div>
-        }
-    </div>
-</ng-template>
+<!-- Filtros de categorías -->
+ <section aria-label="Sección de filtros de categorías inflables">
+     <lib-section-filters-categories-productos id="categorias"
+     [categorias]="categorias"
+     (categorySelected)="onCategoryFilter($event)">
+    </lib-section-filters-categories-productos>
+</section>
 
-<lib-paginator-pg
-  [data]="filteredProducts"
-  [rows]="9"
-  [rowsPerPageOptions]="[9,18,27,54,81]"
-  [showCurrentPageReport]="true"
-  [currentPageReportTemplate]="'Mostrando {first} a {last} de {totalRecords} ítems'"
-  [itemTemplate]="cards">
-</lib-paginator-pg>
+<!-- Listado de productos -->
+<section aria-label="Listado de productos inflables" role="main">
+    <ng-template #cards let-items>
+            <div class="grid align-items-center justify-content-center">
+                    @for (product of items; track $index) {
+                    <div class="col-12 md:col-6 p-5 lg:p-3 lg:col-4 product-card-animation"
+                            [style.transition-delay]="($index * 30) + 'ms'">
+                            <lib-card-productos1 [product]="product" [detailRouteBase]="detailRouteBase" (addToCart)="onAddToCart($event)">
+                            </lib-card-productos1>
+                    </div>
+                    }
+            </div>
+    </ng-template>
 
-<!-- Seccion "Nuestra Historia"-->
-<section id="nosotros" class="history-section" style="
-    background-image: url(&quot;https://placehold.co/1400x600/b0b0b0/ffffff?text=Our+Story+Background+Image&quot;);
-  ">
-    <div class="history-overlay"></div>
-    <div class="history-content">
-        <p class="history-pretitle">Sobre Nosotros</p>
-        <h2 class="history-title">Conoce Nuestra Historia</h2>
-        <p class="history-text">
-            No hay una fórmula mágica para escribir un texto publicitario perfecto; se
-            basa en varios factores, incluyendo la ubicación del anuncio, la
-            demografía e incluso el estado de ánimo del consumidor.
-        </p>
-        <button pButton type="button" class="p-button-rounded p-button-lg p-button-warning" icon="pi pi-play"
-            aria-label="Ver video"></button>
-    </div>
+    <lib-paginator-pg
+        [data]="filteredProducts"
+        [rows]="9"
+        [rowsPerPageOptions]="[9,18,27,54,81]"
+        [showCurrentPageReport]="true"
+        [currentPageReportTemplate]="'Mostrando {first} a {last} de {totalRecords} ítems'"
+        [itemTemplate]="cards">
+    </lib-paginator-pg>
+</section>
+
+
+<section aria-label="Informacion Sobre la historia  Zigma Inflables" id="nosotros" class="history-section" style="background-image: url('https://placehold.co/1400x600/b0b0b0/ffffff?text=Our+Story+Background+Image');">
+  <div class="history-overlay"></div>
+  <div class="history-content">
+      <h2 class="history-title">Conoce Nuestra Historia</h2>
+      <p class="history-text">
+          No hay una fórmula mágica para escribir un texto publicitario perfecto; se basa en varios factores, incluyendo la ubicación del anuncio, la demografía e incluso el estado de ánimo del consumidor.
+      </p>
+      <button pButton type="button" class="p-button-rounded p-button-lg p-button-warning" icon="pi pi-play"
+          aria-label="Ver video de la historia de Zigma Inflables"></button>
+  </div>
 </section>
 
 <!-- Nueva seccion de Instagram -->
-<lib-section-images-instagram-ecommerce1></lib-section-images-instagram-ecommerce1>
+ <section aria-label="Sección de redes sociales">
+
+     <lib-section-images-instagram-ecommerce1></lib-section-images-instagram-ecommerce1>
+ </section>
 
 <!-- Newsletter (PrimeFlex + animación on scroll) -->
 <section class="surface-section py-5 animate-newsletter-section">

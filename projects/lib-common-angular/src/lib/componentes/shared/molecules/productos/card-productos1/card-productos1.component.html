@@ -3,7 +3,7 @@
     @if (product) {
     <div class="relative surface-ground flex align-items-center justify-content-center overflow-hidden p-3 image-hover-container"
         style="height: 280px">
-        <img [src]="currentImageUrl || product.imagen[0]?.url" [alt]="product.name"
+        <img [src]="currentImageUrl || product.imagen[0]?.url" [alt]="product.name" itemprop="image"
             loading="lazy" width="400" height="280"
             class="max-w-full max-h-full object-contain cursor-pointer transition-transform transition-duration-300 hover-zoom"
             (click)="navigateToProductDetail()" />
@@ -11,12 +11,12 @@
         <!-- Overlay con icono de ojo al hover -->
         <div class="image-overlay">
             <button pButton type="button" class="p-button-rounded p-button-info p-button-lg shadow-4"
-                    (click)="navigateToProductDetail()" pTooltip="Ver detalles" tooltipPosition="top">
+                    (click)="navigateToProductDetail()" [attr.aria-label]="'Ver detalle de ' + product.name" pTooltip="Ver detalles" tooltipPosition="top">
                 <i class="pi pi-eye text-xl"></i>
             </button>
         </div>
 
-        <button (click)="shareProductOnWhatsapp()"
+        <button (click)="contactWhatsapp()"
             class="absolute bottom-0 right-0 m-3 bg-green-500 border-none text-white w-3rem h-3rem border-circle shadow-4 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600 z-2">
             <i class="pi pi-whatsapp text-2xl"></i>
         </button>

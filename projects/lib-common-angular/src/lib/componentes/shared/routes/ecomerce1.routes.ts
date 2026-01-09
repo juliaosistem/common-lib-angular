@@ -3,7 +3,6 @@ import { LoginEcommerce1 } from '../../landingPages/pages/ecommerce1/login-ecomm
 import { RegisterEcommerce1 } from '../../landingPages/pages/ecommerce1/register-ecommerce1/register-ecommerce1';
 import { Ecommerce1 } from '../../landingPages/pages/ecommerce1/ecommerce1';
 import { HomeEcommerce1 } from '../../landingPages/pages/ecommerce1/home-ecommerce1/home-ecommerce1';
-//import { CardProductos1Component } from '../molecules/productos/card-productos1/card-productos1.component';
 
 export const ecomerce1Routes: Routes = [
   { path: '', component: Ecommerce1, children: [

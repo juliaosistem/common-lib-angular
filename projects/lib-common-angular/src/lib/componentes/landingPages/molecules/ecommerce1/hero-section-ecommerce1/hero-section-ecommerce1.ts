@@ -10,7 +10,6 @@ import { PrimegModule } from '../../../../../modulos/primeg.module';
 })
 export class HeroSectionEcommerce1  implements OnInit {
       ngOnInit(): void {
-       console.log('HeroSectionEcommerce1 component initialized');
       }
 
   // Metadata del componente    

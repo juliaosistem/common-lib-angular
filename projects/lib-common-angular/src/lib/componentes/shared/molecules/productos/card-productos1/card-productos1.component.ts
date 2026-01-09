@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { CurrencyPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { ImagenDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { IonicModule } from '@ionic/angular';
   templateUrl: './card-productos1.component.html',
   styleUrls: ['./card-productos1.component.scss'],
   imports: [CommonModule, PrimegModule, SectionAddCardsButtons,IonicModule],
-  providers: [CurrencyPipe]
+  // providers: [CurrencyPipe]
 })
 export class CardProductos1Component implements OnInit, OnDestroy {
 
@@ -24,7 +24,7 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   @Output() addToCart = new EventEmitter<{ product: ProductoDTO, quantity: number }>();
   @Input() isLogin: boolean = false;
   // Ruta base configurable desde el frontal para navegar al detalle
-  @Input() detailRouteBase: string[] = ['detalle'];
+  @Input() detailRouteBase: string[] = ['productos'];
 
   discount = 0;
   currentImageIndex = 0;
@@ -35,7 +35,7 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   autoSlideInterval: any;
 
   constructor(
-    private currencyPipe: CurrencyPipe,
+    // private currencyPipe: CurrencyPipe,
     private productService: ProductService,
     private router: Router
   ) {}
@@ -135,26 +135,22 @@ export class CardProductos1Component implements OnInit, OnDestroy {
    * Navega al detalle del producto construyendo la ruta a partir de `detailRouteBase`.
    * Acepta rutas absolutas (inician con `/`) o relativas y pasa el producto en `history.state`.
    */
-navigateToProductDetail(): void {
-  if (this.product?.id) {
-      const parts = this.detailRouteBase
-        .map(p => (p ? p.split('/') : []))
-        .reduce((acc: string[], cur: string[]) => acc.concat(cur), [])
-        .filter(seg => seg && seg.trim().length > 0);
-      const isAbsolute = this.detailRouteBase[0]?.startsWith('/') || false;
-      let basePrefix = '';
-      if (!isAbsolute) {
-        const currentPath = this.router.url.split('?')[0].split('#')[0];
-        const firstSeg = currentPath.split('/').filter(Boolean)[0] || '';
-        basePrefix = firstSeg ? `/${firstSeg}/` : '/';
-      }
-      const joined = [...parts, String(this.product.id)].join('/');
-      const normalized = (isAbsolute ? '/' : basePrefix) + joined;
-      this.router.navigateByUrl(normalized, {
+
+  /**
+   * Navega al detalle del producto usando la ruta SEO-friendly: /home/productos/:nombre/:idInflable
+   */
+  navigateToProductDetail(): void {
+    if (this.product?.id && this.product?.name) {
+      // Generar slug del nombre
+      const slug = this.product.name.replace(/\s+/g, '-').toLowerCase();
+      const id = this.product.id;
+      // Construir la ruta completa
+      const url = `/home/productos/${slug}-inflable/${id}`;
+      this.router.navigateByUrl(url, {
         state: { product: this.product, isLogin: this.isLogin }
       });
+    }
   }
-}
 
 
   /**
@@ -162,19 +158,18 @@ navigateToProductDetail(): void {
    * basado en si el usuario tiene sesión iniciada.
    */
   shareProductOnWhatsapp(): void {
-    const url = this.shareBaseUrl;
-    let text = '';
-
-    if (this.isLogin) {
-      const precio = this.currencyPipe.transform(this.discount, this.product.precios[0].codigo_iso, 'code');
-      text = `¡Mira esto! ${this.product.name} por solo ${precio}`;
-    } else {
-      const id = this.product?.id ?? '';
-      text = `Hola, estoy interesado en el producto Referencia ${id}: ${this.product.name}`;
-    }
-
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+   this.productService.shareProductOnWhatsapp(this.shareBaseUrl, this.isLogin, this.product);
   }
+
+  /**
+   * Abre WhatsApp para contactar directamente a un número predefinido
+   * con un mensaje basado en si el usuario tiene sesión iniciada.
+   */
+  contactWhatsapp(): void {
+    const whatsappNumber =  '+573118025433'; 
+    this.productService.contactWhatsapp(whatsappNumber, this.shareBaseUrl, this.isLogin, this.product);
+  }
+    
   /**
    * Alterna la visibilidad del menú flotante de compartir en redes.
    */

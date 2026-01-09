@@ -75,6 +75,7 @@ export class DetalleCarrito1Component implements OnInit {
    * Método para actualizar la imagen principal cuando se selecciona una miniatura
    */
   updateMainImage(imageUrl: string): void {
+    console.log('Imagen seleccionada:', imageUrl);
     this.selectedImageUrl = imageUrl;
   }
 

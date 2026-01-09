@@ -5,6 +5,7 @@ import { CategoriaDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 import { LibConfigService } from '../../../config/lib-config.service';
 import { JuliaoSystemCrudHttpService } from '../../../config/JuliaoSystemCrudHttpService';
 
+
 export interface Product {
     id?: string;
     code?: string;
@@ -24,12 +25,71 @@ export interface Product {
 export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, ProductoDTO> {
 
   
-       constructor(http: HttpClient, private configService: LibConfigService) {
+    constructor(http: HttpClient, private configService: LibConfigService) {
         super(http);
         const baseUrl = this.configService.get<string>('baseUrlProducts') || 'http://localhost:3000/products';
         this.basePathUrl = `${baseUrl}/product`;
         }
 
+
+    /** 
+     * Genera el texto para compartir en WhatsApp basado en el estado de inicio de sesión y el producto.
+     * @param isLogin Indica si el usuario ha iniciado sesión.
+     * @param product El producto para el cual se genera el texto.
+     * @return El texto formateado para WhatsApp.
+     *
+    */
+  getTextWhatsapp(isLogin: boolean ,product: ProductoDTO): string {
+    let text = '';
+
+        if (isLogin) {
+            const precio = this.formatCurrency(product.descuento, product.precios?.[0]?.codigo_iso);
+            text = `¡Mira esto! ${product.name} por solo ${precio}`;
+        } else {
+            const id = product?.id ?? '';
+            text = `Hola, estoy interesado en el producto Referencia ${id}: ${product.name}`;
+        }
+        return text;
+    }
+
+    /**
+     * Formatea un número como moneda usando Intl.NumberFormat
+     */
+    private formatCurrency(value: number | undefined, currency: string = 'USD'): string {
+        if (typeof value !== 'number' || isNaN(value)) return '';
+        let locale = 'es-CO';
+        if (currency === 'EUR') locale = 'es-ES';
+        // Puedes agregar más condiciones para otros códigos de moneda si lo necesitas
+        try {
+            return new Intl.NumberFormat(locale, { style: 'currency', currency }).format(value);
+        } catch {
+            return value + ' ' + currency;
+        }
+    }
+
+  /**
+   * Abre WhatsApp para compartir información del producto con un mensaje
+   * basado en si el usuario tiene sesión iniciada.
+   * @param domain Dominio o URL base para compartir.
+   * @param isLogin Indica si el usuario ha iniciado sesión.
+   * @param Product El producto para el cual se genera el texto.
+   */
+  shareProductOnWhatsapp(domain :string,isLogin: boolean ,Product: ProductoDTO): void {
+    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(this.getTextWhatsapp(isLogin, Product) + ' ' + domain)}`, '_blank');
+  }
+
+  /**
+   * Abre WhatsApp para contactar directamente a un número predefinido
+   * con un mensaje basado en si el usuario tiene sesión        window.open( iniciada.
+   * @param whatsappNumber Número de WhatsApp al que se enviará el mensaje.
+   * @param domain Dominio o URL base para compartir.
+   * @param isLogin Indica si el usuario ha iniciado sesión.
+   * @param Product El producto para el cual se genera el texto.
+   */
+  contactWhatsapp(whatsappNumber: string  = '+573118025433',domain:string, isLogin:boolean ,Product:ProductoDTO): void {
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(this.getTextWhatsapp(isLogin, Product) + ' ' + domain)}`, '_blank');
+  }
+    
       mockProductoDTO(): ProductoDTO {
         return {
             id: '550e8400-e29b-41d4-a716-446655440000',
@@ -142,11 +202,15 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       name: 'PISCINA DE PELOTAS 3X3',
       precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3100000 }],
       descuento: 0,
-      cantidad: 15,
+      cantidad: 0,
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '1', url: 'https://drive.google.com/file/d/1bvUYjg5pAVCoUV8pgivUej1QNaVcEhdR/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [{ id: '1', url: '../../../../../assets/imagenes/castillos/castillo-picinadepelotas3x3-inflable1.png', alt: 'Castillo inflable ', idComponente: 0 },
+
+        { id: '2', url: '../../../../../assets/imagenes/castillos/castillo-picinadepelotas3x3-inflable2.png', alt: 'Castillo inflable ', idComponente: 0 },
+        { id: '3', url: '../../../../../assets/imagenes/castillos/castillo-picinadepelotas3x3-inflable3.png', alt: 'Castillo inflable ', idComponente: 0 },
+      ],
       estado: 'Activo',
       descripcion: 'MINI CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO IMPRESIONES OPCIONALES DE 50 X 70',
       comision: 0,
@@ -159,11 +223,16 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       name: 'CASTILLO MALLAS',
       precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3100000 }],
       descuento: 0,
-      cantidad: 15,
+      cantidad: 0,
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '2', url: 'https://drive.google.com/file/d/1Kv_0hwdmKOSBPM2Tc8YBdqFt2W7C6hKv/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [
+        { id: '4', url: '../../../../../assets/imagenes/castillos/castillo-mayas-inflable1.png', alt: 'Castillo inflable Recreativo', idComponente: 0 },
+        { id: '5', url: '../../../../../assets/imagenes/castillos/castillo-mayas-inflable2.png', alt: 'Castillo inflable Recreativo', idComponente: 0 },
+        { id: '6', url: '../../../../../assets/imagenes/castillos/castillo-mayas-inflable3.png', alt: 'Castillo inflable Recreativo', idComponente: 0 },
+        { id: '7', url: '../../../../../assets/imagenes/castillos/castillo-mayas-inflable4.png', alt: 'Castillo inflable Recreativo', idComponente: 0 },
+      ],
       estado: 'Activo',
       descripcion: 'MINI CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO IMPRESIONES OPCIONALES DE 50 X 70',
       comision: 0,
@@ -176,11 +245,16 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       name: 'CASTILLO RESBALADERO',
       precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3100000 }],
       descuento: 0,
-      cantidad: 15,
+      cantidad: 0,
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '3', url: 'https://drive.google.com/file/d/1rESa51mTMOkwfMFRck2u2rh6gePoMRIM/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [
+        { id: '8', url: '../../../../../assets/imagenes/castillos/castillo-resbaladero-inflable1.png', alt: 'Castillo inflable Recreativo', idComponente: 0 },
+        { id: '9', url: '../../../../../assets/imagenes/castillos/castillo-resbaladero-inflable2.png', alt: 'Castillo inflable Recreativo', idComponente: 0 },
+        { id: '10', url: '../../../../../assets/imagenes/castillos/castillo-resbaladero-inflable3.png', alt: 'Castillo inflable Recreativo', idComponente: 0 },
+
+      ],
       estado: 'Activo',
       descripcion: 'MINI CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO IMPRESIONES OPCIONALES DE 50 X 70',
       comision: 0,
@@ -193,11 +267,16 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       name: 'COCODRILO',
       precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 4699000 }],
       descuento: 0,
-      cantidad: 10,
+      cantidad: 0,
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '4', url: 'https://drive.google.com/file/d/1vVF_uOXj5WKJRmKjWaostKAKiZONI-Mv/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [
+        { id: '11', url: '../../../../../assets/imagenes/castillos/castillo-minicocodrillo-inflable1.png', alt: 'Castillo Cocodrillo inflable Recreativo', idComponente: 0 },
+        { id: '12', url: '../../../../../assets/imagenes/castillos/castillo-minicocodrillo-inflable2.png', alt: 'Castillo Cocodrillo inflable Recreativo', idComponente: 0 },
+        { id: '13', url: '../../../../../assets/imagenes/castillos/castillo-minicocodrillo-inflable3.png', alt: 'Castillo Cocodrillo inflable Recreativo', idComponente: 0 },
+        { id: '14', url: '../../../../../assets/imagenes/castillos/castillo-minicocodrillo-inflable4.png', alt: 'Castillo Cocodrillo inflable Recreativo', idComponente: 0 },
+    ],
       estado: 'Activo',
       descripcion: 'MINI CASTILLO 2.50 ALTO X 4 DE ANCHO X 4 DE FONDO CABEZA DE COCODRILO SIN IMPRESIONES',
       comision: 0,
@@ -214,7 +293,11 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '5', url: 'https://drive.google.com/file/d/1igto2LItg_YOH67C33KLN9KEr0V79Pg-/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [
+        { id: '15', url: '../../../../../assets/imagenes/castillos/castillo-miniLego-inflable1.png', alt: 'Castillo Lego inflable Recreativo', idComponente: 0 },
+        { id: '16', url: '../../../../../assets/imagenes/castillos/castillo-miniLego-inflable2.png', alt: 'Castillo Lego inflable Recreativo', idComponente: 0 },
+        { id: '17', url: '../../../../../assets/imagenes/castillos/castillo-miniLego-inflable3.png', alt: 'Castillo Lego inflable Recreativo', idComponente: 0 },
+    ],
       estado: 'Activo',
       descripcion: 'MINI CASTILLO 2 ALTO X 4.20 DE ANCHO X 2.80 DE FONDO SIN IMPRESIONES',
       comision: 0,
@@ -227,11 +310,15 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       name: 'COCODRILO PALMERAS',
       precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 4950000 }],
       descuento: 0,
-      cantidad: 10,
+      cantidad: 0,
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '6', url: 'https://drive.google.com/file/d/1cO465kNABoYCtJfhWah31D8aUlb6TFkF/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [
+        { id: '18', url: '../../../../../assets/imagenes/castillos/castillo-palmeras-inflable1.png', alt: 'Castillo Palmeras inflable Recreativo', idComponente: 0 },
+        { id: '19', url: '../../../../../assets/imagenes/castillos/castillo-palmeras-inflable2.png', alt: 'Castillo Palmeras inflable Recreativo', idComponente: 0 },
+        { id: '20', url: '../../../../../assets/imagenes/castillos/castillo-palmeras-inflable3.png', alt: 'Castillo Palmeras inflable Recreativo', idComponente: 0 },
+      ],
       estado: 'Activo',
       descripcion: 'MINI CASTILLO 2.20 ALTO X 4.50 DE ANCHO X 4 DE FONDO SIN IMPRESIONES',
       comision: 0,
@@ -244,11 +331,15 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       name: 'HIPOPOTAMO',
       precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5100000 }],
       descuento: 0,
-      cantidad: 8,
+      cantidad: 1,
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '7', url: 'https://drive.google.com/file/d/1pHMB_50b1mdzeMCTxFhFl3X4tYkb-5uN/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [
+         { id: '21', url: '../../../../../assets/imagenes/castillos/castillo-hipopotamo-inflable1.png', alt: 'Castillo Hipopótamo inflable Recreativo', idComponente: 0 },
+        { id: '22', url: '../../../../../assets/imagenes/castillos/castillo-hipopotamo-inflable2.png', alt: 'Castillo Hipopótamo inflable Recreativo', idComponente: 0 },
+        { id: '23', url: '../../../../../assets/imagenes/castillos/castillo-hipopotamo-inflable3.png', alt: 'Castillo Hipopótamo inflable Recreativo', idComponente: 0 },
+      ],
       estado: 'Activo',
       descripcion: 'MINI CASTILLO 2 ALTO X 4 DE ANCHO X 4 DE FONDO IMPRESIONES OPCIONALES',
       comision: 0,
@@ -265,7 +356,13 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '8', url: 'https://drive.google.com/file/d/1srxXIRMwzn_TgNXdFV28zYpvBe9d8CrF/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [
+        { id: '24', url: '../../../../../assets/imagenes/castillos/castillo-minizigma-inflable1.png', alt: 'Castillo Mini Zigma inflable Recreativo', idComponente: 0 },
+        { id: '25', url: '../../../../../assets/imagenes/castillos/castillo-minizigma-inflable2.png', alt: 'Castillo Mini Zigma inflable Recreativo', idComponente: 0 },
+        { id: '26', url: '../../../../../assets/imagenes/castillos/castillo-minizigma-inflable3.png', alt: 'Castillo Mini Zigma inflable Recreativo', idComponente: 0 },
+        { id: '27', url: '../../../../../assets/imagenes/castillos/castillo-minizigma-inflable4.png', alt: 'Castillo Mini Zigma inflable Recreativo', idComponente: 0 },
+
+    ],
       estado: 'Activo',
       descripcion: '2 X 2 METROS (COLORES E IMPRESIÓN FRONTAL PERSONALIZABLE) (SIN PISCINA DE PELOTAS)',
       comision: 0,
@@ -282,7 +379,14 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '9', url: 'https://drive.google.com/file/d/1PWiq10DrH7XA97MZpyekdboSL8NEvGRu/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [
+         { id: '28', url: '../../../../../assets/imagenes/castillos/castillo-BALL POOL-inflable1.png', alt: 'Castillo MINI ZIGMA BALL POOL inflable Recreativo', idComponente: 0 },
+        { id: '29', url: '../../../../../assets/imagenes/castillos/castillo-BALL POOL-inflable2.png', alt: 'Castillo MINI ZIGMA BALL POOL inflable Recreativo', idComponente: 0 },
+        { id: '30', url: '../../../../../assets/imagenes/castillos/castillo-BALL POOL-inflable3.png', alt: 'Castillo MINI ZIGMA BALL POOL inflable Recreativo', idComponente: 0 },
+        { id: '31', url: '../../../../../assets/imagenes/castillos/castillo-BALL POOL-inflable4.png', alt: 'Castillo MINI ZIGMA BALL POOL inflable Recreativo', idComponente: 0 },
+        { id: '32', url: '../../../../../assets/imagenes/castillos/castillo-BALL POOL-inflable5.png', alt: 'Castillo MINI ZIGMA BALL POOL inflable Recreativo', idComponente: 0 },
+        { id: '33', url: '../../../../../assets/imagenes/castillos/castillo-BALL POOL-inflable6.png', alt: 'Castillo MINI ZIGMA BALL POOL inflable Recreativo', idComponente: 0 },
+      ],
       estado: 'Activo',
       descripcion: '2 X 2 METROS (COLORES E IMPRESIÓN FRONTAL PERSONALIZABLE) + PISCINA DE PELOTAS',
       comision: 0,
@@ -293,13 +397,21 @@ mockProductosInflablesDTO(): ProductoDTO[] {
     {
       id: 'MCAS25-010',
       name: 'MINI PATROL',
-      precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3400000 }],
+      precios: [
+        { codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3400000 }
+    ],
       descuento: 0,
-      cantidad: 12,
+      cantidad: 0,
       idBusiness: 1,
       idCategoria: 'MCAS',
       nombreCategoria: '',
-      imagen: [{ id: '10', url: 'https://drive.google.com/file/d/1eMqzqQBYH5ewcKdVBqA3_M3RS4iFZw2m/view?usp=drive_link', alt: 'inflables recreativos', idComponente: 0 }],
+      imagen: [
+        { id: '34', url: '../../../../../assets/imagenes/castillos/castillo-miniPatrol-inflable1.png', alt: 'Castillo MINI PATROL inflable Recreativo', idComponente: 0 },
+        { id: '35', url: '../../../../../assets/imagenes/castillos/castillo-miniPatrol-inflable3.png', alt: 'Castillo MINI PATROL inflable Recreativo', idComponente: 0 },
+        { id: '36', url: '../../../../../assets/imagenes/castillos/castillo-miniPatrol-inflable5.png', alt: 'Castillo MINI PATROL inflable Recreativo', idComponente: 0 },
+        { id: '37', url: '../../../../../assets/imagenes/castillos/castillo-miniPatrol-inflable2.png', alt: 'Castillo MINI PATROL inflable Recreativo', idComponente: 0 },
+        { id: '38', url: '../../../../../assets/imagenes/castillos/castillo-miniPatrol-inflable4.png', alt: 'Castillo MINI PATROL inflable Recreativo', idComponente: 0 },
+      ],
       estado: 'Activo',
       descripcion: 'MINI CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO IMPRESIÓN DE LA TOTALIDAD DEL FRENTE',
       comision: 0,
@@ -309,19 +421,19 @@ mockProductosInflablesDTO(): ProductoDTO[] {
     },
     {
   id: 'CAS25-001',
-  name: '0’',
+  name: 'Castillo Tobogan Patrol',
   precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 4899000 }],
   descuento: 0,
   cantidad: 10,
   idBusiness: 1,
   idCategoria: 'CAS',
   nombreCategoria: '',
-  imagen: [{
-    id: '1',
-    url: 'https://drive.google.com/file/d/1GgA8XdkTZOPXkgZ1ufIQeNDp1GBovxcY/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+       { id: '39', url: '../../../../../assets/imagenes/castillos/castillo-ToboganPatrol-inflable1.png', alt: 'Castillo Tobogan Patrol inflable Recreativo', idComponente: 0 },
+       { id: '40', url: '../../../../../assets/imagenes/castillos/castillo-ToboganPatrol-inflable2.png', alt: 'Castillo Tobogan Patrol inflable Recreativo', idComponente: 0 },
+       { id: '41', url: '../../../../../assets/imagenes/castillos/castillo-ToboganPatrol-inflable3.png', alt: 'Castillo Tobogan Patrol inflable Recreativo', idComponente: 0 },
+       { id: '42', url: '../../../../../assets/imagenes/castillos/castillo-ToboganPatrol-inflable4.png', alt: 'Castillo Tobogan Patrol inflable Recreativo', idComponente: 0 },
+  ],
   estado: 'Activo',
   descripcion: 'CASTILLO 2.50 ALTO X 4 DE ANCHO X 4 DE FONDO IMPRESION FRONTAL PERSONALIZABLE',
   comision: 0,
@@ -338,12 +450,14 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idBusiness: 1,
   idCategoria: 'CAS',
   nombreCategoria: '',
-  imagen: [{
-    id: '2',
-    url: 'https://drive.google.com/file/d/1QHGz5Ex0z2QIJVopCMDuGJSPVq9BxRx3/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [ 
+       { id: '43', url: '../../../../../assets/imagenes/castillos/castillo-aladino-inflable1.png', alt: 'Castillo Aladino inflable Recreativo', idComponente: 0 },
+       { id: '44', url: '../../../../../assets/imagenes/castillos/castillo-aladino-inflable2.png', alt: 'Castillo Aladino inflable Recreativo', idComponente: 0 },
+       { id: '45', url: '../../../../../assets/imagenes/castillos/castillo-aladino-inflable3.png', alt: 'Castillo Aladino inflable Recreativo', idComponente: 0 },
+       { id: '46', url: '../../../../../assets/imagenes/castillos/castillo-aladino-inflable4.png', alt: 'Castillo Aladino inflable Recreativo', idComponente: 0 },
+       { id: '47', url: '../../../../../assets/imagenes/castillos/castillo-aladino-inflable5.png', alt: 'Castillo Aladino inflable Recreativo', idComponente: 0 },
+       { id: '48', url: '../../../../../assets/imagenes/castillos/castillo-aladino-inflable6.png', alt: 'Castillo Aladino inflable Recreativo', idComponente: 0 },
+    ],
   estado: 'Activo',
   descripcion: 'CASTILLO 2.50 ALTO X 4 DE ANCHO X 4 DE FONDO SIN IMPRESIONES',
   comision: 0,
@@ -356,16 +470,15 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   name: 'CASTILLO MINIPARQUE',
   precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5300000 }],
   descuento: 0,
-  cantidad: 8,
+  cantidad: 1,
   idBusiness: 1,
   idCategoria: 'CAS',
   nombreCategoria: '',
-  imagen: [{
-    id: '3',
-    url: 'https://drive.google.com/file/d/1_JO6BeLOCgmtS_stTQn3uVF-OnBZvo9B/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+    { id: '49', url: '../../../../../assets/imagenes/castillos/castillo-miniparque-inflable1.png', alt: 'Castillo Miniparque inflable Recreativo', idComponente: 0 },
+    { id: '50', url: '../../../../../assets/imagenes/castillos/castillo-miniparque-inflable2.png', alt: 'Castillo Miniparque inflable Recreativo', idComponente: 0 },
+    { id: '51', url: '../../../../../assets/imagenes/castillos/castillo-miniparque-inflable3.png', alt: 'Castillo Miniparque inflable Recreativo', idComponente: 0 },
+  ],
   estado: 'Activo',
   descripcion: 'CASTILLO 2.60 ALTO X 4.50 DE ANCHO X 4.50 DE FONDO SIN IMPRESIONES',
   comision: 0,
@@ -382,12 +495,11 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idBusiness: 1,
   idCategoria: 'CAS',
   nombreCategoria: '',
-  imagen: [{
-    id: '4',
-    url: 'https://drive.google.com/file/d/191Ya70oOtS30hJJX4FTfujT6fDJqqmZ1/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+    { id: '52', url: '../../../../../assets/imagenes/castillos/castillo-lego-inflable1.png', alt: 'Castillo Lego inflable Recreativo', idComponente: 0 },
+    { id: '53', url: '../../../../../assets/imagenes/castillos/castillo-lego-inflable2.png', alt: 'Castillo Lego inflable Recreativo', idComponente: 0 },
+    { id: '54', url: '../../../../../assets/imagenes/castillos/castillo-lego-inflable3.png', alt: 'Castillo Lego inflable Recreativo', idComponente: 0 },
+  ],
   estado: 'Activo',
   descripcion: 'CASTILLO 2.50 ALTO X 3 DE ANCHO X 3 DE FONDO SIN IMPRESIONES',
   comision: 0,
@@ -400,16 +512,15 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   name: 'CASTILLO PALMERAS',
   precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5300000 }],
   descuento: 0,
-  cantidad: 8,
+  cantidad: 0,
   idBusiness: 1,
   idCategoria: 'CAS',
   nombreCategoria: '',
-  imagen: [{
-    id: '5',
-    url: 'https://drive.google.com/file/d/16trPA0UrmplvXkP8tgl6JYNNWGSfYe6J/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+    { id: '55', url: '../../../../../assets/imagenes/castillos/castillo-palmeras-inflable1.png', alt: 'Castillo Palmeras inflable Recreativo', idComponente: 0 },
+    { id: '56', url: '../../../../../assets/imagenes/castillos/castillo-palmeras-inflable2.png', alt: 'Castillo Palmeras inflable Recreativo', idComponente: 0 },
+    { id: '57', url: '../../../../../assets/imagenes/castillos/castillo-palmeras-inflable3.png', alt: 'Castillo Palmeras inflable Recreativo', idComponente: 0 },
+  ],
   estado: 'Activo',
   descripcion: 'CASTILLO 2.70 ALTO X 5 DE ANCHO X 5 DE FONDO SIN IMPRESIONES TORRES EN FORMA DE PALMERAS',
   comision: 0,
@@ -425,12 +536,10 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idBusiness: 1,
   idCategoria: 'MTOB',
   nombreCategoria: '',
-  imagen: [{
-    id: '1',
-    url: 'https://drive.google.com/file/d/1kLTJjAMHSrpYB6glbjDu3kUthgJWPmVq/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+ { id: '57', url: '../../../../../assets/imagenes/miniToboganes/MiniTobogan-inflable-reino-champiñon1.png', alt: 'Mini Tobogan Cocodrilo y Palmeras inflable Recreativo', idComponente: 0 },
+ 
+  ],
   estado: 'Activo',
   descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO SIN IMPRESIONES ENTRADA CABEZA FORMA DE COCODRILO',
   comision: 0,
