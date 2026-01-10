@@ -8,6 +8,7 @@ import { CardProductos1Component } from "../../../../shared/molecules/productos/
 import { SectionImagesInstagramEcommerce1 } from '../../../molecules/ecommerce1/section-images-instagram-ecommerce1/section-images-instagram-ecommerce1';
 import { PaginatorPgComponent } from '../../../../shared/atoms/paginator-pg/paginator-pg.component';
 import { BusinessDTO, CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dtos';
+import { Carruselt1 } from "../../../../../../public-api";
 
 @Component({
   selector: 'lib-home-ecommerce1',
@@ -20,6 +21,7 @@ import { BusinessDTO, CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaos
     CardProductos1Component,
     SectionImagesInstagramEcommerce1,
     PaginatorPgComponent,
+    Carruselt1
 ],
   templateUrl: './home-ecommerce1.html',
   styleUrls: ['./home-ecommerce1.scss']

@@ -8,9 +8,10 @@ import { BarFloatEcommerce1 } from "../../molecules/ecommerce1/bar-float-ecommer
 import { FooterEcommerce1 } from "../../molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1";
 import { RouterOutlet } from '@angular/router';
 import { CategoriaDTO, MenuConfig, MenuItem, BusinessDTO} from '@juliaosistem/core-dtos';
+import { Carruselt1 } from "../../../../../public-api";
 @Component({
   selector: 'lib-ecommerce1',
-  imports: [CommonModule, DialogModule, ButtonModule, BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet],
+  imports: [CommonModule, DialogModule, ButtonModule, BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet, Carruselt1],
   templateUrl: './ecommerce1.html',
   styleUrl: './ecommerce1.scss',
 })

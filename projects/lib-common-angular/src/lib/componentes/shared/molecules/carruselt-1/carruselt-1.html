@@ -1,0 +1,50 @@
+
+
+<section  class="carrusel-bg p-3 flex flex-column align-items-center justify-content-center w-full" aria-label="Carrusel de productos inflables y recreativos" itemscope itemtype="https://schema.org/ItemList">
+    <div class="relative w-full max-w-6xl h-30rem bg-white-alpha-10 border-1 border-white-alpha-30 border-round-3xl shadow-4 overflow-hidden flex flex-column justify-content-center">
+        <div class="w-full h-full relative">
+            @for (slide of slides; track $index) {
+                <div class="slide flex flex-column md:flex-row h-full absolute w-full transition-all duration-800"
+                     [class.active]="$index === currentSlide"
+                     itemprop="itemListElement" itemscope itemtype="https://schema.org/Product">
+                <meta itemprop="position" [content]="$index + 1">
+                <!-- Texto -->
+                <div class="flex-1 flex align-items-center justify-content-center p-4 md:pl-8 order-2 md:order-1">
+                    <div class="content-box text-white md:ml-4">
+                        <span class="p-tag mb-3" [ngClass]="slide.tagClass">{{slide.tag}}</span>
+                        <h2 class="text-3xl md:text-5xl font-bold mb-3" itemprop="name">{{slide.title}}</h2>
+                        <p class="mb-4 text-secondary" itemprop="description">{{slide.description}}</p>
+                        @if (slide.button) {
+                            <a pButton pRipple [href]="slide.button.link" [ngClass]="slide.button.class" itemprop="url" [title]="'Ver más sobre ' + slide.title">{{slide.button.text}}</a>
+                        }
+                    </div>
+                </div>
+                <!-- Imagen -->
+                <div class="flex-1 flex align-items-center justify-content-center order-1 md:order-2 image-box p-0 overflow-hidden">
+                    <img [src]="slide.image" 
+                         [alt]="slide.alt"
+                         [attr.loading]="$index === 0 ? 'eager' : 'lazy'"
+                         [attr.fetchpriority]="$index === 0 ? 'high' : 'auto'"
+                         width="600" height="400"
+                         class="w-full h-full object-cover md:w-auto md:h-auto md:max-w-20rem md:border-round-xl shadow-2" 
+                         itemprop="image">
+                </div>
+                </div>
+            }
+        </div>
+        <!-- Controles de Navegación (Flechas laterales) -->
+        <button class="absolute nav-btn-pos left-0 ml-2 md:ml-3 border-circle border-none bg-white-alpha-20 text-white w-3rem h-3rem flex align-items-center justify-content-center hover:bg-white-alpha-40 transition-colors cursor-pointer p-0" style="transform: translateY(-50%); z-index: 20;" aria-label="Anterior" (click)="prevSlide()">
+            <i class="fas fa-chevron-left text-xl"></i>
+        </button>
+        <button class="absolute nav-btn-pos right-0 mr-2 md:mr-3 border-circle border-none bg-white-alpha-20 text-white w-3rem h-3rem flex align-items-center justify-content-center hover:bg-white-alpha-40 transition-colors cursor-pointer p-0" style="transform: translateY(-50%); z-index: 20;" aria-label="Siguiente" (click)="nextSlide()">
+            <i class="fas fa-chevron-right text-xl"></i>
+        </button>
+
+        <!-- Indicadores (Puntos abajo al centro) -->
+        <div class="absolute bottom-0 left-0 w-full flex justify-content-center gap-2 pb-3" style="z-index: 20;">
+            @for (slide of slides; track $index) {
+                <button class="nav-dot border-circle p-0" [class.active]="$index === currentSlide" (click)="goToSlide($index)" aria-label="Ir a slide"></button>
+            }
+        </div>
+    </div>
+</section>
