@@ -1,6 +1,6 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { PrimegModule } from 'lib-common-angular';
+import { PrimegModule } from '../../../../modulos/primeg.module';
 
 @Component({
   selector: 'lib-carruselt-1',
