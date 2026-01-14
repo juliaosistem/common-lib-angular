@@ -67,6 +67,20 @@ jobs:
           echo "📂 Estado de Git antes de versionar:"
           git status -s
           npm version patch --force -m "chore(release): %s [skip ci]"
+          
+      - name: Sincronizar versión con la librería
+        run: |
+            NEW_VERSION=$(node -p "require('./package.json').version")
+            echo "Nueva versión detectada: $NEW_VERSION"
+            
+            # Actualizar version en projects/lib-common-angular/package.json
+            cd projects/lib-common-angular
+            npm version $NEW_VERSION --no-git-tag-version --allow-same-version
+            cd ../..
+            
+            # Commit de la sincronización para que quede en el repo
+            git add projects/lib-common-angular/package.json
+            git commit --amend --no-edit || echo "No hubo cambios en el sub-package.json para commitear"
 
 
       - name: Build
