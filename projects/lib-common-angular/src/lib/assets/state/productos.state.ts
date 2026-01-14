@@ -14,6 +14,7 @@ import {
   GenericCrudState,
 } from './state-generic/generic-crud.state';
 import { ProductService } from '../../componentes/shared/services/product.service';
+import { createSelector } from '@ngxs/store';
 
 // Crear acciones genéricas para ProductoDTO
 const productosActions = createGenericCrudActions<ProductoDTO>('producto');
@@ -52,6 +53,20 @@ export class ProductosState extends GenericCrudState<ProductoDTO, ProductoDTO> {
   @Selector()
   static getProductos(state: PlantillaResponse<ProductoDTO>) {
     return state.dataList;
+  }
+
+  /**
+   * Selector factory para obtener productos por id de categoría.
+   * @param idCategoria 
+   * @returns 
+   */
+  static selectByCategoriaId(idCategoria: string) {
+    return createSelector([
+      (state: { producto: PlantillaResponse<ProductoDTO> }) => state.producto
+    ], (response: PlantillaResponse<ProductoDTO>) => {
+      const list = (response?.dataList as ProductoDTO[]) || [];
+      return list.filter(p => String(p.idCategoria) === String(idCategoria));
+    });
   }
 
   // Acción All

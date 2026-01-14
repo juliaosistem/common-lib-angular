@@ -29,7 +29,7 @@ export class HeaderEcommerce1Component implements OnInit {
   @Input() DatosNegocio :BusinessDTO | null = null;
     @Input() logoText: string = 'Zigma Inflables';
     @Input() logoUrl: string | null = null;
-    @Input() logoAlt: string = 'Logo';
+    @Input() logoAlt: string = 'Logo Zigma Inflables';
   
   // Configuración del menú
   @Input() menuConfig: MenuConfig | null = null;
@@ -167,6 +167,9 @@ export class HeaderEcommerce1Component implements OnInit {
 
     // Asegurar que el menú esté habilitado por su id cuando se usa en componentes anidados
     this.menuCtrl.enable(true, 'headerMenu');
+    console.log('Logo URL en Header:', this.logoUrl);
+    if(this.DatosNegocio?.logo) this.logoUrl=this.DatosNegocio?.logo;
+    
   }
 
   // --- LÓGICA DE SWIPE (DESLIZAR PARA ABRIR) ---

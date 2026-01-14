@@ -1,29 +1,108 @@
-    <section class="hero-section">
-        <div class="hero-container">
-            <!-- Tarjeta 1: Castillos Inflables -->
-            <a href="#" class="card-link">
-                <p-card class="category-card category-card-blue">
-                    <ng-template pTemplate="header">
-                        <img src="https://placehold.co/200x200/0093e9/ffffff?text=🏰" alt="Castillos Inflables" class="category-image" />
-                    </ng-template>
-                    <div class="card-body">
-                        <h3 class="card-title">Castillos Inflables</h3>
-                        <span class="card-subtitle">Comprar ahora</span>
-                    </div>
-                </p-card>
-            </a>
+<section class="hero-section py-4" aria-label="Servicios de Zigma Inflables">
+    
+    <div class="hero-container flex flex-column md:flex-row gap-4 justify-content-center align-items-stretch">
+        
+        <article class="flex-1" itemscope itemtype="http://schema.org/Service">
+            <meta itemprop="serviceType" content="Fabricación y Venta de Inflables" />
+            <meta itemprop="areaServed" content="Colombia" />
 
-            <!-- Tarjeta 2: Toboganes -->
-            <a href="#" class="card-link">
-                <p-card class="category-card category-card-pink">
+            <a href="https://api.whatsapp.com/send/?phone=%2B573118025433&text=Hola%2C+estoy+interesado+en+los+productos+de+Zigma+Inflables.&type=phone_number&app_absent=0" 
+               target="_blank" rel="noopener noreferrer"
+               title="Ver catálogo de venta y fabricación de inflables publicitarios"
+               class="card-link no-underline text-color h-full block">
+                
+                <p-card class="category-card category-card-blue h-full shadow-4 hover:shadow-6 transition-duration-300">
                     <ng-template pTemplate="header">
-                        <img src="https://placehold.co/200x200/ff5680/ffffff?text=🎢" alt="Toboganes Inflables" class="category-image" />
+                        <img ngSrc="assets/imagenes/FabricaDeInflablesBodega.png" 
+                             alt="Fábrica de inflables publicitarios, arcos y carpas en Bogotá" 
+                             width="400" height="250"
+                             priority
+                             class="category-image border-round-top w-full h-15rem object-cover" />
                     </ng-template>
-                    <div class="card-body">
-                        <h3 class="card-title">Toboganes</h3>
-                        <span class="card-subtitle">Comprar ahora</span>
+                    
+                    <div class="card-body p-3 text-left">
+                        <h3 class="card-title text-xl font-bold mb-2" itemprop="name">
+                            Venta y Fabricación
+                        </h3>
+                        <p class="text-600 mb-3 text-left text-sm line-height-3" itemprop="description">
+                            Potencia tu marca con <strong>inflables publicitarios y recreativos.</strong> Diseños a medida con garantía.
+                        </p>
+                        <div class="mt-auto">
+                            <span class="p-button p-button-outlined p-button-rounded p-button-sm font-bold" aria-hidden="true">
+                                Ver Catálogo
+                            </span>
+                        </div>
                     </div>
                 </p-card>
             </a>
-        </div>
-    </section>
+        </article>
+
+        <article class="flex-1" itemscope itemtype="http://schema.org/Service">
+            <meta itemprop="serviceType" content="Alquiler de Inflables para Fiestas" />
+            <meta itemprop="areaServed" content="Bogotá, Cundinamarca" />
+
+            <a href="https://api.whatsapp.com/send/?phone=%2B573118025433&text=Hola%2C+estoy+interesado+en+los+productos+de+Zigma+Inflables.&type=phone_number&app_absent=0" 
+               target="_blank" rel="noopener noreferrer"
+               title="Reservar alquiler de castillos y toboganes en Bogotá"
+               class="card-link no-underline text-color h-full block">
+                
+                <p-card class="category-card category-card-pink h-full shadow-4 hover:shadow-6 transition-duration-300">
+                    <ng-template pTemplate="header">
+                        <img ngSrc="assets/imagenes/ToboganesInflables.png" 
+                             alt="Alquiler de saltarines, castillos y toboganes para fiestas infantiles" 
+                             width="400" height="250"
+                             class="category-image border-round-top w-full h-15rem object-cover" />
+                    </ng-template>
+                    
+                    <div class="card-body p-3 text-center">
+                        <h3 class="card-title text-xl font-bold mb-2" itemprop="name">
+                            Alquiler para Eventos
+                        </h3>
+                        <p class="text-600 mb-3 text-left text-sm line-height-3" itemprop="description">
+                            Llevamos la diversión a tu fiesta. <strong>Alquiler de saltarines</strong> y toboganes con instalación incluida.
+                        </p>
+                        <div class="mt-auto">
+                            <span class="p-button p-button-outlined p-button-rounded p-button-sm font-bold" aria-hidden="true">
+                                Reservar Fecha
+                            </span>
+                        </div>
+                    </div>
+                </p-card>
+            </a>
+        </article>
+
+        <article class="flex-1" itemscope itemtype="http://schema.org/Service">
+            <meta itemprop="serviceType" content="Reparación y Mantenimiento de Inflables" />
+
+            <a href="https://api.whatsapp.com/send/?phone=%2B573118025433&text=Hola%2C+estoy+interesado+en+los+productos+de+Zigma+Inflables.&type=phone_number&app_absent=0" 
+               target="_blank" rel="noopener noreferrer"
+               title="Solicitar servicio técnico para inflables"
+               class="card-link no-underline text-color h-full block">
+                
+                <p-card class="category-card category-card-yellow h-full shadow-4 hover:shadow-6 transition-duration-300">
+                    <ng-template pTemplate="header">
+                        <img ngSrc="assets/imagenes/servicioReparacionInflables.png" 
+                             alt="Servicio de reparación, costura y lavado de inflables en Bogotá" 
+                             width="400" height="250"
+                             class="category-image border-round-top w-full h-15rem object-cover" />
+                    </ng-template>
+                    
+                    <div class="card-body p-3 ">
+                        <h3 class="card-title text-left text-xl font-bold mb-2" itemprop="name">
+                            Reparación y Lavado
+                        </h3>
+                        <p class="text-600 mb-3 text-left text-sm line-height-3" itemprop="description">
+                            ¿Inflable roto o sucio? Ofrecemos <strong>mantenimiento profesional</strong> para extender la vida de tus equipos.
+                        </p>
+                        <div class="mt-auto">
+                            <span class="p-button  p-button-outlined p-button-rounded p-button-sm font-bold" aria-hidden="true">
+                                Cotizar Arreglo
+                            </span>
+                        </div>
+                    </div>
+                </p-card>
+            </a>
+        </article>
+
+    </div>
+</section>

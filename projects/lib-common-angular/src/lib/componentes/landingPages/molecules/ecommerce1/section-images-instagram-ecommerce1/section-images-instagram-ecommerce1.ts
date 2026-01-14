@@ -1,9 +1,10 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
+import { AppMenuitem } from "../../../../daskboards/daskboard3/moleculas/app.menuitem";
 
 @Component({
   selector: 'lib-section-images-instagram-ecommerce1',
-  imports: [],
+  imports: [AppMenuitem],
   templateUrl: './section-images-instagram-ecommerce1.html',
   styleUrl: './section-images-instagram-ecommerce1.scss',
   encapsulation: ViewEncapsulation.None
@@ -22,7 +23,19 @@ export class SectionImagesInstagramEcommerce1 implements OnInit, OnDestroy {
 
   constructor(private el: ElementRef) {}
 
+  /**
+   * Inicializa los observers de la sección y de las tarjetas al montar el componente.
+   */
   ngOnInit(): void {
+    this.initSectionObserver();
+    this.initCardsObserver();
+  }
+
+  /**
+   * Inicializa el IntersectionObserver para la sección principal,
+   * añadiendo o quitando la clase 'is-visible' según la visibilidad en viewport.
+   */
+  private initSectionObserver(): void {
     const options = { root: null, threshold: 0.2 };
     this.observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -39,15 +52,19 @@ export class SectionImagesInstagramEcommerce1 implements OnInit, OnDestroy {
     if (section) {
       this.observer.observe(section);
     }
+  }
 
-    // Observer para las tarjetas con efecto escalonado
+  /**
+   * Inicializa el IntersectionObserver para las tarjetas de Instagram,
+   * aplicando animación escalonada al entrar en el viewport.
+   */
+  private initCardsObserver(): void {
     const cardOptions = { root: null, threshold: 0.1 };
     let index = 0;
     this.cardsObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         const card = entry.target as HTMLElement;
         if (entry.isIntersecting) {
-          // Asignar delay incremental basado en el orden en DOM
           card.style.transitionDelay = `${(index % 4) * 120}ms`;
           card.classList.add('is-visible');
         }
@@ -59,6 +76,9 @@ export class SectionImagesInstagramEcommerce1 implements OnInit, OnDestroy {
     cards.forEach((c) => this.cardsObserver?.observe(c));
   }
 
+  /**
+   * Limpia los observers al destruir el componente para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     if (this.observer) {
       this.observer.disconnect();

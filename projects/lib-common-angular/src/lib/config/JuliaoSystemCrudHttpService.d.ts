@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
+import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
+import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
 import { Observable } from 'rxjs';
-import { PlantillaResponse } from 'juliaositembackenexpress/src/utils/PlantillaResponse';
-import { QueryParams } from 'juliaositembackenexpress/src/utils/queryParams';
 export declare class JuliaoSystemCrudHttpService<RES, RQ> {
     protected http: HttpClient;
     basePathUrl: string;

@@ -1,0 +1,20 @@
+@use '../../../../../../../../../theme/variables.scss' as vars;
+
+.background-page {
+  background-color: vars.$brand-blue-zigma !important;
+}
+
+/* Centra el texto de los cards dentro del slider de relacionados */
+.related-products {
+  :host ::ng-deep lib-card-productos1 h3 {
+    text-align: center !important;
+  }
+  :host ::ng-deep lib-card-productos1 .surface-ground,
+  :host ::ng-deep lib-card-productos1 .info-badges {
+    text-align: center !important;
+    justify-content: center !important;
+  }
+  :host ::ng-deep lib-card-productos1 .mt-auto .flex {
+    justify-content: center !important;
+  }
+}

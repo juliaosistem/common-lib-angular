@@ -8,6 +8,7 @@ import { CardProductos1Component } from "../../../../shared/molecules/productos/
 import { SectionImagesInstagramEcommerce1 } from '../../../molecules/ecommerce1/section-images-instagram-ecommerce1/section-images-instagram-ecommerce1';
 import { PaginatorPgComponent } from '../../../../shared/atoms/paginator-pg/paginator-pg.component';
 import { BusinessDTO, CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dtos';
+import { Carruselt1 } from "../../../../../../public-api";
 
 @Component({
   selector: 'lib-home-ecommerce1',
@@ -19,8 +20,9 @@ import { BusinessDTO, CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaos
     SectionFiltersCategoriesProductos,
     CardProductos1Component,
     SectionImagesInstagramEcommerce1,
-    PaginatorPgComponent
-  ],
+    PaginatorPgComponent,
+    Carruselt1
+],
   templateUrl: './home-ecommerce1.html',
   styleUrls: ['./home-ecommerce1.scss']
 })
@@ -39,7 +41,7 @@ export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges {
   @Input() bussinesDTO!: BusinessDTO ;
   @Input() categorias: CategoriaDTO[] = [];
   // Base de ruta para navegar al detalle desde las cards (controlado por el front)
-  @Input() detailRouteBase: string[] = ['detalle'];
+  @Input() detailRouteBase: string[] = ['productos'];
 
   filteredProducts: ProductoDTO[] = [];
 

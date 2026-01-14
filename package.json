@@ -1,38 +1,24 @@
 {
   "name": "lib-common-angular",
-  "version": "0.0.1",
+  "version": "0.0.12",
   "description": "Librería común de Angular para proyectos",
   "type": "module",
-  "files": [
-    "fesm2022/",
-    "src/",
-    "index.d.ts",
-    "package.json",
-    "README.md"
-  ],
+  "private": false,
   "scripts": {
     "ng": "ng",
-    "start": "lint && tsc  ng serve ",
+    "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:lib-common-angular-demo": "node dist/lib-common-angular-demo/server/server.mjs",
     "prebuild": "npm run generate:dtos",
     "update:dtos": "npm run init:submodule && npm run update:submodule && npm run generate:dtos",
-    "init:submodule": "git submodule update --init --recursive || (git submodule deinit -f lib-core-dtos 2>/dev/null; rm -rf .git/modules/lib-core-dtos 2>/dev/null; git rm -f lib-core-dtos 2>/dev/null; (git submodule add -b develop https://github.com/juliaosistem/lib-core-dtos.git lib-core-dtos || git submodule add https://github.com/juliaosistem/lib-core-dtos.git lib-core-dtos))",
+    "init:submodule": "git submodule update --init --recursive",
     "update:submodule": "git submodule update --remote --merge",
-    "generate:dtos": "node  lib-core-dtos/scripts/generate-typescript.js ",
-    "build:demo": "ng build lib-common-angular-demo --configuration production",
-    "build:lib": "ng build lib-common-angular ",
-    "pack:lib": "cd dist/lib-common-angular && npm pack",
-    "publish:nexus": "npm publish --registry=${NEXUS_REGISTRY_URL}",
-    "publish:npm": "npm publish --access public",
-    "lint": "ng lint",
-    "test:lib": "ng test lib-common-angular --watch=false --browsers=ChromeHeadless",
-    "test:demo": "ng test lib-common-angular-demo --watch=false --browsers=ChromeHeadless",
-    "serve:ssr:fn-admin": "node dist/fn-admin/server/server.mjs"
+    "generate:dtos": "node lib-core-dtos/scripts/generate-typescript.js",
+    "build:lib": "ng build lib-common-angular",
+    "publish:npm": "npm run build:lib && cd dist/lib-common-angular && npm publish --access public",
+    "lint": "ng lint"
   },
-  "private": false,
   "dependencies": {
     "@angular/platform-server": "^20.1.6",
     "@angular/ssr": "^20.1.5",
@@ -49,6 +35,7 @@
     "flag-icons": "^7.5.0",
     "ionicons": "^8.0.13",
     "jquery": "^3.7.1",
+    "juliaositembackenexpress": "^1.2.4",
     "popper.js": "^1.16.1",
     "primeclt": "^0.1.5",
     "primeflex": "^4.0.0",
@@ -119,12 +106,9 @@
     "tailwindcss": "^4.0.0",
     "typescript": "^5.9.2"
   },
-  "main": "dist/lib-common-angular/bundles/lib-common-angular.umd.js",
-  "module": "dist/lib-common-angular/fesm2015/lib-common-angular.js",
-  "exports": {
-    ".": {
-      "import": "./dist/lib-common-angular/fesm2015/lib-common-angular.js",
-      "require": "./dist/lib-common-angular/bundles/lib-common-angular.umd.js"
-    }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juliaosistem/common-lib-angular"
   }
 }
+

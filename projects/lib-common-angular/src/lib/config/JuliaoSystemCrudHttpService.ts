@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { PlantillaResponse } from 'juliaositembackenexpress/src/utils/PlantillaResponse';
-import { QueryParams } from 'juliaositembackenexpress/src/utils/queryParams';
+import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
+import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
 
 @Injectable({
   providedIn: 'root'
