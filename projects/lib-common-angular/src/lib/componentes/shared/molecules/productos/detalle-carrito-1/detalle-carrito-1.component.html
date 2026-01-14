@@ -59,8 +59,7 @@
                         } @else {
                             <a
                                 class="contact-btn"
-                                [href]="getWhatsAppLink()"
-                                target="_blank" rel="noopener noreferrer"
+                                (click)="shareProductOnWhatsapp()"
                                 aria-label="Contactar por WhatsApp">
                                 <i class="pi pi-whatsapp"></i>
                                 <span>Contactar</span>
@@ -101,13 +100,31 @@
                                 styleClass="bg-900 text-white w-2rem h-2rem border-circle border-none flex align-items-center justify-content-center cursor-pointer hover:bg-700 transition-colors shadow-1">
                             </p-button>
                         }
-                        <p-button 
-                             
-                            pTooltip="Compartir"
-                            tooltipPosition="top"
-                            icon="pi pi-share-alt text-sm"
-                            styleClass="surface-100 text-900 w-2rem h-2rem border-circle border-none flex align-items-center justify-content-center cursor-pointer hover:bg-200 transition-colors shadow-1">
-                        </p-button>
+                        
+                         <!-- Menú flotante de redes estilo PrimeNG -->
+                                <div class="relative inline-block ml-2 align-middle">
+                                    <button (click)="toggleShareMenu()"
+                                        pTooltip="Compartir" tooltipPosition="top"
+                                        aria-label="Compartir en redes sociales"
+                                        class="surface-100 text-900 w-2rem h-2rem border-circle border-none flex align-items-center justify-content-center cursor-pointer hover:bg-200 transition-colors shadow-1">
+                                        <i class="pi" [ngClass]="{'pi-times': shareMenuOpen, 'pi-share-alt': !shareMenuOpen}"></i>
+                                    </button>
+
+                                    @if (shareMenuOpen) {
+                                       <div class="flex gap-2 absolute z-5 mt-2 shadow-2 p-2 border-round surface-0" style="left: 0; min-width: 120px;">
+                                            <button (click)="touchRedes('whatsapp')" 
+                                                class="p-button-rounded p-button-success p-button-text flex align-items-center gap-2 w-full border-none bg-transparent hover:surface-100 cursor-pointer p-2 mb-1">
+                                                <i class="pi pi-whatsapp text-xl text-green-500"></i>
+                                                <span class="text-700 font-medium">WhatsApp</span>
+                                            </button>
+                                            <button (click)="touchRedes('facebook')" 
+                                                class="p-button-rounded p-button-info p-button-text flex align-items-center gap-2 w-full border-none bg-transparent hover:surface-100 cursor-pointer p-2">
+                                                <i class="pi pi-facebook text-xl text-blue-500"></i>
+                                                <span class="text-700 font-medium">Facebook</span>
+                                            </button>
+                                        </div>
+                                    }
+                                </div>
                     </div>
                
 

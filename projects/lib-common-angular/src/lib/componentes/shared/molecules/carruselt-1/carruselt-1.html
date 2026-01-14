@@ -1,6 +1,6 @@
 
 
-<section  class="carrusel-bg p-3 flex flex-column align-items-center justify-content-center w-full" aria-label="Carrusel de productos inflables y recreativos" itemscope itemtype="https://schema.org/ItemList">
+<section aria-label="Carrusel de productos inflables recreativos y publicitarios"  class="carrusel-bg p-3 flex flex-column align-items-center justify-content-center w-full" aria-label="Carrusel de productos inflables y recreativos" itemscope itemtype="https://schema.org/ItemList">
     <div class="relative w-full max-w-6xl h-30rem bg-white-alpha-10 border-1 border-white-alpha-30 border-round-3xl shadow-4 overflow-hidden flex flex-column justify-content-center">
         <div class="w-full h-full relative">
             @for (slide of slides; track $index) {
@@ -15,18 +15,17 @@
                         <h2 class="text-3xl md:text-5xl font-bold mb-3" itemprop="name">{{slide.title}}</h2>
                         <p class="mb-4 text-secondary" itemprop="description">{{slide.description}}</p>
                         @if (slide.button) {
-                            <a pButton pRipple [href]="slide.button.link" [ngClass]="slide.button.class" itemprop="url" [title]="'Ver más sobre ' + slide.title">{{slide.button.text}}</a>
+                            <a pButton pRipple (click)="navigateToWhatsapp(slide)" class="cursor-pointer" [ngClass]="slide.button.class" [title]="'Más información sobre ' + slide.title">{{slide.button.text}}</a>
                         }
                     </div>
                 </div>
                 <!-- Imagen -->
                 <div class="flex-1 flex align-items-center justify-content-center order-1 md:order-2 image-box p-0 overflow-hidden">
-                    <img [src]="slide.image" 
+                    <img [ngSrc]="slide.image" 
                          [alt]="slide.alt"
-                         [attr.loading]="$index === 0 ? 'eager' : 'lazy'"
-                         [attr.fetchpriority]="$index === 0 ? 'high' : 'auto'"
+                         [priority]="$index === 0"
                          width="600" height="400"
-                         class="w-full h-full object-cover md:w-auto md:h-auto md:max-w-20rem md:border-round-xl shadow-2" 
+                         class="w-full h-full object-cover md:w-auto md:h-auto  md:border-round-xl shadow-2" 
                          itemprop="image">
                 </div>
                 </div>
@@ -43,7 +42,7 @@
         <!-- Indicadores (Puntos abajo al centro) -->
         <div class="absolute bottom-0 left-0 w-full flex justify-content-center gap-2 pb-3" style="z-index: 20;">
             @for (slide of slides; track $index) {
-                <button class="nav-dot border-circle p-0" [class.active]="$index === currentSlide" (click)="goToSlide($index)" aria-label="Ir a slide"></button>
+                <button class="nav-dot border-circle p-0" [class.active]="$index === currentSlide" (click)="goToSlide($index)" [attr.aria-label]="'Ir a diapositiva ' + ($index + 1)"></button>
             }
         </div>
     </div>

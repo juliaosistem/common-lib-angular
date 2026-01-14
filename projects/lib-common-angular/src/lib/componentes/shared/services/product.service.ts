@@ -198,6 +198,27 @@ export class ProductService extends JuliaoSystemCrudHttpService<ProductoDTO, Pro
 mockProductosInflablesDTO(): ProductoDTO[] {
   return [
     {
+  id: 'MTOB25-007',
+  name: 'MINI TOBOGAN JUMBO',
+  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6500000 }],
+  descuento: 0,
+  cantidad: 0,
+  idBusiness: 1,
+  idCategoria: 'MTOB',
+  nombreCategoria: '',
+  imagen: [
+    { id: '78', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-JUMBO1.png', alt: 'Mini Tobogan Jumbo inflable Recreativo', idComponente: 0 },
+    { id: '79', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-JUMBO2.png', alt: 'Mini Tobogan Jumbo inflable Recreativo', idComponente: 0 },
+    { id: '80', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-JUMBO3.png', alt: 'Mini Tobogan Jumbo inflable Recreativo', idComponente: 0 },
+  ],
+  estado: 'Activo',
+  descripcion: '4 ALTO X 5.30 DE ANCHO X 4.50 DE FONDO 3 IMPRESIONES FRONTALES Y 1 EN TOBOGAN',
+  comision: 0,
+  fechaCreacion: '',
+  fechaActualizacion: '',
+  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+},
+    {
       id: 'MCAS25-001',
       name: 'PISCINA DE PELOTAS 3X3',
       precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 3100000 }],
@@ -217,6 +238,30 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       fechaCreacion: '',
       fechaActualizacion: '',
       idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+        
+    {
+    id: 'MTOB25-001',
+    name: 'MINI TOBOGAN COCODRILO Y PALMERAS',
+    precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6800000 }],
+    descuento: 0,
+    cantidad: 0,
+    idBusiness: 1,
+    idCategoria: 'MTOB',
+    nombreCategoria: '',
+    imagen: [
+    { id: '58', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-COCODRILO-Y-PALMERAS1.png', alt: 'Mini Tobogan Cocodrilo y Palmeras inflable Recreativo', idComponente: 0 },
+    { id: '59', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-COCODRILO-Y-PALMERAS2.png', alt: 'Mini Tobogan Cocodrilo y Palmeras inflable Recreativo', idComponente: 0 },
+    { id: '60', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-COCODRILO-Y-PALMERAS3.png', alt: 'Mini Tobogan Cocodrilo y Palmeras inflable Recreativo', idComponente: 0 },
+    { id: '61', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-COCODRILO-Y-PALMERAS4.png', alt: 'Mini Tobogan Cocodrilo y Palmeras inflable Recreativo', idComponente: 0 },
+    
+    ],
+    estado: 'Activo',
+    descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO SIN IMPRESIONES ENTRADA CABEZA FORMA DE COCODRILO',
+    comision: 0,
+    fechaCreacion: '',
+    fechaActualizacion: '',
+    idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
     },
     {
       id: 'MCAS25-002',
@@ -283,6 +328,26 @@ mockProductosInflablesDTO(): ProductoDTO[] {
       fechaCreacion: '',
       fechaActualizacion: '',
       idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
+    },
+        {
+    id: 'MTOB25-003',
+    name: 'MINI TOBOGAN MARVEL',
+    precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5999000 }],
+    descuento: 0,
+    cantidad: 0,
+    idBusiness: 1,
+    idCategoria: 'MTOB',
+    nombreCategoria: '',
+    imagen: [
+        { id: '65', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MARVEL-V1-1.png', alt: 'Mini Tobogan Marvel inflable Recreativo', idComponente: 0 },
+        { id: '66', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MARVEL-V1-2.png', alt: 'Mini Tobogan Marvel inflable Recreativo', idComponente: 0 },
+    ],
+    estado: 'Activo',
+    descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO 3 IMPRESIONES FRONTALES, COLCHONES IMPRESOS EN TORRES Y PEDESTAL, ARCOS IMPRESOS',
+    comision: 0,
+    fechaCreacion: '',
+    fechaActualizacion: '',
+    idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
     },
     {
       id: 'MCAS25-005',
@@ -527,41 +592,21 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   fechaCreacion: '',
   fechaActualizacion: '',
   idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
-},{
-  id: 'MTOB25-001',
-  name: 'MINI TOBOGAN COCODRILO Y PALMERAS',
-  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6800000 }],
-  descuento: 0,
-  cantidad: 8,
-  idBusiness: 1,
-  idCategoria: 'MTOB',
-  nombreCategoria: '',
-  imagen: [
- { id: '57', url: '../../../../../assets/imagenes/miniToboganes/MiniTobogan-inflable-reino-champiñon1.png', alt: 'Mini Tobogan Cocodrilo y Palmeras inflable Recreativo', idComponente: 0 },
- 
-  ],
-  estado: 'Activo',
-  descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO SIN IMPRESIONES ENTRADA CABEZA FORMA DE COCODRILO',
-  comision: 0,
-  fechaCreacion: '',
-  fechaActualizacion: '',
-  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
 },
 {
   id: 'MTOB25-002',
   name: 'MINI TOBOGAN DISNEY',
   precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5999000 }],
   descuento: 0,
-  cantidad: 8,
+  cantidad: 0,
   idBusiness: 1,
   idCategoria: 'MTOB',
   nombreCategoria: '',
-  imagen: [{
-    id: '2',
-    url: 'https://drive.google.com/file/d/1C_6RPI3Z4-qIeN5bLL6MkR4ZneVO_jY1/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+    { id: '62', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-DISNEY1.png', alt: 'Mini Tobogan Disney inflable Recreativo', idComponente: 0 },
+    { id: '63', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-DISNEY2.png', alt: 'Mini Tobogan Disney inflable Recreativo', idComponente: 0 },
+    { id: '64', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-DISNEY3.png', alt: 'Mini Tobogan Disney inflable Recreativo', idComponente: 0 },
+  ],
   estado: 'Activo',
   descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO 2 IMPRESIONES FRONTALES, IMPRESIONES TROQUELADAS EN TORRES, PEDESTAL Y ARCOS',
   comision: 0,
@@ -569,43 +614,22 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   fechaActualizacion: '',
   idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
 },
-{
-  id: 'MTOB25-003',
-  name: 'MINI TOBOGAN MARVEL',
-  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5999000 }],
-  descuento: 0,
-  cantidad: 8,
-  idBusiness: 1,
-  idCategoria: 'MTOB',
-  nombreCategoria: '',
-  imagen: [{
-    id: '3',
-    url: 'https://drive.google.com/file/d/1LPDwvgFZq5azSCYMBB_zZkX_Y3U5-Qut/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
-  estado: 'Activo',
-  descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO 3 IMPRESIONES FRONTALES, COLCHONES IMPRESOS EN TORRES Y PEDESTAL, ARCOS IMPRESOS',
-  comision: 0,
-  fechaCreacion: '',
-  fechaActualizacion: '',
-  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
-},
+
 {
   id: 'MTOB25-004',
   name: 'MINI TOBOGAN MARVEL 2',
   precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6500000 }],
   descuento: 0,
-  cantidad: 6,
+  cantidad: 0,
   idBusiness: 1,
   idCategoria: 'MTOB',
   nombreCategoria: '',
-  imagen: [{
-    id: '4',
-    url: 'https://drive.google.com/file/d/1q5EalGuF9Nu70XbmlaGliGJ3hf4rZjX5/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+    { id: '68', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MARVEL1.png', alt: 'Mini Tobogan  inflable Recreativo', idComponente: 0 },
+    { id: '69', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MARVEL2.png', alt: 'Mini Tobogan inflable Recreativo', idComponente: 0 },
+    { id: '70', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MARVEL3.png', alt: 'Mini Tobogan  inflable Recreativo', idComponente: 0 },
+    { id: '71', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MARVEL4.png', alt: 'Mini Tobogan  inflable Recreativo', idComponente: 0 },
+],
   estado: 'Activo',
   descripcion: '3.50 ALTO X 4 DE ANCHO X 6 DE FONDO IMPRESIONES FRONTALES Y EN ARCOS Y PEDESTAL',
   comision: 0,
@@ -618,16 +642,15 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   name: 'MINI TOBOGAN SUPER MARIO',
   precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 5999000 }],
   descuento: 0,
-  cantidad: 6,
+  cantidad: 0,
   idBusiness: 1,
   idCategoria: 'MTOB',
   nombreCategoria: '',
-  imagen: [{
-    id: '5',
-    url: 'https://drive.google.com/file/d/1P36rzlCNbcoS90Rp6aMEcte0BIcg24uh/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+    { id: '72', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-SUPER-MARIO1.png', alt: 'Mini Tobogan Super Mario inflable Recreativo', idComponente: 0 },
+    { id: '73', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-SUPER-MARIO2.png', alt: 'Mini Tobogan Super Mario inflable Recreativo', idComponente: 0 },
+    { id: '74', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-SUPER-MARIO3.png', alt: 'Mini Tobogan Super Mario inflable Recreativo', idComponente: 0 },
+  ],
   estado: 'Activo',
   descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO 3 IMPRESIONES FRONTALES, COLCHON IMPRESO EN PEDESTAL',
   comision: 0,
@@ -640,40 +663,17 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   name: 'MINI TOBOGAN TORRE ALTA',
   precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6500000 }],
   descuento: 0,
-  cantidad: 6,
+  cantidad: 0,
   idBusiness: 1,
   idCategoria: 'MTOB',
   nombreCategoria: '',
-  imagen: [{
-    id: '6',
-    url: 'https://drive.google.com/file/d/1tDpZ6d54qCGmzqKYxQ0AQmPOeWYRPtP7/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+    { id: '75', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-TORRE-ALTA1.png', alt: 'Mini Tobogan Torre Alta inflable Recreativo', idComponente: 0 },
+    { id: '76', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-TORRE-ALTA2.png', alt: 'Mini Tobogan Torre Alta inflable Recreativo', idComponente: 0 },
+    { id: '77', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-TORRE-ALTA3.png', alt: 'Mini Tobogan Torre Alta inflable Recreativo', idComponente: 0 },
+  ],
   estado: 'Activo',
   descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO SIN IMPRESIONES, MALLAS A LOS LADOS DE LA ENTRADA',
-  comision: 0,
-  fechaCreacion: '',
-  fechaActualizacion: '',
-  idDatosUsuario: '550e8400-e29b-41d4-a716-446655440000'
-},
-{
-  id: 'MTOB25-007',
-  name: 'MINI TOBOGAN JUMBO',
-  precios: [{ codigo_iso: 'COP', nombreMoneda: 'Peso colombiano', precio: 6500000 }],
-  descuento: 0,
-  cantidad: 6,
-  idBusiness: 1,
-  idCategoria: 'MTOB',
-  nombreCategoria: '',
-  imagen: [{
-    id: '7',
-    url: 'https://drive.google.com/file/d/1oiWtIBvD-oQZ8tVVPxPxYpJT6hQLm42_/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
-  estado: 'Activo',
-  descripcion: '4 ALTO X 5.30 DE ANCHO X 4.50 DE FONDO 3 IMPRESIONES FRONTALES Y 1 EN TOBOGAN',
   comision: 0,
   fechaCreacion: '',
   fechaActualizacion: '',
@@ -688,12 +688,11 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idBusiness: 1,
   idCategoria: 'MTOB',
   nombreCategoria: '',
-  imagen: [{
-    id: '8',
-    url: 'https://drive.google.com/file/d/1nYIoUKm-mYFy1O0gcDS1f3uleSIMJUOb/view?usp=drive_link',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+    { id: '81', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN -JUMBO-v2-1.png', alt: 'Mini Tobogan Jumbo 2 inflable Recreativo', idComponente: 0 },
+    { id: '82', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN -JUMBO-v2-2.png', alt: 'Mini Tobogan Jumbo 2 inflable Recreativo', idComponente: 0 },
+    { id: '83', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN -JUMBO-v2-3.png', alt: 'Mini Tobogan Jumbo 2 inflable Recreativo', idComponente: 0 },
+  ],
   estado: 'Activo',
   descripcion: '4.50 ALTO X 5.30 DE ANCHO X 4.50 DE FONDO 2 MUÑECOS 3D EN CADA ESQUINA 3 IMPRESIONES FRONTALES 1 EN TOBOGAN Y 1 EN ENTRADA',
   comision: 0,
@@ -710,12 +709,13 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idBusiness: 1,
   idCategoria: 'MTOB',
   nombreCategoria: '',
-  imagen: [{
-    id: '9',
-    url: 'https://drive.google.com/file/d/1nzBYU-wXSk3fIISoPrPCHokpgPxqOXSH/view?usp=drivesdk',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [
+    { id: '84', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY1.png', alt: 'Mini Tobogan Mickey inflable Recreativo', idComponente: 0 },
+    { id: '85', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY2.png', alt: 'Mini Tobogan Mickey inflable Recreativo', idComponente: 0 },
+    { id: '86', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY3.png', alt: 'Mini Tobogan Mickey inflable Recreativo', idComponente: 0 },
+    { id: '87', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY4.png', alt: 'Mini Tobogan Mickey inflable Recreativo', idComponente: 0 },
+
+  ],
   estado: 'Activo',
   descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 LARGO, 1 SUBIDA, DOS DESLIZADEROS, ZONA DE BRINCO, 1 MUÑECO 3D E IMPRESIONES FRONTALES A GUSTO',
   comision: 0,
@@ -732,12 +732,12 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idBusiness: 1,
   idCategoria: 'MTOB',
   nombreCategoria: '',
-  imagen: [{
-    id: '10',
-    url: '',
-    alt: 'inflables recreativos',
-    idComponente: 0
-  }],
+  imagen: [ 
+    { id: '88', url: '../../../../../assets/imagenes/miniToboganes/tobogan-Inflable-Colores1.png', alt: 'Mini Tobogan inflable Recreativo', idComponente: 0 },
+    { id: '89', url: '../../../../../assets/imagenes/miniToboganes/tobogan-Inflable-Colores2.png', alt: 'Mini Tobogan inflable Recreativo', idComponente: 0 },
+    { id: '90', url: '../../../../../assets/imagenes/miniToboganes/tobogan-Inflable-Colores3.png', alt: 'Mini Tobogan inflable Recreativo', idComponente: 0 },
+
+],
   estado: 'Activo',
   descripcion: '',
   comision: 0,

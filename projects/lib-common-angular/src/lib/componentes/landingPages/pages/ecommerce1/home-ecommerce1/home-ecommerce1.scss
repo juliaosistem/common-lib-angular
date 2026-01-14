@@ -18,7 +18,10 @@
 .history-text{ font-size:1rem; margin-bottom:1rem; font-weight:300; }
 
 /* Newsletter styles (replaces Tailwind utilities) */
-.animate-newsletter-section { opacity: 0; }
+.animate-newsletter-section { 
+    opacity: 0; 
+    background-color: var(--ion-background-color) !important;
+}
 .animate-newsletter-section .newsletter-card { opacity: 0; transform: translateY(24px); transition: opacity 600ms ease-out, transform 600ms ease-out; }
 .animate-newsletter-section.is-visible { opacity: 1; }
 .animate-newsletter-section.is-visible .newsletter-card { opacity: 1; transform: translateY(0); }

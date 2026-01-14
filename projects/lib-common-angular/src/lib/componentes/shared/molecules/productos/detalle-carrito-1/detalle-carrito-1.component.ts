@@ -51,6 +51,9 @@ export class DetalleCarrito1Component implements OnInit {
   // Control para mostrar botón de personalización como en las cards
   @Input() isPersonalizable: boolean = false;
 
+  // Variable para controlar la visibilidad del menú de compartir
+  shareMenuOpen: boolean = false;
+
   constructor(private productService: ProductService) {}
 
   ngOnInit(): void {
@@ -86,10 +89,28 @@ export class DetalleCarrito1Component implements OnInit {
     this.isFavorite = !this.isFavorite;
   }
 
-  getWhatsAppLink(): string {
-    const base = 'https://wa.me/?text=';
-    const message = `Hola, estoy interesado en el producto: ${this.product?.name ?? ''}`;
-    return base + encodeURIComponent(message);
+  shareProductOnWhatsapp(): void {
+    const url = window.location.href;
+    console.log(this.isLogin)
+    this.productService.contactWhatsapp('+573118025433', url, this.isLogin , this.product);
+  }
+
+  toggleShareMenu(): void {
+    this.shareMenuOpen = !this.shareMenuOpen;
+  }
+
+  touchRedes(red: string): void {
+     // Aquí puedes implementar la lógica específica para cada red si quieres rastrear el evento
+     // o compartir en URL específica de la red social
+      if(red === 'whatsapp'){
+         this.shareProductOnWhatsapp();
+     } else if (red === 'facebook'){
+         // Lógica para compartir en Facebook
+         const currentUrl = window.location.href;
+         const facebookSharer = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+         window.open(facebookSharer, '_blank', 'width=600,height=400');
+     }
+      this.shareMenuOpen = false;
   }
 
 
