@@ -113,8 +113,14 @@ export class DetalleProductoPageLib implements OnInit {
    * - Último segmento de la URL
    */
   private getProductIdFromRoute(): string | null {
-    let id = this.route.snapshot.paramMap.get('id');
-    if (id) return id;
+
+    // Nueva ruta: /productos/:nombre/:idInflable
+    let id = this.route.snapshot.paramMap.get('idInflable');
+    if (id) {
+      // Extraer solo el número o identificador antes de '-inflable'
+      const match = id.match(/^([0-9a-zA-Z-]+)(?:-inflable)?$/);
+      return match ? match[1] : id;
+    }
     id = this.route.snapshot.paramMap.get('productId');
     if (id) return id;
     id = this.route.snapshot.queryParamMap.get('id');

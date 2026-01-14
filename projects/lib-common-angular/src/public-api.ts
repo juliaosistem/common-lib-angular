@@ -18,6 +18,9 @@ export * from './lib/assets/state/tabla1.actions'; */
 export * from './lib/componentes/shared/pages/crud/crud.component';
 export * from './lib/componentes/shared/pages/crud/doc/crud-doc.component';
 
+export * from './lib/componentes/shared/molecules/carruselt-1/carruselt-1';
+export * from './lib/componentes/shared/atoms/paginator-pg/paginator-pg.component';
+export * from './lib/componentes/shared/atoms/sh-wats-button-card/sh-wats-button-card';
 export * from './lib/componentes/shared/atoms/select-input1/select-input1.component'
 export * from './lib/componentes/shared/atoms/button-action-edit1/button-action-edit1.component'
 export * from './lib/componentes/shared/atoms/button-action-delete1/button-action-delete1.component'
