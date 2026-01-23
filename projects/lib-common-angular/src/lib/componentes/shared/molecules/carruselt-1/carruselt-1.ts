@@ -1,5 +1,7 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input,OnDestroy  } from '@angular/core';
+import { GoogleService } from '../../../..//services/google.service';
+import { BusinessDTO } from '@juliaosistem/core-dtos';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 
 @Component({
@@ -8,7 +10,11 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
   styleUrls: ['./carruselt-1.scss'],
   imports: [CommonModule, PrimegModule, NgOptimizedImage],
 })
-export class Carruselt1 implements OnInit, OnDestroy {
+export class Carruselt1 implements OnInit,OnDestroy {
+  @Input() DatosNegocio: BusinessDTO | null = null;
+
+  constructor(private googleService: GoogleService) {}
+
  slides = [{
       id: 1,
       tag: 'Fabricación de Inflables Publicitarios',
@@ -125,7 +131,17 @@ export class Carruselt1 implements OnInit, OnDestroy {
   navigateToWhatsapp(slide: any) {
     const currentUrl = window.location.href;
     const message = `Hola, estoy en tu página ${currentUrl} y me interesa  ${slide.title}`;
-    const whatsappUrl = `https://api.whatsapp.com/send/?phone=%2B573118025433&text=${encodeURIComponent(message)}&type=phone_number&app_absent=0`;
-    window.open(whatsappUrl, '_blank');
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    // Google Ads Conversion
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+    // Google Analytics Event
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { slide: slide.title });
+    }
   }
 }

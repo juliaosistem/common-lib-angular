@@ -1,3 +1,4 @@
+export * from './lib/services/google.service';
 /*
  * Public API Surface of common-lib
  */
