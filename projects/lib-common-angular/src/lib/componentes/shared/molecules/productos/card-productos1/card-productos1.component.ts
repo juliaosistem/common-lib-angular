@@ -1,4 +1,6 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { GoogleService } from '../../../../../services/google.service';
+import { BusinessDTO } from '@juliaosistem/core-dtos';
 import { CommonModule } from '@angular/common';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { ImagenDTO, ProductoDTO } from '@juliaosistem/core-dtos';
@@ -23,6 +25,7 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   @Input() product!: ProductoView;
   @Output() addToCart = new EventEmitter<{ product: ProductoDTO, quantity: number }>();
   @Input() isLogin: boolean = false;
+  @Input() DatosNegocio: BusinessDTO | null = null;
   // Ruta base configurable desde el frontal para navegar al detalle
   @Input() detailRouteBase: string[] = ['productos'];
 
@@ -37,7 +40,8 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   constructor(
     // private currencyPipe: CurrencyPipe,
     private productService: ProductService,
-    private router: Router
+    private router: Router,
+    private googleService: GoogleService
   ) {}
 
   /**
@@ -158,7 +162,17 @@ export class CardProductos1Component implements OnInit, OnDestroy {
    * basado en si el usuario tiene sesión iniciada.
    */
   shareProductOnWhatsapp(): void {
-   this.productService.shareProductOnWhatsapp(this.shareBaseUrl, this.isLogin, this.product);
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
+    const text = `Mira este producto: ${this.product?.name ?? ''} - ${this.shareBaseUrl}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { producto: this.product?.name });
+    }
   }
 
   /**
@@ -166,8 +180,17 @@ export class CardProductos1Component implements OnInit, OnDestroy {
    * con un mensaje basado en si el usuario tiene sesión iniciada.
    */
   contactWhatsapp(): void {
-    const whatsappNumber =  '+573118025433'; 
-    this.productService.contactWhatsapp(whatsappNumber, this.shareBaseUrl, this.isLogin, this.product);
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
+    const text = `Mira este producto: ${this.product?.name ?? ''} - ${this.shareBaseUrl}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { producto: this.product?.name });
+    }
   }
     
   /**
@@ -183,10 +206,8 @@ export class CardProductos1Component implements OnInit, OnDestroy {
    */
   touchRedes(red: 'whatsapp' | 'facebook' | 'instagram') {
     const url = this.shareBaseUrl;
-    const name = this.product?.name ?? '';
     if (red === 'whatsapp') {
-      const text = `Mira este producto: ${name} - ${url}`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`,'_blank');
+      this.shareProductOnWhatsapp();
     }
     if (red === 'facebook') {
       const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;

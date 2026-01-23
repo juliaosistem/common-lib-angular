@@ -1,17 +1,17 @@
 import { Component, OnDestroy, OnInit, ElementRef, ViewChild, Renderer2, PLATFORM_ID, Inject, Input, OnChanges } from '@angular/core';
+import { GoogleService } from '../../../../services/google.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HeaderEcommerce1Component } from "../../molecules/ecommerce1/header-ecommerce1/header-ecommerce1";
-import { BarFloatEcommerce1 } from "../../molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1";
 import { FooterEcommerce1 } from "../../molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1";
 import { RouterOutlet } from '@angular/router';
 import { CategoriaDTO, MenuConfig, MenuItem, BusinessDTO} from '@juliaosistem/core-dtos';
 import { Carruselt1 } from "../../../../../public-api";
 @Component({
   selector: 'lib-ecommerce1',
-  imports: [CommonModule, DialogModule, ButtonModule, BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet, Carruselt1],
+  imports: [CommonModule, DialogModule, ButtonModule, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet, Carruselt1],
   templateUrl: './ecommerce1.html',
   styleUrl: './ecommerce1.scss',
 })
@@ -54,10 +54,12 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
   private beforeUnloadListener?: (event: BeforeUnloadEvent) => void;
   private intersectionObserver?: IntersectionObserver;
 
+  // eslint-disable-next-line max-params
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private renderer: Renderer2,
+    private googleService: GoogleService,
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
@@ -177,11 +179,17 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
 
   openWhatsappChat(message?: string): void {
     const defaultMessage = 'Hola, estoy interesado en los productos de Zigma Inflables.';
-    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433'; // Reemplazar con número real
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
     const finalMessage = message || defaultMessage;
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(finalMessage)}`;
-    window.open(whatsappUrl, '_blank');
-    
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { page: 'ecommerce1' });
+    }
   }
 
   // ===== NEWSLETTER =====
