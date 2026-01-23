@@ -5,6 +5,8 @@ import { FormsModule } from '@angular/forms';
 import { ComponentesDTO,ProductoDTO } from '@juliaosistem/core-dtos';
 type ProductoView = ProductoDTO & { nombreCategoria?: string };
 import { ProductService } from '../../../services/product.service';
+import { GoogleService } from '../../../../../services/google.service';
+import { BusinessDTO } from '@juliaosistem/core-dtos';
 import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";
 
 
@@ -54,10 +56,21 @@ export class DetalleCarrito1Component implements OnInit {
   // Variable para controlar la visibilidad del menú de compartir
   shareMenuOpen: boolean = false;
 
-  constructor(private productService: ProductService) {}
+  @Input() DatosNegocio: BusinessDTO | null =  {
+    nombreNegocio: 'Zigma Inflables',
+    logo: '../../../assets/imagenes/logoZigmaInflables.svg',
+    urlWhatssapp: 'https://tinyurl.com/zigmainflables',
+    email: 'zigmainflables.com',
+    googleAnalyticsEvent: "cotizar",
+    googleAdsConversionId: "AW-17894779083",
+    businessModule: [],
+    telefono: '+573118025433'
+  };
+  constructor(private productService: ProductService, private googleService: GoogleService) {}
 
   ngOnInit(): void {
    this.checkIsProductExists();
+   
   }
 
 /**
@@ -90,9 +103,17 @@ export class DetalleCarrito1Component implements OnInit {
   }
 
   shareProductOnWhatsapp(): void {
-    const url = window.location.href;
-    console.log(this.isLogin)
-    this.productService.contactWhatsapp('+573118025433', url, this.isLogin , this.product);
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
+    const text = `Mira este producto: ${this.product?.name ?? ''} - ${window.location.href}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { producto: this.product?.name });
+    }
   }
 
   toggleShareMenu(): void {

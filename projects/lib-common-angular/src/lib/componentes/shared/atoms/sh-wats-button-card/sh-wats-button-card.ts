@@ -1,4 +1,6 @@
-import { Component ,Input} from '@angular/core';
+import { Component ,Input } from '@angular/core';
+import { GoogleService } from '../../../..//services/google.service';
+import { BusinessDTO } from '@juliaosistem/core-dtos';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { ProductoDTO } from '@juliaosistem/core-dtos';
 import { ProductService } from '../../services/product.service';
@@ -14,6 +16,7 @@ export class ShWatsButtonCard {
 
   // producto a compartir
   @Input() product : ProductoDTO = {} as ProductoDTO;
+  @Input() DatosNegocio: BusinessDTO | null = null;
 
   // indica si el usuario está logueado
   @Input() isLogin: boolean = false;
@@ -22,13 +25,22 @@ export class ShWatsButtonCard {
   @Input() discount: number = 0;
 
    constructor(
-    private productSvc : ProductService
-
+    private productSvc : ProductService,
+    private googleService: GoogleService
   ) {}
 
   shareProductOnWhatsapp(): void {
-    const url = window.location.href;
-    this.productSvc.contactWhatsapp('+573118025433', url, this.isLogin , this.product);
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
+    const text = `Mira este producto: ${this.product?.name ?? ''} - ${window.location.href}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { producto: this.product?.name });
+    }
   }
 
 }
