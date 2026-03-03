@@ -1,0 +1,69 @@
+import { Action, StateContext, State, Selector } from '@ngxs/store';
+import { AuthResponseDTO, RegisterUserDTO } from '@juliaosistem/core-dtos';
+import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
+import { createGenericCrudActions } from './state-generic/generic-crud.actions';
+import { HttpClient } from '@angular/common/http';
+import { LibConfigService } from '../../config/lib-config.service';
+import { MetaDataService } from '../../services/meta-data.service.ts/meta-data.service';
+import { GenericCrudActions, GenericCrudState } from './state-generic/generic-crud.state';
+import { Login } from './usuarios.actions';
+import { tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
+
+// Acciones CRUD para usuarios
+const usuariosActions = createGenericCrudActions<RegisterUserDTO>('usuarios');
+export const UsuariosActions = usuariosActions;
+
+@State<PlantillaResponse<RegisterUserDTO>>({
+  name: 'usuarios',
+  defaults: {
+    data: undefined,
+    dataList: [],
+    message: '',
+    rta: false,
+  },
+})
+@Injectable()
+export class UsuariosState extends GenericCrudState<RegisterUserDTO, RegisterUserDTO> {
+  constructor(
+    private http: HttpClient,
+    private config: LibConfigService,
+    private meta: MetaDataService
+  ) {
+    const service = new GenericCrudHttpService<RegisterUserDTO>(
+      http,
+      config,
+      meta,
+      'baseUrlUsuarios'
+    );
+    super(service, UsuariosActions as unknown as GenericCrudActions<RegisterUserDTO>);
+  }
+
+  @Selector()
+  static getUsuarios(state: PlantillaResponse<RegisterUserDTO>) {
+    return state.dataList;
+  }
+  
+  @Selector()
+  static Login(state: PlantillaResponse<AuthResponseDTO>) {
+    return state;
+  }
+
+  @Action(Login)
+  login(ctx: StateContext<PlantillaResponse<AuthResponseDTO>>, action: Login) {
+    const url = this.config.get('baseUrlUsers') + '/login';
+    return this.http.post<PlantillaResponse<AuthResponseDTO>>(url, action.payload).pipe(
+      tap((response) => {
+        ctx.patchState({
+          data: response.data,
+          message: response.message,
+          rta: response.rta
+        });
+      })
+    );
+  }
+
+
+
+}

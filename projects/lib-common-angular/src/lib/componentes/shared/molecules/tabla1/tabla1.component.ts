@@ -5,7 +5,7 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { DynamicField } from '../../interfaces/dynamic-field.interface';
 import { FieldType } from '@juliaosistem/core-dtos';
-import { DynamicFieldService } from '../../services/dynamic-field.service';
+import { DynamicFieldService } from '../../../../services/dynamic-field.service';
 import { ButtonActionsRow1Component } from '../../atoms/button-actions-row1/button-actions-row1.component';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
 

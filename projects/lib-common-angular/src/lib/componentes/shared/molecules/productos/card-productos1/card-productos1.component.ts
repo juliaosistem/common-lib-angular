@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { ImagenDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 import { Router } from '@angular/router';
-import { ProductService } from '../../../services/product.service';
+import { ProductService } from '../../../../../services/product.service';
 import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";
 import { IonicModule } from '@ionic/angular';
 

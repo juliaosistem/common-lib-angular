@@ -1,17 +1,33 @@
-<form class="p-4 flex flex-column gap-3">
-    
-    
+<form class="p-4 flex flex-column gap-3" [formGroup]="isRegistering ? registerForm : loginForm" (ngSubmit)="onSubmit()">
    <lib-buttons-socialmedia-login [isRegistering]="isRegistering" [isLogout]="isLogout"></lib-buttons-socialmedia-login>
-    <lib-section-login-registro-ecomerce1></lib-section-login-registro-ecomerce1>
-    <!-- Botones de Social Login -->
-    
-    <!-- Campos del formulario -->
-     @if (isRegistering && isLogout) {
-        <lib-inputs-register-ecommerce1></lib-inputs-register-ecommerce1>
-     }@else {
-        <lib-inputs-login-ecommerce1></lib-inputs-login-ecommerce1>
-     }
-    
+   <lib-section-login-registro-ecomerce1></lib-section-login-registro-ecomerce1>
+   <!-- Botones de Social Login -->
+
+   <!-- Campos del formulario -->
+   <ng-container *ngIf="isRegistering && isLogout; else loginFields">
+      <div class="grid formgrid p-fluid">
+         <div class="col-12 field">
+            <label for="register-name" class="input-label">Nombre completo</label>
+            <input id="register-name" type="text" pInputText placeholder="John Doe" formControlName="name" required />
+         </div>
+         <div class="col-12 field">
+            <label for="register-email" class="input-label">Email</label>
+            <input id="register-email" type="email" pInputText placeholder="ejemplo@correo.com" formControlName="email" required />
+         </div>
+         <div class="col-12 field">
+            <label for="register-password" class="input-label">Contraseña</label>
+            <p-password inputId="register-password" placeholder="********" [toggleMask]="true" appendTo="body" formControlName="password"></p-password>
+         </div>
+         <div class="col-12 field">
+            <label for="register-confirm-password" class="input-label">Confirmar Contraseña</label>
+            <p-password inputId="register-confirm-password" [feedback]="false" [toggleMask]="true" formControlName="confirmPassword"></p-password>
+         </div>
+      </div>
+   </ng-container>
+   <ng-template #loginFields>
+      <lib-inputs-login-ecommerce1 [parentForm]="loginForm"></lib-inputs-login-ecommerce1>
+   </ng-template>
+
    <button pButton type="submit"
       [label]="isRegistering ? 'Registrarse' : 'Iniciar sesión'"
       class="w-full p-button-warning font-bold py-3 px-4 border-round-xl shadow-3">

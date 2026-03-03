@@ -4,7 +4,7 @@ import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { ComponentesDTO,ProductoDTO } from '@juliaosistem/core-dtos';
 type ProductoView = ProductoDTO & { nombreCategoria?: string };
-import { ProductService } from '../../../services/product.service';
+import { ProductService } from '../../../../../services/product.service';
 import { GoogleService } from '../../../../../services/google.service';
 import { BusinessDTO } from '@juliaosistem/core-dtos';
 import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";

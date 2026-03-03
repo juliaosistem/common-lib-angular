@@ -1,13 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
+import { ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-inputs-login-ecommerce1',
-  imports: [PrimegModule],
+  imports: [PrimegModule, ReactiveFormsModule, CommonModule],
   templateUrl: './inputs-login-ecommerce1.html',
   styleUrl: './inputs-login-ecommerce1.scss'
 })
 export class InputsLoginEcommerce1 {
+  @Input() parentForm!: FormGroup;
   remember = false;
 
   

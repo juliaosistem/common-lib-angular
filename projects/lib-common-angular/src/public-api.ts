@@ -30,7 +30,7 @@ export * from './lib/componentes/daskboards/daskboard2/index2/index2.component';
 export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
 export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.component';
 export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
-export * from './lib/componentes/shared/services/dynamic-field.service';
+export * from './lib/services/dynamic-field.service';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
 export * from './lib/componentes/shared/pages/notfound/notfound';
 export * from './lib/componentes/shared/molecules/inflatable-customizer/customizer.component';
@@ -38,7 +38,7 @@ export * from './lib/componentes/shared/molecules/inflatable-customizer/customiz
 export * from './lib/componentes/shared/interfaces/menu.interface';
 export * from './lib/componentes/shared/atoms/menu-item1/menu-item1.component';
 export * from './lib/componentes/daskboards/daskboard3/atoms/dynamic-menu1/dynamic-menu1.component';
-export * from './lib/componentes/shared/services/dynamic-menu.service';
+export * from './lib/services/dynamic-menu.service';
 export * from './lib/componentes/daskboards/daskboard3/moleculas/menu/menu.component';
 
 // Dashboard3 y sus componentes
@@ -109,9 +109,9 @@ export * from './lib/config/lib-config.module';
 export * from './lib/modulos/core.lib.module';
 
 //servicios
-export * from './lib/componentes/shared/services/product.service';
-export * from './lib/componentes/shared/services/categorias-productos.service';
-export * from './lib/componentes/shared/services/meta-data.service.ts/meta-data.service';
+export * from './lib/services/product.service';
+export * from './lib/services/categorias-productos.service';
+export * from './lib/services/meta-data.service.ts/meta-data.service';
 
 
 // Estados y acciones
@@ -120,6 +120,7 @@ export * from './lib/assets/state/productos.state';
 export * from './lib/assets/state/currency.state';
 export * from './lib/assets/state/business.state';
 export * from './lib/assets/state/usuarios.actions';
+export * from './lib/assets/state/usuarios.state';
 export * from './lib/assets/state/categorias-productos.state'
 
 //routes

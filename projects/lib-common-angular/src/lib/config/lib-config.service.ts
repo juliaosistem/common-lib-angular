@@ -18,7 +18,7 @@ export class LibConfigService {
   private config: LibCommonConfig = {
     baseUrlProducts: 'http://localhost:3000/products',
     baseUrlAuth: 'http://localhost:3000/auth',
-    baseUrlUsers: 'http://localhost:3000/users',
+    baseUrlUsers: 'http://localhost:1212/user',
     baseUrlBusiness: 'http://localhost:3000/Business',
     baseUrlCurrency: 'http://localhost:3000/Currency',
     baseUrlCategoryProduct: 'http://localhost:3000/category-products',
