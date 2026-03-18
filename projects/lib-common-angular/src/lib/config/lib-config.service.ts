@@ -4,6 +4,7 @@ export interface LibCommonConfig {
   baseUrlProducts?: string;
   baseUrlAuth?: string;
   baseUrlUsers?: string;
+  baseUrlCarrito?: string;
   apiVersion?: string;
   timeout?: number;
   [key: string]: unknown;
@@ -19,6 +20,7 @@ export class LibConfigService {
     baseUrlProducts: 'http://localhost:3000/products',
     baseUrlAuth: 'http://localhost:3000/auth',
     baseUrlUsers: 'http://localhost:1212/user',
+    baseUrlCarrito: 'http://localhost:3000/carrito',
     baseUrlBusiness: 'http://localhost:3000/Business',
     baseUrlCurrency: 'http://localhost:3000/Currency',
     baseUrlCategoryProduct: 'http://localhost:3000/category-products',

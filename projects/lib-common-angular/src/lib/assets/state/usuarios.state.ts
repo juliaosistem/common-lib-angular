@@ -3,11 +3,13 @@ import { AuthResponseDTO, RegisterUserDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { createGenericCrudActions } from './state-generic/generic-crud.actions';
 import { HttpClient } from '@angular/common/http';
+import { getLibraryInjector } from '../../utils/library-injector';
 import { LibConfigService } from '../../config/lib-config.service';
 import { MetaDataService } from '../../services/meta-data.service.ts/meta-data.service';
-import { GenericCrudActions, GenericCrudState } from './state-generic/generic-crud.state';
+import { GenericCrudActions, GenericCrudState, LazyGenericCrudHttpService } from './state-generic/generic-crud.state';
 import { Login } from './usuarios.actions';
 import { tap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
 
@@ -26,17 +28,8 @@ export const UsuariosActions = usuariosActions;
 })
 @Injectable()
 export class UsuariosState extends GenericCrudState<RegisterUserDTO, RegisterUserDTO> {
-  constructor(
-    private http: HttpClient,
-    private config: LibConfigService,
-    private meta: MetaDataService
-  ) {
-    const service = new GenericCrudHttpService<RegisterUserDTO>(
-      http,
-      config,
-      meta,
-      'baseUrlUsuarios'
-    );
+  constructor() {
+    const service = new LazyGenericCrudHttpService<RegisterUserDTO>('baseUrlUsuarios') as unknown as GenericCrudHttpService<RegisterUserDTO>;
     super(service, UsuariosActions as unknown as GenericCrudActions<RegisterUserDTO>);
   }
 
@@ -52,16 +45,24 @@ export class UsuariosState extends GenericCrudState<RegisterUserDTO, RegisterUse
 
   @Action(Login)
   login(ctx: StateContext<PlantillaResponse<AuthResponseDTO>>, action: Login) {
-    const url = this.config.get('baseUrlUsers') + '/login';
-    return this.http.post<PlantillaResponse<AuthResponseDTO>>(url, action.payload).pipe(
-      tap((response) => {
-        ctx.patchState({
-          data: response.data,
-          message: response.message,
-          rta: response.rta
-        });
-      })
-    );
+    try {
+      const injector = getLibraryInjector();
+      const http = injector.get(HttpClient);
+      const config = injector.get(LibConfigService);
+      const url = (config.get('baseUrlUsers') as string) + '/login';
+      return http.post<PlantillaResponse<AuthResponseDTO>>(url, action.payload).pipe(
+        tap((response) => {
+          ctx.patchState({
+            data: response.data,
+            message: response.message,
+            rta: response.rta,
+          });
+        })
+      );
+    } catch (e) {
+      // Injector not ready or service missing
+      return throwError(() => new Error('Library injector not initialized')) as unknown as any;
+    }
   }
 
 

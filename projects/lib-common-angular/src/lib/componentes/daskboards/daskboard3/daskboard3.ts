@@ -4,7 +4,7 @@ import { NavigationEnd, Router, RouterModule, ActivatedRoute } from '@angular/ro
 import { filter, Subscription } from 'rxjs';
 import { AppTopbar } from './moleculas/app.topbar';
 import { AppFooter } from './moleculas/app.footer';
-import { LayoutService } from '../../shared/services/layout.service';
+import { LayoutService } from '../../../services/layout.service';
 import { MenuConfig } from '@juliaosistem/core-dtos';
 import { MenuComponent } from "./moleculas/menu/menu.component";
 
@@ -12,17 +12,88 @@ import { MenuComponent } from "./moleculas/menu/menu.component";
     selector: 'lib-daskboard3',
     standalone: true,
     imports: [CommonModule, AppTopbar, RouterModule, AppFooter,  MenuComponent],
-    template: `<div class="layout-wrapper" [ngClass]="containerClass">
+    template: `<div class="db3-wrapper layout-wrapper" [ngClass]="containerClass">
         <lib-topbar3></lib-topbar3>
-        <lib-menu [menuConfig]="menuConfig" [userPermissions]="userPermissions"></lib-menu>
-        <div class="layout-main-container">
-            <div class="layout-main">
+                <lib-menu
+                    [menuConfig]="menuConfig"
+                    [userPermissions]="userPermissions"
+                    [class.db3-menu-hidden]="!isSidebarVisible"
+                ></lib-menu>
+        <div class="db3-main-container layout-main-container flex flex-column justify-content-between"
+             [ngClass]="mainContainerClass">
+            <div class="db3-main layout-main flex-1">
                 <router-outlet></router-outlet>
             </div>
             <lib-footer3></lib-footer3>
         </div>
-        <div class="layout-mask animate-fadein"></div>
-    </div> `
+        <div class="db3-mask layout-mask animate-fadein" [ngClass]="{'db3-mask--active': isMaskVisible}" (click)="hideMenu()"></div>
+    </div> `,
+    styles: [`
+        :host {
+            display: block;
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        .db3-wrapper {
+            min-height: 100vh;
+            position: relative;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        .db3-main-container {
+            min-height: 100vh;
+            width: auto;
+            max-width: 100%;
+            box-sizing: border-box;
+            padding: 6rem 2rem 0 2rem;
+            transition: margin-left var(--layout-section-transition-duration, 0.2s);
+            overflow-x: hidden;
+        }
+
+        .db3-main-container--static { margin-left: 22rem; }
+        .db3-main-container--static-inactive { margin-left: 0; padding-left: 2rem; }
+        .db3-main-container--overlay { margin-left: 0; padding-left: 2rem; }
+
+        .db3-main {
+            flex: 1 1 auto;
+            padding-bottom: 2rem;
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        .db3-menu-hidden {
+            display: none !important;
+        }
+
+        .db3-mask {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 998;
+            width: 100%; height: 100%;
+            background-color: var(--maskbg, rgba(0,0,0,.4));
+        }
+        .db3-mask--active { display: block; }
+
+        @media (max-width: 991px) {
+            .db3-main-container {
+                margin-left: 0 !important;
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            .db3-mask { display: none; }
+        }
+
+        @media (max-width: 575px) {
+            .db3-main-container {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+        }
+    `]
 })
 export class DaskBoard3 implements OnInit {
     @Input() menuConfig?: MenuConfig;
@@ -75,12 +146,6 @@ export class DaskBoard3 implements OnInit {
             }
         });
 
-        // Listener explícito para cerrar al hacer click en la máscara en móviles
-        const maskEl = document.querySelector('.layout-mask');
-        if (maskEl) {
-            this.renderer.listen(maskEl, 'click', () => this.hideMenu());
-        }
-
         // Si no se proporciona menuConfig, usar configuración por defecto
         if (!this.menuConfig) {
             console.warn('Dashboard3: No se proporcionó menuConfig, usando configuración por defecto');
@@ -89,7 +154,7 @@ export class DaskBoard3 implements OnInit {
 
     isOutsideClicked(event: MouseEvent) {
         const sidebarEl = document.querySelector('.layout-sidebar');
-        const topbarEl = document.querySelector('.layout-menu-button');
+        const topbarEl = document.querySelector('.layout-menu-button, .db3-menu-button');
         const eventTarget = event.target as Node;
 
         return !(sidebarEl?.isSameNode(eventTarget) || sidebarEl?.contains(eventTarget) || topbarEl?.isSameNode(eventTarget) || topbarEl?.contains(eventTarget));
@@ -122,13 +187,33 @@ export class DaskBoard3 implements OnInit {
 
     get containerClass() {
         return {
-            'layout-wrapper': true,
             'layout-overlay': this.layoutService.layoutConfig().menuMode === 'overlay',
             'layout-static': this.layoutService.layoutConfig().menuMode === 'static',
             'layout-static-inactive': this.layoutService.layoutState().staticMenuDesktopInactive && this.layoutService.layoutConfig().menuMode === 'static',
             'layout-overlay-active': this.layoutService.layoutState().overlayMenuActive,
             'layout-mobile-active': this.layoutService.layoutState().staticMenuMobileActive
         };
+    }
+
+    get mainContainerClass() {
+        const mode = this.layoutService.layoutConfig().menuMode;
+        const state = this.layoutService.layoutState();
+        return {
+            'db3-main-container--overlay': mode === 'overlay',
+            'db3-main-container--static': mode === 'static' && !state.staticMenuDesktopInactive,
+            'db3-main-container--static-inactive': mode === 'static' && state.staticMenuDesktopInactive
+        };
+    }
+
+    get isMaskVisible(): boolean {
+        return !!this.layoutService.layoutState().staticMenuMobileActive;
+    }
+
+    get isSidebarVisible(): boolean {
+        if (this.layoutService.isMobile()) {
+            return !!this.layoutService.layoutState().staticMenuMobileActive;
+        }
+        return !this.layoutService.layoutState().staticMenuDesktopInactive;
     }
 
     ngOnDestroy() {

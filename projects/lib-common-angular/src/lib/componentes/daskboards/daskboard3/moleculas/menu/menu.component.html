@@ -39,9 +39,11 @@
 
       <!-- Menú dinámico -->
       <div class="menu-wrapper">
-        <app-dynamic-menu1 [menuId]="menuId" [userPermissions]="userPermissions" [menuConfig]="menuConfig"
+        @if (hasValidMenuConfig) {
+          <app-dynamic-menu1 [menuId]="menuId" [userPermissions]="userPermissions" [menuConfig]="menuConfig"
           (menuEvent)="onMenuEvent($event)" (menuLoaded)="onMenuLoaded($event)"
           (menuError)="onMenuError($event)"></app-dynamic-menu1>
+        }
       </div>
 
 

@@ -4,20 +4,23 @@
   [rows]="rows"
   [paginator]="paginator"
   [globalFilterFields]="['name']"
-  [tableStyle]="{ 'min-width': '75rem' }"
+  [tableStyle]="{ width: '100%' }"
   [selection]="selectedItems"
   (selectionChange)="onSelectionChange($event)"
   [rowHover]="true"
   dataKey="id"
+  responsiveLayout="stack"
+  breakpoint="991px"
+  styleClass="tabla1-table"
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
   [showCurrentPageReport]="showCurrentPageReport"
   [rowsPerPageOptions]="rowsPerPageOptions"
 >
   <ng-template #header>
     <tr *ngIf="showDefaultHeader">
-      <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
-      <th style="width: 8rem">Actions</th>
-      <th *ngFor="let field of displayFields" style="min-width: 12rem">
+      <th class="tabla1-col-select"><p-tableHeaderCheckbox /></th>
+      <th class="tabla1-col-actions">Actions</th>
+      <th *ngFor="let field of displayFields" class="tabla1-col-data">
         {{ field.label }}
       </th>
     </tr>
@@ -25,21 +28,29 @@
 
   <ng-template #body let-item>
     <tr *ngIf="showDefaultBody">
-      <td style="width: 3rem"><p-tableCheckbox [value]="item" /></td>
-      <td style="width: 8rem">
+      <td class="tabla1-cell-select" data-label="Select">
+        <span class="p-column-title">Select</span>
+        <p-tableCheckbox [value]="item" />
+      </td>
+      <td class="tabla1-cell-actions" data-label="Actions">
+        <span class="p-column-title">Actions</span>
         <div class="flex gap-2 items-center">
           <lib-button-actions-row1 [item]="item" (edit)="onEditItem($event)">
           </lib-button-actions-row1>
         </div>
       </td>
-      <td *ngFor="let field of displayFields">
+      <td
+        *ngFor="let field of displayFields"
+        class="tabla1-cell-data"
+        [attr.data-label]="field.label"
+      >
+        <span class="p-column-title">{{ field.label }}</span>
         <ng-container [ngSwitch]="field.type">
           <img
             *ngSwitchCase="'img'"
             [src]="getImageUrl(field, getValue(item, field))"
             [alt]="getImageAltText(field, item)"
-            style="width: 64px"
-            class="rounded"
+            class="tabla1-image rounded"
           />
 
           <span *ngSwitchCase="'checkbox'" class="flex items-center gap-2">
@@ -53,7 +64,7 @@
             <span>{{ getValue(item, field) ? 'Yes' : 'No' }}</span>
           </span>
 
-          <span *ngSwitchDefault>
+          <span *ngSwitchDefault class="tabla1-cell-text">
             {{ formatDynamicFieldValue(field, getValue(item, field)) }}
           </span>
         </ng-container>

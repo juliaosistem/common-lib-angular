@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { decodeBusinessToken, getSessionToken } from '../../utils/business-token.util';
 
 @Injectable({ providedIn: 'root' })
 export class MetaDataService {
@@ -29,17 +30,10 @@ export class MetaDataService {
 
   public getIdBusinessFromSession(): string | number {
     // Busca primero en localStorage, luego en sessionStorage, luego en JWT (si existe)
-    let idBusiness = localStorage.getItem('idBusiness') || sessionStorage.getItem('idBusiness');
+    let idBusiness: string | number | null = localStorage.getItem('idBusiness') || sessionStorage.getItem('idBusiness');
     if (!idBusiness) {
-      const jwt = this.getToken();
-      if (jwt) {
-        try {
-          const payload = this.decodeJwt(jwt);
-          idBusiness = payload?.idBusiness;
-        } catch (error) {
-          console.error('Error al decodificar JWT para obtener idBusiness:', error);
-        }
-      }
+      const payload = this.getSessionPayload();
+      idBusiness = (payload?.idBusiness as string | number | undefined) || null;
     }
     return idBusiness || '1';
   }
@@ -48,15 +42,8 @@ export class MetaDataService {
     // Busca primero en localStorage, luego en sessionStorage, luego en JWT (si existe)
     let idDatosUsuario = localStorage.getItem('idDatosUsuario') || sessionStorage.getItem('idDatosUsuario');
     if (!idDatosUsuario) {
-      const jwt = this.getToken();
-      if (jwt) {
-        try {
-          const payload = this.decodeJwt(jwt);
-          idDatosUsuario = payload?.sub || payload?.idDatosUsuario;
-        } catch (error) {
-          console.error('Error al decodificar JWT para obtener idDatosUsuario:', error);
-      }
-      }
+      const payload = this.getSessionPayload();
+      idDatosUsuario = (payload?.sub as string | undefined) || (payload?.id as string | undefined) || (payload?.['idDatosUsuario'] as string | undefined) || null;
     }
     return idDatosUsuario || 'userX';
   }
@@ -65,15 +52,8 @@ export class MetaDataService {
     // Busca primero en localStorage, luego en sessionStorage, luego en JWT (si existe)
     let usuario = localStorage.getItem('usuario') || sessionStorage.getItem('usuario');
     if (!usuario) {
-      const jwt = this.getToken();
-      if (jwt) {
-        try {
-          const payload = this.decodeJwt(jwt);
-          usuario = payload?.usuario || payload?.email || payload?.username;
-        } catch (error) {
-          console.error('Error al decodificar JWT para obtener usuario:', error);
-        }
-      }
+      const payload = this.getSessionPayload();
+      usuario = (payload?.usuario as string | undefined) || (payload?.email as string | undefined) || (payload?.username as string | undefined) || null;
     }
     return usuario || 'admin';
   }
@@ -86,19 +66,8 @@ export class MetaDataService {
     return localStorage.getItem('dominio') || sessionStorage.getItem('dominio') || 'app';
   }
 
-  private getToken(): string | null {
-    return localStorage.getItem('token') || sessionStorage.getItem('token');
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private decodeJwt(token: string): any {
-    // Decodifica un JWT (sin validación de firma)
-    try {
-      const payload = token.split('.')[1];
-      return JSON.parse(atob(payload.replace(/-/g, '+').replace(/_/g, '/')));
-    } catch (error) {
-      console.error('Error al decodificar JWT:', error);
-      return null;
-    }
+  private getSessionPayload() {
+    const token = getSessionToken();
+    return decodeBusinessToken(token);
   }
 }

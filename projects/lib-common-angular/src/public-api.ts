@@ -4,10 +4,6 @@ export * from './lib/services/google.service';
  */
 
 
-export * from './lib/common-lib.service';
-export * from './lib/common-lib.component';
-
-
 // Estados y acciones
 /* export * from './lib/assets/state/tabla1.state';
 export * from './lib/assets/state/tabla1.actions'; */
@@ -32,6 +28,7 @@ export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.comp
 export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
 export * from './lib/services/dynamic-field.service';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
+export * from './lib/componentes/shared/molecules/user-profile-dialog1/user-profile-dialog1.component';
 export * from './lib/componentes/shared/pages/notfound/notfound';
 export * from './lib/componentes/shared/molecules/inflatable-customizer/customizer.component';
 // Menú dinámico
@@ -110,14 +107,20 @@ export * from './lib/modulos/core.lib.module';
 
 //servicios
 export * from './lib/services/product.service';
+export * from './lib/services/auth-service';
+export * from './lib/services/cart.service';
 export * from './lib/services/categorias-productos.service';
 export * from './lib/services/meta-data.service.ts/meta-data.service';
+
+// library injector helper (set by host app)
+export * from './lib/utils/library-injector';
+export * from './lib/utils/business-token.util';
 
 
 // Estados y acciones
 export * from './lib/assets/state/state-generic/generic-crud.state';
 export * from './lib/assets/state/productos.state';
-export * from './lib/assets/state/currency.state';
+export * from './lib/assets/state/moneda.state';
 export * from './lib/assets/state/business.state';
 export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/usuarios.state';

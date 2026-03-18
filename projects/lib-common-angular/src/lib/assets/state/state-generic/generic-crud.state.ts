@@ -3,6 +3,58 @@ import { Injectable } from '@angular/core';
 import { StateContext, Selector, Action, createSelector } from '@ngxs/store';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { GenericCrudHttpService } from '../../../componentes/shared/services/generic-crud.service/generic-crud.service';
+import { HttpClient } from '@angular/common/http';
+import { LibConfigService } from '../../../config/lib-config.service';
+import { MetaDataService } from '../../../componentes/shared/services/meta-data.service.ts/meta-data.service';
+import { getLibraryInjector } from '../../../utils/library-injector';
+
+/**
+ * Lazy wrapper for GenericCrudHttpService that defers obtaining the real
+ * GenericCrudHttpService until the library injector is available. This
+ * prevents calling `getLibraryInjector()` during state construction which
+ * can run before the host app registers the global injector.
+ */
+export class LazyGenericCrudHttpService<RES> {
+  private realService: GenericCrudHttpService<RES> | null = null;
+
+  constructor(private readonly baseUrlKey: string) {}
+
+  private ensureReal(): void {
+    if (!this.realService) {
+      const injector = getLibraryInjector();
+      const http = injector.get(HttpClient);
+      const config = injector.get(LibConfigService);
+      const meta = injector.get(MetaDataService);
+      this.realService = new GenericCrudHttpService<RES>(http, config, meta, this.baseUrlKey);
+    }
+  }
+
+  all(payload: any) {
+    this.ensureReal();
+    return this.realService!.all(payload);
+  }
+
+  add(payload: any, queryParams: any) {
+    this.ensureReal();
+    return this.realService!.add(payload, queryParams);
+  }
+
+  update(payload: any, queryParams: any) {
+    this.ensureReal();
+    return this.realService!.update(payload, queryParams);
+  }
+
+  delete(queryParams: any) {
+    this.ensureReal();
+    return this.realService!.delete(queryParams);
+  }
+
+  getMockData?() {
+    this.ensureReal();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (this.realService as any).getMockData?.();
+  }
+}
 import { tap } from 'rxjs';
 
 export interface GenericCrudActions<RQ> {

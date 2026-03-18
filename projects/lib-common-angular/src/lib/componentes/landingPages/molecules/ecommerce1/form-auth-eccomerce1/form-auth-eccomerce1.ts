@@ -3,14 +3,13 @@ import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { SectionLoginRegistroEcomerce1 } from "../../../atoms/ecommerce1/section-login-registro-ecomerce1/section-login-registro-ecomerce1";
 import { InputsLoginEcommerce1 } from "../../../atoms/ecommerce1/inputs-login-ecommerce1/inputs-login-ecommerce1";
 import { ButtonsSocialmediaLogin } from "../../../atoms/ecommerce1/buttons-socialmedia-login/buttons-socialmedia-login";
-import { InputsRegisterEcommerce1 } from '../../../atoms/ecommerce1/inputs-register-ecommerce1/inputs-register-ecommerce1';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { LoginDTO, RegisterUserDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-form-auth-eccomerce1',
-  imports: [PrimegModule, SectionLoginRegistroEcomerce1, InputsLoginEcommerce1, ButtonsSocialmediaLogin, InputsRegisterEcommerce1, ReactiveFormsModule, CommonModule],
+  imports: [PrimegModule, SectionLoginRegistroEcomerce1, InputsLoginEcommerce1, ButtonsSocialmediaLogin, ReactiveFormsModule, CommonModule],
   templateUrl: './form-auth-eccomerce1.html',
   styleUrl: './form-auth-eccomerce1.css'
 })

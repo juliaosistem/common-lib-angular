@@ -1,5 +1,5 @@
 // En crud.ts - Agregar las propiedades para el sistema dinámico
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -31,7 +31,7 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
     templateUrl: './crud.component.html',
     providers: [MessageService, ConfirmationService]
 })
-export class Crud implements OnInit {
+export class Crud implements OnInit, OnChanges {
     @Input() showDialog: boolean = false;
     @Input() submitted: boolean = false;
     @Input() loaded: boolean = false;
@@ -78,6 +78,13 @@ export class Crud implements OnInit {
 
     ngOnInit() {
         this.initFields();
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['data'] && this.data?.length > 0) {
+            this.fields = [];
+            this.initFields();
+        }
     }
 initFields() {
     // Inicializar campos dinámicos si no se han generado

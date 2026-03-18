@@ -41,6 +41,10 @@ export class MenuComponent implements OnInit {
 
   constructor(private menuService: DynamicMenuService) {}
 
+  get hasValidMenuConfig(): boolean {
+    return !!this.menuConfig && Array.isArray(this.menuConfig.items);
+  }
+
   ngOnInit() {
     // Usar configuración inicial si se proporciona
     if (this.initialConfig) {
@@ -49,6 +53,7 @@ export class MenuComponent implements OnInit {
     
       if (this.menuConfig) {
             this.menuId = this.menuConfig.id || 'dashboard3-menu';
+        this.menuConfig = this.normalizeConfig(this.menuConfig);
         }
         
         // Inicializar el menú dinámico
@@ -57,7 +62,10 @@ export class MenuComponent implements OnInit {
 
     private initializeDynamicMenu() {
         // Configurar el menú dinámico para el dashboard3
-        this.menuService.updateMenuConfig(this.menuId, this.menuConfig!);
+      if (this.menuConfig) {
+        this.menuService.updateMenuConfig(this.menuId, this.menuConfig);
+          this.loadMenuInfo();
+      }
     }
 
   async loadMenuInfo() {
@@ -73,9 +81,12 @@ export class MenuComponent implements OnInit {
   }
 
   countMenuItems(items: MenuItem[]): number {
+    if (!Array.isArray(items)) {
+      return 0;
+    }
     let count = items.length;
     items.forEach(item => {
-      if (item.items) {
+      if (Array.isArray(item.items)) {
         count += this.countMenuItems(item.items);
       }
     });
@@ -170,7 +181,7 @@ export class MenuComponent implements OnInit {
   }
 
   public setMenuConfig(config: MenuConfig) {
-    this.menuConfig = { ...config };
+    this.menuConfig = this.normalizeConfig(config);
   }
 
   public clearEventLog() {
@@ -183,6 +194,24 @@ export class MenuComponent implements OnInit {
 
   public getEventLog() {
     return [...this.eventLog];
+  }
+
+  private normalizeConfig(config: MenuConfig): MenuConfig {
+    return {
+      ...config,
+      items: this.normalizeItems(config.items as unknown as MenuItem[]),
+    };
+  }
+
+  private normalizeItems(items: MenuItem[] | undefined): MenuItem[] {
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    return items.map((item) => ({
+      ...item,
+      items: this.normalizeItems(item.items as unknown as MenuItem[]),
+    }));
   }
 
   

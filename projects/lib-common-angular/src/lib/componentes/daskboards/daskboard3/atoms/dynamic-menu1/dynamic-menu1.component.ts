@@ -67,9 +67,12 @@ export class DynamicMenu1Component implements OnInit {
   }
 
   private setConfig(config: MenuConfig) {
-    this.config = config;
+    this.config = {
+      ...config,
+      items: this.normalizeItems(config.items),
+    };
     this.collapsed = config.collapsed ?? false;
-    this.menuManager = new MenuManager(config);
+    this.menuManager = new MenuManager(this.config);
     this.updateMenuItems();
   }
 
@@ -83,7 +86,7 @@ export class DynamicMenu1Component implements OnInit {
       items = this.menuManager.filterByPermissions(this.userPermissions);
     }
 
-    this.menuItems = items;
+    this.menuItems = Array.isArray(items) ? items : [];
   }
 
   getMenuClasses(): string {
@@ -175,6 +178,10 @@ export class DynamicMenu1Component implements OnInit {
 
   // Buscar un item por ID recursivamente
   private findItemById(id: string, items: MenuItem[]): MenuItem | null {
+    if (!Array.isArray(items)) {
+      return null;
+    }
+
     for (const item of items) {
       if (item.id === id) {
         return item;
@@ -235,5 +242,16 @@ export class DynamicMenu1Component implements OnInit {
 
   refreshMenu() {
     this.loadMenu();
+  }
+
+  private normalizeItems(items: MenuItem[] | undefined): MenuItem[] {
+    if (!Array.isArray(items)) {
+      return [];
+    }
+
+    return items.map((item) => ({
+      ...item,
+      items: this.normalizeItems(item.items as unknown as MenuItem[]),
+    }));
   }
 } 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, AfterViewInit, ElementRef, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter, AfterViewInit, ElementRef, OnChanges, OnDestroy, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
@@ -8,6 +8,8 @@ import { CardProductos1Component } from "../../../../shared/molecules/productos/
 import { SectionImagesInstagramEcommerce1 } from '../../../molecules/ecommerce1/section-images-instagram-ecommerce1/section-images-instagram-ecommerce1';
 import { PaginatorPgComponent } from '../../../../shared/atoms/paginator-pg/paginator-pg.component';
 import { BusinessDTO, CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaosistem/core-dtos';
+import { CartService } from '../../../../../services/cart.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-home-ecommerce1',
@@ -24,7 +26,7 @@ import { BusinessDTO, CategoriaDTO, ComponentesDTO, ProductoDTO } from '@juliaos
   templateUrl: './home-ecommerce1.html',
   styleUrls: ['./home-ecommerce1.scss']
 })
-export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges {
+export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges, OnDestroy {
 
   // Metadata del componente    
   componente: ComponentesDTO = {
@@ -46,8 +48,12 @@ export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges {
   // ===== Outputs para eventos hacia la app =====
   @Output() productClicked = new EventEmitter<ProductoDTO>();
   @Output() categorySelected = new EventEmitter<string>();
+  private readonly destroy$ = new Subject<void>();
 
-  constructor(private el: ElementRef) {}
+  constructor(
+    private readonly el: ElementRef,
+    private readonly cartService: CartService,
+  ) {}
 
   ngOnInit(): void {
     this.filteredProducts = this.getAllProducts();
@@ -61,6 +67,11 @@ export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges {
   }
   ngAfterViewInit() {
     this.iniciarAnimacionScroll();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
@@ -134,10 +145,11 @@ export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges {
     this.productClicked.emit(product);
   }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-onAddToCart(event: any) {
-  console.log("Evento recibido:", event);
-}
+  onAddToCart(event: { product: ProductoDTO; quantity: number }): void {
+    this.cartService.addOrUpdateProduct(event.product, event.quantity)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+  }
   onCategoryFilter(category: string): void {
     this.applyCategoryFilter(category);
     this.categorySelected.emit(category);

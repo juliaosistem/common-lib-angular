@@ -1,6 +1,5 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
 import { provideHttpClient } from '@angular/common/http';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
@@ -12,12 +11,12 @@ import { ProductosState } from 'lib-common-angular';
 /* import { CategoriasProductosState } from 'lib-common-angular';
  */
 import { AppComponent } from './app/app.component';
-import { routes } from './app/app.routes';
+// routes removed from demo providers to avoid duplicate Router provision when
+// the library/demo is bundled into a host app that already provides Router.
 import { MessageService } from 'primeng/api';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideRouter(routes),
     provideHttpClient(),
     provideAnimations(),
     MessageService,

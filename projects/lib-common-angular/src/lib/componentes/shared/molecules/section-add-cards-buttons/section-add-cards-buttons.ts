@@ -1,5 +1,5 @@
 import { ProductoDTO } from '@juliaosistem/core-dtos';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ShWatsButtonCard } from "../../atoms/sh-wats-button-card/sh-wats-button-card";
 import { ButtonAddToCard1 } from "../../atoms/button-add-to-card1/button-add-to-card1";
 
@@ -13,10 +13,10 @@ export class SectionAddCardsButtons {
 
   @Input() product!: ProductoDTO;
   @Input() isLogin: boolean = false;
+  @Output() addToCart = new EventEmitter<{ product: ProductoDTO; quantity: number }>();
 
   onAddToCart(event: { product: ProductoDTO; quantity: number }): void {
-    // Aquí puedes manejar el evento de agregar al carrito si es necesario
-    console.log('Producto agregado al carrito:', event);
+    this.addToCart.emit(event);
   }
 
 }

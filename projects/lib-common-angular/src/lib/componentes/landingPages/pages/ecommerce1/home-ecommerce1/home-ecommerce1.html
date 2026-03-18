@@ -22,7 +22,7 @@
                     @for (product of items; track $index) {
                     <div class="col-12 md:col-6 p-5 lg:p-3 lg:col-4 product-card-animation"
                             [style.transition-delay]="($index * 30) + 'ms'">
-                            <lib-card-productos1 [DatosNegocio]="bussinesDTO" [product]="product" [detailRouteBase]="detailRouteBase" (addToCart)="onAddToCart($event)">
+                            <lib-card-productos1 [DatosNegocio]="bussinesDTO" [product]="product" [isLogin]="isLogin" [detailRouteBase]="detailRouteBase" (addToCart)="onAddToCart($event)">
                             </lib-card-productos1>
                     </div>
                     }
