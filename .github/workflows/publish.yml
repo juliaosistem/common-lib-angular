@@ -93,7 +93,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
-          echo "📦 Publicando en npm..."
+          echo "📦 Publicando en Nexus..."
+          npm config set registry "http://nexus.juliaosistem-server.in:30080/repository/npm-hosted/"
           npm run publish:npm
           echo "✅ Publicación completada."
 
