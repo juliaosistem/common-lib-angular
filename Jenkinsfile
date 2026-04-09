@@ -121,10 +121,11 @@ pipeline {
                             fi
 
                             AUTH_TOKEN=$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)
+                              AUTH_REGISTRY=$(echo "$TARGET_NPM_REGISTRY" | sed -E 's#^https?://##')
                             cat > .npmrc <<EOF
 registry=$TARGET_NPM_REGISTRY
-//nexus.twincode.site/:_auth=$AUTH_TOKEN
-//nexus.twincode.site/:always-auth=true
+//$AUTH_REGISTRY:_auth=$AUTH_TOKEN
+//$AUTH_REGISTRY:always-auth=true
 EOF
 
                             # Versionado
@@ -154,11 +155,21 @@ EOF
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
                         sh '''
                             set -e
+                              cd dist/lib-common-angular
                             if [ "$BRANCH_NAME" = "master" ]; then
                                 TARGET_NPM_REGISTRY="$NEXUS_NPM_HOSTED"
                             else
                                 TARGET_NPM_REGISTRY="$NEXUS_NPM_SNAPSHOTS"
                             fi
+
+                              AUTH_TOKEN=$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)
+                              AUTH_REGISTRY=$(echo "$TARGET_NPM_REGISTRY" | sed -E 's#^https?://##')
+                              cat > .npmrc <<EOF
+registry=$TARGET_NPM_REGISTRY
+//$AUTH_REGISTRY:_auth=$AUTH_TOKEN
+//$AUTH_REGISTRY:always-auth=true
+EOF
+
                             npm view lib-common-angular version --registry "$TARGET_NPM_REGISTRY" >/dev/null
                             echo "Paquete lib-common-angular verificado en $TARGET_NPM_REGISTRY"
                         '''
