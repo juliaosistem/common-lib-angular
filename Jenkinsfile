@@ -42,10 +42,10 @@ pipeline {
 
     environment {
         NEXUS_DOMAIN = 'nexus.juliaosistem-server.in'
+        NEXUS_NPM_SNAPSHOTS = 'http://nexus.juliaosistem-server.in:30080/repository/npm-snapshots/'
+        NEXUS_NPM_HOSTED = 'http://nexus.juliaosistem-server.in:30080/repository/npm-hosted/'
         // Docker Registry: Dominio + Puerto NodePort
-        NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOMAIN}:30500"
-        // NPM Registry: URL Completa
-        NEXUS_NPM_REGISTRY = "http://${env.NEXUS_DOMAIN}:30080/repository/npm-private/"
+        NEXUS_DOCKER_REGISTRY = 'nexus.juliaosistem-server.in:30500'
         
         GIT_CREDS_ID = 'credencialesgit'
         NEXUS_CREDS_ID = 'nexus-credentials'
@@ -94,29 +94,38 @@ pipeline {
         }
 
         stage('Publish to Nexus NPM') {
-            when { anyOf { branch 'master'; branch 'develop'; branch 'desplieges' } }
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'desplieges'
+                }
+            }
             steps {
                 container('nodejs') {
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
                         sh '''
                             set -e
                             cd dist/lib-common-angular
-                            
-                            # Calculamos hostpath para el .npmrc
-                            hostpath=$(echo "$NEXUS_NPM_REGISTRY" | sed -E 's|https?://||; s|/$||')
 
-                            # Generamos el .npmrc con el token base64
-                            printf "registry=%s\n//%s/:_auth=%s\n//%s/:always-auth=true\n" \
-                                "$NEXUS_NPM_REGISTRY" \
-                                "$hostpath" \
-                                "$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)" \
-                                "$hostpath" > .npmrc
+                            if [ "$BRANCH_NAME" = "master" ]; then
+                                TARGET_NPM_REGISTRY="$NEXUS_NPM_HOSTED"
+                            else
+                                TARGET_NPM_REGISTRY="$NEXUS_NPM_SNAPSHOTS"
+                            fi
+
+                            AUTH_TOKEN=$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)
+                            cat > .npmrc <<EOF
+registry=$TARGET_NPM_REGISTRY
+//nexus.juliaosistem-server.in:30080/:_auth=$AUTH_TOKEN
+//nexus.juliaosistem-server.in:30080/:always-auth=true
+EOF
 
                             # Versionado
                             if [ "$BRANCH_NAME" = "master" ]; then
                                 npm version patch --no-git-tag-version
-                            else
-                                npm version ${CUSTOM_TAG} --no-git-tag-version --allow-same-version
+                              else
+                                  npm version "$CUSTOM_TAG" --no-git-tag-version --allow-same-version
                             fi
 
                             npm publish --userconfig .npmrc
@@ -127,12 +136,18 @@ pipeline {
         }
 
         stage('Docker Push & Deploy') {
-            when { anyOf { branch 'develop'; branch 'desplieges'; branch 'master' } }
+            when {
+                anyOf {
+                    branch 'develop'
+                    branch 'desplieges'
+                    branch 'master'
+                }
+            }
             steps {
                 container('docker') {
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         sh '''
-                            IMAGE_TAGGED="${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG}"
+                            IMAGE_TAGGED="$NEXUS_DOCKER_REGISTRY/lib-common-angular-demo:$CUSTOM_TAG"
                             
                             echo "$PASS" | docker login --username "$USER" --password-stdin "${NEXUS_DOCKER_REGISTRY}"
                             
@@ -143,7 +158,7 @@ pipeline {
                         withCredentials([file(credentialsId: "${RANCHER_CREDS_ID}", variable: 'KUBECONFIG')]) {
                             sh """
                                 export KUBECONFIG=${KUBECONFIG}
-                                kubectl set image deployment/demo-angular-app demo=${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG} -n develop
+                                kubectl set image deployment/demo-angular-app demo=$NEXUS_DOCKER_REGISTRY/lib-common-angular-demo:$CUSTOM_TAG -n develop
                                 kubectl rollout status deployment/demo-angular-app -n develop
                             """
                         }

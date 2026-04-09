@@ -16,7 +16,7 @@
     "update:submodule": "git submodule update --remote --merge",
     "generate:dtos": "node lib-core-dtos/scripts/generate-typescript.js",
     "build:lib": "ng build lib-common-angular",
-    "publish:npm": "npm run build:lib && cd dist/lib-common-angular && npm publish --access public",
+    "publish:npm": "npm run build:lib && cd dist/lib-common-angular && npm publish",
     "lint": "ng lint"
   },
   "dependencies": {
