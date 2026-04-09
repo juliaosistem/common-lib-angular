@@ -35,7 +35,7 @@ pipeline {
                 hostPath: { path: /var/run/docker.sock }
               - name: node-cache
                 persistentVolumeClaim:
-                  claimName: node-pvc
+                                    claimName: maven-pvc
             """
         }
     }
