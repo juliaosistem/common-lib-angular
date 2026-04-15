@@ -15,9 +15,15 @@
     "init:submodule": "git submodule update --init --recursive",
     "update:submodule": "git submodule update --remote --merge",
     "generate:dtos": "node lib-core-dtos/scripts/generate-typescript.js",
+    "build:demo": "ng build lib-common-angular-demo --configuration production",
     "build:lib": "ng build lib-common-angular",
+    "pack:lib": "cd dist/lib-common-angular && npm pack",
+    "publish:nexus": "npm publish --registry=${NEXUS_REGISTRY_URL}",
     "publish:npm": "npm run build:lib && cd dist/lib-common-angular && npm publish",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "test:lib": "ng test lib-common-angular --watch=false --browsers=ChromeHeadless",
+    "test:demo": "ng test lib-common-angular-demo --watch=false --browsers=ChromeHeadless",
+    "serve:ssr:fn-admin": "node dist/fn-admin/server/server.mjs"
   },
   "dependencies": {
     "@angular/platform-server": "^20.1.6",
