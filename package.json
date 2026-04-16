@@ -15,9 +15,15 @@
     "init:submodule": "git submodule update --init --recursive",
     "update:submodule": "git submodule update --remote --merge",
     "generate:dtos": "node lib-core-dtos/scripts/generate-typescript.js",
+    "build:demo": "ng build lib-common-angular-demo --configuration production",
     "build:lib": "ng build lib-common-angular",
-    "publish:npm": "npm run build:lib && cd dist/lib-common-angular && npm publish --access public",
-    "lint": "ng lint"
+    "pack:lib": "cd dist/lib-common-angular && npm pack",
+    "publish:nexus": "npm publish --registry=${NEXUS_REGISTRY_URL}",
+    "publish:npm": "npm run build:lib && cd dist/lib-common-angular && npm publish",
+    "lint": "ng lint",
+    "test:lib": "ng test lib-common-angular --watch=false --browsers=ChromeHeadless",
+    "test:demo": "ng test lib-common-angular-demo --watch=false --browsers=ChromeHeadless",
+    "serve:ssr:fn-admin": "node dist/fn-admin/server/server.mjs"
   },
   "dependencies": {
     "@angular/platform-server": "^20.1.6",
@@ -85,6 +91,7 @@
     "@types/prismjs": "^1.26.5",
     "@typescript-eslint/eslint-plugin": "^8.27.0",
     "@typescript-eslint/parser": "^8.27.0",
+    "archiver": "^7.0.1",
     "autoprefixer": "^10.4.21",
     "eslint": "^8.48.0",
     "eslint-config-prettier": "^9.0.0",
@@ -104,7 +111,8 @@
     "prettier": "^3.0.0",
     "raml2obj": "^6.8.1",
     "tailwindcss": "^4.0.0",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "yaml": "^2.8.3"
   },
   "repository": {
     "type": "git",

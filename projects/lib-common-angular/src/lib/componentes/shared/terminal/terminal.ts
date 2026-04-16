@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular/core';
-import Prism from 'prismjs';
+import * as Prism from 'prismjs';
 // Importa los lenguajes que quieras usar
 import 'prismjs/components/prism-typescript';
 import 'prismjs/components/prism-javascript';

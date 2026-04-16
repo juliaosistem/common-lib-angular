@@ -1,10 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-  }
-}
 
 @Injectable({ providedIn: 'root' })
 export class GoogleService {
@@ -14,8 +9,8 @@ export class GoogleService {
         window.location.href = url;
       }
     };
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', 'conversion', {
+    if (typeof (window as any).gtag === 'function') {
+      (window as any).gtag('event', 'conversion', {
         send_to: sendTo,
         event_callback: callback
       });
@@ -25,9 +20,10 @@ export class GoogleService {
     }
   }
 
+  
   reportAnalyticsEvent(eventName: string, params?: Record<string, unknown>): void {
-    if (typeof window.gtag === 'function') {
-      window.gtag('event', eventName, params || {});
+    if (typeof (window as any).gtag === 'function') {
+      (window as any).gtag('event', eventName, params || {});
     }
   }
 }

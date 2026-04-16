@@ -31,6 +31,8 @@ import { ImageModule } from 'primeng/image';
 import { StepperModule } from 'primeng/stepper';
 import { MessageService } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MessageModule } from 'primeng/message';
 @NgModule({
   declarations: [],
   providers: [MessageService],
@@ -66,6 +68,8 @@ import { DrawerModule } from 'primeng/drawer';
    DataViewModule,
    StepperModule,
    DrawerModule,
+    ProgressSpinnerModule,
+    MessageModule,
   ],
   exports:[
     ButtonModule,
@@ -98,6 +102,9 @@ import { DrawerModule } from 'primeng/drawer';
   ImageModule,
   StepperModule,
   DrawerModule,
+  ProgressSpinnerModule,
+  MessageModule,
+  
   ]
 })
 export class PrimegModule { }

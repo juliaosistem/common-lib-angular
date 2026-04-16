@@ -4,7 +4,7 @@ import { Crud, CrudDocComponent, PrimegModule } from 'lib-common-angular';
 @Component({
   selector: 'app-crud-doc-page',
   standalone: true,
-  imports: [PrimegModule, CrudDocComponent, Crud],
+  imports: [PrimegModule, CrudDocComponent],
   templateUrl: './crud-doc-page.component.html'
 })
 export class CrudDocPageComponent {
@@ -21,10 +21,12 @@ export class CrudDocPageComponent {
   onNewItem() {
   }
 
-  onEditItem(item: any) {
+  onEditItem(item: unknown) {
+    console.log('Editar item:', item);
   }
 
-  onItemSaved(item: any) {
+  onItemSaved(item: unknown) {
+    console.log('Item guardado:', item);
   }
 
   onDialogCanceled() {

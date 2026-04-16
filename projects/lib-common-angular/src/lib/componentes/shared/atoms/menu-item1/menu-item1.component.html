@@ -78,7 +78,7 @@
     <!-- Submenús -->
     @if (hasSubItems && isItemExpanded) {
       <ul class="submenu">
-        @for (subItem of item.items; track $index) {
+        @for (subItem of getSubItems(); track $index) {
           <app-menu-item1
             [item]="subItem"
             [showIcons]="showIcons"

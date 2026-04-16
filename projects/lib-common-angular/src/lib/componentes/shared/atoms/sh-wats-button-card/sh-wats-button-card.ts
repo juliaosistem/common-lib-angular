@@ -3,7 +3,7 @@ import { GoogleService } from '../../../..//services/google.service';
 import { BusinessDTO } from '@juliaosistem/core-dtos';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { ProductoDTO } from '@juliaosistem/core-dtos';
-import { ProductService } from '../../services/product.service';
+import { ProductService } from '../../../../services/product.service';
 
 
 @Component({

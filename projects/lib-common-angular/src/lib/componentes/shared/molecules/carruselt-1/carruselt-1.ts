@@ -134,7 +134,7 @@ export class Carruselt1 implements OnInit,OnDestroy {
     const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     // Google Ads Conversion
-    if (this.DatosNegocio?.googleAdsConversionId) {
+    if (this.DatosNegocio?.googleAdsConversionId || this.DatosNegocio?.googleAdsConversionId) {
       this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
     } else {
       window.open(whatsappUrl, '_blank');

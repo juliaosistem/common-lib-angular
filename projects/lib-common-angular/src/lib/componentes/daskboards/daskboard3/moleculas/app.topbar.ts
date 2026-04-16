@@ -1,15 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
-import { LayoutService } from '../../../shared/services/layout.service';
+import { LayoutService } from '../../../../services/layout.service';
+import {
+    BusinessTokenAddressClaim,
+    BusinessTokenClaims,
+    BusinessTokenDatesUserClaim,
+    BusinessTokenPhoneClaim,
+    getSessionBusinessClaims,
+    toNumberOrNull,
+    toStringOr,
+} from '../../../../utils/business-token.util';
+import {
+    UserProfileDialog1Component,
+    UserProfileDialogData,
+    UserProfileSavePayload,
+} from '../../../shared/molecules/user-profile-dialog1/user-profile-dialog1.component';
 
 @Component({
     selector: 'lib-topbar3',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator],
+    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, UserProfileDialog1Component],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -42,19 +56,15 @@ import { LayoutService } from '../../../shared/services/layout.service';
                 <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                     <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
                 </button>
-                <div class="relative">
+                <div class="relative" #configMenuContainer>
                     <button
                         class="layout-topbar-action layout-topbar-action-highlight"
-                        pStyleClass="@next"
-                        enterFromClass="hidden"
-                        enterActiveClass="animate-scalein"
-                        leaveToClass="hidden"
-                        leaveActiveClass="animate-fadeout"
-                        [hideOnOutsideClick]="true"
+                        type="button"
+                        (click)="toggleConfigMenu($event)"
                     >
                         <i class="pi pi-palette"></i>
                     </button>
-                    <app-configurator />
+                    <app-configurator [class.hidden]="!isConfigMenuOpen" />
                 </div>
             </div>
 
@@ -72,21 +82,148 @@ import { LayoutService } from '../../../shared/services/layout.service';
                         <i class="pi pi-inbox"></i>
                         <span>Messages</span>
                     </button>
-                    <button type="button" class="layout-topbar-action">
+                    <button type="button" class="layout-topbar-action" (click)="openProfileDialog()">
                         <i class="pi pi-user"></i>
                         <span>Profile</span>
                     </button>
                 </div>
             </div>
         </div>
+        <lib-user-profile-dialog1
+            [visible]="showProfileDialog"
+            [profileData]="profileData"
+            (visibleChange)="onProfileDialogVisibilityChange($event)"
+            (profileSave)="onProfileSave($event)"
+            (profileClose)="onProfileClose()"
+        />
     </div>`
 })
 export class AppTopbar {
     items!: MenuItem[];
 
+    @ViewChild('configMenuContainer') configMenuContainer?: ElementRef<HTMLElement>;
+
+    isConfigMenuOpen = false;
+    showProfileDialog = false;
+    profileData: UserProfileDialogData = {
+        idBussines: null,
+        email: '',
+        password: '',
+        datesUserId: '',
+        firstName: '',
+        secondName: '',
+        idUrl: '',
+        estado: 'ACTIVO',
+        nombreRol: 'USUARIO',
+        phoneNumber: '',
+        phoneCityCode: null,
+        phoneCountryCode: null,
+        phoneNameCity: '',
+        phoneNameCountry: '',
+        address: '',
+        city: '',
+        department: '',
+        country: '',
+        postalCode: '',
+    };
+
     constructor(public layoutService: LayoutService) {}
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    }
+
+    toggleConfigMenu(event: Event) {
+        event.stopPropagation();
+        this.isConfigMenuOpen = !this.isConfigMenuOpen;
+    }
+
+    openProfileDialog() {
+        this.syncProfileDataFromSession();
+        this.showProfileDialog = true;
+    }
+
+    onProfileDialogVisibilityChange(visible: boolean) {
+        this.showProfileDialog = visible;
+    }
+
+    onProfileSave(payload: UserProfileSavePayload) {
+        this.profileData = { ...payload.profileData };
+        this.showProfileDialog = false;
+    }
+
+    onProfileClose() {
+        this.showProfileDialog = false;
+    }
+
+    private syncProfileDataFromSession() {
+        const claims = getSessionBusinessClaims();
+        if (!claims) {
+            return;
+        }
+
+        const datesUser = this.getDatesUser(claims);
+        const phone = this.getPrimaryPhone(datesUser);
+        const address = this.getPrimaryAddress(datesUser);
+        const firstCity = this.getPrimaryCityName(address);
+
+        this.profileData = {
+            ...this.profileData,
+            idBussines: toNumberOrNull(claims.idBusiness),
+            email: toStringOr(claims.email, this.profileData.email),
+            datesUserId: toStringOr(datesUser?.idDatesUser || datesUser?.id, this.profileData.datesUserId),
+            firstName: toStringOr(datesUser?.firstName, this.profileData.firstName),
+            secondName: toStringOr(datesUser?.secondName, this.profileData.secondName),
+            idUrl: toStringOr(datesUser?.idUrl, this.profileData.idUrl),
+            estado: toStringOr(datesUser?.estado, toStringOr(claims.estado, this.profileData.estado)),
+            nombreRol: toStringOr(datesUser?.nombreRol, this.resolveRole(claims)),
+            phoneNumber: toStringOr(phone?.number, this.profileData.phoneNumber),
+            phoneCityCode: toNumberOrNull(phone?.cityCode),
+            phoneCountryCode: toNumberOrNull(phone?.countryCode),
+            phoneNameCity: toStringOr(phone?.nameCity, this.profileData.phoneNameCity),
+            phoneNameCountry: toStringOr(phone?.nameCountry, this.profileData.phoneNameCountry),
+            address: toStringOr(address?.adress, this.profileData.address),
+            city: toStringOr(firstCity, this.profileData.city),
+            department: toStringOr(claims['department'], this.profileData.department),
+            country: toStringOr(address?.country?.name, this.profileData.country),
+            postalCode: toStringOr(claims['postalCode'], this.profileData.postalCode),
+        };
+    }
+
+    private getDatesUser(claims: BusinessTokenClaims): BusinessTokenDatesUserClaim {
+        return claims?.datesUser ?? {};
+    }
+
+    private getPrimaryPhone(datesUser: BusinessTokenDatesUserClaim): BusinessTokenPhoneClaim | null {
+        const phoneList = datesUser?.phone;
+        return Array.isArray(phoneList) && phoneList.length > 0 ? phoneList[0] : null;
+    }
+
+    private getPrimaryAddress(datesUser: BusinessTokenDatesUserClaim): BusinessTokenAddressClaim | null {
+        const addressList = datesUser?.addresses;
+        return Array.isArray(addressList) && addressList.length > 0 ? addressList[0] : null;
+    }
+
+    private getPrimaryCityName(address: BusinessTokenAddressClaim | null): string {
+        const city = address?.country?.cities;
+        return Array.isArray(city) && city.length > 0 ? toStringOr(city[0]?.name) : '';
+    }
+
+    private resolveRole(claims: BusinessTokenClaims): string {
+        const roles = claims?.roles;
+        return Array.isArray(roles) && roles.length > 0 ? toStringOr(roles[0], this.profileData.nombreRol) : this.profileData.nombreRol;
+    }
+
+    @HostListener('document:click', ['$event'])
+    onDocumentClick(event: Event) {
+        if (!this.isConfigMenuOpen) {
+            return;
+        }
+
+        const target = event.target as Node | null;
+        const container = this.configMenuContainer?.nativeElement;
+        if (target && container && !container.contains(target)) {
+            this.isConfigMenuOpen = false;
+        }
     }
 }

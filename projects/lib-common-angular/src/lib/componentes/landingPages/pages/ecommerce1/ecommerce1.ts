@@ -9,6 +9,8 @@ import { FooterEcommerce1 } from "../../molecules/ecommerce1/footer-ecommerce1/f
 import { RouterOutlet } from '@angular/router';
 import { CategoriaDTO, MenuConfig, MenuItem, BusinessDTO} from '@juliaosistem/core-dtos';
 import { Carruselt1 } from "../../../../../public-api";
+import { AuthService } from '../../../../services/auth-service';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-ecommerce1',
   imports: [CommonModule, DialogModule, ButtonModule, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet, Carruselt1],
@@ -53,6 +55,7 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
   private mouseOutListener?: (event: MouseEvent) => void;
   private beforeUnloadListener?: (event: BeforeUnloadEvent) => void;
   private intersectionObserver?: IntersectionObserver;
+  private destroy$ = new Subject<void>();
 
   // eslint-disable-next-line max-params
   constructor(
@@ -60,6 +63,7 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
     private route: ActivatedRoute,
     private renderer: Renderer2,
     private googleService: GoogleService,
+    private authService: AuthService,
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
@@ -70,7 +74,9 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
       this.setupWhatsappModal();
       this.setupScrollListener();
     }
-     this.updateMenuConfig();
+
+    this.syncLoginState();
+    this.updateMenuConfig();
   }
 
   ngOnChanges(): void {
@@ -82,6 +88,18 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
   }
   ngOnDestroy(): void {
     this.cleanup();
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private syncLoginState(): void {
+    this.authService.rehydrateSession();
+    this.authService.isLoggedIn$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isLogged) => {
+        this.isLogin = isLogged;
+        this.updateMenuConfig();
+      });
   }
 
    // eslint-disable-next-line max-lines-per-function
@@ -97,13 +115,13 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
           label: 'Iniciar Sesión',
           type: 'link',
           routerLink: [this.routePaths['login'] || 'login'],
-          icon: 'fas fa-sign-in-alt', visible: true,  order: 4
+          icon: 'fas fa-sign-in-alt', visible: !this.isLogin,  order: 4
         },   {
           id: 'register',
           label: 'Registrar',
           type: 'link',
           routerLink: [this.routePaths['register'] || 'register'],
-          icon: 'fas fa-user-plus',visible: true,  order: 5
+          icon: 'fas fa-user-plus',visible: !this.isLogin,  order: 5
         }, {
           id: 'Nosotros',
           label: 'Nosotros',

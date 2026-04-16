@@ -9,7 +9,7 @@ pipeline {
               hostAliases:
               - ip: "192.168.1.254"
                 hostnames:
-                - "nexus.juliaosistem-server.in"
+                                - "nexus.twincode.site"
               securityContext:
                 runAsUser: 0
               containers:
@@ -35,21 +35,28 @@ pipeline {
                 hostPath: { path: /var/run/docker.sock }
               - name: node-cache
                 persistentVolumeClaim:
-                  claimName: node-pvc
+                                    claimName: maven-pvc
             """
         }
     }
 
     environment {
-        NEXUS_DOMAIN = 'nexus.juliaosistem-server.in'
-        // Docker Registry: Dominio + Puerto NodePort
-        NEXUS_DOCKER_REGISTRY = "${env.NEXUS_DOMAIN}:30500"
-        // NPM Registry: URL Completa
-        NEXUS_NPM_REGISTRY = "http://${env.NEXUS_DOMAIN}:30080/repository/npm-private/"
+        NEXUS_DOMAIN = 'nexus.twincode.site'
+        NEXUS_NPM_SNAPSHOTS = 'https://nexus.twincode.site/repository/npm-snapshots/'
+        NEXUS_NPM_HOSTED = 'https://nexus.twincode.site/repository/npm-hosted/'
+        NEXUS_DOCKER_REGISTRY = 'nexus.twincode.site:5000'
         
         GIT_CREDS_ID = 'credencialesgit'
         NEXUS_CREDS_ID = 'nexus-credentials'
         RANCHER_CREDS_ID = 'rancher-api-credentials'
+    }
+
+    parameters {
+        booleanParam(
+            name: 'DEPLOY_DEMO_DOCKER',
+            defaultValue: false,
+            description: 'Publicar imagen Docker de la demo y desplegarla en Rancher.'
+        )
     }
 
     options {
@@ -79,7 +86,7 @@ pipeline {
             }
         }    
 
-        stage('Build Angular') {
+        stage('Build Library') {
             steps {
                 container('nodejs') {
                     sh '''
@@ -87,36 +94,45 @@ pipeline {
                         npm ci --prefer-offline --no-audit
                         npm run generate:dtos
                         npm run build:lib
-                        npm run build:demo
                     '''
                 }
             }
         }
 
         stage('Publish to Nexus NPM') {
-            when { anyOf { branch 'master'; branch 'develop'; branch 'desplieges' } }
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'desplieges'
+                }
+            }
             steps {
                 container('nodejs') {
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
                         sh '''
                             set -e
                             cd dist/lib-common-angular
-                            
-                            # Calculamos hostpath para el .npmrc
-                            hostpath=$(echo "$NEXUS_NPM_REGISTRY" | sed -E 's|https?://||; s|/$||')
 
-                            # Generamos el .npmrc con el token base64
-                            printf "registry=%s\n//%s/:_auth=%s\n//%s/:always-auth=true\n" \
-                                "$NEXUS_NPM_REGISTRY" \
-                                "$hostpath" \
-                                "$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)" \
-                                "$hostpath" > .npmrc
+                            if [ "$BRANCH_NAME" = "master" ]; then
+                                TARGET_NPM_REGISTRY="$NEXUS_NPM_HOSTED"
+                            else
+                                TARGET_NPM_REGISTRY="$NEXUS_NPM_SNAPSHOTS"
+                            fi
+
+                            AUTH_TOKEN=$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)
+                              AUTH_REGISTRY=$(echo "$TARGET_NPM_REGISTRY" | sed -E 's#^https?://##')
+                            cat > .npmrc <<EOF
+registry=$TARGET_NPM_REGISTRY
+//$AUTH_REGISTRY:_auth=$AUTH_TOKEN
+//$AUTH_REGISTRY:always-auth=true
+EOF
 
                             # Versionado
                             if [ "$BRANCH_NAME" = "master" ]; then
                                 npm version patch --no-git-tag-version
-                            else
-                                npm version ${CUSTOM_TAG} --no-git-tag-version --allow-same-version
+                              else
+                                  npm version "$CUSTOM_TAG" --no-git-tag-version --allow-same-version
                             fi
 
                             npm publish --userconfig .npmrc
@@ -126,27 +142,89 @@ pipeline {
             }
         }
 
-        stage('Docker Push & Deploy') {
-            when { anyOf { branch 'develop'; branch 'desplieges'; branch 'master' } }
+        stage('Verify Package In Nexus') {
+            when {
+                anyOf {
+                    branch 'master'
+                    branch 'develop'
+                    branch 'desplieges'
+                }
+            }
+            steps {
+                container('nodejs') {
+                    withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                        sh '''
+                            set -e
+                              cd dist/lib-common-angular
+                            if [ "$BRANCH_NAME" = "master" ]; then
+                                TARGET_NPM_REGISTRY="$NEXUS_NPM_HOSTED"
+                            else
+                                TARGET_NPM_REGISTRY="$NEXUS_NPM_SNAPSHOTS"
+                            fi
+
+                              AUTH_TOKEN=$(printf "%s:%s" "$NEXUS_USER" "$NEXUS_PASS" | base64)
+                              AUTH_REGISTRY=$(echo "$TARGET_NPM_REGISTRY" | sed -E 's#^https?://##')
+                              cat > .npmrc <<EOF
+registry=$TARGET_NPM_REGISTRY
+//$AUTH_REGISTRY:_auth=$AUTH_TOKEN
+//$AUTH_REGISTRY:always-auth=true
+EOF
+
+                            npm view lib-common-angular version --registry "$TARGET_NPM_REGISTRY" >/dev/null
+                            echo "Paquete lib-common-angular verificado en $TARGET_NPM_REGISTRY"
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Build Demo') {
+            when {
+                allOf {
+                    expression { return params.DEPLOY_DEMO_DOCKER }
+                    anyOf {
+                        branch 'master'
+                        branch 'develop'
+                        branch 'desplieges'
+                    }
+                }
+            }
+            steps {
+                container('nodejs') {
+                    sh 'npm run build:demo'
+                }
+            }
+        }
+
+        stage('Docker Push & Deploy Demo') {
+            when {
+                allOf {
+                    expression { return params.DEPLOY_DEMO_DOCKER }
+                    anyOf {
+                        branch 'master'
+                        branch 'develop'
+                        branch 'desplieges'
+                    }
+                }
+            }
             steps {
                 container('docker') {
                     withCredentials([usernamePassword(credentialsId: "${NEXUS_CREDS_ID}", usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                         sh '''
-                            IMAGE_TAGGED="${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG}"
-                            
-                            echo "$PASS" | docker login --username "$USER" --password-stdin "${NEXUS_DOCKER_REGISTRY}"
-                            
+                            set -e
+                            IMAGE_TAGGED="$NEXUS_DOCKER_REGISTRY/lib-common-angular-demo:$CUSTOM_TAG"
+                            echo "$PASS" | docker login --username "$USER" --password-stdin "$NEXUS_DOCKER_REGISTRY"
                             docker build -t "$IMAGE_TAGGED" .
                             docker push "$IMAGE_TAGGED"
                         '''
-                        
-                        withCredentials([file(credentialsId: "${RANCHER_CREDS_ID}", variable: 'KUBECONFIG')]) {
-                            sh """
-                                export KUBECONFIG=${KUBECONFIG}
-                                kubectl set image deployment/demo-angular-app demo=${NEXUS_DOCKER_REGISTRY}/lib-common-angular-demo:${CUSTOM_TAG} -n develop
-                                kubectl rollout status deployment/demo-angular-app -n develop
-                            """
-                        }
+                    }
+                    withCredentials([file(credentialsId: "${RANCHER_CREDS_ID}", variable: 'KUBECONFIG')]) {
+                        sh '''
+                            set -e
+                            export KUBECONFIG="$KUBECONFIG"
+                            kubectl set image deployment/demo-angular-app demo=$NEXUS_DOCKER_REGISTRY/lib-common-angular-demo:$CUSTOM_TAG -n develop
+                            kubectl rollout status deployment/demo-angular-app -n develop
+                        '''
                     }
                 }
             }

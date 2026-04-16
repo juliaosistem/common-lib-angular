@@ -1,0 +1,52 @@
+:host {
+	display: block;
+}
+
+.tabla1-col-select,
+.tabla1-cell-select {
+	width: 3rem;
+}
+
+.tabla1-col-actions,
+.tabla1-cell-actions {
+	width: 8rem;
+}
+
+.tabla1-col-data {
+	min-width: 10rem;
+}
+
+.tabla1-image {
+	width: 64px;
+	max-width: 100%;
+	height: auto;
+	object-fit: cover;
+}
+
+.tabla1-cell-text {
+	overflow-wrap: anywhere;
+	word-break: break-word;
+}
+
+@media (max-width: 991px) {
+	.tabla1-col-select,
+	.tabla1-col-actions,
+	.tabla1-col-data,
+	.tabla1-cell-select,
+	.tabla1-cell-actions,
+	.tabla1-cell-data {
+		width: 100%;
+		min-width: 0;
+	}
+
+	.tabla1-cell-actions {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 0.5rem;
+	}
+
+	.tabla1-image {
+		width: 56px;
+	}
+}

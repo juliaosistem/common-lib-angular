@@ -1,10 +1,9 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
-import { AppMenuitem } from "../../../../daskboards/daskboard3/moleculas/app.menuitem";
 
 @Component({
   selector: 'lib-section-images-instagram-ecommerce1',
-  imports: [AppMenuitem],
+  imports: [],
   templateUrl: './section-images-instagram-ecommerce1.html',
   styleUrl: './section-images-instagram-ecommerce1.scss',
   encapsulation: ViewEncapsulation.None

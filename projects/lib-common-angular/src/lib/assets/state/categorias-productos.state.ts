@@ -4,13 +4,11 @@ import { State, Selector, Action, StateContext } from '@ngxs/store';
 import { CategoriaDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { createGenericCrudActions } from './state-generic/generic-crud.actions';
-import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
-import { HttpClient } from '@angular/common/http';
-import { LibConfigService } from '../../config/lib-config.service';
-import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
 import { tap } from 'rxjs';
-import { GenericCrudActions, GenericCrudState } from './state-generic/generic-crud.state';
+import { GenericCrudState, LazyGenericCrudHttpService } from './state-generic/generic-crud.state';
 import { ProductService } from '../../componentes/shared/services/product.service';
+import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
+import { getLibraryInjector } from '../../utils/library-injector';
 
 
 // Crear acciones genéricas para ProductoDTO
@@ -28,19 +26,10 @@ export const CategoriaproductoActions = categoriaproductoActions;
 })
 @Injectable()
 export class CategoriaProductoState extends GenericCrudState<CategoriaDTO, CategoriaDTO> {
-  constructor(
-    private http: HttpClient,
-    private config: LibConfigService,
-    private meta: MetaDataService,
-    private productSvc: ProductService,
-  ) {
-    const service = new GenericCrudHttpService<CategoriaDTO>(
-      http,
-      config,
-      meta,
-      'baseUrlCategoryProduct'
-    );
-    super(service, CategoriaproductoActions as unknown as GenericCrudActions<CategoriaDTO>);
+
+  constructor() {
+    const service = new LazyGenericCrudHttpService<CategoriaDTO>('baseUrlCategoryProduct') as unknown as GenericCrudHttpService<CategoriaDTO>;
+    super(service, CategoriaproductoActions as any);
   }
 
   @Selector()
@@ -57,7 +46,14 @@ export class CategoriaProductoState extends GenericCrudState<CategoriaDTO, Categ
   @Action(CategoriaproductoActions.LoadMock)
   override loadMock(ctx: StateContext<PlantillaResponse<CategoriaDTO>>) {
     try {
-      const mockData = this.productSvc.mockCategoriaInflablesDTO();
+      let mockData: CategoriaDTO[] = [];
+      try {
+        const injector = getLibraryInjector();
+        const productSvc = injector.get(ProductService) as ProductService;
+        mockData = productSvc.mockCategoriaInflablesDTO();
+      } catch (e) {
+        mockData = [];
+      }
       ctx.patchState({
         data: undefined,
         dataList: mockData,

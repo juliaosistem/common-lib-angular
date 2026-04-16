@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonIcon } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { grid, list } from 'ionicons/icons';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
@@ -7,7 +7,7 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-button-table-view1',
   standalone: true,
-  imports: [IonIcon],
+  imports: [IonicModule],
   templateUrl: './button-table-view1.component.html',
   styleUrl: './button-table-view1.component.scss'
 })

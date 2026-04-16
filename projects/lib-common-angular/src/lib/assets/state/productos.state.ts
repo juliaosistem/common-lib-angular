@@ -1,20 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
-import { State, Selector, Action, StateContext } from '@ngxs/store';
+import { State, Selector, Action, StateContext, createSelector } from '@ngxs/store';
 import { ProductoDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { createGenericCrudActions } from './state-generic/generic-crud.actions';
-import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
-import { HttpClient } from '@angular/common/http';
-import { LibConfigService } from '../../config/lib-config.service';
-import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
 import { tap } from 'rxjs';
-import {
-  GenericCrudActions,
-  GenericCrudState,
-} from './state-generic/generic-crud.state';
+import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
+import { GenericCrudState, LazyGenericCrudHttpService } from './state-generic/generic-crud.state';
+import { getLibraryInjector } from '../../utils/library-injector';
 import { ProductService } from '../../componentes/shared/services/product.service';
-import { createSelector } from '@ngxs/store';
 
 // Crear acciones genéricas para ProductoDTO
 const productosActions = createGenericCrudActions<ProductoDTO>('producto');
@@ -30,23 +24,10 @@ export const ProductosActions = productosActions;
 })
 @Injectable()
 export class ProductosState extends GenericCrudState<ProductoDTO, ProductoDTO> {
-  constructor(
-    private http: HttpClient,
-    private config: LibConfigService,
-    private meta: MetaDataService,
-    private productSvc: ProductService
-  ) {
-  
-    const service = new GenericCrudHttpService<ProductoDTO>(
-      http,
-      config,
-      meta,
-      'baseUrlProducts',
-    );
-    super(
-      service,
-      ProductosActions as unknown as GenericCrudActions<ProductoDTO>,
-    );
+
+  constructor() {
+    const service = new LazyGenericCrudHttpService<ProductoDTO>('baseUrlProducts') as unknown as GenericCrudHttpService<ProductoDTO>;
+    super(service, ProductosActions as any);
   }
 
   // Selector para lista de productos
@@ -135,7 +116,14 @@ override delete(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) 
   @Action(ProductosActions.LoadMock)
 override loadMock(ctx: StateContext<PlantillaResponse<ProductoDTO>>) {
     try {
-      const mockData = this.productSvc.mockProductosInflablesDTO();
+      let mockData: ProductoDTO[] = [];
+      try {
+        const injector = getLibraryInjector();
+        const productSvc = injector.get(ProductService) as ProductService;
+        mockData = productSvc.mockProductosInflablesDTO();
+      } catch (e) {
+        mockData = [];
+      }
       ctx.patchState({
         data: undefined,
         dataList: mockData,
