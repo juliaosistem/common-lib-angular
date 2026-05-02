@@ -37,10 +37,7 @@
     <section class="profile-section">
       <h4>Datos Personales</h4>
       <div class="profile-grid">
-        <div class="field">
-          <label for="profile-dates-id">ID DatesUser</label>
-          <input id="profile-dates-id" type="text" pInputText formControlName="datesUserId" />
-        </div>
+       
 
         <div class="field">
           <label for="profile-id-url">ID Documento</label>
@@ -94,81 +91,46 @@
             <small class="field-error">{{ getErrorMessage('phoneNumber', 'Numero telefonico') }}</small>
           }
         </div>
-
-        <div class="field">
-          <label for="profile-country-code">Codigo Pais</label>
-          <input id="profile-country-code" type="number" pInputText formControlName="phoneCountryCode" />
-          @if (showError('phoneCountryCode')) {
-            <small class="field-error">{{ getErrorMessage('phoneCountryCode', 'Codigo Pais') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-city-code">Codigo Ciudad</label>
-          <input id="profile-city-code" type="number" pInputText formControlName="phoneCityCode" />
-          @if (showError('phoneCityCode')) {
-            <small class="field-error">{{ getErrorMessage('phoneCityCode', 'Codigo Ciudad') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-city-name">Nombre Ciudad Telefono</label>
-          <input id="profile-city-name" type="text" pInputText formControlName="phoneNameCity" />
-          @if (showError('phoneNameCity')) {
-            <small class="field-error">{{ getErrorMessage('phoneNameCity', 'Nombre Ciudad') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-country-name">Nombre Pais Telefono</label>
-          <input id="profile-country-name" type="text" pInputText formControlName="phoneNameCountry" />
-          @if (showError('phoneNameCountry')) {
-            <small class="field-error">{{ getErrorMessage('phoneNameCountry', 'Nombre Pais') }}</small>
-          }
-        </div>
       </div>
     </section>
 
     <section class="profile-section">
       <h4>Direccion</h4>
       <div class="profile-grid">
-        <div class="field field--full">
-          <label for="profile-address">Direccion</label>
-          <input id="profile-address" type="text" pInputText formControlName="address" />
-          @if (showError('address')) {
-            <small class="field-error">{{ getErrorMessage('address', 'Direccion') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-city-field">Ciudad</label>
-          <input id="profile-city-field" type="text" pInputText formControlName="city" />
-          @if (showError('city')) {
-            <small class="field-error">{{ getErrorMessage('city', 'Ciudad') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-department">Departamento</label>
-          <input id="profile-department" type="text" pInputText formControlName="department" />
-          @if (showError('department')) {
-            <small class="field-error">{{ getErrorMessage('department', 'Departamento') }}</small>
-          }
-        </div>
-
         <div class="field">
           <label for="profile-country">Pais</label>
-          <input id="profile-country" type="text" pInputText formControlName="country" />
+          <lib-country-list
+            [selectedCountryCode]="getSelectedCountryCode()"
+            [countryListConfig]="countryListConfig"
+            [placeholderText]="'Buscar pais o codigo'"
+            (onCountryChange)="onCountrySelected($event)"
+          ></lib-country-list>
+       
           @if (showError('country')) {
             <small class="field-error">{{ getErrorMessage('country', 'Pais') }}</small>
           }
         </div>
 
-        <div class="field">
-          <label for="profile-postal">Codigo Postal</label>
-          <input id="profile-postal" type="text" pInputText formControlName="postalCode" />
-          @if (showError('postalCode')) {
-            <small class="field-error">{{ getErrorMessage('postalCode', 'Codigo Postal') }}</small>
+        @if (selectedCountryCode) {
+          <div class="field">
+            <label for="profile-city-field">Ciudad</label>
+            <select id="profile-city-field" class="p-inputtext p-component" formControlName="city" (change)="onCitySelected(profileForm.controls.city.value)">
+              <option value="">Selecciona una ciudad</option>
+              @for (cityOption of cityOptions; track cityOption.value) {
+                <option [value]="cityOption.value">{{ cityOption.label }}</option>
+              }
+            </select>
+            @if (showError('city')) {
+              <small class="field-error">{{ getErrorMessage('city', 'Ciudad') }}</small>
+            }
+          </div>
+        }
+
+        <div class="field field--full">
+          <label for="profile-address">Direccion</label>
+          <input id="profile-address" type="text" pInputText formControlName="address" />
+          @if (showError('address')) {
+            <small class="field-error">{{ getErrorMessage('address', 'Direccion') }}</small>
           }
         </div>
       </div>

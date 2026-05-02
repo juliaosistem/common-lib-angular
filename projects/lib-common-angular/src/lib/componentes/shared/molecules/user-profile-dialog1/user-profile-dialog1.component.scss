@@ -41,6 +41,15 @@
   font-weight: 600;
 }
 
+.country-field {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep .country-field .mat-mdc-form-field {
+  width: 100%;
+}
+
 .field-error {
   color: #dc2626;
   font-size: 0.8rem;
