@@ -25,6 +25,7 @@ export * from './lib/componentes/shared/atoms/button-add1/button-add1.component'
 export * from './lib/componentes/daskboards/daskboard2/index2/index2.component';
 export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
 export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.component';
+export * from './lib/componentes/shared/molecules/crud-feedback-toast1/crud-feedback-toast1.component';
 export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
 export * from './lib/services/dynamic-field.service';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';

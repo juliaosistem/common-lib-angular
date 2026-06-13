@@ -1,20 +1,183 @@
-<lib-crud-doc
-  [component]="Crud"
-  [title]="'lib-crud Demo Completo'"
-  [description]="'CRUD dinámico con tabla/grid, sin modal externo.'"
-  [exampleCode]="exampleCode"
-  [inputsDocs]="inputsDocs"
-  [outputsDocs]="outputsDocs"
-  [demoInputs]="{
-    data: users(),
-    rows: 5,
-    paginator: true,
-    tableType: 'table'
-  }"
-  [demoOutputs]="{
-    newItemRequest: onNewItem.bind(this),
-    editItemRequest: onEditItem.bind(this),
-    itemSaved: onItemSaved.bind(this),
-    dialogCanceled: onDialogCanceled.bind(this)
-  }">
-</lib-crud-doc>
+<div class="crud-documentation">
+  <!-- ✅ Título y Descripción -->
+  <div class="doc-header">
+    <h1>Componente CRUD - Documentación Completa</h1>
+    <p class="subtitle">CRUD dinámico con tabla/grid, modal integrado, y configuración flexible</p>
+  </div>
+
+  <!-- ✅ 1. DEMO EN VIVO -->
+  <div class="section">
+    <h2>1. Demo en Vivo</h2>
+    <p>Prueba la funcionalidad completa: agregar, editar, eliminar y cambiar el tipo de vista.</p>
+    
+    <div class="controls-bar">
+      <label>
+        <input type="radio" name="tableType" value="table" (change)="tableType = 'table'" [checked]="tableType === 'table'">
+        Vista de Tabla
+      </label>
+      <label>
+        <input type="radio" name="tableType" value="grid" (change)="tableType = 'grid'" [checked]="tableType === 'grid'">
+        Vista de Grid
+      </label>
+    </div>
+
+    <!-- CRUD Demo -->
+    <lib-crud
+      [data]="users()"
+      [fieldTypeConfig]="fieldTypeConfig"
+      [fieldLabels]="fieldLabels"
+      [fieldOrder]="fieldOrder"
+      [excludeFields]="excludeFields"
+      [fieldSelectOptions]="fieldSelectOptions"
+      [tableType]="tableType"
+      [rows]="10"
+      [paginator]="true"
+      [submitted]="submitted"
+      [loaded]="loaded"
+      (newItemRequest)="onNewItem()"
+      (editItemRequest)="onEditItem($event)"
+      (deleteItemRequest)="onDeleteItem($event)"
+      (dataChange)="onDataChanged($event)"
+      (itemSaved)="onItemSaved($event)">
+    </lib-crud>
+
+    <!-- ✅ Modal CRUD Dialog -->
+    <lib-crud-dialog1
+      [(visible)]="showDialog"
+      [displayFields]="dialogDisplayFields"
+      [currentItem]="dialogCurrentItem"
+      [fieldSelectOptions]="dialogFieldSelectOptions"
+      (save)="onDialogSave($event)"
+      (cancel)="onDialogCancel()">
+    </lib-crud-dialog1>
+  </div>
+
+  <!-- ✅ 2. USO BÁSICO -->
+  <div class="section">
+    <h2>2. Uso Básico</h2>
+    <p>Ejemplo simple del componente CRUD con lo mínimo requerido:</p>
+    
+    <lib-terminal [code]="basicUsageCode" language="typescript"></lib-terminal>
+  </div>
+
+  <!-- ✅ 3. CONFIGURACIÓN DETALLADA -->
+  <div class="section">
+    <h2>3. Configuración de Campos (fieldTypeConfig, fieldLabels, fieldSelectOptions)</h2>
+    <p>Las tres propiedades clave para personalizar el comportamiento del CRUD:</p>
+    
+    <lib-terminal [code]="configurationCode" language="typescript"></lib-terminal>
+  </div>
+
+  <!-- ✅ 4. INTEGRACIÓN CON MODAL -->
+  <div class="section">
+    <h2>4. Integración con Modal (CrudDialog1)</h2>
+    <p>Cómo manejar el modal para agregar y editar elementos:</p>
+    
+    <lib-terminal [code]="modalIntegrationCode" language="typescript"></lib-terminal>
+  </div>
+
+  <!-- ✅ 5. PLANTILLA HTML COMPLETA -->
+  <div class="section">
+    <h2>5. Plantilla HTML Completa</h2>
+    <p>Ejemplo completo de HTML con CRUD y Modal integrados:</p>
+    
+    <lib-terminal [code]="htmlTemplateCode" language="typescript"></lib-terminal>
+  </div>
+
+  <!-- ✅ 6. INPUTS DOCUMENTADOS -->
+  <div class="section">
+    <h2>6. Inputs (@Input)</h2>
+    <p>Todas las propiedades de entrada del componente CRUD:</p>
+    
+    <div class="documentation-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Propiedad</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let input of inputsDocs">
+            <td><code>{{ input.name }}</code></td>
+            <td><code>{{ input.type }}</code></td>
+            <td>{{ input.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 7. OUTPUTS DOCUMENTADOS -->
+  <div class="section">
+    <h2>7. Outputs (@Output)</h2>
+    <p>Todos los eventos que emite el componente CRUD:</p>
+    
+    <div class="documentation-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let output of outputsDocs">
+            <td><code>{{ output.name }}</code></td>
+            <td><code>{{ output.type }}</code></td>
+            <td>{{ output.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 8. TIPOS DE CAMPO DISPONIBLES -->
+  <div class="section">
+    <h2>8. Tipos de Campo Disponibles (FieldType)</h2>
+    <p>Los diferentes tipos de datos que soporta el CRUD:</p>
+    
+    <div class="documentation-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Descripción</th>
+            <th>Ejemplo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fieldType of fieldTypesDocs">
+            <td><code>{{ fieldType.type }}</code></td>
+            <td>{{ fieldType.description }}</td>
+            <td>
+              <span *ngIf="fieldType.type === 'text'">{{ '{' }} name: 'text' {{ '}' }}</span>
+              <span *ngIf="fieldType.type === 'email'">{{ '{' }} email: 'email' {{ '}' }}</span>
+              <span *ngIf="fieldType.type === 'number'">{{ '{' }} price: 'number' {{ '}' }}</span>
+              <span *ngIf="fieldType.type === 'date'">{{ '{' }} joinDate: 'date' {{ '}' }}</span>
+              <span *ngIf="fieldType.type === 'boolean'">{{ '{' }} active: 'boolean' {{ '}' }}</span>
+              <span *ngIf="fieldType.type === 'select'">{{ '{' }} role: 'select' {{ '}' }}</span>
+              <span *ngIf="fieldType.type === 'img'">{{ '{' }} photo: 'img' {{ '}' }}</span>
+              <span *ngIf="fieldType.type === 'file'">{{ '{' }} document: 'file' {{ '}' }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 9. TIPS Y BUENAS PRÁCTICAS -->
+  <div class="section tips">
+    <h2>9. Tips y Buenas Prácticas</h2>
+    <ul>
+      <li><strong>Modal Obligatorio:</strong> Usa CrudDialog1 para manejar la creación/edición de elementos. El CRUD solo maneja la visualización y eventos.</li>
+      <li><strong>Excluir campos innecesarios:</strong> Usa <code>excludeFields</code> para no mostrar ID, timestamps, etc.</li>
+      <li><strong>Orden de columnas:</strong> Usa <code>fieldOrder</code> para controlar la visualización. El orden en que defines los campos aquí es el que se muestra.</li>
+      <li><strong>Validaciones en el modal:</strong> Las validaciones se hacen en CrudDialog1, no en CRUD.</li>
+      <li><strong>Paginación:</strong> Activa <code>paginator="true"</code> si tienes muchos registros.</li>
+      <li><strong>Vistas:</strong> Alterna entre 'table' y 'grid' según necesites.</li>
+    </ul>
+  </div>
+</div>

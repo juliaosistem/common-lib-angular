@@ -11,8 +11,8 @@
     </lib-tool-bar1>
 
     <!-- Vista de tabla con sistema dinámico -->
-    <lib-tabla1 
-        *ngIf="tableType === 'table'"
+     @if (tableType === 'table') {
+    <lib-tabla1    
         [data]="data"
         [selectedItems]="selectedItems"
         (selectedItemsChange)="onSelectedItemsChange($event)"
@@ -28,10 +28,10 @@
         [showCurrentPageReport]="showCurrentPageReport"
         (editItem)="editItem($event)">
     </lib-tabla1>
-
+     }
     <!-- Vista de grid -->
+     @if(tableType === 'grid') {
     <lib-grid1 
-        *ngIf="tableType === 'grid'"
         [data]="data"
         [selectedItems]="selectedItems"
         (selectedItemsChange)="onSelectedItemsChange($event)"
@@ -47,7 +47,7 @@
         [showCurrentPageReport]="showCurrentPageReport"
         (editItem)="editItem($event)">
     </lib-grid1>
-
+     }
     <!-- Diálogo de confirmación -->
     <p-confirmDialog></p-confirmDialog>
 </div>

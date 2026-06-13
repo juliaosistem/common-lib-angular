@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   Input,
   Output,
@@ -6,12 +7,16 @@ import {
   OnChanges,
   SimpleChanges,
   TemplateRef,
+  ViewChild,
+  ViewContainerRef,
+  ComponentRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { DynamicField } from '../../interfaces/dynamic-field.interface';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
+import { CrudFeedbackToast1Component } from '../crud-feedback-toast1/crud-feedback-toast1.component';
 
 @Component({
   selector: 'lib-crud-dialog1',
@@ -20,7 +25,7 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
   templateUrl: './crud-dialog1.component.html',
   styleUrl: './crud-dialog1.component.scss',
 })
-export class CrudDialog1Component implements OnChanges {
+export class CrudDialog1Component implements OnChanges, AfterViewInit {
   onSubmit() {
     throw new Error('Method not implemented.');
   }
@@ -38,6 +43,7 @@ export class CrudDialog1Component implements OnChanges {
   @Output() triggerSave = new EventEmitter<void>(); // Nuevo evento para templates personalizados
 
   itemForm: FormGroup;
+  private readonly maxImageSize = 5 * 1024 * 1024;
 
   componente: ComponentesDTO = {
     id: 18,
@@ -49,6 +55,10 @@ export class CrudDialog1Component implements OnChanges {
    * Archivos seleccionados
    */
   selectedFiles: Record<string, File> = {};
+  private feedbackToastRef?: ComponentRef<CrudFeedbackToast1Component>;
+
+  @ViewChild('toastHost', { read: ViewContainerRef })
+  private toastHost?: ViewContainerRef;
 
   constructor(private fb: FormBuilder) {
     this.itemForm = this.fb.group({});
@@ -57,6 +67,12 @@ export class CrudDialog1Component implements OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     if (changes['currentItem'] && this.currentItem) {
       this.updateForm();
+    }
+  }
+
+  ngAfterViewInit(): void {
+    if (this.toastHost && !this.feedbackToastRef) {
+      this.feedbackToastRef = this.toastHost.createComponent(CrudFeedbackToast1Component);
     }
   }
 
@@ -101,6 +117,18 @@ export class CrudDialog1Component implements OnChanges {
     const file = event.files[0] as File;
 
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        this.feedbackToastRef?.instance.showError('Solo se permiten imágenes');
+        this.onFileRemove(fieldKey);
+        return;
+      }
+
+      if (file.size > this.maxImageSize) {
+        this.feedbackToastRef?.instance.showError('La imagen no puede superar 5 MB');
+        this.onFileRemove(fieldKey);
+        return;
+      }
+
       // Guardar archivo
       this.selectedFiles[fieldKey] = file;
       // Actualizar el formulario

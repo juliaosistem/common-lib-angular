@@ -1,0 +1,136 @@
+<div class="terminal-documentation">
+  <!-- ✅ Título y Descripción -->
+  <div class="doc-header">
+    <h1>Componente Terminal - Documentación</h1>
+    <p class="subtitle">Visualizador de código con resaltado de sintaxis y botón para copiar</p>
+  </div>
+
+  <!-- ✅ 1. DEMO EN VIVO -->
+  <div class="section">
+    <h2>1. Demo en Vivo - Diferentes Lenguajes</h2>
+    <p>El componente Terminal soporta múltiples lenguajes con resaltado de sintaxis automático:</p>
+    
+    <div class="demos-grid">
+      <div class="demo-item">
+        <h3>TypeScript</h3>
+        <lib-terminal [code]="typescriptExample" language="typescript"></lib-terminal>
+      </div>
+
+      <div class="demo-item">
+        <h3>HTML</h3>
+        <lib-terminal [code]="htmlExample" language="html"></lib-terminal>
+      </div>
+
+      <div class="demo-item">
+        <h3>JSON</h3>
+        <lib-terminal [code]="jsonExample" language="json"></lib-terminal>
+      </div>
+
+      <div class="demo-item">
+        <h3>Bash</h3>
+        <lib-terminal [code]="bashExample" language="bash"></lib-terminal>
+      </div>
+
+      <div class="demo-item">
+        <h3>CSS</h3>
+        <lib-terminal [code]="cssExample" language="css"></lib-terminal>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 2. USO BÁSICO -->
+  <div class="section">
+    <h2>2. Uso Básico</h2>
+    <p>Cómo usar el componente Terminal en tu componente:</p>
+    
+    <lib-terminal [code]="basicUsageCode" language="typescript"></lib-terminal>
+  </div>
+
+  <!-- ✅ 3. CONFIGURACIÓN AVANZADA -->
+  <div class="section">
+    <h2>3. Configuración Avanzada - Múltiples Lenguajes</h2>
+    <p>Puedes mostrar múltiples terminales con diferentes lenguajes en la misma página:</p>
+    
+    <lib-terminal [code]="advancedConfigCode" language="typescript"></lib-terminal>
+  </div>
+
+  <!-- ✅ 4. INPUTS DOCUMENTADOS -->
+  <div class="section">
+    <h2>4. Inputs (@Input)</h2>
+    <p>Las propiedades de entrada del componente Terminal:</p>
+    
+    <div class="documentation-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Propiedad</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let input of inputsDocs">
+            <td><code>{{ input.name }}</code></td>
+            <td><code>{{ input.type }}</code></td>
+            <td>{{ input.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 5. CARACTERÍSTICAS -->
+  <div class="section">
+    <h2>5. Características Principales</h2>
+    <p>Lo que hace especial al componente Terminal:</p>
+    
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of featuresDocs">
+        <div class="feature-icon">✨</div>
+        <h3>{{ feature.name }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 6. LENGUAJES SOPORTADOS -->
+  <div class="section">
+    <h2>6. Lenguajes de Programación Soportados</h2>
+    <p>Lista completa de lenguajes que el componente puede resaltar:</p>
+    
+    <div class="languages-grid">
+      <div class="language-badge" *ngFor="let lang of languagesSupported">
+        <code>{{ lang.lang }}</code>
+        <span *ngIf="lang.alias">({{ lang.alias }})</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 7. CASOS DE USO -->
+  <div class="section tips">
+    <h2>7. Casos de Uso Recomendados</h2>
+    <ul>
+      <li><strong>Documentación de Componentes:</strong> Mostrar ejemplos de código con resaltado de sintaxis.</li>
+      <li><strong>Tutoriales y Guías:</strong> Presentar ejemplos de código durante tutoriales.</li>
+      <li><strong>Demostración de APIs:</strong> Mostrar cómo usar endpoints o funciones.</li>
+      <li><strong>Configuraciones:</strong> Mostrar archivos de configuración como JSON, YAML, etc.</li>
+      <li><strong>Snippets Reutilizables:</strong> Permitir a los usuarios copiar fragmentos de código listos para usar.</li>
+      <li><strong>Blog Técnico:</strong> Integrar ejemplos de código en artículos técnicos.</li>
+    </ul>
+  </div>
+
+  <!-- ✅ 8. EJEMPLO REAL -->
+  <div class="section">
+    <h2>8. Ejemplo Real - Integración Completa</h2>
+    <p>Cómo se ve un ejemplo completo con Terminal en una documentación real:</p>
+    
+    <lib-terminal 
+      [code]="basicUsageCode" 
+      language="typescript">
+    </lib-terminal>
+
+    <p style="margin-top: 2rem; color: #666; font-size: 0.95rem;">
+      <strong>Tip:</strong> El botón 📋 en la esquina superior derecha de cada Terminal permite copiar todo el código al portapapeles.
+    </p>
+  </div>
+</div>

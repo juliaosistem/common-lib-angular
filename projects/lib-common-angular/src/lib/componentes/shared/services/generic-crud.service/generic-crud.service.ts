@@ -16,9 +16,22 @@ export class GenericCrudHttpService<T> {
     private meta: MetaDataService,
     @Inject('ENDPOINT_KEY') @Optional() private endpointKey?: string
   ) {
-    this.basePathUrl = this.endpointKey
-      ? this.config.get<string>(this.endpointKey) || "http://localhost:3000"
-      : "http://localhost:3000";
+    this.basePathUrl = this.resolveBasePathUrl();
+  }
+
+  private resolveBasePathUrl(): string {
+    const config = this.config.getConfig();
+    const endpointFromConfig = this.endpointKey ? this.config.get<string>(this.endpointKey) : undefined;
+
+    if (endpointFromConfig) {
+      return endpointFromConfig;
+    }
+
+    if (config.apiGateway) {
+      return config.apiGateway.replace(/\/$/, '');
+    }
+
+    return 'http://localhost:3000';
   }
 
   // Construye headers a partir de un objeto
@@ -26,8 +39,14 @@ export class GenericCrudHttpService<T> {
   private buildHeaders(headersObj: Record<string, any>): HttpHeaders {
     let headers = new HttpHeaders();
     Object.keys(headersObj).forEach(key => {
-      if (headersObj[key] !== undefined && headersObj[key] !== null) {
-        headers = headers.set(key, headersObj[key]);
+      const rawValue = headersObj[key];
+      if (rawValue !== undefined && rawValue !== null) {
+        // HttpHeaders solo admite string o string[]; normalizamos para evitar fallos runtime.
+        if (Array.isArray(rawValue)) {
+          headers = headers.set(key, rawValue.map(value => String(value)));
+        } else if (typeof rawValue !== 'object') {
+          headers = headers.set(key, String(rawValue));
+        }
       }
     });
     return headers;

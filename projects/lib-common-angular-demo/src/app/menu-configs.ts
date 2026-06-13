@@ -71,33 +71,40 @@ export const defaultMenuConfig: MenuConfig = {
                   id: 'menu',
                   label: 'Menu',
                   icon: 'pi pi-fw pi-bars',
-                  routerLink: ['/pages/menu-navigation'],
                   type: 'group',
                   order: 11,
                   items: [
                                     {
+                            id: 'menu-navigation',
+                            label: 'Menu Navigation',
+                            icon: 'pi pi-fw pi-pencil',
+                            routerLink: ['/componentes/menu-navigation'],
+                            type: 'item',
+                            order: 1,
+                          },
+                          {
                             id: 'admin',
-                            label: 'Admin',
+                            label: 'Admin Menu',
                             icon: 'pi pi-fw pi-pencil',
                             routerLink: ['/admin'],
                             type: 'item',
-                            order: 1,
+                            order: 2,
                           },
                           {
                             id: 'minimal',
-                            label: 'Minimal',
+                            label: 'Minimal Menu',
                             icon: 'pi pi-fw pi-pencil',
                             routerLink: ['/minimal'],
                             type: 'item',
-                            order: 1,
+                            order: 3,
                           },
                           {
                           id: 'user',
-                          label: 'User',
+                          label: 'User Menu',
                           icon: 'pi pi-fw pi-pencil',
                           routerLink: ['/user'],
                           type: 'item',
-                          order: 1,
+                          order: 4,
                         }
                   ]
               },
@@ -131,7 +138,7 @@ export const defaultMenuConfig: MenuConfig = {
           ]
       },
 
-        {
+      {
       id: 'doc',
       label: 'Documentación',
       icon: 'pi pi-fw pi-book',
@@ -139,29 +146,45 @@ export const defaultMenuConfig: MenuConfig = {
       order: 3,
       items: [
         {
-          id: 'crud-doc',
-          label: 'Crud',
-          icon: 'pi pi-fw pi-file',
-          routerLink: ['/documentation/crud'],
+          id: 'catalogo-doc',
+          label: 'Catálogo Completo',
+          icon: 'pi pi-fw pi-sitemap',
+          routerLink: ['/documentation/catalogo'],
           type: 'item',
           order: 1
         },
-/*         {
-          id: 'table-doc',
-          label: 'Table Docs',
-          icon: 'pi pi-fw pi-table',
-          routerLink: ['/doc/table'],
+        {
+          id: 'crud-doc',
+          label: 'CRUD',
+          icon: 'pi pi-fw pi-pencil',
+          routerLink: ['/documentation/crud'],
           type: 'item',
           order: 2
-        }, */
-   /*      {
-          id: 'form-doc',
-          label: 'Form Docs',
-          icon: 'pi pi-fw pi-file-edit',
-          routerLink: ['/doc/form'],
+        },
+        {
+          id: 'terminal-doc',
+          label: 'Terminal',
+          icon: 'pi pi-fw pi-code',
+          routerLink: ['/documentation/terminal'],
           type: 'item',
           order: 3
-        } */
+        },
+        {
+          id: 'tabla-doc',
+          label: 'Tabla',
+          icon: 'pi pi-fw pi-table',
+          routerLink: ['/documentation/tabla'],
+          type: 'item',
+          order: 4
+        },
+        {
+          id: 'botones-doc',
+          label: 'Botones',
+          icon: 'pi pi-fw pi-check',
+          routerLink: ['/documentation/botones'],
+          type: 'item',
+          order: 5
+        }
       ]
     }
   ],

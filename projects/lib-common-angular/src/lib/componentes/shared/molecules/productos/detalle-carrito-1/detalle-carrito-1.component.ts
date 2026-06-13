@@ -44,7 +44,7 @@ export class DetalleCarrito1Component implements OnInit {
   // Variable que determina la cantidad actual del producto
   currentQuantity: number = 1;
   // Variable que almacena la URL de la imagen seleccionada
-  selectedImageUrl: string = '';
+  selectedImageUrl: string | undefined = '';
   // Variable que controla la visibilidad del mensaje de agregado al carrito
   showCartMessage: boolean = false;
   // Variable que indica si el producto es favorito
@@ -90,9 +90,11 @@ export class DetalleCarrito1Component implements OnInit {
    * @param imageUrl URL de la imagen seleccionada
    * Método para actualizar la imagen principal cuando se selecciona una miniatura
    */
-  updateMainImage(imageUrl: string): void {
-    console.log('Imagen seleccionada:', imageUrl);
-    this.selectedImageUrl = imageUrl;
+  updateMainImage(imageUrl: string | undefined): void {
+    if (imageUrl) {
+      console.log('Imagen seleccionada:', imageUrl);
+      this.selectedImageUrl = imageUrl;
+    }
   }
 
   
@@ -141,7 +143,7 @@ export class DetalleCarrito1Component implements OnInit {
  * Método para verificar si una miniatura es la imagen activa
  * @returns 
  */
-  isActiveThumbnail(imageUrl: string): boolean {
+  isActiveThumbnail(imageUrl: string | undefined): boolean {
     return this.selectedImageUrl === imageUrl;
   }
 

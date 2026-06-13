@@ -2,7 +2,6 @@ import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../../../../services/layout.service';
 import {
@@ -23,7 +22,7 @@ import {
 @Component({
     selector: 'lib-topbar3',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator, UserProfileDialog1Component],
+    imports: [RouterModule, CommonModule, AppConfigurator, UserProfileDialog1Component],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -68,24 +67,26 @@ import {
                 </div>
             </div>
 
-            <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
-                <i class="pi pi-ellipsis-v"></i>
-            </button>
+            <div class="relative" #topbarMenuContainer>
+                <button class="layout-topbar-menu-button layout-topbar-action" type="button" (click)="toggleTopbarMenu($event)">
+                    <i class="pi pi-ellipsis-v"></i>
+                </button>
 
-            <div class="layout-topbar-menu hidden lg:block">
-                <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action" (click)="openProfileDialog()">
-                        <i class="pi pi-user"></i>
-                        <span>Profile</span>
-                    </button>
+                <div [ngClass]="{ 'layout-topbar-menu': true, 'hidden': !isTopbarMenuOpen, 'animate-scalein': isTopbarMenuOpen }" class="lg:block">
+                    <div class="layout-topbar-menu-content">
+                        <button type="button" class="layout-topbar-action">
+                            <i class="pi pi-calendar"></i>
+                            <span>Calendar</span>
+                        </button>
+                        <button type="button" class="layout-topbar-action">
+                            <i class="pi pi-inbox"></i>
+                            <span>Messages</span>
+                        </button>
+                        <button type="button" class="layout-topbar-action" (click)="openProfileDialog()">
+                            <i class="pi pi-user"></i>
+                            <span>Profile</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -102,8 +103,10 @@ export class AppTopbar {
     items!: MenuItem[];
 
     @ViewChild('configMenuContainer') configMenuContainer?: ElementRef<HTMLElement>;
+    @ViewChild('topbarMenuContainer') topbarMenuContainer?: ElementRef<HTMLElement>;
 
     isConfigMenuOpen = false;
+    isTopbarMenuOpen = false;
     showProfileDialog = false;
     profileData: UserProfileDialogData = {
         idBussines: null,
@@ -135,10 +138,18 @@ export class AppTopbar {
 
     toggleConfigMenu(event: Event) {
         event.stopPropagation();
+        this.isTopbarMenuOpen = false;
         this.isConfigMenuOpen = !this.isConfigMenuOpen;
     }
 
+    toggleTopbarMenu(event: Event) {
+        event.stopPropagation();
+        this.isConfigMenuOpen = false;
+        this.isTopbarMenuOpen = !this.isTopbarMenuOpen;
+    }
+
     openProfileDialog() {
+        this.isTopbarMenuOpen = false;
         this.syncProfileDataFromSession();
         this.showProfileDialog = true;
     }
@@ -214,16 +225,24 @@ export class AppTopbar {
         return Array.isArray(roles) && roles.length > 0 ? toStringOr(roles[0], this.profileData.nombreRol) : this.profileData.nombreRol;
     }
 
-    @HostListener('document:click', ['$event'])
-    onDocumentClick(event: Event) {
-        if (!this.isConfigMenuOpen) {
-            return;
-        }
-
+    @HostListener('document:pointerdown', ['$event'])
+    onDocumentPointerDown(event: Event) {
         const target = event.target as Node | null;
-        const container = this.configMenuContainer?.nativeElement;
-        if (target && container && !container.contains(target)) {
+        const configContainer = this.configMenuContainer?.nativeElement;
+        const topbarContainer = this.topbarMenuContainer?.nativeElement;
+
+        if (this.isConfigMenuOpen && target && configContainer && !configContainer.contains(target)) {
             this.isConfigMenuOpen = false;
         }
+
+        if (this.isTopbarMenuOpen && target && topbarContainer && !topbarContainer.contains(target)) {
+            this.isTopbarMenuOpen = false;
+        }
+    }
+
+    @HostListener('document:keydown.escape')
+    onEscapeKey() {
+        this.isConfigMenuOpen = false;
+        this.isTopbarMenuOpen = false;
     }
 }

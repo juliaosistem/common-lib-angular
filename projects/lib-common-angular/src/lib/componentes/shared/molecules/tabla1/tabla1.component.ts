@@ -17,8 +17,12 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
   imports: [CommonModule, TableModule, PrimegModule, FormsModule, ButtonActionsRow1Component],
 })
 export class Tabla1Component implements OnInit {
+  // Propiedades del componente
+  // data: array de objetos a mostrar en la tabla
   @Input() data: Record<string, unknown>[] = [];
+  // selectedItems: array de objetos seleccionados en la tabla
   @Input() selectedItems!: Record<string, unknown>[] | null;
+  // Evento que se emite cuando cambia la selección de items
   @Output() selectedItemsChange = new EventEmitter<Record<string, unknown>[] | null>();
   @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Tipos por campo
   @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas

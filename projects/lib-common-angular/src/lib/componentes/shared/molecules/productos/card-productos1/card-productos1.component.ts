@@ -73,9 +73,9 @@ export class CardProductos1Component implements OnInit, OnDestroy {
 
   /**
    * Devuelve la URL de la imagen actualmente seleccionada.
-   * @returns string URL de la imagen activa
+   * @returns string | undefined URL de la imagen activa
    */
-  get currentImageUrl(): string {
+  get currentImageUrl(): string | undefined {
     return this.currentImage.url;
   }
 
