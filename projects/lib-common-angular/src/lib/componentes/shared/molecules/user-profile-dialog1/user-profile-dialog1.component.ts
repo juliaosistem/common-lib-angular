@@ -8,7 +8,7 @@ import { COUNTRIES_LIST, CountryListComponent, getCountryByCode, ICountry } from
 import { PrimegModule } from '../../../../modulos/primeg.module';
 
 export interface UserProfileDialogData {
-  idBussines: number | null;
+  idbusiness: number | null;
   email: string;
   password: string;
   datesUserId: string;
@@ -355,7 +355,7 @@ export class UserProfileDialog1Component implements OnChanges {
   private toProfileData(): UserProfileDialogData {
     const raw = this.profileForm.getRawValue();
     return {
-      idBussines: this.profileData?.idBussines ?? null,
+      idbusiness: this.profileData?.idbusiness ?? null,
       ...this.mapAccountFromRaw(raw),
       ...this.mapPersonalFromRaw(raw),
       ...this.mapPhoneFromRaw(raw),
@@ -417,7 +417,7 @@ export class UserProfileDialog1Component implements OnChanges {
 
   private toRegisterUserDTO(data: UserProfileDialogData): RegisterUserDTO {
     return {
-      idBussines: data.idBussines ?? undefined,
+      idbusiness: data.idbusiness ?? undefined,
       email: data.email,
       password: data.password || undefined,
       DatesUser: this.toDatesUserDTO(data),

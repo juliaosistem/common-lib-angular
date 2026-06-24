@@ -57,24 +57,12 @@ export class ProductosState extends GenericCrudState<ProductoDTO, ProductoDTO> {
       .all(action.payload)
       .pipe(tap((res) => ctx.setState(res)));
   }
-@Action(ProductosActions.Add)
-override add(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
-  return this.service.add(action.payload, action.queryParams).pipe(
-    tap((res) => {
-      const state = ctx.getState();
-      const newItem = res.data;
-      if (newItem && state.dataList) {
-        ctx.setState({
-          ...state,
-          dataList: [...state.dataList, newItem],
-          data: newItem,
-          message: res.message,
-          rta: true,
-        });
-      }
-    })
-  );
-}
+
+  @Action(ProductosActions.Add)
+  oadd(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
+    return this.add(ctx, action);
+  }
+
 
 @Action(ProductosActions.Update)
 override update(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
@@ -115,31 +103,22 @@ override delete(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) 
   }
   @Action(ProductosActions.LoadMock)
 override loadMock(ctx: StateContext<PlantillaResponse<ProductoDTO>>) {
+    let mockData: ProductoDTO[] = [];
     try {
-      let mockData: ProductoDTO[] = [];
-      try {
-        const injector = getLibraryInjector();
-        const productSvc = injector.get(ProductService) as ProductService;
-        mockData = productSvc.mockProductosInflablesDTO();
-      } catch (e) {
-        mockData = [];
-      }
-      ctx.patchState({
-        data: undefined,
-        dataList: mockData,
-        message: mockData.length
-          ? 'Datos mock cargados correctamente'
-          : 'No hay datos mock disponibles',
-        rta: !!mockData.length,
-      });
-    } catch (error) {
-      ctx.patchState({
-        data: undefined,
-        dataList: [],
-        message: 'Error al cargar datos mock ' + error,
-        rta: false,
-      });
+      const injector = getLibraryInjector();
+      const productSvc = injector.get(ProductService) as ProductService;
+      mockData = productSvc.mockProductosInflablesDTO();
+    } catch {
+      mockData = [];
     }
+    ctx.patchState({
+      data: undefined,
+      dataList: mockData,
+      message: mockData.length
+        ? 'Datos mock cargados correctamente'
+        : 'No hay datos mock disponibles',
+      rta: !!mockData.length,
+    });
   }
 
 }

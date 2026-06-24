@@ -101,7 +101,7 @@ export class AuthService {
       return;
     }
 
-    this.persistSessionValue('idBusiness', claims?.idBusiness);
+    this.persistSessionValue('idbusiness', claims?.['idBusiness']);
     this.persistSessionValue('idDatosUsuario', claims?.id || claims?.sub || claims?.['idDatosUsuario']);
     this.persistSessionValue('usuario', claims?.email || claims?.usuario || claims?.username);
   }
@@ -137,7 +137,7 @@ export class AuthService {
       return;
     }
 
-    const keys = ['token', 'businessToken', 'keycloakAccessToken', 'idBusiness', 'idDatosUsuario', 'usuario', 'isLogin'];
+    const keys = ['token', 'businessToken', 'keycloakAccessToken', 'idbusiness', 'idDatosUsuario', 'usuario', 'isLogin'];
     keys.forEach((key) => sessionStorage.removeItem(key));
   }
 

@@ -109,7 +109,7 @@ export class AppTopbar {
     isTopbarMenuOpen = false;
     showProfileDialog = false;
     profileData: UserProfileDialogData = {
-        idBussines: null,
+        idbusiness: null,
         email: '',
         password: '',
         datesUserId: '',
@@ -167,59 +167,141 @@ export class AppTopbar {
         this.showProfileDialog = false;
     }
 
+    /**
+     * Sincroniza los datos del perfil de usuario desde la sesión de negocio (JWT claims).
+     * Extrae información del token de autenticación y actualiza el modelo de perfil local.
+     * Si no hay claims disponibles en la sesión, no realiza cambio alguno.
+     */
     private syncProfileDataFromSession() {
         const claims = getSessionBusinessClaims();
         if (!claims) {
             return;
         }
 
+        this.profileData = this.buildProfileDataFromClaims(claims);
+    }
+
+    /**
+     * Construye el objeto de datos de perfil a partir de los claims del token de negocio.
+     * Extrae y transforma datos de usuario, contacto y dirección con valores por defecto.
+     *
+     * @param claims - Claims del token JWT de negocio
+     * @returns Objeto UserProfileDialogData con todos los campos mapeados
+     */
+    private buildProfileDataFromClaims(claims: BusinessTokenClaims): UserProfileDialogData {
         const datesUser = this.getDatesUser(claims);
         const phone = this.getPrimaryPhone(datesUser);
         const address = this.getPrimaryAddress(datesUser);
         const firstCity = this.getPrimaryCityName(address);
 
-        this.profileData = {
+        return {
             ...this.profileData,
-            idBussines: toNumberOrNull(claims.idBusiness),
+            idbusiness: toNumberOrNull(claims.idbusiness),
             email: toStringOr(claims.email, this.profileData.email),
             datesUserId: toStringOr(datesUser?.idDatesUser || datesUser?.id, this.profileData.datesUserId),
             firstName: toStringOr(datesUser?.firstName, this.profileData.firstName),
             secondName: toStringOr(datesUser?.secondName, this.profileData.secondName),
             idUrl: toStringOr(datesUser?.idUrl, this.profileData.idUrl),
-            estado: toStringOr(datesUser?.estado, toStringOr(claims.estado, this.profileData.estado)),
+            estado: this.resolveUserState(datesUser, claims),
             nombreRol: toStringOr(datesUser?.nombreRol, this.resolveRole(claims)),
+            ...this.mapPhoneData(phone),
+            ...this.mapAddressData(address, firstCity),
+            department: toStringOr(claims['department'], this.profileData.department),
+            postalCode: toStringOr(claims['postalCode'], this.profileData.postalCode),
+        };
+    }
+
+    /**
+     * Mapea datos de teléfono del usuario a propiedades del perfil.
+     *
+     * @param phone - Información de teléfono principal o null
+     * @returns Objeto parcial con propiedades de teléfono
+     */
+    private mapPhoneData(phone: BusinessTokenPhoneClaim | null) {
+        return {
             phoneNumber: toStringOr(phone?.number, this.profileData.phoneNumber),
             phoneCityCode: toNumberOrNull(phone?.cityCode),
             phoneCountryCode: toNumberOrNull(phone?.countryCode),
             phoneNameCity: toStringOr(phone?.nameCity, this.profileData.phoneNameCity),
             phoneNameCountry: toStringOr(phone?.nameCountry, this.profileData.phoneNameCountry),
-            address: toStringOr(address?.adress, this.profileData.address),
-            city: toStringOr(firstCity, this.profileData.city),
-            department: toStringOr(claims['department'], this.profileData.department),
-            country: toStringOr(address?.country?.name, this.profileData.country),
-            postalCode: toStringOr(claims['postalCode'], this.profileData.postalCode),
         };
     }
 
+    /**
+     * Mapea datos de dirección del usuario a propiedades del perfil.
+     *
+     * @param address - Información de dirección principal o null
+     * @param cityName - Nombre de la ciudad principal
+     * @returns Objeto parcial con propiedades de dirección
+     */
+    private mapAddressData(address: BusinessTokenAddressClaim | null, cityName: string) {
+        return {
+            address: toStringOr(address?.adress, this.profileData.address),
+            city: toStringOr(cityName, this.profileData.city),
+            country: toStringOr(address?.country?.name, this.profileData.country),
+        };
+    }
+
+    /**
+     * Resuelve el estado del usuario desde claims o datos de usuario.
+     *
+     * @param datesUser - Datos de usuario
+     * @param claims - Claims del JWT de negocio
+     * @returns Estado del usuario (ej: 'ACTIVO', 'INACTIVO')
+     */
+    private resolveUserState(datesUser: BusinessTokenDatesUserClaim, claims: BusinessTokenClaims): string {
+        return toStringOr(datesUser?.estado, toStringOr(claims.estado, this.profileData.estado));
+    }
+
+    /**
+     * Obtiene los datos de usuario desde los claims del JWT.
+     *
+     * @param claims - Claims del token de negocio
+     * @returns Objeto con datos de usuario o vacío si no existe
+     */
     private getDatesUser(claims: BusinessTokenClaims): BusinessTokenDatesUserClaim {
         return claims?.datesUser ?? {};
     }
 
+    /**
+     * Extrae el teléfono principal de la lista de teléfonos del usuario.
+     *
+     * @param datesUser - Datos de usuario
+     * @returns Teléfono principal o null si no existe
+     */
     private getPrimaryPhone(datesUser: BusinessTokenDatesUserClaim): BusinessTokenPhoneClaim | null {
         const phoneList = datesUser?.phone;
         return Array.isArray(phoneList) && phoneList.length > 0 ? phoneList[0] : null;
     }
 
+    /**
+     * Extrae la dirección principal de la lista de direcciones del usuario.
+     *
+     * @param datesUser - Datos de usuario
+     * @returns Dirección principal o null si no existe
+     */
     private getPrimaryAddress(datesUser: BusinessTokenDatesUserClaim): BusinessTokenAddressClaim | null {
         const addressList = datesUser?.addresses;
         return Array.isArray(addressList) && addressList.length > 0 ? addressList[0] : null;
     }
 
+    /**
+     * Obtiene el nombre de la ciudad principal desde la dirección.
+     *
+     * @param address - Información de dirección o null
+     * @returns Nombre de la ciudad o cadena vacía si no existe
+     */
     private getPrimaryCityName(address: BusinessTokenAddressClaim | null): string {
         const city = address?.country?.cities;
         return Array.isArray(city) && city.length > 0 ? toStringOr(city[0]?.name) : '';
     }
 
+    /**
+     * Resuelve el rol principal del usuario desde los claims del JWT.
+     *
+     * @param claims - Claims del token de negocio
+     * @returns Rol del usuario o valor por defecto del perfil
+     */
     private resolveRole(claims: BusinessTokenClaims): string {
         const roles = claims?.roles;
         return Array.isArray(roles) && roles.length > 0 ? toStringOr(roles[0], this.profileData.nombreRol) : this.profileData.nombreRol;

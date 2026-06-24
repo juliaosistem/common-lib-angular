@@ -153,14 +153,30 @@
             <td><code>{{ fieldType.type }}</code></td>
             <td>{{ fieldType.description }}</td>
             <td>
-              <span *ngIf="fieldType.type === 'text'">{{ '{' }} name: 'text' {{ '}' }}</span>
-              <span *ngIf="fieldType.type === 'email'">{{ '{' }} email: 'email' {{ '}' }}</span>
-              <span *ngIf="fieldType.type === 'number'">{{ '{' }} price: 'number' {{ '}' }}</span>
-              <span *ngIf="fieldType.type === 'date'">{{ '{' }} joinDate: 'date' {{ '}' }}</span>
-              <span *ngIf="fieldType.type === 'boolean'">{{ '{' }} active: 'boolean' {{ '}' }}</span>
-              <span *ngIf="fieldType.type === 'select'">{{ '{' }} role: 'select' {{ '}' }}</span>
-              <span *ngIf="fieldType.type === 'img'">{{ '{' }} photo: 'img' {{ '}' }}</span>
-              <span *ngIf="fieldType.type === 'file'">{{ '{' }} document: 'file' {{ '}' }}</span>
+              @if (fieldType.type === 'text') {
+                <span>{{ '{' }} name: 'text' {{ '}' }}</span>
+              }
+              @if (fieldType.type === 'email') {
+                <span>{{ '{' }} email: 'email' {{ '}' }}</span>
+              }
+              @if (fieldType.type === 'number') {
+                <span>{{ '{' }} price: 'number' {{ '}' }}</span>
+              }
+              @if (fieldType.type === 'date') {
+                <span>{{ '{' }} joinDate: 'date' {{ '}' }}</span>
+              }
+              @if (fieldType.type === 'boolean') {
+                <span>{{ '{' }} active: 'boolean' {{ '}' }}</span>
+              }
+              @if (fieldType.type === 'select') {
+                <span>{{ '{' }} role: 'select' {{ '}' }}</span>
+              }
+              @if (fieldType.type === 'img') {
+                <span>{{ '{' }} photo: 'img' {{ '}' }}</span>
+              }
+              @if (fieldType.type === 'file') {
+                <span>{{ '{' }} document: 'file' {{ '}' }}</span>
+              }
             </td>
           </tr>
         </tbody>

@@ -112,6 +112,7 @@ export * from './lib/services/auth-service';
 export * from './lib/services/cart.service';
 export * from './lib/services/categorias-productos.service';
 export * from './lib/services/meta-data.service.ts/meta-data.service';
+export * from './lib/services/store-action-feedback.service';
 
 // library injector helper (set by host app)
 export * from './lib/utils/library-injector';
@@ -126,6 +127,7 @@ export * from './lib/assets/state/business.state';
 export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/usuarios.state';
 export * from './lib/assets/state/categorias-productos.state'
+export * from './lib/assets/state/tipo-categorias.state'
 
 //routes
 export * from './lib/componentes/shared/routes/ecomerce1.routes';

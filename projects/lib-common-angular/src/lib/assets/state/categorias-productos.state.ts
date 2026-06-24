@@ -45,28 +45,24 @@ export class CategoriaProductoState extends GenericCrudState<CategoriaDTO, Categ
   }
   @Action(CategoriaproductoActions.LoadMock)
   override loadMock(ctx: StateContext<PlantillaResponse<CategoriaDTO>>) {
+    let mockData: CategoriaDTO[] = [];
     try {
-      let mockData: CategoriaDTO[] = [];
-      try {
-        const injector = getLibraryInjector();
-        const productSvc = injector.get(ProductService) as ProductService;
-        mockData = productSvc.mockCategoriaInflablesDTO();
-      } catch (e) {
-        mockData = [];
-      }
-      ctx.patchState({
-        data: undefined,
-        dataList: mockData,
-        message: mockData.length ? 'Datos mock cargados correctamente' : 'No hay datos mock disponibles',
-        rta: !!mockData.length,
-      });
-    } catch (error) {
-      ctx.patchState({
-        data: undefined,
-        dataList: [],
-        message: 'Error al cargar datos mock ' + error,
-        rta: false,
-      });
+      const injector = getLibraryInjector();
+      const productSvc = injector.get(ProductService) as ProductService;
+      mockData = productSvc.mockCategoriaInflablesDTO();
+    } catch {
+      mockData = [];
     }
+    ctx.patchState({
+      data: undefined,
+      dataList: mockData,
+      message: mockData.length ? 'Datos mock cargados correctamente' : 'No hay datos mock disponibles',
+      rta: !!mockData.length,
+    });
+  }
+
+  @Action(CategoriaproductoActions.Add)
+  oadd(ctx: StateContext<PlantillaResponse<CategoriaDTO>>, action: any) {
+    return this.add(ctx, action);
   }
 }

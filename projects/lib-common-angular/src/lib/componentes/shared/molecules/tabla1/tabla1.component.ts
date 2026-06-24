@@ -37,7 +37,7 @@ export class Tabla1Component implements OnInit {
   // Propiedades del paginador
   @Input() rows: number = 10;                               // Filas por página
   @Input() paginator: boolean = true;                       // Habilitar paginador
-  @Input() rowsPerPageOptions: number[] = [10, 20, 30];     // Opciones de filas por página
+  @Input() rowsPerPageOptions: number[] = [5,10,20,30];     // Opciones de filas por página
   @Input() showCurrentPageReport: boolean = true;           // Mostrar reporte de página
 
   @Output() editItem = new EventEmitter<Record<string, unknown>>();

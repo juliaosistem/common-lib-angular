@@ -4,7 +4,7 @@
    <!-- Botones de Social Login -->
 
    <!-- Campos del formulario -->
-   <ng-container *ngIf="isRegistering && isLogout; else loginFields">
+   @if (isRegistering && isLogout) {
       <div class="grid formgrid p-fluid">
          <div class="col-12 field">
             <label for="register-name" class="input-label">Nombre completo</label>
@@ -23,10 +23,9 @@
             <p-password inputId="register-confirm-password" [feedback]="false" [toggleMask]="true" formControlName="confirmPassword"></p-password>
          </div>
       </div>
-   </ng-container>
-   <ng-template #loginFields>
+   } @else {
       <lib-inputs-login-ecommerce1 [parentForm]="loginForm"></lib-inputs-login-ecommerce1>
-   </ng-template>
+   }
 
    <button pButton type="submit"
       [label]="isRegistering ? 'Registrarse' : 'Iniciar sesión'"

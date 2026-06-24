@@ -62,8 +62,11 @@
               <tr *ngFor="let item of section.items; trackBy: trackByPath">
                 <td data-label="Clase"><code>{{ item.className }}</code></td>
                 <td data-label="Selector">
-                  <code *ngIf="item.selector">{{ item.selector }}</code>
-                  <span *ngIf="!item.selector">N/A</span>
+                  @if (item.selector) {
+                    <code>{{ item.selector }}</code>
+                  } @else {
+                    <span>N/A</span>
+                  }
                 </td>
                 <td data-label="Ruta"><small>{{ item.path }}</small></td>
                 <td data-label="Acción" class="action-cell">
@@ -75,7 +78,9 @@
         </div>
       </ng-container>
 
-      <p *ngIf="sections.length === 0" class="empty-state">No se encontraron componentes con los filtros aplicados.</p>
+      @if (sections.length === 0) {
+        <p class="empty-state">No se encontraron componentes con los filtros aplicados.</p>
+      }
     </div>
 
     <div class="section snippet-panel">

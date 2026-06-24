@@ -101,7 +101,9 @@
     <div class="languages-grid">
       <div class="language-badge" *ngFor="let lang of languagesSupported">
         <code>{{ lang.lang }}</code>
-        <span *ngIf="lang.alias">({{ lang.alias }})</span>
+        @if (lang.alias) {
+          <span>({{ lang.alias }})</span>
+        }
       </div>
     </div>
   </div>

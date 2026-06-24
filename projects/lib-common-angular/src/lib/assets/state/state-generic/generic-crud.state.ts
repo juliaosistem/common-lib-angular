@@ -100,7 +100,23 @@ export abstract class GenericCrudState<RES, RQ> {
 
  @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.Add; } as any)
 add(ctx: StateContext<PlantillaResponse<RES>>, action: any) {
-  return this.service.add(action.payload, action.queryParams);
+  // eslint-disable-next-line no-debugger
+  return this.service.add(action.payload, action.queryParams).pipe(
+    
+    tap((res) => {
+      const state = ctx.getState();
+      const newItem = res.data;
+      if (newItem && state.dataList) {
+        ctx.setState({
+          ...state,
+          dataList: [...state.dataList, newItem],
+          data: newItem,
+          message: res.message,
+          rta: true,
+        });
+      }
+    })
+  );
 }
 
 @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.Update; } as any)
