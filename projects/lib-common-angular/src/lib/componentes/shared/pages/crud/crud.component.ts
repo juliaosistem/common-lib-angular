@@ -87,8 +87,8 @@ export class Crud implements OnInit, OnChanges {
         }
     }
 initFields() {
-    // Inicializar campos dinámicos si no se han generado
-    if (this.fields.length === 0) {
+    // Inicializar campos dinámicos solo cuando no se proporcionan desde el padre
+    if (this.fields.length === 0 && this.displayFields.length === 0) {
         this.fields = this.dynamicFieldService.generateFieldsFromData({
             data: this.data,
             fieldTypeConfig: this.fieldTypeConfig,
@@ -186,7 +186,7 @@ deleteSelectedItems() {
             severity: 'success',
             summary: 'Successful',
             detail: `${count} item${count > 1 ? 's' : ''} deleted`,
-            life: 3000,
+            life: 6000,
         });
     }
 

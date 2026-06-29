@@ -12,11 +12,13 @@ export interface FeedbackMessages {
 
 @Injectable({ providedIn: 'root' })
 export class StoreActionFeedbackService {
+  private readonly toastLifeMs = 6000;
+
   constructor(private messageService: MessageService) {}
 
   execute(
     store: Store,
-    action: unknown,
+    action: object,
     stateKey: string,
     messages: FeedbackMessages,
   ): Observable<boolean> {
@@ -29,6 +31,7 @@ export class StoreActionFeedbackService {
           severity: 'error',
           summary: 'Error',
           detail: error?.message || messages.error,
+          life: this.toastLifeMs,
         });
         return of(false);
       }),
@@ -36,28 +39,38 @@ export class StoreActionFeedbackService {
   }
 
   private getResponse(store: Store, stateKey: string): PlantillaResponse<unknown> | undefined {
-    return store.selectSnapshot((state: any) => state?.[stateKey]) as PlantillaResponse<unknown> | undefined;
+    return store.selectSnapshot((state: Record<string, unknown>) => {
+      const stateSlice = state?.[stateKey] as PlantillaResponse<unknown> | undefined;
+      return stateSlice;
+    });
   }
 
   private showToast(response: PlantillaResponse<unknown> | undefined, messages: FeedbackMessages): void {
     const isSuccess = this.isSuccessResponse(response);
+    const responseMessage = this.resolveResponseMessage(response);
     this.messageService.add({
       severity: isSuccess ? 'success' : 'error',
       summary: isSuccess ? 'Success' : 'Error',
-      detail: response?.message || (isSuccess ? messages.success : messages.error),
+      detail: responseMessage || (isSuccess ? messages.success : messages.error),
+      life: this.toastLifeMs,
     });
+  }
+
+  private resolveResponseMessage(response?: PlantillaResponse<unknown>): string {
+    const rootMessage = response?.message;
+    const dataMessage = (response?.data as { message?: string } | undefined)?.message;
+    return (rootMessage || dataMessage || '').toString().trim();
   }
 
   private isSuccessResponse(response?: PlantillaResponse<unknown>): boolean {
     if (!response) {
       return false;
     }
-
-    if (typeof response.rta === 'boolean') {
-      return response.rta;
+    const status = response.httpStatus ?? 0;
+    if (status >= 200 && status < 300) {
+      return true;
     }
 
-    const status = response.httpStatus ?? 0;
-    return status >= 200 && status < 300;
+    return response.rta === true;
   }
 }

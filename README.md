@@ -7,6 +7,9 @@ Esta libreria se usa para todos los proyectos frontales de aqui se usan los comp
 
 ## Configuración de Ambientes
 
+Documentacion detallada de configuracion de endpoints:
+- `projects/lib-common-angular/README.md`
+
 ### Uso Básico
 
 ```typescript

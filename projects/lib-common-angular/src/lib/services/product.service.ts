@@ -668,9 +668,9 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idCategoria: 'MTOB',
   nombreCategoria: '',
   imagen: [
-    { id: '75', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-TORRE-ALTA1.png', alt: 'Mini Tobogan Torre Alta inflable Recreativo', idComponente: 0 },
-    { id: '76', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-TORRE-ALTA2.png', alt: 'Mini Tobogan Torre Alta inflable Recreativo', idComponente: 0 },
-    { id: '77', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-TORRE-ALTA3.png', alt: 'Mini Tobogan Torre Alta inflable Recreativo', idComponente: 0 },
+    { id: '75', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-TORRE-ALTA1.png', alt: 'Mini Tobogan Torre Alta inflable Recreativo' },
+    { id: '76', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-TORRE-ALTA2.png', alt: 'Mini Tobogan Torre Alta inflable Recreativo'},
+    { id: '77', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-TORRE-ALTA3.png', alt: 'Mini Tobogan Torre Alta inflable Recreativo' },
   ],
   estado: 'Activo',
   descripcion: 'MINI TOBOGAN 4.50 ALTO X 4 DE ANCHO X 5 DE FONDO SIN IMPRESIONES, MALLAS A LOS LADOS DE LA ENTRADA',
@@ -689,9 +689,9 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idCategoria: 'MTOB',
   nombreCategoria: '',
   imagen: [
-    { id: '81', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN -JUMBO-v2-1.png', alt: 'Mini Tobogan Jumbo 2 inflable Recreativo', idComponente: 0 },
-    { id: '82', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN -JUMBO-v2-2.png', alt: 'Mini Tobogan Jumbo 2 inflable Recreativo', idComponente: 0 },
-    { id: '83', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN -JUMBO-v2-3.png', alt: 'Mini Tobogan Jumbo 2 inflable Recreativo', idComponente: 0 },
+    { id: '81', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN -JUMBO-v2-1.png', alt: 'Mini Tobogan Jumbo 2 inflable Recreativo' },
+    { id: '82', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN -JUMBO-v2-2.png', alt: 'Mini Tobogan Jumbo 2 inflable Recreativo' },
+    { id: '83', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN -JUMBO-v2-3.png', alt: 'Mini Tobogan Jumbo 2 inflable Recreativo' },
   ],
   estado: 'Activo',
   descripcion: '4.50 ALTO X 5.30 DE ANCHO X 4.50 DE FONDO 2 MUÑECOS 3D EN CADA ESQUINA 3 IMPRESIONES FRONTALES 1 EN TOBOGAN Y 1 EN ENTRADA',
@@ -710,10 +710,10 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idCategoria: 'MTOB',
   nombreCategoria: '',
   imagen: [
-    { id: '84', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY1.png', alt: 'Mini Tobogan Mickey inflable Recreativo', idComponente: 0 },
-    { id: '85', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY2.png', alt: 'Mini Tobogan Mickey inflable Recreativo', idComponente: 0 },
-    { id: '86', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY3.png', alt: 'Mini Tobogan Mickey inflable Recreativo', idComponente: 0 },
-    { id: '87', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY4.png', alt: 'Mini Tobogan Mickey inflable Recreativo', idComponente: 0 },
+    { id: '84', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY1.png', alt: 'Mini Tobogan Mickey inflable Recreativo' },
+    { id: '85', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY2.png', alt: 'Mini Tobogan Mickey inflable Recreativo'  },
+    { id: '86', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY3.png', alt: 'Mini Tobogan Mickey inflable Recreativo' },
+    { id: '87', url: '../../../../../assets/imagenes/miniToboganes/MINI-TOBOGAN-MICKEY4.png', alt: 'Mini Tobogan Mickey inflable Recreativo' },
 
   ],
   estado: 'Activo',
@@ -733,9 +733,9 @@ mockProductosInflablesDTO(): ProductoDTO[] {
   idCategoria: 'MTOB',
   nombreCategoria: '',
   imagen: [ 
-    { id: '88', url: '../../../../../assets/imagenes/miniToboganes/tobogan-Inflable-Colores1.png', alt: 'Mini Tobogan inflable Recreativo', idComponente: 0 },
-    { id: '89', url: '../../../../../assets/imagenes/miniToboganes/tobogan-Inflable-Colores2.png', alt: 'Mini Tobogan inflable Recreativo', idComponente: 0 },
-    { id: '90', url: '../../../../../assets/imagenes/miniToboganes/tobogan-Inflable-Colores3.png', alt: 'Mini Tobogan inflable Recreativo', idComponente: 0 },
+    { id: '88', url: '../../../../../assets/imagenes/miniToboganes/tobogan-Inflable-Colores1.png', alt: 'Mini Tobogan inflable Recreativo' },
+    { id: '89', url: '../../../../../assets/imagenes/miniToboganes/tobogan-Inflable-Colores2.png', alt: 'Mini Tobogan inflable Recreativo' },
+    { id: '90', url: '../../../../../assets/imagenes/miniToboganes/tobogan-Inflable-Colores3.png', alt: 'Mini Tobogan inflable Recreativo' },
 
 ],
   estado: 'Activo',

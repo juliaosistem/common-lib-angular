@@ -45,3 +45,7 @@
     border-bottom-right-radius: 12px;
   }
 }
+
+:host ::ng-deep .crud-dialog-select-panel-up {
+  transform: translateY(calc(-100% - 0.25rem)) !important;
+}

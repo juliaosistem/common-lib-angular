@@ -87,13 +87,13 @@ override update(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) 
 
 @Action(ProductosActions.Delete)
 override delete(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
-  return this.service.delete(action.queryParams).pipe(
+  return this.service.delete(action.queryParams?.id, action.queryParams).pipe(
     tap((res) => {
       const state = ctx.getState();
       if (state.dataList) {
         ctx.setState({
           ...state,
-          dataList: state.dataList.filter((item: any) => item.id !== action.id),
+          dataList: state.dataList.filter((item: any) => String(item.id) !== String(action.queryParams?.id)),
           message: res.message,
           rta: true,
         });

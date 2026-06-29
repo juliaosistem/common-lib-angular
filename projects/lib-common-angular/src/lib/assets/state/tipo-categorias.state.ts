@@ -44,4 +44,30 @@ export class TipoCategoriaState extends GenericCrudState<TipoCategoriaDTO, TipoC
   oadd(ctx: StateContext<PlantillaResponse<TipoCategoriaDTO>>, action: any) {
     return this.add(ctx, action);
   }
+
+  @Action(TipoCategoriaActions.Update)
+   aupdate(ctx: StateContext<PlantillaResponse<TipoCategoriaDTO>>, action: any) {
+    return this.update(ctx, action);
+  }
+
+  @Action(TipoCategoriaActions.Delete)
+  override delete(ctx: StateContext<PlantillaResponse<TipoCategoriaDTO>>, action: any) {
+    return this.service.delete(action.queryParams?.id, action.queryParams).pipe(
+      tap((res) => {
+        const state = ctx.getState();
+        if (!state.dataList) return;
+        ctx.setState({
+          ...state,
+          dataList: state.dataList.filter(
+            (item: any) => String(item.id) !== String(action.queryParams?.id)
+          ),
+          message: res.message,
+          rta: true,
+        });
+      })
+    );
+  }
+
+  
+
 }
