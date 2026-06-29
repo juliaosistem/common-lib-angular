@@ -5,5 +5,6 @@
   [blockedCountryCodes]="blockedCountryCodes"
   [countryListConfig]="countryListConfig"
   [placeholderText]="placeholderText"
+  (keyup)="onCountrySearchKeyup($event)"
   (onCountryChange)="handleCountryChange($event)"
 ></lib-country-list>

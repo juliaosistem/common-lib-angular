@@ -99,14 +99,11 @@
       <div class="profile-grid">
         <div class="field">
           <label for="profile-country">Pais</label>
-          <lib-country-list
-            [selectedCountryCode]="selectedCountryCode || null"
-            [allowedCountryCodes]="allowedCountryCodes"
-            [countryListConfig]="countryListConfig"
+          <app-country-dropdown
+            [selectedCountryCode]="selectedCountryCode"
             [placeholderText]="'Buscar pais o codigo'"
-            (keyup)="onCountrySearchKeyup($event)"
             (onCountryChange)="onCountrySelected($event)"
-          ></lib-country-list>
+          ></app-country-dropdown>
        
           @if (showError('country')) {
             <small class="field-error">{{ getErrorMessage('country', 'Pais') }}</small>

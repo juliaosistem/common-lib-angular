@@ -1,4 +1,5 @@
 export * from './lib/services/google.service';
+export * from './lib/services/country-ymoneda.utilities';
 /*
  * Public API Surface of common-lib
  */
