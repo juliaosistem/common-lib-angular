@@ -63,10 +63,15 @@ export class UserProfileDialog1Component implements OnChanges {
   @Output() profileClose = new EventEmitter<void>();
 
   countryOptions: ICountry[] = [];
+  allowedCountryCodes: string[] = [];
   cityOptions: { label: string; value: string }[] = [];
   selectedCountry: ICountry | null = null;
   selectedCountryCode = '';
-  readonly countryListConfig = { hideSearch: false };
+  readonly countryListConfig = {
+    hideSearch: false,
+    hideCode: false,
+    hideName: false,
+  };
 
   readonly profileForm = new FormGroup({
     email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
@@ -124,6 +129,7 @@ export class UserProfileDialog1Component implements OnChanges {
 
   onCountrySelected(countryCode: string): void {
     const selectedFromCatalog = getCountryByCode(countryCode?.toUpperCase());
+    this.allowedCountryCodes = [];
     this.selectedCountry = selectedFromCatalog ?? null;
     this.handleSelection(countryCode, selectedFromCatalog);
   }
@@ -147,6 +153,14 @@ export class UserProfileDialog1Component implements OnChanges {
       city,
       phoneNameCity: city,
     });
+  }
+
+  onCountrySearchKeyup(event: KeyboardEvent): void {
+    const input = event.target;
+    if (!(input instanceof HTMLInputElement)) return;
+    if (!input.classList.contains('ipv_search_box')) return;
+    this.applyCountryFilter(input.value);
+    input.dispatchEvent(new Event('change', { bubbles: true }));
   }
 
   onSave(): void {
@@ -265,10 +279,6 @@ export class UserProfileDialog1Component implements OnChanges {
     }
   }
 
-  getSelectedCountryCode(): string {
-    return this.selectedCountryCode || this.resolveCountryCode(this.profileForm.getRawValue().country ?? this.profileData?.country ?? '');
-  }
-
   private findCountryByCode(countryCode: string): ICountry | null {
     const normalizedCountryCode = this.normalizeCountryCode(countryCode);
     if (!normalizedCountryCode) {
@@ -345,6 +355,33 @@ export class UserProfileDialog1Component implements OnChanges {
   private normalizeCountryCode(value: string): string {
     const cleaned = String(value).trim().toLowerCase();
     return cleaned.length >= 2 ? cleaned.slice(0, 2) : '';
+  }
+
+  private applyCountryFilter(rawQuery: string): void {
+    const query = this.normalizeSearchText(rawQuery);
+    if (!query) {
+      this.allowedCountryCodes = [];
+      return;
+    }
+
+    this.allowedCountryCodes = COUNTRIES_LIST
+      .filter((item) => this.countryMatchesQuery(item, query))
+      .map((item) => String(item.code).toLowerCase());
+  }
+
+  private countryMatchesQuery(item: ICountry, query: string): boolean {
+    const byName = this.normalizeSearchText(item.name).includes(query);
+    const byCode = this.normalizeSearchText(item.code).includes(query);
+    const byDial = this.normalizeSearchText(item.dialling_code).includes(query);
+    return byName || byCode || byDial;
+  }
+
+  private normalizeSearchText(value: string): string {
+    return String(value ?? '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
   }
 
   private resetFormState(): void {

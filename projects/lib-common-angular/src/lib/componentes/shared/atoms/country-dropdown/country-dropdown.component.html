@@ -1,0 +1,9 @@
+<lib-country-list
+  [selectedCountryCode]="selectedCountryCode || null"
+  [preferredCountryCodes]="preferredCountryCodes"
+  [allowedCountryCodes]="allowedCountryCodes"
+  [blockedCountryCodes]="blockedCountryCodes"
+  [countryListConfig]="countryListConfig"
+  [placeholderText]="placeholderText"
+  (onCountryChange)="handleCountryChange($event)"
+></lib-country-list>
