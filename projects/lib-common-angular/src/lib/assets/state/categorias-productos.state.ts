@@ -65,4 +65,15 @@ export class CategoriaProductoState extends GenericCrudState<CategoriaDTO, Categ
   oadd(ctx: StateContext<PlantillaResponse<CategoriaDTO>>, action: any) {
     return this.add(ctx, action);
   }
+
+
+    @Action(CategoriaproductoActions.Update)
+       Update(ctx: StateContext<PlantillaResponse<CategoriaDTO>>, action: any) {
+      return this.update(ctx, action);
+    }
+
+    @Action(CategoriaproductoActions.Delete)
+    Delete(ctx: StateContext<PlantillaResponse<CategoriaDTO>>, action: any) {
+     return this.delete(ctx, action);
+    }
 }

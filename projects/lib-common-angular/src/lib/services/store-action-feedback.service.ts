@@ -30,13 +30,14 @@ export class StoreActionFeedbackService {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: error?.message || messages.error,
+          detail: error.error.message || "algún error ocurrió durante la acción",
           life: this.toastLifeMs,
         });
         return of(false);
       }),
     );
   }
+
 
   private getResponse(store: Store, stateKey: string): PlantillaResponse<unknown> | undefined {
     return store.selectSnapshot((state: Record<string, unknown>) => {
@@ -61,6 +62,11 @@ export class StoreActionFeedbackService {
     const dataMessage = (response?.data as { message?: string } | undefined)?.message;
     return (rootMessage || dataMessage || '').toString().trim();
   }
+
+  
+ 
+
+  
 
   private isSuccessResponse(response?: PlantillaResponse<unknown>): boolean {
     if (!response) {

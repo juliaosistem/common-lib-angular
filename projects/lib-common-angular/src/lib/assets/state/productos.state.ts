@@ -4,7 +4,6 @@ import { State, Selector, Action, StateContext, createSelector } from '@ngxs/sto
 import { ProductoDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { createGenericCrudActions } from './state-generic/generic-crud.actions';
-import { tap } from 'rxjs';
 import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
 import { GenericCrudState, LazyGenericCrudHttpService } from './state-generic/generic-crud.state';
 import { getLibraryInjector } from '../../utils/library-injector';
@@ -53,9 +52,7 @@ export class ProductosState extends GenericCrudState<ProductoDTO, ProductoDTO> {
   // Acción All
   @Action(ProductosActions.All)
   all(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
-    return this.service
-      .all(action.payload)
-      .pipe(tap((res) => ctx.setState(res)));
+   return this.All(ctx, action);
   }
 
   @Action(ProductosActions.Add)
@@ -65,42 +62,17 @@ export class ProductosState extends GenericCrudState<ProductoDTO, ProductoDTO> {
 
 
 @Action(ProductosActions.Update)
-override update(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
-  return this.service.update(action.payload, action.queryParams).pipe(
-    tap((res) => {
-      const state = ctx.getState();
-      const updatedItem = res.data;
-      if (updatedItem && state.dataList) {
-        ctx.setState({
-          ...state,
-          dataList: state.dataList.map((item: any) =>
-            item.id === updatedItem.id ? updatedItem : item
-          ),
-          data: updatedItem,
-          message: res.message,
-          rta: true,
-        });
-      }
-    })
-  );
+  Update(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
+  return this.update(ctx, action);
 }
 
+
+
 @Action(ProductosActions.Delete)
-override delete(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
-  return this.service.delete(action.queryParams?.id, action.queryParams).pipe(
-    tap((res) => {
-      const state = ctx.getState();
-      if (state.dataList) {
-        ctx.setState({
-          ...state,
-          dataList: state.dataList.filter((item: any) => String(item.id) !== String(action.queryParams?.id)),
-          message: res.message,
-          rta: true,
-        });
-      }
-    })
-    );
+ Delete(ctx: StateContext<PlantillaResponse<ProductoDTO>>, action: any) {
+  return this.delete(ctx, action);
   }
+
   @Action(ProductosActions.LoadMock)
 override loadMock(ctx: StateContext<PlantillaResponse<ProductoDTO>>) {
     let mockData: ProductoDTO[] = [];
@@ -121,4 +93,5 @@ override loadMock(ctx: StateContext<PlantillaResponse<ProductoDTO>>) {
     });
   }
 
+  
 }
