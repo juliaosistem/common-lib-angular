@@ -65,6 +65,7 @@ export * from './lib/componentes/shared/atoms/select-input1/select-input1.compon
 export * from './lib/componentes/shared/atoms/paginator-pg/paginator-pg.component';
 export * from './lib/componentes/shared/atoms/sh-wats-button-card/sh-wats-button-card';
 export * from './lib/componentes/shared/atoms/button-add-to-card1/button-add-to-card1';
+export * from './lib/componentes/shared/atoms/country-dropdown/country-dropdown.component';
 // shared pages
 export * from './lib/componentes/shared/pages/notfound/notfound';
 
@@ -114,6 +115,7 @@ export * from './lib/services/cart.service';
 export * from './lib/services/categorias-productos.service';
 export * from './lib/services/meta-data.service.ts/meta-data.service';
 export * from './lib/services/store-action-feedback.service';
+export * from './lib/services/imagenes.service';
 
 // library injector helper (set by host app)
 export * from './lib/utils/library-injector';
@@ -129,6 +131,7 @@ export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/usuarios.state';
 export * from './lib/assets/state/categorias-productos.state'
 export * from './lib/assets/state/tipo-categorias.state'
+export * from './lib/assets/state/imagenes.state'
 
 //routes
 export * from './lib/componentes/shared/routes/ecomerce1.routes';

@@ -19,7 +19,7 @@ import { CountryYmonedaUtilities } from '../../../../services/country-ymoneda.ut
   standalone: true,
   imports: [CountryListComponent],
   templateUrl: './country-dropdown.component.html',
-  styleUrl: './country-dropdown.component.scss',
+  styleUrls: ['./country-dropdown.component.scss'],
 })
 export class CountryDropdownComponent implements OnInit {
   @Input() selectedCountryCode = '';

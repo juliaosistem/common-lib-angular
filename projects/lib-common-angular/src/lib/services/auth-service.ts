@@ -151,7 +151,8 @@ export class AuthService {
       dominio: 'app',
       usuario: 'admin',
       topic: 'usuarios',
-      proceso: 'guardar'
+      proceso: 'guardar',
+      idbusiness: Number(sessionStorage.getItem('idbusiness')) || 0,
     };
     return this.store.dispatch(new AddUser(registerUser, queryParams)).pipe(
       map(() => this.store.selectSnapshot(UsuariosState.getUsuarios))

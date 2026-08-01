@@ -68,9 +68,35 @@
     <lib-terminal [code]="configurationCode" language="typescript"></lib-terminal>
   </div>
 
+  <div class="section">
+    <h2>4. Campo Number con Moneda Dinámica</h2>
+    <p>Ahora <code>CrudDialog1</code> permite formatear un campo numérico como moneda dependiendo del valor seleccionado en otro campo (por ejemplo, <code>moneda</code>).</p>
+
+    <lib-terminal [code]="numberCurrencyCode" language="typescript"></lib-terminal>
+
+    <div class="documentation-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Propiedad (DynamicField)</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let option of numberFieldOptionsDocs">
+            <td><code>{{ option.name }}</code></td>
+            <td><code>{{ option.type }}</code></td>
+            <td>{{ option.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- ✅ 4. INTEGRACIÓN CON MODAL -->
   <div class="section">
-    <h2>4. Integración con Modal (CrudDialog1)</h2>
+    <h2>5. Integración con Modal (CrudDialog1)</h2>
     <p>Cómo manejar el modal para agregar y editar elementos:</p>
     
     <lib-terminal [code]="modalIntegrationCode" language="typescript"></lib-terminal>
@@ -78,7 +104,7 @@
 
   <!-- ✅ 5. PLANTILLA HTML COMPLETA -->
   <div class="section">
-    <h2>5. Plantilla HTML Completa</h2>
+    <h2>6. Plantilla HTML Completa</h2>
     <p>Ejemplo completo de HTML con CRUD y Modal integrados:</p>
     
     <lib-terminal [code]="htmlTemplateCode" language="typescript"></lib-terminal>
@@ -86,7 +112,7 @@
 
   <!-- ✅ 6. INPUTS DOCUMENTADOS -->
   <div class="section">
-    <h2>6. Inputs (@Input)</h2>
+    <h2>7. Inputs (@Input)</h2>
     <p>Todas las propiedades de entrada del componente CRUD:</p>
     
     <div class="documentation-table">
@@ -111,7 +137,7 @@
 
   <!-- ✅ 7. OUTPUTS DOCUMENTADOS -->
   <div class="section">
-    <h2>7. Outputs (@Output)</h2>
+    <h2>8. Outputs (@Output)</h2>
     <p>Todos los eventos que emite el componente CRUD:</p>
     
     <div class="documentation-table">
@@ -136,7 +162,7 @@
 
   <!-- ✅ 8. TIPOS DE CAMPO DISPONIBLES -->
   <div class="section">
-    <h2>8. Tipos de Campo Disponibles (FieldType)</h2>
+    <h2>9. Tipos de Campo Disponibles (FieldType)</h2>
     <p>Los diferentes tipos de datos que soporta el CRUD:</p>
     
     <div class="documentation-table">
@@ -156,17 +182,14 @@
               @if (fieldType.type === 'text') {
                 <span>{{ '{' }} name: 'text' {{ '}' }}</span>
               }
-              @if (fieldType.type === 'email') {
-                <span>{{ '{' }} email: 'email' {{ '}' }}</span>
-              }
               @if (fieldType.type === 'number') {
                 <span>{{ '{' }} price: 'number' {{ '}' }}</span>
               }
-              @if (fieldType.type === 'date') {
-                <span>{{ '{' }} joinDate: 'date' {{ '}' }}</span>
+              @if (fieldType.type === 'checkbox') {
+                <span>{{ '{' }} active: 'checkbox' {{ '}' }}</span>
               }
-              @if (fieldType.type === 'boolean') {
-                <span>{{ '{' }} active: 'boolean' {{ '}' }}</span>
+              @if (fieldType.type === 'textarea') {
+                <span>{{ '{' }} description: 'textarea' {{ '}' }}</span>
               }
               @if (fieldType.type === 'select') {
                 <span>{{ '{' }} role: 'select' {{ '}' }}</span>
@@ -186,12 +209,13 @@
 
   <!-- ✅ 9. TIPS Y BUENAS PRÁCTICAS -->
   <div class="section tips">
-    <h2>9. Tips y Buenas Prácticas</h2>
+    <h2>10. Tips y Buenas Prácticas</h2>
     <ul>
       <li><strong>Modal Obligatorio:</strong> Usa CrudDialog1 para manejar la creación/edición de elementos. El CRUD solo maneja la visualización y eventos.</li>
       <li><strong>Excluir campos innecesarios:</strong> Usa <code>excludeFields</code> para no mostrar ID, timestamps, etc.</li>
       <li><strong>Orden de columnas:</strong> Usa <code>fieldOrder</code> para controlar la visualización. El orden en que defines los campos aquí es el que se muestra.</li>
-      <li><strong>Validaciones en el modal:</strong> Las validaciones se hacen en CrudDialog1, no en CRUD.</li>
+      <li><strong>Validaciones en el modal:</strong> Las validaciones se hacen en CrudDialog1 y el botón <code>Save</code> se desactiva automáticamente cuando <code>itemForm</code> es inválido.</li>
+      <li><strong>Moneda dinámica en number:</strong> Usa <code>mode: 'currency'</code> + <code>currencyFieldKey</code> para formatear precio según la moneda seleccionada.</li>
       <li><strong>Paginación:</strong> Activa <code>paginator="true"</code> si tienes muchos registros.</li>
       <li><strong>Vistas:</strong> Alterna entre 'table' y 'grid' según necesites.</li>
     </ul>

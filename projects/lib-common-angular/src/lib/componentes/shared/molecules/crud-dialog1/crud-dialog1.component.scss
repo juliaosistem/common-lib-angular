@@ -49,3 +49,79 @@
 :host ::ng-deep .crud-dialog-select-panel-up {
   transform: translateY(calc(-100% - 0.25rem)) !important;
 }
+
+.crud-image-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 0.875rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  background: #fff;
+}
+
+.crud-image-preview-thumb {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  flex: 0 0 auto;
+}
+
+.crud-image-preview-info {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  flex: 1 1 auto;
+}
+
+.crud-image-preview-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #334155;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crud-image-preview-url {
+  font-size: 0.75rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.crud-image-preview-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 5rem;
+  padding: 0 0.5rem;
+  height: 1.5rem;
+  border-radius: 9999px;
+  background: #10b981;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex: 0 0 auto;
+}
+
+.crud-image-preview-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background: #f8fafc;
+  color: #334155;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.crud-image-preview-remove:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}

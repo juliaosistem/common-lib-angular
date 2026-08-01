@@ -191,7 +191,7 @@ fieldTypeConfig: Record<string, FieldType> = {
   email: 'text',
   price: 'number',
   category: 'select',
-  status: 'boolean',
+  status: 'checkbox',
   image: 'img',
   joinDate: 'text'
 };
@@ -223,6 +223,38 @@ fieldSelectOptions: Record<string, { label: string; value: string }[]> = {
 // ✅ 4. Orden y exclusión
 fieldOrder: string[] = ['name', 'email', 'price', 'category', 'status'];
 excludeFields: string[] = ['id', 'createdAt'];`;
+
+  numberCurrencyCode = `// ✅ Formato de moneda dinámico en CrudDialog1 (p-inputNumber)
+dialogDisplayFields = [
+  {
+    key: 'precio',
+    label: 'Precio',
+    type: 'number',
+    required: true,
+    min: 0.01,
+    mode: 'currency',
+    currencyFieldKey: 'moneda',
+    currencyDisplay: 'code',
+    locale: 'es-CO'
+  },
+  {
+    key: 'moneda',
+    label: 'Moneda',
+    type: 'select',
+    required: true
+  }
+];
+
+dialogFieldSelectOptions = {
+  moneda: [
+    { label: 'Peso colombiano', value: 'COP' },
+    { label: 'Dólar americano', value: 'USD' },
+    { label: 'Euro', value: 'EUR' }
+  ]
+};
+
+// ✅ Save se desactiva automáticamente cuando itemForm es inválido
+// [disabled]="!body && itemForm.invalid"`;
 
   modalIntegrationCode = `// ✅ Integración con Modal (CrudDialog1)
 export class MyComponent {
@@ -291,15 +323,30 @@ export class MyComponent {
 
   // ✅ --- DOCUMENTACIÓN DE INPUTS ---
   inputsDocs = [
+    { name: 'showDialog', type: 'boolean', description: 'Controla visibilidad del diálogo interno.' },
+    { name: 'submitted', type: 'boolean', description: 'Indica si el formulario fue enviado.' },
+    { name: 'loaded', type: 'boolean', description: 'Indica si los datos iniciales ya fueron cargados.' },
+    { name: 'displayFields', type: 'DynamicField[]', description: 'Campos dinámicos a renderizar en tabla/grid.' },
     { name: 'data', type: 'any[]', description: 'Array de objetos que se muestran en la tabla.' },
     { name: 'rows', type: 'number', description: 'Número de filas por página (default: 10).' },
     { name: 'paginator', type: 'boolean', description: 'Habilita paginación (default: true).' },
+    { name: 'rowsPerPageOptions', type: 'number[]', description: 'Opciones de tamaño de página para el paginador.' },
+    { name: 'showCurrentPageReport', type: 'boolean', description: 'Muestra el reporte de página actual del paginador.' },
     { name: 'tableType', type: "'table' | 'grid'", description: "Tipo de vista: 'table' o 'grid' (default: 'table')." },
     { name: 'fieldTypeConfig', type: 'Record<string, FieldType>', description: 'Define el tipo de dato de cada campo.' },
     { name: 'fieldLabels', type: 'Record<string, string>', description: 'Etiquetas personalizadas para los headers.' },
     { name: 'fieldOrder', type: 'string[]', description: 'Define el orden en que se muestran las columnas.' },
     { name: 'excludeFields', type: 'string[]', description: 'Campos que NO se muestran en la tabla.' },
     { name: 'fieldSelectOptions', type: 'Record<string, any[]>', description: 'Opciones para campos de tipo select.' }
+  ];
+
+  numberFieldOptionsDocs = [
+    { name: 'min', type: 'number', description: 'Valor mínimo permitido para campos type: number.' },
+    { name: 'mode', type: "'decimal' | 'currency'", description: 'Modo de p-inputNumber. Permite usar formato de moneda.' },
+    { name: 'currencyFieldKey', type: 'string', description: 'Campo del formulario que define el código ISO de moneda (ej. moneda).' },
+    { name: 'currency', type: 'string', description: 'Moneda fija (fallback) cuando no se usa currencyFieldKey.' },
+    { name: 'currencyDisplay', type: "'symbol' | 'code'", description: 'Cómo se muestra la moneda en el input numérico.' },
+    { name: 'locale', type: 'string', description: 'Locale para separadores y formato numérico (ej. es-CO).' },
   ];
 
   // ✅ --- DOCUMENTACIÓN DE OUTPUTS ---
@@ -315,8 +362,9 @@ export class MyComponent {
   // ✅ --- DOCUMENTACIÓN DE TIPOS DE CAMPO ---
   fieldTypesDocs = [
     { type: 'text', description: 'Input de texto simple.' },
-    { type: 'number', description: 'Input numérico.' },
-    { type: 'boolean', description: 'Checkbox para valores true/false.' },
+    { type: 'number', description: 'Input numérico con soporte decimal/currency y validación por min.' },
+    { type: 'checkbox', description: 'Checkbox para valores true/false.' },
+    { type: 'textarea', description: 'Área de texto para contenido largo.' },
     { type: 'select', description: 'Dropdown con opciones predefinidas.' },
     { type: 'img', description: 'Visualización de imágenes en la tabla.' },
     { type: 'file', description: 'Upload de archivos.' }

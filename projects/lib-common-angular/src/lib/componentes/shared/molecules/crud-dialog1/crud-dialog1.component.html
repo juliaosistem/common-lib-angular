@@ -27,14 +27,28 @@
                 pInputText
                 [id]="field.key"
                 [formControlName]="field.key"
-                [placeholder]="'Enter ' + field.label"
+                [placeholder]="field.placeholder || ('Enter ' + field.label)"
               />
+            }
+            @case ("textarea") {
+              <textarea
+                pInputTextarea
+                [id]="field.key"
+                [formControlName]="field.key"
+                [rows]="field.rows || 5"
+                class="w-full"
+                [placeholder]="field.placeholder || ('Enter ' + field.label)"
+              ></textarea>
             }
             @case ("number") {
               <p-inputNumber
                 [id]="field.key"
                 [formControlName]="field.key"
-                mode="decimal"
+                [mode]="getNumberMode(field)"
+                [currency]="getNumberCurrency(field)"
+                [currencyDisplay]="getCurrencyDisplay(field)"
+                [locale]="getNumberLocale(field)"
+                [min]="getNumberMin(field)"
                 [placeholder]="'Enter ' + field.label"
               />
             }
@@ -63,7 +77,7 @@
               <!-- ✅ FileUpload de PrimeNG para imágenes -->
               <div class="file-upload-container">
                 <p-fileUpload
-                  [multiple]="false"
+                  [multiple]="isMultipleField(field.key)"
                   [accept]="field.accept || 'image/*'"
                   [maxFileSize]="field.maxFileSize || 5242880"
                   [showUploadButton]="false"
@@ -76,13 +90,39 @@
                   styleClass="w-full"
                 >
                 </p-fileUpload>
+
+                @if (getPersistedImagePreviewItems(field.key).length) {
+                  <div class="mt-3 flex flex-col gap-2">
+                    @for (preview of getPersistedImagePreviewItems(field.key); track preview.fingerprint) {
+                      <div class="crud-image-preview-row">
+                        <img [src]="preview.url" [alt]="preview.alt" class="crud-image-preview-thumb" />
+
+                        <div class="crud-image-preview-info">
+                          <span class="crud-image-preview-name">{{ preview.alt }}</span>
+                          <span class="crud-image-preview-url">{{ preview.url }}</span>
+                        </div>
+
+                        <span class="crud-image-preview-badge">Cargada</span>
+
+                        <button
+                          type="button"
+                          class="crud-image-preview-remove"
+                          aria-label="Quitar imagen cargada"
+                          (click)="removeImagePreview(field.key, preview)"
+                        >
+                          <i class="pi pi-times"></i>
+                        </button>
+                      </div>
+                    }
+                  </div>
+                }
               </div>
             }
             @case ("file") {
               <!-- FileUpload de PrimeNG para PDF, Excel, etc. -->
               <div class="file-upload-container">
                 <p-fileUpload
-                  [multiple]="false"
+                  [multiple]="isMultipleField(field.key)"
                   [accept]="field.accept || '.pdf,.xls,.xlsx'"
                   [maxFileSize]="field.maxFileSize || 10485760"
                   [showUploadButton]="false"
@@ -113,6 +153,12 @@
               />
             }
           }
+
+          @if (itemForm.get(field.key)?.touched && itemForm.get(field.key)?.invalid) {
+            <small class="text-red-500">
+              Este campo es obligatorio.
+            </small>
+          }
         </div>
       }
     </form>
@@ -129,6 +175,7 @@
       label="Save"
       icon="pi pi-check"
       [text]="true"
+      [disabled]="!body && itemForm.invalid"
       (click)="saveItem()"
     />
   </ng-template>

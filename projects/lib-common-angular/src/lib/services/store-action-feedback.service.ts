@@ -38,6 +38,15 @@ export class StoreActionFeedbackService {
     );
   }
 
+  showError(detail: string, summary = 'Error'): void {
+    this.messageService.add({
+      severity: 'error',
+      summary,
+      detail: (detail || '').toString().trim() || 'Algún error ocurrió durante la acción',
+      life: this.toastLifeMs,
+    });
+  }
+
 
   private getResponse(store: Store, stateKey: string): PlantillaResponse<unknown> | undefined {
     return store.selectSnapshot((state: Record<string, unknown>) => {

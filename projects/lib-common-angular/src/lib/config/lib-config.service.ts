@@ -13,6 +13,7 @@ export interface LibCommonConfig {
   baseUrlCurrency?: string;
   baseUrlCategoryProduct?: string;
   baseUrlTipoCategoria?: string;
+  baseUrlImagenes?: string;
   baseUrlCrmWhats?: string;
   apiVersion?: string;
   timeout?: number;
@@ -32,6 +33,7 @@ const DEFAULT_LOCAL_CONFIG: LibCommonConfig = {
   baseUrlCurrency: 'http://localhost:3000/Currency',
   baseUrlCategoryProduct: 'http://localhost:3000/category-products',
   baseUrlTipoCategoria: 'http://localhost:3000/tipo-categoria',
+  baseUrlImagenes: 'http://localhost:3000/imagenes',
   baseUrlCrmWhats: 'http://localhost:8090',
   apiVersion: 'v1',
   timeout: 30000
@@ -78,6 +80,7 @@ export class LibConfigService {
       baseUrlCurrency: mergedConfig.baseUrlCurrency ?? `${apiGateway}/Currency`,
       baseUrlCategoryProduct: mergedConfig.baseUrlCategoryProduct ?? `${apiGateway}/category-products`,
       baseUrlTipoCategoria: mergedConfig.baseUrlTipoCategoria ?? `${apiGateway}/tipo-categoria`,
+      baseUrlImagenes: mergedConfig.baseUrlImagenes ?? `${apiGateway}/imagenes`,
       baseUrlCrmWhats: mergedConfig.baseUrlCrmWhats ?? `${apiGateway}/whats`
     };
   }
