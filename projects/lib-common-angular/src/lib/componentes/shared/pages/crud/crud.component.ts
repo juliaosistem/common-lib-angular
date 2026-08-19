@@ -57,6 +57,7 @@ export class Crud implements OnInit, OnChanges {
     @Output() dialogCanceled = new EventEmitter<void>();
     @Input() displayFields: DynamicField[] = [];            
 @Output() deleteItemRequest = new EventEmitter<Record<string, unknown>>();
+    @Input() testIdPrefix: string = 'crud';
 
     // ✅ Propiedades para el manejo del CRUD
     currentItem: Record<string, unknown> = {};

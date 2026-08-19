@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { LoginDTO, RegisterUserDTO } from '@juliaosistem/core-dtos';
 import { Login, AddUser } from '../assets/state/usuarios.actions';
@@ -16,7 +16,7 @@ import { decodeBusinessToken, getSessionToken } from '../utils/business-token.ut
 export class AuthService {
   private readonly loginState$ = new BehaviorSubject<boolean>(this.hasValidSession());
 
-  constructor(private store: Store, private router: Router) {}
+  constructor(private readonly injector: Injector, private router: Router) {}
 
   get isLoggedIn$(): Observable<boolean> {
     return this.loginState$.asObservable();
@@ -36,9 +36,9 @@ export class AuthService {
    */
   // eslint-disable-next-line max-lines-per-function
   login(login: LoginDTO): Observable<{ success: boolean; errorMsg?: string }> {
-    return this.store.dispatch(new Login(login)).pipe(
+    return this.getStore().dispatch(new Login(login)).pipe(
       map(() => {
-        const authResponse = this.store.selectSnapshot<PlantillaResponse<AuthResponseDTO>>(UsuariosState.Login);
+        const authResponse = this.getStore().selectSnapshot<PlantillaResponse<AuthResponseDTO>>(UsuariosState.Login);
         const resolvedToken = this.resolveToken(authResponse?.data);
 
         if (resolvedToken) {
@@ -154,8 +154,12 @@ export class AuthService {
       proceso: 'guardar',
       idbusiness: Number(sessionStorage.getItem('idbusiness')) || 0,
     };
-    return this.store.dispatch(new AddUser(registerUser, queryParams)).pipe(
-      map(() => this.store.selectSnapshot(UsuariosState.getUsuarios))
+    return this.getStore().dispatch(new AddUser(registerUser, queryParams)).pipe(
+      map(() => this.getStore().selectSnapshot(UsuariosState.getUsuarios))
     );
+  }
+
+  private getStore(): Store {
+    return this.injector.get(Store);
   }
 }

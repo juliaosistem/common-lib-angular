@@ -29,6 +29,7 @@ interface CartDisplayItem {
   templateUrl: './header-ecommerce1.html',
   styleUrls: ['./header-ecommerce1.scss'],
   encapsulation: ViewEncapsulation.None 
+  ,standalone: true
 })
 export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
 
@@ -117,7 +118,7 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
       }
     ]
   };
- langs:string[];
+  langs: string[] = [];
 
  private touchStartX = 0;
   private touchEndX = 0;
@@ -150,6 +151,7 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
   cartError: string | null = null;
   private readonly destroy$ = new Subject<void>();
 
+  // eslint-disable-next-line max-lines-per-function
   ngOnInit(): void {
     /**
      * Inicializa el componente:
@@ -377,7 +379,7 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
    */
   getLeftMenuItems(): MenuItem[] {
     // Mostrar todos los items de navegación excepto los de auth en la izquierda
-    return this.currentMenu.items.filter(item => 
+    return (this.currentMenu?.items ?? []).filter(item => 
       !item.separator && 
       !['login', 'register'].includes(item.id)
     );
@@ -386,7 +388,7 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
   // Método para obtener items del menú derecho (últimos elementos)
   /** Retorna los ítems de autenticación (login/register) para la zona derecha. */
   getRightMenuItems(): MenuItem[] {
-    return this.currentMenu.items.filter(item => 
+    return (this.currentMenu?.items ?? []).filter(item => 
       !item.separator && 
       ['login', 'register'].includes(item.id)
     );
@@ -395,7 +397,7 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
   // Método para obtener todos los items visibles para móvil
   /** Retorna todos los ítems visibles para el menú móvil. */
   getMobileMenuItems(): MenuItem[] {
-    return this.currentMenu.items
+    return this.currentMenu?.items ?? [];
   }
 
   // Método para manejar clics en el menú

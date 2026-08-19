@@ -46,6 +46,7 @@ export class CrudDialog1Component implements OnChanges, AfterViewInit {
   @Input() currentItem: Record<string, unknown> = {};
   @Input() fieldSelectOptions: Record<string, { label: string; value: string | number | boolean }[]> = {};
   @Input() isDefaultContent: boolean = true;
+  @Input() testIdPrefix: string = 'crud-dialog';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() body: TemplateRef<any> | undefined;
 
@@ -875,5 +876,25 @@ export class CrudDialog1Component implements OnChanges, AfterViewInit {
     }
 
     return `Imagen ${index + 1}`;
+  }
+
+  getDialogTestId(): string {
+    return `${this.testIdPrefix}-container`;
+  }
+
+  getFieldTestId(fieldKey: string): string {
+    return `${this.testIdPrefix}-field-${fieldKey}`;
+  }
+
+  getPersistedImageRemoveTestId(fieldKey: string, index: number): string {
+    return `${this.testIdPrefix}-remove-persisted-${fieldKey}-${index}`;
+  }
+
+  getCancelButtonTestId(): string {
+    return `${this.testIdPrefix}-cancel`;
+  }
+
+  getSaveButtonTestId(): string {
+    return `${this.testIdPrefix}-save`;
   }
 }

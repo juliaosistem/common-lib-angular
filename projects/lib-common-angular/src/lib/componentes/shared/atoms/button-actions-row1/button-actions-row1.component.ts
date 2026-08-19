@@ -21,6 +21,7 @@ export class ButtonActionsRow1Component implements OnInit {
 
   @Input() item: Record<string, unknown> = {};
   @Input() disabled: boolean = false;
+  @Input() testIdPrefix: string = 'crud';
   
   @Output() edit = new EventEmitter<Record<string, unknown>>();
   
@@ -41,5 +42,11 @@ export class ButtonActionsRow1Component implements OnInit {
       icon: 'pi pi-pencil',
       command: () => this.edit.emit(this.item)
     });
+  }
+
+  getActionButtonTestId(): string {
+    const rawId = String(this.item?.['id'] ?? '').trim();
+    const normalizedId = rawId || 'row';
+    return `${this.testIdPrefix}-row-actions-${normalizedId}`;
   }
 }

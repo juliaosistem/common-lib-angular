@@ -30,6 +30,7 @@ export class Tabla1Component implements OnInit {
   @Input() excludeFields: string[] = ['id'];                // Campos a excluir
 @Input() fieldSelectOptions: Record<string, { label: string; value: string | number | boolean }[]> = {};
   @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
+  @Input() testIdPrefix: string = 'crud';
 
   @Input() showDefaultHeader: boolean = true;               // Mostrar encabezado por defecto
   @Input() showDefaultBody: boolean = true;                 // Mostrar cuerpo por defecto
@@ -128,5 +129,10 @@ getFieldValue(item: Record<string, any>, key: string) {
     .replace(/\[(\d+)]/g, '.$1') // "precios[0]" → "precios.0"
     .split('.')
     .reduce((acc, part) => acc?.[part], item);
+}
+
+getRowId(item: Record<string, any>): string {
+  const rowId = String(item?.['id'] ?? '').trim();
+  return rowId || 'row';
 }
 }

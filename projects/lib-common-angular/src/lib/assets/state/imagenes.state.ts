@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { ImagenDTO, UploadImageRequestDTO } from '@juliaosistem/core-dtos';
+import { ImagenDTO, RequestUpdateImages, UploadImageRequestDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
 import { tap } from 'rxjs';
@@ -70,6 +70,19 @@ export class ImagenesState extends GenericCrudState<ImagenDTO, ImagenDTO> {
     action: InstanceType<typeof Upload>,
   ) {
     return this.imagenesService.upload(action.request, action.queryParams).pipe(
+      tap((response) => ctx.setState(response)),
+    );
+  }
+
+  @Action(ImagenesActions.Update as any)
+  override update(
+    ctx: StateContext<PlantillaResponse<ImagenDTO>>,
+    action: any,
+  ) {
+    return this.imagenesService.updateImages(
+      action.payload as RequestUpdateImages & { id: string | number },
+      action.queryParams as QueryParams,
+    ).pipe(
       tap((response) => ctx.setState(response)),
     );
   }

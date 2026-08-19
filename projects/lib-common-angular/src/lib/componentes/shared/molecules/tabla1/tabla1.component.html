@@ -1,5 +1,6 @@
 <p-table
   #dt
+  [attr.data-testid]="testIdPrefix + '-table'"
   [value]="data"
   [rows]="rows"
   [paginator]="paginator"
@@ -31,12 +32,12 @@
   <ng-template #body let-item>
     @if (showDefaultBody) {
       <tr>
-        <td class="tabla1-cell-select" data-label="Select">
+        <td class="tabla1-cell-select" data-label="Select" [attr.data-testid]="testIdPrefix + '-row-checkbox-' + getRowId(item)">
           <p-tableCheckbox [value]="item" />
         </td>
-        <td class="tabla1-cell-actions" data-label="Actions">
+        <td class="tabla1-cell-actions" data-label="Actions" [attr.data-testid]="testIdPrefix + '-row-actions-cell-' + getRowId(item)">
           <div class="flex gap-2 items-center">
-            <lib-button-actions-row1 [item]="item" (edit)="onEditItem($event)">
+            <lib-button-actions-row1 [item]="item" [testIdPrefix]="testIdPrefix" (edit)="onEditItem($event)">
             </lib-button-actions-row1>
           </div>
         </td>

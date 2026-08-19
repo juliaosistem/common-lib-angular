@@ -1,10 +1,11 @@
 <!-- En crud.component.html -->
-<div class="card">
+<div class="card" [attr.data-testid]="testIdPrefix + '-container'">
     <!-- Toolbar para cambiar vista -->
     <lib-tool-bar1 
         (viewChange)="onViewChange($event)"
         [currentView]="tableType"
         [selectedItems]="selectedItems"
+        [testIdPrefix]="testIdPrefix"
         (newItem)="openNew()"
         (deleteSelected)="deleteSelectedItems()"
         (exportToExcel)="exportToExcel()">
@@ -16,6 +17,7 @@
         [data]="data"
         [selectedItems]="selectedItems"
         (selectedItemsChange)="onSelectedItemsChange($event)"
+        [testIdPrefix]="testIdPrefix"
         [fieldTypeConfig]="fieldTypeConfig"
         [fieldLabels]="fieldLabels"
         [fieldOrder]="fieldOrder"
@@ -35,6 +37,7 @@
         [data]="data"
         [selectedItems]="selectedItems"
         (selectedItemsChange)="onSelectedItemsChange($event)"
+        [attr.data-testid]="testIdPrefix + '-grid'"
         [fieldTypeConfig]="fieldTypeConfig"
         [fieldLabels]="fieldLabels"
         [fieldOrder]="fieldOrder"

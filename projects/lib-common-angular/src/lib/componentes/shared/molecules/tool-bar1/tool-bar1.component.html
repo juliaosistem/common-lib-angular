@@ -10,11 +10,13 @@
       </lib-button-options-table>
       @if (showAddButton) {
         <lib-button-add1 
+          [testId]="testIdPrefix + '-add-button'"
           (add)="onNewItem()">
         </lib-button-add1>
       }
       @if (shouldShowDeleteButton) {
         <lib-button-delete1 
+          [testId]="testIdPrefix + '-delete-button'"
           (delete)="onDeleteSelected()">
         </lib-button-delete1>
       }

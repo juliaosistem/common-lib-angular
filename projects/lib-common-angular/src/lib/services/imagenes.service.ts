@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ImagenDTO, UploadImageRequestDTO } from '@juliaosistem/core-dtos';
+import { ImagenDTO, RequestUpdateImages, UploadImageRequestDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
 import { Observable } from 'rxjs';
@@ -50,6 +50,30 @@ export class ImagenesService extends JuliaoSystemCrudHttpService<ImagenDTO, Imag
     this.appendOptional(formData, 'idComponente', request.idComponente);
     this.appendOptional(formData, 'idDatosUsuario', request.idDatosUsuario);
     return formData;
+  }
+
+  /**
+   * Sincroniza imágenes existentes y nuevas usando PUT /imagenes/:id.
+   * @param request DTO con lastImages/actuallyImages/uploadImageRequestDTO e id de ruta.
+   * @param queryParams Headers de trazabilidad.
+   * @returns Respuesta estándar de sincronización.
+   */
+  updateImages(
+    request: RequestUpdateImages & { id: string | number },
+    queryParams: QueryParams = {} as QueryParams,
+  ): Observable<PlantillaResponse<ImagenDTO>> {
+    const headers = this.buildHeaders(queryParams);
+    const id = String(request.id ?? '').trim();
+    const body: RequestUpdateImages = {
+      lastImages: request.lastImages,
+      actuallyImages: request.actuallyImages,
+      uploadImageRequestDTO: request.uploadImageRequestDTO,
+    };
+    return this.http.put<PlantillaResponse<ImagenDTO>>(
+      `${this.basePathUrl}/${id}`,
+      body,
+      { headers },
+    );
   }
 
   /**

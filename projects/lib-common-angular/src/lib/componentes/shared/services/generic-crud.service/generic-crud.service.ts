@@ -72,8 +72,8 @@ export class GenericCrudHttpService<T> {
 
  // eslint-disable-next-line @typescript-eslint/no-explicit-any
  update(payload: T & { id: any }, queryParams?: QueryParams): Observable<PlantillaResponse<T>> {
-  const topic = queryParams?.topic;
-  const headers = topic ? this.buildHeaders({ topic }) : undefined;
+  const metaParams = this.meta.get(queryParams?.topic ?? 'actualizar', 'guardar');
+  const headers = this.buildHeaders({ ...metaParams, ...queryParams });
 
   return this.http.put<PlantillaResponse<T>>(
     `${this.basePathUrl}/${payload.id}`,

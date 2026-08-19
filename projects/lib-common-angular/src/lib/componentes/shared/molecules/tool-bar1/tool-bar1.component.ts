@@ -24,6 +24,7 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
 })
 export class ToolBar1Component {
   @Input() currentView: 'table' | 'grid' = 'table';
+  @Input() testIdPrefix: string = 'crud';
   @Input() showAddButton: boolean = true;
   @Input() selectedItems: Record<string, unknown>[] = [];
   @Input() showDropdownAddButton: boolean = true;

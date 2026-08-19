@@ -123,6 +123,7 @@ add(ctx: StateContext<PlantillaResponse<RES>>, action: any) {
 update(ctx: StateContext<PlantillaResponse<RES>>, action: any) {
   return this.service.update(action.payload, action.queryParams).pipe(
       tap((res) => {
+
         const state = ctx.getState();
         const updatedItem = res.data;
         const updatedId = this.resolveEntityId(updatedItem, action);
