@@ -19,6 +19,7 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
 import { CrudFeedbackToast1Component } from '../crud-feedback-toast1/crud-feedback-toast1.component';
 
 type ImagePreviewItem = {
+  id?: string;
   url: string;
   alt: string;
   source: 'persisted' | 'selected';
@@ -657,27 +658,37 @@ export class CrudDialog1Component implements OnChanges, AfterViewInit {
    * @returns Lista unica de entradas de imagen.
    */
   private getPersistedImages(fieldKey = 'imagen'): unknown[] {
+    const unique = new Map<string, unknown>();
+    this.getPersistedImageCandidates(fieldKey)
+      .forEach((entry) => this.upsertPersistedImage(unique, entry));
+
+    return Array.from(unique.values());
+  }
+
+  private getPersistedImageCandidates(fieldKey: string): unknown[] {
     const candidates = [
       this.currentItem[fieldKey],
       this.currentItem['imagenes'],
       this.currentItem[`${fieldKey}s`],
     ];
 
-    const unique = new Map<string, unknown>();
+    return candidates.reduce<unknown[]>((accumulator, candidate) => {
+      accumulator.push(...this.normalizeToArray(candidate));
+      return accumulator;
+    }, []);
+  }
 
-    candidates
-      .reduce<unknown[]>((accumulator, candidate) => {
-        accumulator.push(...this.normalizeToArray(candidate));
-        return accumulator;
-      }, [])
-      .forEach((entry) => {
-        const key = this.buildPersistedImageKey(entry);
-        if (!unique.has(key)) {
-          unique.set(key, entry);
-        }
-      });
+  private upsertPersistedImage(unique: Map<string, unknown>, entry: unknown): void {
+    const key = this.buildPersistedImageKey(entry);
+    if (!unique.has(key)) {
+      unique.set(key, entry);
+      return;
+    }
 
-    return Array.from(unique.values());
+    const current = unique.get(key);
+    if (this.shouldReplacePersistedEntry(current, entry)) {
+      unique.set(key, entry);
+    }
   }
 
   /**
@@ -694,6 +705,7 @@ export class CrudDialog1Component implements OnChanges, AfterViewInit {
         }
 
         return {
+          id: this.extractImageId(entry),
           url,
           alt: this.extractImageAlt(entry, index),
           source: 'persisted' as const,
@@ -753,6 +765,7 @@ export class CrudDialog1Component implements OnChanges, AfterViewInit {
         }
 
         return {
+          id: this.extractImageId(entry),
           url,
           alt: this.extractImageAlt(entry, index),
           source: 'persisted' as const,
@@ -771,11 +784,21 @@ export class CrudDialog1Component implements OnChanges, AfterViewInit {
    * @param items Imagenes restantes en formato preview.
    */
   private updateCurrentItemImages(fieldKey: string, items: ImagePreviewItem[]): void {
+    const mappedImages = items.map((item) => ({ id: item.id ?? '', url: item.url, alt: item.alt }));
     this.currentItem = {
       ...this.currentItem,
-      [fieldKey]: items.map((item) => ({ url: item.url, alt: item.alt })),
-      imagenes: fieldKey === 'imagen' ? items.map((item) => ({ url: item.url, alt: item.alt })) : this.currentItem['imagenes'],
+      [fieldKey]: mappedImages,
+      imagenes: fieldKey === 'imagen' ? mappedImages : this.currentItem['imagenes'],
     };
+  }
+
+  private extractImageId(entry: unknown): string | undefined {
+    if (!entry || typeof entry !== 'object') {
+      return undefined;
+    }
+
+    const id = String((entry as { id?: unknown }).id ?? '').trim();
+    return id || undefined;
   }
 
   /**
@@ -802,6 +825,11 @@ export class CrudDialog1Component implements OnChanges, AfterViewInit {
    * @returns Llave unica de deduplicacion.
    */
   private buildPersistedImageKey(entry: unknown): string {
+    const url = this.extractImageUrl(entry);
+    if (url) {
+      return `url:${url}`;
+    }
+
     if (entry && typeof entry === 'object') {
       const id = String((entry as { id?: unknown }).id ?? '').trim();
       if (id) {
@@ -809,12 +837,23 @@ export class CrudDialog1Component implements OnChanges, AfterViewInit {
       }
     }
 
-    const url = this.extractImageUrl(entry);
-    if (url) {
-      return `url:${url}`;
+    return `entry:${JSON.stringify(entry ?? '')}`;
+  }
+
+  private shouldReplacePersistedEntry(current: unknown, next: unknown): boolean {
+    const currentId = this.extractImageId(current);
+    const nextId = this.extractImageId(next);
+    if (!currentId && nextId) {
+      return true;
     }
 
-    return `entry:${JSON.stringify(entry ?? '')}`;
+    const currentAlt = this.extractImageAlt(current, 0);
+    const nextAlt = this.extractImageAlt(next, 0);
+    if (!currentAlt && nextAlt) {
+      return true;
+    }
+
+    return false;
   }
 
   /**
