@@ -24,7 +24,7 @@ COPY . /workspace
 RUN printf 'registry=https://nexus.twincode.site/repository/npm-all/\n//nexus.twincode.site/repository/npm-all/:_auth=%s\n//nexus.twincode.site/repository/npm-all/:always-auth=true\nstrict-ssl=false\n' \
       "$(printf '%s:%s' "$NEXUS_USER" "$NEXUS_PASS" | base64 -w0)" > .npmrc
 
-RUN npm ci --no-audit --prefer-offline
+RUN npm install --no-audit --prefer-offline
 
 # Instala las libs internas ya publicadas en Nexus con la versión exacta indicada para esta build.
 RUN if [ -n "$CORE_DTOS_VERSION" ]; then npm install "@juliaosistem/core-dtos@${CORE_DTOS_VERSION}" --no-save; fi \
