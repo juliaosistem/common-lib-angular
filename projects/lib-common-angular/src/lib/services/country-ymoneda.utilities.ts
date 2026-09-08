@@ -1,5 +1,46 @@
-import { COUNTRIES_LIST, ICountry } from 'ngx-countries-dropdown';
+import { Country } from 'country-state-city';
+import type { ICountry as CscCountry } from 'country-state-city';
 import { getCountryCallingCode } from 'libphonenumber-js';
+
+// Interfaz local que mantiene el mismo contrato que tenía ngx-countries-dropdown
+export interface ICountry {
+  code: string;
+  isoCode?: string;
+  name: string;
+  dialling_code: string;
+  flag?: string;
+  currency?: { code: string; name?: string; symbol?: string | null };
+}
+
+// Símbolos de las divisas más usadas (country-state-city provee solo el código ISO 4217)
+const CURRENCY_SYMBOLS: Record<string, string> = {
+  USD:'$', EUR:'€', GBP:'£', JPY:'¥', CNY:'¥', INR:'₹', BRL:'R$', CAD:'CA$',
+  AUD:'A$', COP:'$', MXN:'$', ARS:'$', CLP:'$', PEN:'S/', UYU:'$U', BOB:'Bs',
+  PYG:'₲', VES:'Bs.S', CHF:'CHF', SEK:'kr', NOK:'kr', DKK:'kr', PLN:'zł',
+  HUF:'Ft', CZK:'Kč', RON:'lei', HRK:'kn', RUB:'₽', UAH:'₴', TRY:'₺',
+  KRW:'₩', TWD:'NT$', HKD:'HK$', SGD:'S$', MYR:'RM', THB:'฿', IDR:'Rp',
+  PHP:'₱', VND:'₫', PKR:'₨', BDT:'৳', LKR:'Rs', SAR:'ر.س', AED:'د.إ',
+  QAR:'﷼', KWD:'د.ك', BHD:'.د.ب', ILS:'₪', EGP:'E£', MAD:'د.م.', ZAR:'R',
+  NGN:'₦', KES:'KSh', GHS:'₵', ETB:'Br', TZS:'TSh', UGX:'USh', RWF:'Fr',
+  XOF:'CFA', XAF:'FCFA', DZD:'دج', TND:'د.ت', CRC:'₡', GTQ:'Q', HNL:'L',
+  NIO:'C$', DOP:'RD$', JMD:'J$', TTD:'TT$', AWG:'ƒ', SRD:'$', GYD:'$',
+  FJD:'$', NZD:'NZ$', MNT:'₮', KHR:'₭', LAK:'₭', MMK:'K', KZT:'₸',
+  AZN:'₼', GEL:'₾', AMD:'֏', AFN:'؋', IRR:'﷼', IQD:'ع.د', SYP:'£',
+  LBP:'ل.ل', JOD:'JD', YER:'﷼', OMR:'ر.ع.', MVR:'Rf', NPR:'₨', BTN:'Nu',
+  MKD:'ден', BAM:'KM', RSD:'дин', ISK:'kr', MZN:'MT', AOA:'Kz', ZMW:'ZK',
+};
+
+// Lista de países construida desde country-state-city con el mismo contrato que usaba la clase
+const COUNTRIES_LIST: ICountry[] = Country.getAllCountries().map((c: CscCountry) => ({
+  code: c.isoCode.toLowerCase(),
+  isoCode: c.isoCode,
+  name: c.name,
+  dialling_code: c.phonecode ? `+${c.phonecode.replace(/^\+/, '')}` : '',
+  flag: c.flag,
+  currency: c.currency
+    ? { code: c.currency, symbol: CURRENCY_SYMBOLS[c.currency] ?? null }
+    : undefined,
+}));
 
 /**
  * Utilidades centralizadas para búsqueda de países y obtención de datos de monedas.

@@ -5,6 +5,8 @@
         (viewChange)="onViewChange($event)"
         [currentView]="tableType"
         [selectedItems]="selectedItems"
+        [showAddButton]="canCreate"
+        [canDelete]="canDelete"
         [testIdPrefix]="testIdPrefix"
         (newItem)="openNew()"
         (deleteSelected)="deleteSelectedItems()"
@@ -15,6 +17,7 @@
      @if (tableType === 'table') {
     <lib-tabla1    
         [data]="data"
+        [dataKey]="dataKey"
         [selectedItems]="selectedItems"
         (selectedItemsChange)="onSelectedItemsChange($event)"
         [testIdPrefix]="testIdPrefix"
@@ -28,6 +31,7 @@
         [paginator]="paginator"
         [rowsPerPageOptions]="rowsPerPageOptions"
         [showCurrentPageReport]="showCurrentPageReport"
+        [canUpdate]="canUpdate"
         (editItem)="editItem($event)">
     </lib-tabla1>
      }
@@ -48,6 +52,7 @@
         [paginator]="paginator"
         [rowsPerPageOptions]="rowsPerPageOptions"
         [showCurrentPageReport]="showCurrentPageReport"
+        [canUpdate]="canUpdate"
         (editItem)="editItem($event)">
     </lib-grid1>
      }

@@ -30,7 +30,7 @@ export class StoreActionFeedbackService {
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: error.error.message || "algún error ocurrió durante la acción",
+          detail: this.resolveErrorMessage(error),
           life: this.toastLifeMs,
         });
         return of(false);
@@ -70,6 +70,15 @@ export class StoreActionFeedbackService {
     const rootMessage = response?.message;
     const dataMessage = (response?.data as { message?: string } | undefined)?.message;
     return (rootMessage || dataMessage || '').toString().trim();
+  }
+
+  private resolveErrorMessage(error: unknown): string {
+    if (!error || typeof error !== 'object') {
+      return 'Algún error ocurrió durante la acción';
+    }
+
+    const payload = error as { error?: { message?: unknown }; message?: unknown };
+    return String(payload.error?.message ?? payload.message ?? 'Algún error ocurrió durante la acción').trim();
   }
 
   

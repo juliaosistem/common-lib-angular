@@ -114,6 +114,8 @@ export * from './lib/services/auth-service';
 export * from './lib/services/cart.service';
 export * from './lib/services/categorias-productos.service';
 export * from './lib/services/meta-data.service.ts/meta-data.service';
+export * from './lib/services/roles.service';
+export * from './lib/services/permisos.service';
 export * from './lib/services/store-action-feedback.service';
 export * from './lib/services/imagenes.service';
 
@@ -129,6 +131,14 @@ export * from './lib/assets/state/moneda.state';
 export * from './lib/assets/state/business.state';
 export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/usuarios.state';
+export * from './lib/assets/state/roles.state';
+export * from './lib/assets/state/permisos.state';
+export * from './lib/assets/state/users-dashboard/users-dashboard.actions';
+export * from './lib/assets/state/users-dashboard/users-dashboard.models';
+export * from './lib/assets/state/users-dashboard/users-dashboard-api.service';
+export * from './lib/assets/state/users-dashboard/users-dashboard.state';
+export * from './lib/assets/state/users-dashboard/roles.action';
+export * from './lib/assets/state/users-dashboard/permisos.action';
 export * from './lib/assets/state/categorias-productos.state'
 export * from './lib/assets/state/tipo-categorias.state'
 export * from './lib/assets/state/imagenes.state'

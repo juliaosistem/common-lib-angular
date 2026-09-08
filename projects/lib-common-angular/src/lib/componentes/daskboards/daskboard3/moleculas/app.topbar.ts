@@ -18,6 +18,7 @@ import {
     UserProfileDialogData,
     UserProfileSavePayload,
 } from '../../../shared/molecules/user-profile-dialog1/user-profile-dialog1.component';
+import { AuthService } from '../../../../services/auth-service';
 
 @Component({
     selector: 'lib-topbar3',
@@ -86,6 +87,10 @@ import {
                             <i class="pi pi-user"></i>
                             <span>Profile</span>
                         </button>
+                        <button type="button" class="layout-topbar-action" (click)="logout()">
+                            <i class="pi pi-sign-out"></i>
+                            <span>Cerrar sesión</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -118,6 +123,7 @@ export class AppTopbar {
         idUrl: '',
         estado: 'ACTIVO',
         nombreRol: 'USUARIO',
+        roles: [],
         phoneNumber: '',
         phoneCityCode: null,
         phoneCountryCode: null,
@@ -130,7 +136,10 @@ export class AppTopbar {
         postalCode: '',
     };
 
-    constructor(public layoutService: LayoutService) {}
+    constructor(
+        public layoutService: LayoutService,
+        private readonly authService: AuthService,
+    ) {}
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
@@ -165,6 +174,11 @@ export class AppTopbar {
 
     onProfileClose() {
         this.showProfileDialog = false;
+    }
+
+    logout() {
+        this.isTopbarMenuOpen = false;
+        this.authService.logout().subscribe();
     }
 
     /**

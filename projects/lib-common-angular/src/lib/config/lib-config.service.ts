@@ -8,6 +8,8 @@ export interface LibCommonConfig {
   baseUrlProducts?: string;
   baseUrlAuth?: string;
   baseUrlUsers?: string;
+  baseUrlRoles?: string;
+  baseUrlPermisos?: string;
   baseUrlCarrito?: string;
   baseUrlBusiness?: string;
   baseUrlCurrency?: string;
@@ -28,6 +30,8 @@ const DEFAULT_LOCAL_CONFIG: LibCommonConfig = {
   baseUrlProducts: 'http://localhost:3000/products',
   baseUrlAuth: 'http://localhost:3000/auth',
   baseUrlUsers: 'http://localhost:1212/user',
+  baseUrlRoles: 'http://localhost:1212/roles',
+  baseUrlPermisos: 'http://localhost:1212/permisos',
   baseUrlCarrito: 'http://localhost:3000/carrito',
   baseUrlBusiness: 'http://localhost:3000/Business',
   baseUrlCurrency: 'http://localhost:3000/Currency',
@@ -75,6 +79,8 @@ export class LibConfigService {
       baseUrlProducts: mergedConfig.baseUrlProducts ?? `${apiGateway}/products`,
       baseUrlAuth: mergedConfig.baseUrlAuth ?? `${apiGateway}/auth`,
       baseUrlUsers: mergedConfig.baseUrlUsers ?? `${apiGateway}/user`,
+      baseUrlRoles: mergedConfig.baseUrlRoles ?? `${apiGateway}/roles`,
+      baseUrlPermisos: mergedConfig.baseUrlPermisos ?? `${apiGateway}/permisos`,
       baseUrlCarrito: mergedConfig.baseUrlCarrito ?? `${apiGateway}/carrito`,
       baseUrlBusiness: mergedConfig.baseUrlBusiness ?? apiGateway,
       baseUrlCurrency: mergedConfig.baseUrlCurrency ?? `${apiGateway}/Currency`,

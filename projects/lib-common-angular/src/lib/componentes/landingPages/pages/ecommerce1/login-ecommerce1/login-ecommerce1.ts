@@ -37,15 +37,15 @@ export class LoginEcommerce1 implements OnInit, OnDestroy {
       .login(login)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (result: { success: boolean; errorMsg?: string }) => {
+        next: (result) => {
           this.loading = false;
-          if (!result.success) {
-            this.errorMsg = result.errorMsg ?? 'Credenciales inválidas';
+          if (!result.rta) {
+            this.errorMsg = result.message ?? 'Credenciales inválidas';
           }
         },
-        error: (err: { errorMsg?: string }) => {
+        error: (err: { message?: string }) => {
           this.loading = false;
-          this.errorMsg = err?.errorMsg || 'Error de autenticación';
+          this.errorMsg = err?.message || 'Error de autenticación';
         },
       });
   }

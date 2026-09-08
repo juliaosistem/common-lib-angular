@@ -71,12 +71,34 @@
           }
         </div>
 
-        <div class="field">
-          <label for="profile-rol">Rol</label>
-          <input id="profile-rol" type="text" pInputText formControlName="nombreRol" />
-          @if (showError('nombreRol')) {
-            <small class="field-error">{{ getErrorMessage('nombreRol', 'Rol') }}</small>
+        <div class="field field--full">
+          <label for="profile-roles">Roles</label>
+          <p-multiSelect
+            id="profile-roles"
+            formControlName="roles"
+            [options]="availableRoles"
+            optionLabel="nameRol"
+            dataKey="idRol"
+            display="chip"
+            [maxSelectedLabels]="20"
+            placeholder="Selecciona roles"
+            appendTo="body"
+          />
+          @if (showError('roles')) {
+            <small class="field-error">{{ getErrorMessage('roles', 'Roles') }}</small>
           }
+        </div>
+
+        <div class="field field--full">
+          <label for="profile-permisos">Permisos</label>
+          <textarea
+            id="profile-permisos"
+            class="permisos-readonly"
+            rows="3"
+            readonly
+            [value]="permisosPreviewText"
+          ></textarea>
+          <small class="field-hint">Permisos que tiene el usuario segun sus roles. Para modificarlos edita el rol correspondiente.</small>
         </div>
       </div>
     </section>

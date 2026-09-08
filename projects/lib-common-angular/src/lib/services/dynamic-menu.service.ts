@@ -429,6 +429,11 @@ export class DynamicMenuService implements MenuService {
         if (!item.permissions || item.permissions.length === 0) {
           return true;
         }
+
+        if (permissions.includes('TODOS')) {
+          return true;
+        }
+
         return item.permissions.some(permission => permissions.includes(permission));
       })
       .map(item => ({

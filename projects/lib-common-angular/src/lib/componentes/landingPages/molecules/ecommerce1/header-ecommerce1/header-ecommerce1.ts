@@ -151,7 +151,6 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
   cartError: string | null = null;
   private readonly destroy$ = new Subject<void>();
 
-  // eslint-disable-next-line max-lines-per-function
   ngOnInit(): void {
     /**
      * Inicializa el componente:

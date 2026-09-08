@@ -35,23 +35,22 @@
 .card-title{ font-size:1.5rem; font-weight:700; margin:0 0 .5rem 0; }
 .card-subtitle{ font-weight:600; }
 
-/* Invertir estilos de botones en tarjetas: Blanco sólido por defecto, transparente al hover */
 .category-card .p-button {
-    background-color: #ffffff !important;
-    color: #495057 !important; /* Texto oscuro */
-    border: 2px solid #ffffff !important;
-    transition: all 0.3s ease !important;
+    background: var(--p-button-primary-background);
+    color: var(--p-button-primary-color);
+    border: 1px solid var(--p-button-primary-border-color, var(--p-button-primary-background));
+    transition: all 0.3s ease;
 }
 
 .category-card .p-button:hover {
-    background-color: transparent !important;
-    color: #ffffff !important;
+    background: var(--p-button-primary-hover-background);
+    color: var(--p-button-primary-hover-color);
+    border-color: var(--p-button-primary-hover-border-color, var(--p-button-primary-hover-background));
 }
 
-/* Excepción para tarjeta amarilla: Hover con texto oscuro para contraste */
 .category-card-yellow .p-button:hover {
-    color: #1f2937 !important;
-    border-color: #1f2937 !important;
+    color: var(--p-button-primary-hover-color);
+    border-color: var(--p-button-primary-hover-border-color, var(--p-button-primary-hover-background));
 }
 
 @media (max-width: 768px){

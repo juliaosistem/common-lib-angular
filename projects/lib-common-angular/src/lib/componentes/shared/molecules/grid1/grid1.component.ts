@@ -29,6 +29,7 @@ export class Grid1Component implements OnInit {
   @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
 
   @Input() showDefaultGrid: boolean = true;                 // Mostrar grid por defecto
+  @Input() canUpdate: boolean = true;
 
   // Propiedades del paginador
   @Input() rows: number = 10;                               // Filas por página

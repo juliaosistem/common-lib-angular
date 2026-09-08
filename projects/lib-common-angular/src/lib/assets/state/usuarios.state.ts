@@ -5,7 +5,6 @@ import { createGenericCrudActions } from './state-generic/generic-crud.actions';
 import { HttpClient } from '@angular/common/http';
 import { getLibraryInjector } from '../../utils/library-injector';
 import { LibConfigService } from '../../config/lib-config.service';
-import { MetaDataService } from '../../services/meta-data.service.ts/meta-data.service';
 import { GenericCrudActions, GenericCrudState, LazyGenericCrudHttpService } from './state-generic/generic-crud.state';
 import { Login } from './usuarios.actions';
 import { tap } from 'rxjs/operators';
@@ -29,7 +28,7 @@ export const UsuariosActions = usuariosActions;
 @Injectable()
 export class UsuariosState extends GenericCrudState<RegisterUserDTO, RegisterUserDTO> {
   constructor() {
-    const service = new LazyGenericCrudHttpService<RegisterUserDTO>('baseUrlUsuarios') as unknown as GenericCrudHttpService<RegisterUserDTO>;
+    const service = new LazyGenericCrudHttpService<RegisterUserDTO>('baseUrlUsers') as unknown as GenericCrudHttpService<RegisterUserDTO>;
     super(service, UsuariosActions as unknown as GenericCrudActions<RegisterUserDTO>);
   }
 
@@ -61,7 +60,8 @@ export class UsuariosState extends GenericCrudState<RegisterUserDTO, RegisterUse
       );
     } catch (e) {
       // Injector not ready or service missing
-      return throwError(() => new Error('Library injector not initialized')) as unknown as any;
+      console.error('Error in UsuariosState.login: ', e);
+      return throwError(() => new Error('Library injector not initialized')) as unknown ;
     }
   }
 

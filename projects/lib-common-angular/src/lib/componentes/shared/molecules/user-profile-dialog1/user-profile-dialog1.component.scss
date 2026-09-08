@@ -55,6 +55,22 @@
   font-size: 0.8rem;
 }
 
+.field-hint {
+  color: #6b7280;
+  font-size: 0.78rem;
+}
+
+.permisos-readonly {
+  resize: none;
+  font-family: inherit;
+  font-size: 0.9rem;
+  color: #4b5563;
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+}
+
 .dialog-actions {
   display: flex;
   justify-content: flex-end;

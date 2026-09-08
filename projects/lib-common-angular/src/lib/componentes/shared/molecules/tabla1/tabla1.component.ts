@@ -22,6 +22,7 @@ export class Tabla1Component implements OnInit {
   @Input() data: Record<string, unknown>[] = [];
   // selectedItems: array de objetos seleccionados en la tabla
   @Input() selectedItems!: Record<string, unknown>[] | null;
+  @Input() dataKey: string = 'id';
   // Evento que se emite cuando cambia la selección de items
   @Output() selectedItemsChange = new EventEmitter<Record<string, unknown>[] | null>();
   @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Tipos por campo
@@ -34,6 +35,7 @@ export class Tabla1Component implements OnInit {
 
   @Input() showDefaultHeader: boolean = true;               // Mostrar encabezado por defecto
   @Input() showDefaultBody: boolean = true;                 // Mostrar cuerpo por defecto
+  @Input() canUpdate: boolean = true;
 
   // Propiedades del paginador
   @Input() rows: number = 10;                               // Filas por página

@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RegisterUserDTO } from '@juliaosistem/core-dtos';
+import { RegisterUserDTO, RolesDTO ,UpdateProfileDTO} from '@juliaosistem/core-dtos';
 import { City, ICity } from 'country-state-city';
-import { getCountryByCode, ICountry } from 'ngx-countries-dropdown';
+import { CountryYmonedaUtilities, ICountry } from '../../../../services/country-ymoneda.utilities';
 import { CountryDropdownComponent } from '../../atoms/country-dropdown/country-dropdown.component';
-import { CountryYmonedaUtilities } from '../../../../services/country-ymoneda.utilities';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 
 export interface UserProfileDialogData {
@@ -18,6 +17,7 @@ export interface UserProfileDialogData {
   idUrl: string;
   estado: string;
   nombreRol: string;
+  roles: RolesDTO[];
   phoneNumber: string;
   phoneCityCode: number | null;
   phoneCountryCode: number | null;
@@ -30,22 +30,12 @@ export interface UserProfileDialogData {
   postalCode: string;
 }
 
-export interface UserProfileUpdateDTO {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  department: string;
-  country: string;
-  postalCode: string;
-}
+
 
 export interface UserProfileSavePayload {
   profileData: UserProfileDialogData;
   registerUserDTO: RegisterUserDTO;
-  updateProfileDTO: UserProfileUpdateDTO;
+  updateProfileDTO: UpdateProfileDTO;
 }
 
 @Component({
@@ -58,6 +48,7 @@ export interface UserProfileSavePayload {
 export class UserProfileDialog1Component implements OnChanges {
   @Input() visible = false;
   @Input() profileData: Partial<UserProfileDialogData> | null = null;
+  @Input() availableRoles: RolesDTO[] = [];
 
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() profileSave = new EventEmitter<UserProfileSavePayload>();
@@ -68,6 +59,17 @@ export class UserProfileDialog1Component implements OnChanges {
   selectedCountry: ICountry | null = null;
   selectedCountryCode = '';
 
+  /**
+   * Texto plano con los permisos heredados de los roles actualmente seleccionados.
+   *
+   * @returns Permisos unicos separados por coma, listos para mostrar en un textarea readonly.
+   */
+  get permisosPreviewText(): string {
+    const unique = new Set<string>();
+    this.profileForm.controls.roles.value.forEach((role) => (role.permisos ?? []).forEach((permiso) => unique.add(permiso)));
+    return Array.from(unique).join(', ');
+  }
+
   readonly profileForm = new FormGroup({
     email: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.email] }),
     password: new FormControl('', { nonNullable: true, validators: [Validators.minLength(8)] }),
@@ -77,6 +79,7 @@ export class UserProfileDialog1Component implements OnChanges {
     idUrl: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(4)] }),
     estado: new FormControl('ACTIVO', { nonNullable: true, validators: [Validators.required] }),
     nombreRol: new FormControl('USUARIO', { nonNullable: true, validators: [Validators.required] }),
+    roles: new FormControl<RolesDTO[]>([], { nonNullable: true, validators: [Validators.required] }),
     phoneNumber: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^[+]?[0-9\s()-]{7,20}$/)] }),
     phoneCityCode: new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(1)] }),
     phoneCountryCode: new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(1)] }),
@@ -123,9 +126,9 @@ export class UserProfileDialog1Component implements OnChanges {
   }
 
   onCountrySelected(countryCode: string): void {
-    const selectedFromCatalog = getCountryByCode(countryCode?.toUpperCase());
+    const selectedFromCatalog = CountryYmonedaUtilities.findCountryByCode(countryCode?.toUpperCase());
     this.selectedCountry = selectedFromCatalog ?? null;
-    this.handleSelection(countryCode, selectedFromCatalog);
+    this.handleSelection(countryCode, selectedFromCatalog ?? undefined);
   }
 
   handleSelection(countryCode: string, selectedFromCatalog?: ICountry): void {
@@ -212,6 +215,7 @@ export class UserProfileDialog1Component implements OnChanges {
       idUrl: this.profileData?.idUrl ?? '',
       estado: this.profileData?.estado ?? 'ACTIVO',
       nombreRol: this.profileData?.nombreRol ?? 'USUARIO',
+      roles: this.profileData?.roles ?? [],
     };
   }
 
@@ -308,7 +312,8 @@ export class UserProfileDialog1Component implements OnChanges {
       secondName: raw.secondName,
       idUrl: raw.idUrl,
       estado: raw.estado,
-      nombreRol: raw.nombreRol,
+      nombreRol: raw.roles[0]?.nameRol ?? raw.nombreRol,
+      roles: raw.roles,
     };
   }
 
@@ -332,7 +337,7 @@ export class UserProfileDialog1Component implements OnChanges {
     };
   }
 
-  private toUpdateProfileDTO(data: UserProfileDialogData): UserProfileUpdateDTO {
+  private toUpdateProfileDTO(data: UserProfileDialogData): UpdateProfileDTO  {
     return {
       firstName: data.firstName,
       lastName: data.secondName,
@@ -348,10 +353,10 @@ export class UserProfileDialog1Component implements OnChanges {
 
   private toRegisterUserDTO(data: UserProfileDialogData): RegisterUserDTO {
     return {
-      idbusiness: data.idbusiness ?? undefined,
+      idBusiness: data.idbusiness ?? undefined,
       email: data.email,
       password: data.password || undefined,
-      DatesUser: this.toDatesUserDTO(data),
+      datesUser: this.toDatesUserDTO(data),
     };
   }
 
@@ -361,11 +366,26 @@ export class UserProfileDialog1Component implements OnChanges {
       firstName: data.firstName,
       secondName: data.secondName,
       idUrl: data.idUrl,
-      estado: data.estado,
-      nombreRol: data.nombreRol,
+      estado: this.resolveStatus(data.estado),
+      nombreRol: data.roles[0]?.nameRol ?? data.nombreRol,
+      roles: data.roles,
       phone: [this.toPhoneDTO(data)],
       addresses: [this.toAddressDTO(data)],
     };
+  }
+
+  /**
+   * Convierte el estado visible del formulario al valor numérico del DTO.
+   *
+   * @param status Estado seleccionado o recibido del perfil.
+   * @returns Estado compatible con DatesUserDTO.
+   */
+  private resolveStatus(status: string): number {
+    const normalizedStatus = status.trim().toUpperCase();
+    if (normalizedStatus === 'ACTIVO') return 1;
+    if (normalizedStatus === 'INACTIVO') return 0;
+    const numericStatus = Number(status);
+    return Number.isFinite(numericStatus) ? numericStatus : 0;
   }
 
   private toPhoneDTO(data: UserProfileDialogData) {
@@ -380,7 +400,7 @@ export class UserProfileDialog1Component implements OnChanges {
 
   private toAddressDTO(data: UserProfileDialogData) {
     return {
-      adress: data.address,
+      address: data.address,
       country: {
         name: data.country,
         cities: [{ name: data.city }],

@@ -16,6 +16,7 @@ import { RatingModule } from 'primeng/rating';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
@@ -56,6 +57,7 @@ import { MessageModule } from 'primeng/message';
    RatingModule,
    TextareaModule,
    SelectModule,
+   MultiSelectModule,
    RadioButtonModule,
    InputNumberModule,
    DialogModule,
@@ -89,6 +91,7 @@ import { MessageModule } from 'primeng/message';
    RatingModule,
    TextareaModule,
    SelectModule,
+   MultiSelectModule,
    RadioButtonModule,
    InputNumberModule,
    DialogModule,

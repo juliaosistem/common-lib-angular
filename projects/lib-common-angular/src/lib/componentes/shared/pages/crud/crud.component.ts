@@ -37,6 +37,7 @@ export class Crud implements OnInit, OnChanges {
     @Input() loaded: boolean = false;
     @Input() tableType: 'table' | 'grid' = 'table';
     @Input() data: Record<string, unknown>[] = [];
+    @Input() dataKey: string = 'id';
     @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Configuración de tipos de campo
     @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personal
     @Input() fieldOrder: string[] = [];                       // Orden de columnas
@@ -58,6 +59,10 @@ export class Crud implements OnInit, OnChanges {
     @Input() displayFields: DynamicField[] = [];            
 @Output() deleteItemRequest = new EventEmitter<Record<string, unknown>>();
     @Input() testIdPrefix: string = 'crud';
+    @Input() canCreate: boolean = true;
+    @Input() canUpdate: boolean = true;
+    @Input() canDelete: boolean = true;
+    @Output() actionDenied = new EventEmitter<{ action: 'create' | 'update' | 'delete'; item?: Record<string, unknown> }>();
 
     // ✅ Propiedades para el manejo del CRUD
     currentItem: Record<string, unknown> = {};
@@ -110,11 +115,19 @@ initFields() {
 
     // ✅ Método para abrir el diálogo de edición
     editItem(item: Record<string, unknown>) {
+        if (!this.canUpdate) {
+            this.actionDenied.emit({ action: 'update', item });
+            return;
+        }
         this.editItemRequest.emit(item);
     }
 
     // ✅ Método para crear un nuevo item
     openNew() {
+        if (!this.canCreate) {
+            this.actionDenied.emit({ action: 'create' });
+            return;
+        }
         this.newItemRequest.emit();
     }
 
@@ -139,6 +152,10 @@ initFields() {
 
     // ✅ Eliminar item con confirmación
 deleteItem(item: Record<string, unknown>) {
+    if (!this.canDelete) {
+        this.actionDenied.emit({ action: 'delete', item });
+        return;
+    }
     const itemName = String(item['name'] || 'this item');
     this.confirmationService.confirm({
         message: 'Are you sure you want to delete ' + itemName + '?',
@@ -153,6 +170,10 @@ deleteItem(item: Record<string, unknown>) {
 
     // ✅ Eliminar elementos seleccionados con confirmación
 deleteSelectedItems() {
+    if (!this.canDelete) {
+        this.actionDenied.emit({ action: 'delete' });
+        return;
+    }
     if (!this.selectedItems || this.selectedItems.length === 0) {
         this.messageService.add({
             severity: 'warn',
@@ -179,8 +200,8 @@ deleteSelectedItems() {
 
 
     private executeItemsDeletion(itemsToDelete: Record<string, unknown>[], count: number) {
-        const idsToDelete = itemsToDelete.map(item => item['id']);
-        this.data = this.data.filter(item => !idsToDelete.includes(item['id']));
+        const idsToDelete = itemsToDelete.map(item => item[this.dataKey]);
+        this.data = this.data.filter(item => !idsToDelete.includes(item[this.dataKey]));
         this.selectedItems = [];
         this.dataChange.emit([...this.data]);
         this.messageService.add({

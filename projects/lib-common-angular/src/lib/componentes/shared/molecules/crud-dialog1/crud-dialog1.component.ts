@@ -268,11 +268,17 @@ export class CrudDialog1Component implements OnChanges, AfterViewInit {
   }
 
   /**
-   * Obtiene el valor inicial basado en el tipo de campo
+   * Obtiene el valor inicial basado en el tipo de campo.
+   * Respeta `field.value` cuando es un arreglo (ej. multiselect) para evitar
+   * inicializar el control con '' y provocar NG0900 al iterarlo.
    */
   private getInitialValue(
     field: DynamicField,
-  ): string | number | boolean | null {
+  ): string | number | boolean | null | unknown[] {
+    if (Array.isArray(field.value)) {
+      return field.value;
+    }
+
     switch (field.type) {
       case 'checkbox':
         return false;

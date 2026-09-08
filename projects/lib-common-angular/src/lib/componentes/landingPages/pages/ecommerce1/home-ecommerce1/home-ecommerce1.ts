@@ -13,6 +13,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-home-ecommerce1',
+  standalone: true,
   imports: [
     CommonModule,
     ButtonModule,

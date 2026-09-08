@@ -7,6 +7,7 @@ import { AppFooter } from './moleculas/app.footer';
 import { LayoutService } from '../../../services/layout.service';
 import { MenuConfig } from '@juliaosistem/core-dtos';
 import { MenuComponent } from "./moleculas/menu/menu.component";
+import { decodeBusinessToken } from '../../../utils/business-token.util';
 
 @Component({
     selector: 'lib-daskboard3',
@@ -97,7 +98,7 @@ import { MenuComponent } from "./moleculas/menu/menu.component";
 })
 export class DaskBoard3 implements OnInit {
     @Input() menuConfig?: MenuConfig;
-    @Input() userPermissions: string[] = ['admin.users.read', 'admin.settings.read', 'pages.crud.read'];
+    @Input() userPermissions: string[] = [];
     
     overlayMenuOpenSubscription: Subscription;
 
@@ -143,6 +144,12 @@ export class DaskBoard3 implements OnInit {
             if (data['userPermissions']) {
                 this.userPermissions = data['userPermissions'];
                 console.log('Dashboard3: UserPermissions cargados desde datos de ruta:', this.userPermissions);
+            }
+
+            const sessionPermissions = this.resolveSessionPermissions();
+            if (sessionPermissions.length > 0) {
+                this.userPermissions = sessionPermissions;
+                console.log('Dashboard3: UserPermissions cargados desde sesión:', this.userPermissions);
             }
         });
 
@@ -224,5 +231,99 @@ export class DaskBoard3 implements OnInit {
         if (this.menuOutsideClickListener) {
             this.menuOutsideClickListener();
         }
+    }
+
+    /**
+     * Resuelve la lista de permisos efectivos del usuario a partir del token de sesion o storage.
+     *
+     * @returns Array de strings con los permisos del usuario o array vacio.
+     */
+    private resolveSessionPermissions(): string[] {
+        const claims = this.resolveClaimsFromToken();
+        if (claims) {
+            const fromClaims = this.resolvePermissionsFromClaims(claims);
+            if (fromClaims.length > 0) {
+                return fromClaims;
+            }
+        }
+
+        const fromStorage = this.parsePermissionList(sessionStorage.getItem('userPermissions'));
+        if (fromStorage.length > 0) {
+            return fromStorage;
+        }
+
+        return [];
+    }
+
+    /**
+     * Extrae y decodifica los claims del token activo de negocio o Keycloak.
+     *
+     * @returns Objeto de claims decodificado o null si no existe token.
+     */
+    private resolveClaimsFromToken(): Record<string, unknown> | null {
+        const token = sessionStorage.getItem('businessToken') || sessionStorage.getItem('token');
+        return decodeBusinessToken(token);
+    }
+
+    /**
+     * Determina los permisos provenientes de los claims del JWT.
+     * Si el usuario posee rol de administrador, asigna acceso total ('TODOS').
+     *
+     * @param claims Objeto con los claims del token decodificado.
+     * @returns Array de permisos calculados a partir de roles y claims.
+     */
+    private resolvePermissionsFromClaims(claims: Record<string, unknown>): string[] {
+        const roles = this.parsePermissionList([claims['roles'], claims['role'], claims['authorities']]);
+        const isAdmin = roles.some((role) => {
+            const upper = role.toUpperCase();
+            return upper === 'ADMINISTRADOR' || upper === 'SUPER_ADMIN';
+        });
+
+        if (isAdmin) {
+            return ['TODOS'];
+        }
+
+        const permissions = this.parsePermissionList([
+            claims['permissions'],
+            claims['permisos'],
+            claims['userPermissions'],
+            claims['user-permissions']
+        ]);
+
+        if (permissions.length > 0) {
+            return permissions;
+        }
+
+        return [];
+    }
+
+    /**
+     * Analiza recursivamente estructuras arbitrarias (arrays, objetos, cadenas) para extraer nombres de permisos o roles.
+     *
+     * @param value Estructura desconocida proveniente de los claims.
+     * @returns Array de strings normalizados sin duplicados.
+     */
+    private parsePermissionList(value: unknown): string[] {
+        if (!value) {
+            return [];
+        }
+
+        const out: string[] = [];
+        const extract = (val: unknown) => {
+            if (!val) return;
+            if (Array.isArray(val)) {
+                val.forEach(extract);
+            } else if (typeof val === 'string') {
+                val.split(',').forEach((item) => {
+                    const trimmed = item.trim();
+                    if (trimmed) out.push(trimmed);
+                });
+            } else if (typeof val === 'object') {
+                Object.values(val as Record<string, unknown>).forEach(extract);
+            }
+        };
+
+        extract(value);
+        return [...new Set(out)];
     }
 }

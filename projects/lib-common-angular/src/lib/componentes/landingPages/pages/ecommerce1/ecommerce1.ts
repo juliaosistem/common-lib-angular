@@ -13,6 +13,7 @@ import { AuthService } from '../../../../services/auth-service';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-ecommerce1',
+  standalone: true,
   imports: [CommonModule, DialogModule, ButtonModule, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet, Carruselt1],
   templateUrl: './ecommerce1.html',
   styleUrl: './ecommerce1.scss',
