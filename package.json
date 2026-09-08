@@ -15,6 +15,7 @@
     "pack:lib": "cd dist/lib-common-angular && npm pack",
     "publish:nexus": "npm publish --registry=${NEXUS_REGISTRY_URL}",
     "publish:npm": "npm run build:lib && cd dist/lib-common-angular && npm publish",
+    "deploy:nexus": "node scripts/deploy-nexus.js",
     "lint": "ng lint",
     "test:lib": "ng test lib-common-angular --watch=false --browsers=ChromeHeadless",
     "test:demo": "ng test lib-common-angular-demo --watch=false --browsers=ChromeHeadless",
