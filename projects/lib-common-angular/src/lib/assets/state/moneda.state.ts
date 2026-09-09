@@ -1,19 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Injectable } from '@angular/core';
 import { State, Selector, Action, StateContext } from '@ngxs/store';
-import { ProductoDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { createGenericCrudActions } from './state-generic/generic-crud.actions';
-import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
-import { HttpClient } from '@angular/common/http';
-import { LibConfigService } from '../../config/lib-config.service';
-import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
 import { tap } from 'rxjs';
-import { GenericCrudActions, GenericCrudState } from './state-generic/generic-crud.state';
+import { GenericCrudState, LazyGenericCrudHttpService } from './state-generic/generic-crud.state';
 import { MonedaDTO } from '@juliaosistem/core-dtos';
+import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
 
-// Crear acciones genéricas para ProductoDTO
-const monedaActions = createGenericCrudActions<ProductoDTO>('moneda');
+// Crear acciones genéricas para MonedaDTO
+const monedaActions = createGenericCrudActions<MonedaDTO>('moneda');
 export const MonedaActions = monedaActions;
 
 @State<PlantillaResponse<MonedaDTO>>({
@@ -27,18 +23,9 @@ export const MonedaActions = monedaActions;
 })
 @Injectable()
 export class MonedaState extends GenericCrudState<MonedaDTO, MonedaDTO> {
-  constructor(
-    private http: HttpClient,
-    private config: LibConfigService,
-    private meta: MetaDataService
-  ) {
-    const service = new GenericCrudHttpService<MonedaDTO>(
-      http,
-      config,
-      meta,
-      'baseUrlCurrency'
-    );
-    super(service, MonedaActions as unknown as GenericCrudActions<MonedaDTO>);
+  constructor() {
+    const service = new LazyGenericCrudHttpService<MonedaDTO>('baseUrlCurrency') as unknown as GenericCrudHttpService<MonedaDTO>;
+    super(service, MonedaActions as any);
   }
 
   @Selector()

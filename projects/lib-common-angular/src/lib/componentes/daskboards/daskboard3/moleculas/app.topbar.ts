@@ -1,15 +1,29 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { StyleClassModule } from 'primeng/styleclass';
 import { AppConfigurator } from './app.configurator';
-import { LayoutService } from '../../../shared/services/layout.service';
+import { LayoutService } from '../../../../services/layout.service';
+import {
+    BusinessTokenAddressClaim,
+    BusinessTokenClaims,
+    BusinessTokenDatesUserClaim,
+    BusinessTokenPhoneClaim,
+    getSessionBusinessClaims,
+    toNumberOrNull,
+    toStringOr,
+} from '../../../../utils/business-token.util';
+import {
+    UserProfileDialog1Component,
+    UserProfileDialogData,
+    UserProfileSavePayload,
+} from '../../../shared/molecules/user-profile-dialog1/user-profile-dialog1.component';
+import { AuthService } from '../../../../services/auth-service';
 
 @Component({
     selector: 'lib-topbar3',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator],
+    imports: [RouterModule, CommonModule, AppConfigurator, UserProfileDialog1Component],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -42,51 +56,289 @@ import { LayoutService } from '../../../shared/services/layout.service';
                 <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                     <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
                 </button>
-                <div class="relative">
+                <div class="relative" #configMenuContainer>
                     <button
                         class="layout-topbar-action layout-topbar-action-highlight"
-                        pStyleClass="@next"
-                        enterFromClass="hidden"
-                        enterActiveClass="animate-scalein"
-                        leaveToClass="hidden"
-                        leaveActiveClass="animate-fadeout"
-                        [hideOnOutsideClick]="true"
+                        type="button"
+                        (click)="toggleConfigMenu($event)"
                     >
                         <i class="pi pi-palette"></i>
                     </button>
-                    <app-configurator />
+                    <app-configurator [class.hidden]="!isConfigMenuOpen" />
                 </div>
             </div>
 
-            <button class="layout-topbar-menu-button layout-topbar-action" pStyleClass="@next" enterFromClass="hidden" enterActiveClass="animate-scalein" leaveToClass="hidden" leaveActiveClass="animate-fadeout" [hideOnOutsideClick]="true">
-                <i class="pi pi-ellipsis-v"></i>
-            </button>
+            <div class="relative" #topbarMenuContainer>
+                <button class="layout-topbar-menu-button layout-topbar-action" type="button" (click)="toggleTopbarMenu($event)">
+                    <i class="pi pi-ellipsis-v"></i>
+                </button>
 
-            <div class="layout-topbar-menu hidden lg:block">
-                <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
-                    </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-user"></i>
-                        <span>Profile</span>
-                    </button>
+                <div [ngClass]="{ 'layout-topbar-menu': true, 'hidden': !isTopbarMenuOpen, 'animate-scalein': isTopbarMenuOpen }" class="lg:block">
+                    <div class="layout-topbar-menu-content">
+                        <button type="button" class="layout-topbar-action">
+                            <i class="pi pi-calendar"></i>
+                            <span>Calendar</span>
+                        </button>
+                        <button type="button" class="layout-topbar-action">
+                            <i class="pi pi-inbox"></i>
+                            <span>Messages</span>
+                        </button>
+                        <button type="button" class="layout-topbar-action" (click)="openProfileDialog()">
+                            <i class="pi pi-user"></i>
+                            <span>Profile</span>
+                        </button>
+                        <button type="button" class="layout-topbar-action" (click)="logout()">
+                            <i class="pi pi-sign-out"></i>
+                            <span>Cerrar sesión</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
+        <lib-user-profile-dialog1
+            [visible]="showProfileDialog"
+            [profileData]="profileData"
+            (visibleChange)="onProfileDialogVisibilityChange($event)"
+            (profileSave)="onProfileSave($event)"
+            (profileClose)="onProfileClose()"
+        />
     </div>`
 })
 export class AppTopbar {
     items!: MenuItem[];
 
-    constructor(public layoutService: LayoutService) {}
+    @ViewChild('configMenuContainer') configMenuContainer?: ElementRef<HTMLElement>;
+    @ViewChild('topbarMenuContainer') topbarMenuContainer?: ElementRef<HTMLElement>;
+
+    isConfigMenuOpen = false;
+    isTopbarMenuOpen = false;
+    showProfileDialog = false;
+    profileData: UserProfileDialogData = {
+        idbusiness: null,
+        email: '',
+        password: '',
+        datesUserId: '',
+        firstName: '',
+        secondName: '',
+        idUrl: '',
+        estado: 'ACTIVO',
+        nombreRol: 'USUARIO',
+        roles: [],
+        phoneNumber: '',
+        phoneCityCode: null,
+        phoneCountryCode: null,
+        phoneNameCity: '',
+        phoneNameCountry: '',
+        address: '',
+        city: '',
+        department: '',
+        country: '',
+        postalCode: '',
+    };
+
+    constructor(
+        public layoutService: LayoutService,
+        private readonly authService: AuthService,
+    ) {}
 
     toggleDarkMode() {
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    }
+
+    toggleConfigMenu(event: Event) {
+        event.stopPropagation();
+        this.isTopbarMenuOpen = false;
+        this.isConfigMenuOpen = !this.isConfigMenuOpen;
+    }
+
+    toggleTopbarMenu(event: Event) {
+        event.stopPropagation();
+        this.isConfigMenuOpen = false;
+        this.isTopbarMenuOpen = !this.isTopbarMenuOpen;
+    }
+
+    openProfileDialog() {
+        this.isTopbarMenuOpen = false;
+        this.syncProfileDataFromSession();
+        this.showProfileDialog = true;
+    }
+
+    onProfileDialogVisibilityChange(visible: boolean) {
+        this.showProfileDialog = visible;
+    }
+
+    onProfileSave(payload: UserProfileSavePayload) {
+        this.profileData = { ...payload.profileData };
+        this.showProfileDialog = false;
+    }
+
+    onProfileClose() {
+        this.showProfileDialog = false;
+    }
+
+    logout() {
+        this.isTopbarMenuOpen = false;
+        this.authService.logout().subscribe();
+    }
+
+    /**
+     * Sincroniza los datos del perfil de usuario desde la sesión de negocio (JWT claims).
+     * Extrae información del token de autenticación y actualiza el modelo de perfil local.
+     * Si no hay claims disponibles en la sesión, no realiza cambio alguno.
+     */
+    private syncProfileDataFromSession() {
+        const claims = getSessionBusinessClaims();
+        if (!claims) {
+            return;
+        }
+
+        this.profileData = this.buildProfileDataFromClaims(claims);
+    }
+
+    /**
+     * Construye el objeto de datos de perfil a partir de los claims del token de negocio.
+     * Extrae y transforma datos de usuario, contacto y dirección con valores por defecto.
+     *
+     * @param claims - Claims del token JWT de negocio
+     * @returns Objeto UserProfileDialogData con todos los campos mapeados
+     */
+    private buildProfileDataFromClaims(claims: BusinessTokenClaims): UserProfileDialogData {
+        const datesUser = this.getDatesUser(claims);
+        const phone = this.getPrimaryPhone(datesUser);
+        const address = this.getPrimaryAddress(datesUser);
+        const firstCity = this.getPrimaryCityName(address);
+
+        return {
+            ...this.profileData,
+            idbusiness: toNumberOrNull(claims.idbusiness),
+            email: toStringOr(claims.email, this.profileData.email),
+            datesUserId: toStringOr(datesUser?.idDatesUser || datesUser?.id, this.profileData.datesUserId),
+            firstName: toStringOr(datesUser?.firstName, this.profileData.firstName),
+            secondName: toStringOr(datesUser?.secondName, this.profileData.secondName),
+            idUrl: toStringOr(datesUser?.idUrl, this.profileData.idUrl),
+            estado: this.resolveUserState(datesUser, claims),
+            nombreRol: toStringOr(datesUser?.nombreRol, this.resolveRole(claims)),
+            ...this.mapPhoneData(phone),
+            ...this.mapAddressData(address, firstCity),
+            department: toStringOr(claims['department'], this.profileData.department),
+            postalCode: toStringOr(claims['postalCode'], this.profileData.postalCode),
+        };
+    }
+
+    /**
+     * Mapea datos de teléfono del usuario a propiedades del perfil.
+     *
+     * @param phone - Información de teléfono principal o null
+     * @returns Objeto parcial con propiedades de teléfono
+     */
+    private mapPhoneData(phone: BusinessTokenPhoneClaim | null) {
+        return {
+            phoneNumber: toStringOr(phone?.number, this.profileData.phoneNumber),
+            phoneCityCode: toNumberOrNull(phone?.cityCode),
+            phoneCountryCode: toNumberOrNull(phone?.countryCode),
+            phoneNameCity: toStringOr(phone?.nameCity, this.profileData.phoneNameCity),
+            phoneNameCountry: toStringOr(phone?.nameCountry, this.profileData.phoneNameCountry),
+        };
+    }
+
+    /**
+     * Mapea datos de dirección del usuario a propiedades del perfil.
+     *
+     * @param address - Información de dirección principal o null
+     * @param cityName - Nombre de la ciudad principal
+     * @returns Objeto parcial con propiedades de dirección
+     */
+    private mapAddressData(address: BusinessTokenAddressClaim | null, cityName: string) {
+        return {
+            address: toStringOr(address?.adress, this.profileData.address),
+            city: toStringOr(cityName, this.profileData.city),
+            country: toStringOr(address?.country?.name, this.profileData.country),
+        };
+    }
+
+    /**
+     * Resuelve el estado del usuario desde claims o datos de usuario.
+     *
+     * @param datesUser - Datos de usuario
+     * @param claims - Claims del JWT de negocio
+     * @returns Estado del usuario (ej: 'ACTIVO', 'INACTIVO')
+     */
+    private resolveUserState(datesUser: BusinessTokenDatesUserClaim, claims: BusinessTokenClaims): string {
+        return toStringOr(datesUser?.estado, toStringOr(claims.estado, this.profileData.estado));
+    }
+
+    /**
+     * Obtiene los datos de usuario desde los claims del JWT.
+     *
+     * @param claims - Claims del token de negocio
+     * @returns Objeto con datos de usuario o vacío si no existe
+     */
+    private getDatesUser(claims: BusinessTokenClaims): BusinessTokenDatesUserClaim {
+        return claims?.datesUser ?? {};
+    }
+
+    /**
+     * Extrae el teléfono principal de la lista de teléfonos del usuario.
+     *
+     * @param datesUser - Datos de usuario
+     * @returns Teléfono principal o null si no existe
+     */
+    private getPrimaryPhone(datesUser: BusinessTokenDatesUserClaim): BusinessTokenPhoneClaim | null {
+        const phoneList = datesUser?.phone;
+        return Array.isArray(phoneList) && phoneList.length > 0 ? phoneList[0] : null;
+    }
+
+    /**
+     * Extrae la dirección principal de la lista de direcciones del usuario.
+     *
+     * @param datesUser - Datos de usuario
+     * @returns Dirección principal o null si no existe
+     */
+    private getPrimaryAddress(datesUser: BusinessTokenDatesUserClaim): BusinessTokenAddressClaim | null {
+        const addressList = datesUser?.addresses;
+        return Array.isArray(addressList) && addressList.length > 0 ? addressList[0] : null;
+    }
+
+    /**
+     * Obtiene el nombre de la ciudad principal desde la dirección.
+     *
+     * @param address - Información de dirección o null
+     * @returns Nombre de la ciudad o cadena vacía si no existe
+     */
+    private getPrimaryCityName(address: BusinessTokenAddressClaim | null): string {
+        const city = address?.country?.cities;
+        return Array.isArray(city) && city.length > 0 ? toStringOr(city[0]?.name) : '';
+    }
+
+    /**
+     * Resuelve el rol principal del usuario desde los claims del JWT.
+     *
+     * @param claims - Claims del token de negocio
+     * @returns Rol del usuario o valor por defecto del perfil
+     */
+    private resolveRole(claims: BusinessTokenClaims): string {
+        const roles = claims?.roles;
+        return Array.isArray(roles) && roles.length > 0 ? toStringOr(roles[0], this.profileData.nombreRol) : this.profileData.nombreRol;
+    }
+
+    @HostListener('document:pointerdown', ['$event'])
+    onDocumentPointerDown(event: Event) {
+        const target = event.target as Node | null;
+        const configContainer = this.configMenuContainer?.nativeElement;
+        const topbarContainer = this.topbarMenuContainer?.nativeElement;
+
+        if (this.isConfigMenuOpen && target && configContainer && !configContainer.contains(target)) {
+            this.isConfigMenuOpen = false;
+        }
+
+        if (this.isTopbarMenuOpen && target && topbarContainer && !topbarContainer.contains(target)) {
+            this.isTopbarMenuOpen = false;
+        }
+    }
+
+    @HostListener('document:keydown.escape')
+    onEscapeKey() {
+        this.isConfigMenuOpen = false;
+        this.isTopbarMenuOpen = false;
     }
 }

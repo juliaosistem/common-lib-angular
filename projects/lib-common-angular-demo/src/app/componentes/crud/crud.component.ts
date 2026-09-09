@@ -3,9 +3,9 @@ import { Crud, CrudDialog1Component, ProductDialog1Component } from 'lib-common-
 import { FieldType } from '@juliaosistem/core-dtos';
 import { Product } from '../../core/services/product.service';
 import { Table } from 'primeng/table';
-import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
 
 import { Menu } from 'primeng/menu';
+import { TablaDataSharedDTO } from './tablaDataSharedDTO';
 
 @Component({
   selector: 'app-crud',

@@ -65,7 +65,8 @@
             "styles": [
               "node_modules/prismjs/themes/prism.css",
               "node_modules/tailwindcss/index.css",
-              "projects/lib-common-angular-demo/src/styles.scss"
+              "projects/lib-common-angular-demo/src/styles.scss",
+              "node_modules/ngx-countries-dropdown/assets/styles.css"
           ],
             "scripts": [  
         

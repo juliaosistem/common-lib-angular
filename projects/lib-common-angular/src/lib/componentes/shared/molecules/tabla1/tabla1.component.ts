@@ -5,7 +5,7 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { DynamicField } from '../../interfaces/dynamic-field.interface';
 import { FieldType } from '@juliaosistem/core-dtos';
-import { DynamicFieldService } from '../../services/dynamic-field.service';
+import { DynamicFieldService } from '../../../../services/dynamic-field.service';
 import { ButtonActionsRow1Component } from '../../atoms/button-actions-row1/button-actions-row1.component';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
@@ -17,8 +17,13 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
   imports: [CommonModule, TableModule, PrimegModule, FormsModule, ButtonActionsRow1Component],
 })
 export class Tabla1Component implements OnInit {
+  // Propiedades del componente
+  // data: array de objetos a mostrar en la tabla
   @Input() data: Record<string, unknown>[] = [];
+  // selectedItems: array de objetos seleccionados en la tabla
   @Input() selectedItems!: Record<string, unknown>[] | null;
+  @Input() dataKey: string = 'id';
+  // Evento que se emite cuando cambia la selección de items
   @Output() selectedItemsChange = new EventEmitter<Record<string, unknown>[] | null>();
   @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Tipos por campo
   @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personalizadas
@@ -26,14 +31,16 @@ export class Tabla1Component implements OnInit {
   @Input() excludeFields: string[] = ['id'];                // Campos a excluir
 @Input() fieldSelectOptions: Record<string, { label: string; value: string | number | boolean }[]> = {};
   @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
+  @Input() testIdPrefix: string = 'crud';
 
   @Input() showDefaultHeader: boolean = true;               // Mostrar encabezado por defecto
   @Input() showDefaultBody: boolean = true;                 // Mostrar cuerpo por defecto
+  @Input() canUpdate: boolean = true;
 
   // Propiedades del paginador
   @Input() rows: number = 10;                               // Filas por página
   @Input() paginator: boolean = true;                       // Habilitar paginador
-  @Input() rowsPerPageOptions: number[] = [10, 20, 30];     // Opciones de filas por página
+  @Input() rowsPerPageOptions: number[] = [5,10,20,30];     // Opciones de filas por página
   @Input() showCurrentPageReport: boolean = true;           // Mostrar reporte de página
 
   @Output() editItem = new EventEmitter<Record<string, unknown>>();
@@ -124,5 +131,10 @@ getFieldValue(item: Record<string, any>, key: string) {
     .replace(/\[(\d+)]/g, '.$1') // "precios[0]" → "precios.0"
     .split('.')
     .reduce((acc, part) => acc?.[part], item);
+}
+
+getRowId(item: Record<string, any>): string {
+  const rowId = String(item?.['id'] ?? '').trim();
+  return rowId || 'row';
 }
 }

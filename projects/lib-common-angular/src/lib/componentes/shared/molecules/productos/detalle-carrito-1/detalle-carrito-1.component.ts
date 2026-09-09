@@ -4,7 +4,9 @@ import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { ComponentesDTO,ProductoDTO } from '@juliaosistem/core-dtos';
 type ProductoView = ProductoDTO & { nombreCategoria?: string };
-import { ProductService } from '../../../services/product.service';
+import { ProductService } from '../../../../../services/product.service';
+import { GoogleService } from '../../../../../services/google.service';
+import { BusinessDTO } from '@juliaosistem/core-dtos';
 import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";
 
 
@@ -42,7 +44,7 @@ export class DetalleCarrito1Component implements OnInit {
   // Variable que determina la cantidad actual del producto
   currentQuantity: number = 1;
   // Variable que almacena la URL de la imagen seleccionada
-  selectedImageUrl: string = '';
+  selectedImageUrl: string | undefined = '';
   // Variable que controla la visibilidad del mensaje de agregado al carrito
   showCartMessage: boolean = false;
   // Variable que indica si el producto es favorito
@@ -51,10 +53,24 @@ export class DetalleCarrito1Component implements OnInit {
   // Control para mostrar botón de personalización como en las cards
   @Input() isPersonalizable: boolean = false;
 
-  constructor(private productService: ProductService) {}
+  // Variable para controlar la visibilidad del menú de compartir
+  shareMenuOpen: boolean = false;
+
+  @Input() DatosNegocio: BusinessDTO | null =  {
+    nombreNegocio: 'Zigma Inflables',
+    logo: '../../../assets/imagenes/logoZigmaInflables.svg',
+    urlWhatssapp: 'https://tinyurl.com/zigmainflables',
+    email: 'zigmainflables.com',
+    googleAnalyticsEvent: "cotizar",
+    googleAdsConversionId: "AW-17894779083",
+    businessModule: [],
+    telefono: '+573118025433'
+  };
+  constructor(private productService: ProductService, private googleService: GoogleService) {}
 
   ngOnInit(): void {
    this.checkIsProductExists();
+   
   }
 
 /**
@@ -74,8 +90,11 @@ export class DetalleCarrito1Component implements OnInit {
    * @param imageUrl URL de la imagen seleccionada
    * Método para actualizar la imagen principal cuando se selecciona una miniatura
    */
-  updateMainImage(imageUrl: string): void {
-    this.selectedImageUrl = imageUrl;
+  updateMainImage(imageUrl: string | undefined): void {
+    if (imageUrl) {
+      console.log('Imagen seleccionada:', imageUrl);
+      this.selectedImageUrl = imageUrl;
+    }
   }
 
   
@@ -85,10 +104,36 @@ export class DetalleCarrito1Component implements OnInit {
     this.isFavorite = !this.isFavorite;
   }
 
-  getWhatsAppLink(): string {
-    const base = 'https://wa.me/?text=';
-    const message = `Hola, estoy interesado en el producto: ${this.product?.name ?? ''}`;
-    return base + encodeURIComponent(message);
+  shareProductOnWhatsapp(): void {
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
+    const text = `Mira este producto: ${this.product?.name ?? ''} - ${window.location.href}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { producto: this.product?.name });
+    }
+  }
+
+  toggleShareMenu(): void {
+    this.shareMenuOpen = !this.shareMenuOpen;
+  }
+
+  touchRedes(red: string): void {
+     // Aquí puedes implementar la lógica específica para cada red si quieres rastrear el evento
+     // o compartir en URL específica de la red social
+      if(red === 'whatsapp'){
+         this.shareProductOnWhatsapp();
+     } else if (red === 'facebook'){
+         // Lógica para compartir en Facebook
+         const currentUrl = window.location.href;
+         const facebookSharer = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(currentUrl)}`;
+         window.open(facebookSharer, '_blank', 'width=600,height=400');
+     }
+      this.shareMenuOpen = false;
   }
 
 
@@ -98,7 +143,7 @@ export class DetalleCarrito1Component implements OnInit {
  * Método para verificar si una miniatura es la imagen activa
  * @returns 
  */
-  isActiveThumbnail(imageUrl: string): boolean {
+  isActiveThumbnail(imageUrl: string | undefined): boolean {
     return this.selectedImageUrl === imageUrl;
   }
 

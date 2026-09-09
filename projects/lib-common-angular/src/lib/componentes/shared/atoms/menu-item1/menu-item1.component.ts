@@ -26,7 +26,7 @@ export class MenuItem1Component implements OnInit {
   hasSubItems = false;
 
   ngOnInit() {
-    this.hasSubItems = !!(this.item.items && this.item.items.length > 0);
+    this.hasSubItems = this.getSubItems().length > 0;
   }
 
   getItemClasses(): string {
@@ -113,5 +113,9 @@ export class MenuItem1Component implements OnInit {
   // Método para verificar si un subitem está expandido
   isSubItemExpanded(itemId: string): boolean {
     return this.expandedItems?.has(itemId) ?? false;
+  }
+
+  getSubItems(): MenuItem[] {
+    return Array.isArray(this.item.items) ? this.item.items : [];
   }
 } 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { ComponentServicesService } from '../../../../../shared/services/component-services.service';
+import { ComponentServicesService } from '../../../../../../services/component-services.service';
 import { CoreModuleLib } from '../../../../../../modulos/core.lib.module';
 import { BusinessDTO, ComponentesDTO } from '@juliaosistem/core-dtos';
 @Component({

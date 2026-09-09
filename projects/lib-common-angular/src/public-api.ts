@@ -1,10 +1,8 @@
+export * from './lib/services/google.service';
+export * from './lib/services/country-ymoneda.utilities';
 /*
  * Public API Surface of common-lib
  */
-
-
-export * from './lib/common-lib.service';
-export * from './lib/common-lib.component';
 
 
 // Estados y acciones
@@ -18,6 +16,9 @@ export * from './lib/assets/state/tabla1.actions'; */
 export * from './lib/componentes/shared/pages/crud/crud.component';
 export * from './lib/componentes/shared/pages/crud/doc/crud-doc.component';
 
+export * from './lib/componentes/shared/molecules/carruselt-1/carruselt-1';
+export * from './lib/componentes/shared/atoms/paginator-pg/paginator-pg.component';
+export * from './lib/componentes/shared/atoms/sh-wats-button-card/sh-wats-button-card';
 export * from './lib/componentes/shared/atoms/select-input1/select-input1.component'
 export * from './lib/componentes/shared/atoms/button-action-edit1/button-action-edit1.component'
 export * from './lib/componentes/shared/atoms/button-action-delete1/button-action-delete1.component'
@@ -25,16 +26,18 @@ export * from './lib/componentes/shared/atoms/button-add1/button-add1.component'
 export * from './lib/componentes/daskboards/daskboard2/index2/index2.component';
 export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
 export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.component';
+export * from './lib/componentes/shared/molecules/crud-feedback-toast1/crud-feedback-toast1.component';
 export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
-export * from './lib/componentes/shared/services/dynamic-field.service';
+export * from './lib/services/dynamic-field.service';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
+export * from './lib/componentes/shared/molecules/user-profile-dialog1/user-profile-dialog1.component';
 export * from './lib/componentes/shared/pages/notfound/notfound';
 export * from './lib/componentes/shared/molecules/inflatable-customizer/customizer.component';
 // Menú dinámico
 export * from './lib/componentes/shared/interfaces/menu.interface';
 export * from './lib/componentes/shared/atoms/menu-item1/menu-item1.component';
 export * from './lib/componentes/daskboards/daskboard3/atoms/dynamic-menu1/dynamic-menu1.component';
-export * from './lib/componentes/shared/services/dynamic-menu.service';
+export * from './lib/services/dynamic-menu.service';
 export * from './lib/componentes/daskboards/daskboard3/moleculas/menu/menu.component';
 
 // Dashboard3 y sus componentes
@@ -62,6 +65,7 @@ export * from './lib/componentes/shared/atoms/select-input1/select-input1.compon
 export * from './lib/componentes/shared/atoms/paginator-pg/paginator-pg.component';
 export * from './lib/componentes/shared/atoms/sh-wats-button-card/sh-wats-button-card';
 export * from './lib/componentes/shared/atoms/button-add-to-card1/button-add-to-card1';
+export * from './lib/componentes/shared/atoms/country-dropdown/country-dropdown.component';
 // shared pages
 export * from './lib/componentes/shared/pages/notfound/notfound';
 
@@ -105,18 +109,39 @@ export * from './lib/config/lib-config.module';
 export * from './lib/modulos/core.lib.module';
 
 //servicios
-export * from './lib/componentes/shared/services/product.service';
-export * from './lib/componentes/shared/services/categorias-productos.service';
-export * from './lib/componentes/shared/services/meta-data.service.ts/meta-data.service';
+export * from './lib/services/product.service';
+export * from './lib/services/auth-service';
+export * from './lib/services/cart.service';
+export * from './lib/services/categorias-productos.service';
+export * from './lib/services/meta-data.service.ts/meta-data.service';
+export * from './lib/services/roles.service';
+export * from './lib/services/permisos.service';
+export * from './lib/services/store-action-feedback.service';
+export * from './lib/services/imagenes.service';
+
+// library injector helper (set by host app)
+export * from './lib/utils/library-injector';
+export * from './lib/utils/business-token.util';
 
 
 // Estados y acciones
 export * from './lib/assets/state/state-generic/generic-crud.state';
 export * from './lib/assets/state/productos.state';
-export * from './lib/assets/state/currency.state';
+export * from './lib/assets/state/moneda.state';
 export * from './lib/assets/state/business.state';
 export * from './lib/assets/state/usuarios.actions';
+export * from './lib/assets/state/usuarios.state';
+export * from './lib/assets/state/roles.state';
+export * from './lib/assets/state/permisos.state';
+export * from './lib/assets/state/users-dashboard/users-dashboard.actions';
+export * from './lib/assets/state/users-dashboard/users-dashboard.models';
+export * from './lib/assets/state/users-dashboard/users-dashboard-api.service';
+export * from './lib/assets/state/users-dashboard/users-dashboard.state';
+export * from './lib/assets/state/users-dashboard/roles.action';
+export * from './lib/assets/state/users-dashboard/permisos.action';
 export * from './lib/assets/state/categorias-productos.state'
+export * from './lib/assets/state/tipo-categorias.state'
+export * from './lib/assets/state/imagenes.state'
 
 //routes
 export * from './lib/componentes/shared/routes/ecomerce1.routes';

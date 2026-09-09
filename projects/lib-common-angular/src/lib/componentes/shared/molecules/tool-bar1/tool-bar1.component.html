@@ -8,14 +8,18 @@
         (onDelete)="onDeleteSelected()"
         (onExportExcel)="onExportToExcel()">
       </lib-button-options-table>
-      <lib-button-add1 
-        *ngIf="showAddButton"
-        (add)="onNewItem()">
-      </lib-button-add1>
-      <lib-button-delete1 
-        *ngIf="shouldShowDeleteButton"
-        (delete)="onDeleteSelected()">
-      </lib-button-delete1>
+      @if (showAddButton) {
+        <lib-button-add1 
+          [testId]="testIdPrefix + '-add-button'"
+          (add)="onNewItem()">
+        </lib-button-add1>
+      }
+      @if (shouldShowDeleteButton) {
+        <lib-button-delete1 
+          [testId]="testIdPrefix + '-delete-button'"
+          (delete)="onDeleteSelected()">
+        </lib-button-delete1>
+      }
     </div>
   </ng-template>
 

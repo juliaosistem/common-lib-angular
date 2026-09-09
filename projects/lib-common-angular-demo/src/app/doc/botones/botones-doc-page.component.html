@@ -1,0 +1,175 @@
+<div class="botones-documentation">
+  <!-- ✅ Título y Descripción -->
+  <div class="doc-header">
+    <h1>Componentes de Botones - Documentación</h1>
+    <p class="subtitle">Botones especializados para CRUD: Agregar, Editar, Eliminar</p>
+  </div>
+
+  <!-- ✅ 1. DESCRIPCIÓN GENERAL -->
+  <div class="section">
+    <h2>1. Descripción General</h2>
+    <p>La librería proporciona tres botones especializados para operaciones CRUD:</p>
+    
+    <ul class="button-list">
+      <li>
+        <strong>lib-button-add1:</strong> Botón para crear nuevos elementos
+      </li>
+      <li>
+        <strong>lib-button-action-edit1:</strong> Botón para editar elementos existentes
+      </li>
+      <li>
+        <strong>lib-button-action-delete1:</strong> Botón para eliminar elementos (con confirmación)
+      </li>
+    </ul>
+  </div>
+
+  <!-- ✅ 2. BOTÓN AGREGAR -->
+  <div class="section">
+    <h2>2. Botón Agregar (ButtonAdd1)</h2>
+    <p>Botón para crear nuevos elementos:</p>
+    
+    <lib-terminal [code]="buttonAddExample" language="typescript"></lib-terminal>
+
+    <div class="component-info">
+      <h4>Propiedades:</h4>
+      <table class="info-table">
+        <tr>
+          <td><strong>@Input</strong> disabled</td>
+          <td>boolean</td>
+          <td>Deshabilitar el botón (ej: mientras se carga)</td>
+        </tr>
+        <tr>
+          <td><strong>@Input</strong> label</td>
+          <td>string</td>
+          <td>Texto del botón (default: "Agregar")</td>
+        </tr>
+        <tr>
+          <td><strong>@Output</strong> onClick</td>
+          <td>EventEmitter&lt;void&gt;</td>
+          <td>Se dispara al hacer clic</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 3. BOTÓN EDITAR -->
+  <div class="section">
+    <h2>3. Botón Editar (ButtonActionEdit1)</h2>
+    <p>Botón para editar elementos seleccionados:</p>
+    
+    <lib-terminal [code]="buttonEditExample" language="typescript"></lib-terminal>
+
+    <div class="component-info">
+      <h4>Propiedades:</h4>
+      <table class="info-table">
+        <tr>
+          <td><strong>@Input</strong> item</td>
+          <td>any</td>
+          <td>Elemento a editar (se emite en onClick)</td>
+        </tr>
+        <tr>
+          <td><strong>@Input</strong> disabled</td>
+          <td>boolean</td>
+          <td>Deshabilitar si no hay item seleccionado</td>
+        </tr>
+        <tr>
+          <td><strong>@Input</strong> label</td>
+          <td>string</td>
+          <td>Texto del botón (default: "Editar")</td>
+        </tr>
+        <tr>
+          <td><strong>@Output</strong> onClick</td>
+          <td>EventEmitter&lt;any&gt;</td>
+          <td>Se dispara con el item al hacer clic</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 4. BOTÓN ELIMINAR -->
+  <div class="section">
+    <h2>4. Botón Eliminar (ButtonActionDelete1)</h2>
+    <p>Botón para eliminar elementos con confirmación:</p>
+    
+    <lib-terminal [code]="buttonDeleteExample" language="typescript"></lib-terminal>
+
+    <div class="component-info">
+      <h4>Propiedades:</h4>
+      <table class="info-table">
+        <tr>
+          <td><strong>@Input</strong> item</td>
+          <td>any</td>
+          <td>Elemento a eliminar</td>
+        </tr>
+        <tr>
+          <td><strong>@Input</strong> disabled</td>
+          <td>boolean</td>
+          <td>Deshabilitar si no hay item seleccionado</td>
+        </tr>
+        <tr>
+          <td><strong>@Input</strong> label</td>
+          <td>string</td>
+          <td>Texto del botón (default: "Eliminar")</td>
+        </tr>
+        <tr>
+          <td><strong>@Output</strong> onClick</td>
+          <td>EventEmitter&lt;any&gt;</td>
+          <td>Se dispara al hacer clic (antes de confirmar)</td>
+        </tr>
+        <tr>
+          <td><strong>@Output</strong> onConfirm</td>
+          <td>EventEmitter&lt;any&gt;</td>
+          <td>Se dispara cuando se confirma la eliminación</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 5. INTEGRACIÓN COMPLETA -->
+  <div class="section">
+    <h2>5. Integración Completa - Ejemplo Real</h2>
+    <p>Cómo usar todos los botones juntos en una operación CRUD:</p>
+    
+    <lib-terminal [code]="integrationExample" language="typescript"></lib-terminal>
+  </div>
+
+  <!-- ✅ 6. GRUPO DE BOTONES -->
+  <div class="section">
+    <h2>6. Grupo de Botones en una Fila</h2>
+    <p>Ejemplo de cómo organizarlos en una barra de herramientas:</p>
+    
+    <lib-terminal [code]="allButtonsExample" language="typescript"></lib-terminal>
+
+    <div class="style-info">
+      <h4>Estilos CSS Recomendados:</h4>
+      <lib-terminal 
+        [code]="`.button-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 1rem 0;
+}
+
+.button-group lib-button-add1,
+.button-group lib-button-action-edit1,
+.button-group lib-button-action-delete1 {
+  flex: 1;
+  min-width: 100px;
+}`" 
+        language="css">
+      </lib-terminal>
+    </div>
+  </div>
+
+  <!-- ✅ 7. PATRONES DE USO -->
+  <div class="section tips">
+    <h2>7. Patrones y Mejores Prácticas</h2>
+    <ul>
+      <li><strong>Deshabilitar por contexto:</strong> Desactiva Edit y Delete si no hay item seleccionado.</li>
+      <li><strong>Confirmación en Delete:</strong> El botón Delete maneja automáticamente el diálogo de confirmación.</li>
+      <li><strong>Mantener coherencia:</strong> Usa siempre estos botones en lugar de crear nuevos para CRUD.</li>
+      <li><strong>Estado de carga:</strong> Usa el prop <code>disabled</code> mientras se procesan requests.</li>
+      <li><strong>Accesibilidad:</strong> Los botones incluyen iconos y estilos de alto contraste.</li>
+    </ul>
+  </div>
+</div>

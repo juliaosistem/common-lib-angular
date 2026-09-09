@@ -1,14 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { CommonModule } from '@angular/common';
-import { Component, HostListener, Input, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { BusinessDTO, ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
+import { BusinessDTO, CarritoDTO, ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { IonicModule, MenuController } from '@ionic/angular';
 import { HeaderTopEcommerce1 } from "../../../atoms/ecommerce1/header-top-ecommerce1/header-top-ecommerce1";
+import { Subject, takeUntil } from 'rxjs';
+import { CartService } from '../../../../../services/cart.service';
+
+interface CartDisplayItem {
+  productId: string;
+  name: string;
+  quantity: number;
+  unitPrice: number;
+  subtotal: number;
+  currencyCode: string;
+  imageUrl?: string;
+  imageAlt?: string;
+}
 
 @Component({
   selector: 'lib-header-ecommerce1',
@@ -16,8 +29,9 @@ import { HeaderTopEcommerce1 } from "../../../atoms/ecommerce1/header-top-ecomme
   templateUrl: './header-ecommerce1.html',
   styleUrls: ['./header-ecommerce1.scss'],
   encapsulation: ViewEncapsulation.None 
+  ,standalone: true
 })
-export class HeaderEcommerce1Component implements OnInit {
+export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
 
   // Metadata del componente  
   componente:ComponentesDTO = {
@@ -104,7 +118,7 @@ export class HeaderEcommerce1Component implements OnInit {
       }
     ]
   };
- langs:string[];
+  langs: string[] = [];
 
  private touchStartX = 0;
   private touchEndX = 0;
@@ -116,11 +130,15 @@ export class HeaderEcommerce1Component implements OnInit {
   private readonly CLOSE_THRESHOLD = -80; // distancia para cerrar
   private readonly VERTICAL_TOLERANCE = 30; // tolerancia vertical para considerar swipe horizontal
 
-  constructor(    private translate: TranslateService, private menuCtrl: MenuController, private router: Router) {
+  constructor(
+    private translate: TranslateService,
+    private menuCtrl: MenuController,
+    private router: Router,
+    private readonly cartService: CartService,
+  ) {
     this.translate.addLangs(["es","en"]);
     this.translate.use('es');
-    this.langs = [...this.translate.getLangs()]
-    
+    this.langs = [...this.translate.getLangs()];
   }
 
   // Menú final que se usará en el template
@@ -128,10 +146,10 @@ export class HeaderEcommerce1Component implements OnInit {
   currentMenu: MenuConfig = this.defaultMenuConfig;
   isMobileMenuOpen: boolean = false;
   isCartOpen: boolean = false;
-  cartItems: Array<{id:number; name:string; qty:number; price:number}> = [
-    { id: 1, name: 'Inflable básico', qty: 1, price: 120 },
-    { id: 2, name: 'Kit de reparación', qty: 2, price: 15 }
-  ];
+  cartItems: CartDisplayItem[] = [];
+  cartLoading: boolean = false;
+  cartError: string | null = null;
+  private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
     /**
@@ -169,7 +187,20 @@ export class HeaderEcommerce1Component implements OnInit {
     this.menuCtrl.enable(true, 'headerMenu');
     console.log('Logo URL en Header:', this.logoUrl);
     if(this.DatosNegocio?.logo) this.logoUrl=this.DatosNegocio?.logo;
-    
+
+    this.bindCartState();
+    this.syncCartWithSession();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['islogin'] && !changes['islogin'].firstChange) {
+      this.syncCartWithSession();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // --- LÓGICA DE SWIPE (DESLIZAR PARA ABRIR) ---
@@ -278,24 +309,31 @@ export class HeaderEcommerce1Component implements OnInit {
   }
   /** Abre el `Drawer` del carrito. */
   openCart() {
-    this.isCartOpen = true;
+    this.cartService.openDrawer();
   }
   closeCart() {
     /** Cierra el `Drawer` del carrito. */
-    this.isCartOpen = false;
+    this.cartService.closeDrawer();
   }
   /**
    * Calcula el total del carrito sumando `price * qty`.
    * @returns Total acumulado.
    */
   getCartTotal(): number {
-    return this.cartItems.reduce((acc, it) => acc + (it.price * it.qty), 0);
+    return this.cartItems.reduce((acc, it) => acc + it.subtotal, 0);
   }
+
+  removeCartItem(productId: string): void {
+    this.cartService.removeProduct(productId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe();
+  }
+
   goToCheckout() {
     /** Acción placeholder para ir al checkout; cierra el carrito. */
     // Navegación simple: ajusta a tu ruta real de checkout
     console.log('Ir a checkout');
-    this.isCartOpen = false;
+    this.cartService.closeDrawer();
   }
   
 
@@ -340,7 +378,7 @@ export class HeaderEcommerce1Component implements OnInit {
    */
   getLeftMenuItems(): MenuItem[] {
     // Mostrar todos los items de navegación excepto los de auth en la izquierda
-    return this.currentMenu.items.filter(item => 
+    return (this.currentMenu?.items ?? []).filter(item => 
       !item.separator && 
       !['login', 'register'].includes(item.id)
     );
@@ -349,7 +387,7 @@ export class HeaderEcommerce1Component implements OnInit {
   // Método para obtener items del menú derecho (últimos elementos)
   /** Retorna los ítems de autenticación (login/register) para la zona derecha. */
   getRightMenuItems(): MenuItem[] {
-    return this.currentMenu.items.filter(item => 
+    return (this.currentMenu?.items ?? []).filter(item => 
       !item.separator && 
       ['login', 'register'].includes(item.id)
     );
@@ -358,7 +396,7 @@ export class HeaderEcommerce1Component implements OnInit {
   // Método para obtener todos los items visibles para móvil
   /** Retorna todos los ítems visibles para el menú móvil. */
   getMobileMenuItems(): MenuItem[] {
-    return this.currentMenu.items
+    return this.currentMenu?.items ?? [];
   }
 
   // Método para manejar clics en el menú
@@ -415,6 +453,53 @@ export class HeaderEcommerce1Component implements OnInit {
       this.router.navigate(['/'], { fragment: anchorId });
     }
     this.isMobileMenuOpen = false;
+  }
+
+  private bindCartState(): void {
+    this.cartService.cart$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((cart) => this.cartItems = this.mapCartItems(cart));
+
+    this.cartService.loading$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((loading) => this.cartLoading = loading);
+
+    this.cartService.error$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((error) => this.cartError = error);
+
+    this.cartService.drawerOpen$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isOpen) => this.isCartOpen = isOpen);
+  }
+
+  private syncCartWithSession(): void {
+    if (this.islogin) {
+      this.cartService.loadCart()
+        .pipe(takeUntil(this.destroy$))
+        .subscribe();
+      return;
+    }
+
+    this.cartService.clearState();
+    this.cartItems = [];
+  }
+
+  private mapCartItems(cart: CarritoDTO | null): CartDisplayItem[] {
+    if (!cart?.items?.length) {
+      return [];
+    }
+
+    return cart.items.map((item) => ({
+      productId: item.producto.id || '',
+      name: item.producto.name,
+      quantity: Number(item.cantidad || 0),
+      unitPrice: Number(item.moneda?.precio || item.producto.precios?.[0]?.precio || 0),
+      subtotal: Number(item.subtotal || 0),
+      currencyCode: item.moneda?.codigo_iso || item.producto.precios?.[0]?.codigo_iso || 'COP',
+      imageUrl: item.producto.imagen?.[0]?.url,
+      imageAlt: item.producto.imagen?.[0]?.alt || item.producto.name,
+    }));
   }
 
   

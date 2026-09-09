@@ -11,10 +11,20 @@
                 <a href="#">Contactos</a>
             </nav> -->
 
+            <div class="contact-info text-center my-4">
+                <p class="m-0 text-lg"><i class="fas fa-map-marker-alt mr-2"></i> Kr 104 #130a-06, Segundo piso</p>
+                <p class="m-0">Lagos de Suba, Bogotá</p>
+                <p class="mt-2 m-0 text-xl font-bold">
+                    <a [href]="DatosNegocio?.urlWhatssapp || 'https://api.whatsapp.com/send/?phone=%2B573118025433&text=Hola%2C+estoy+interesado+en+los+productos+de+Zigma+Inflables.&type=phone_number&app_absent=0'" target="_blank" class="no-underline text-inherit hover:text-primary transition-colors duration-300">
+                        <i class="fab fa-whatsapp mr-2"></i> +57 311 8025433
+                    </a>
+                </p>
+            </div>
+
             <div class="social-links" aria-hidden="false">
                 <a href="#" aria-label="Facebook" class="social"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" aria-label="Instagram" class="social"><i class="fab fa-instagram"></i></a>
-                <a href="{{DatosNegocio?.urlWhatssapp || '#'}}" aria-label="WhatsApp" class="social"><i class="fab fa-whatsapp"></i></a>
+                <a href="{{DatosNegocio?.urlWhatssapp || 'https://api.whatsapp.com/send/?phone=%2B573118025433&text=Hola%2C+estoy+interesado+en+los+productos+de+Zigma+Inflables.&type=phone_number&app_absent=0'}}" target="_blank" aria-label="WhatsApp" class="social"><i class="fab fa-whatsapp"></i></a>
             </div>
         </div>
 
@@ -23,3 +33,4 @@
         </div>
     </div>
 </footer>
+    

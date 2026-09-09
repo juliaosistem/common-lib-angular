@@ -1,16 +1,20 @@
 import { Component, OnDestroy, OnInit, ElementRef, ViewChild, Renderer2, PLATFORM_ID, Inject, Input, OnChanges } from '@angular/core';
+import { GoogleService } from '../../../../services/google.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HeaderEcommerce1Component } from "../../molecules/ecommerce1/header-ecommerce1/header-ecommerce1";
-import { BarFloatEcommerce1 } from "../../molecules/ecommerce1/bar-float-ecommerce1/bar-float-ecommerce1";
 import { FooterEcommerce1 } from "../../molecules/ecommerce1/footer-ecommerce1/footer-ecommerce1";
 import { RouterOutlet } from '@angular/router';
 import { CategoriaDTO, MenuConfig, MenuItem, BusinessDTO} from '@juliaosistem/core-dtos';
+import { Carruselt1 } from "../../../../../public-api";
+import { AuthService } from '../../../../services/auth-service';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'lib-ecommerce1',
-  imports: [CommonModule, DialogModule, ButtonModule, BarFloatEcommerce1, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet],
+  standalone: true,
+  imports: [CommonModule, DialogModule, ButtonModule, FooterEcommerce1, HeaderEcommerce1Component, RouterOutlet, Carruselt1],
   templateUrl: './ecommerce1.html',
   styleUrl: './ecommerce1.scss',
 })
@@ -52,11 +56,15 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
   private mouseOutListener?: (event: MouseEvent) => void;
   private beforeUnloadListener?: (event: BeforeUnloadEvent) => void;
   private intersectionObserver?: IntersectionObserver;
+  private destroy$ = new Subject<void>();
 
+  // eslint-disable-next-line max-params
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private renderer: Renderer2,
+    private googleService: GoogleService,
+    private authService: AuthService,
     // eslint-disable-next-line @typescript-eslint/no-wrapper-object-types
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
@@ -67,7 +75,9 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
       this.setupWhatsappModal();
       this.setupScrollListener();
     }
-     this.updateMenuConfig();
+
+    this.syncLoginState();
+    this.updateMenuConfig();
   }
 
   ngOnChanges(): void {
@@ -79,6 +89,18 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
   }
   ngOnDestroy(): void {
     this.cleanup();
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private syncLoginState(): void {
+    this.authService.rehydrateSession();
+    this.authService.isLoggedIn$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((isLogged) => {
+        this.isLogin = isLogged;
+        this.updateMenuConfig();
+      });
   }
 
    // eslint-disable-next-line max-lines-per-function
@@ -94,13 +116,13 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
           label: 'Iniciar Sesión',
           type: 'link',
           routerLink: [this.routePaths['login'] || 'login'],
-          icon: 'fas fa-sign-in-alt', visible: true,  order: 4
+          icon: 'fas fa-sign-in-alt', visible: !this.isLogin,  order: 4
         },   {
           id: 'register',
           label: 'Registrar',
           type: 'link',
           routerLink: [this.routePaths['register'] || 'register'],
-          icon: 'fas fa-user-plus',visible: true,  order: 5
+          icon: 'fas fa-user-plus',visible: !this.isLogin,  order: 5
         }, {
           id: 'Nosotros',
           label: 'Nosotros',
@@ -142,7 +164,7 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
     // Mostrar modal después de 10 segundos
     this.whatsappModalTimer = window.setTimeout(() => {
       this.showWhatsappModalDialog();
-    }, 15000);
+    }, 55000);
 
     // Exit intent detection
     this.mouseOutListener = (event: MouseEvent) => {
@@ -176,11 +198,17 @@ export class Ecommerce1 implements OnInit, OnDestroy, OnChanges {
 
   openWhatsappChat(message?: string): void {
     const defaultMessage = 'Hola, estoy interesado en los productos de Zigma Inflables.';
-    const whatsappNumber = this.DatosNegocio?.telefono || '3186956700'; // Reemplazar con número real
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
     const finalMessage = message || defaultMessage;
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(finalMessage)}`;
-    window.open(whatsappUrl, '_blank');
-    
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { page: 'ecommerce1' });
+    }
   }
 
   // ===== NEWSLETTER =====

@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { PrimegModule } from '../../../../modulos/primeg.module';
 import { DynamicField } from '../../interfaces/dynamic-field.interface';
 import { FieldType } from '@juliaosistem/core-dtos';
-import { DynamicFieldService } from '../../services/dynamic-field.service';
+import { DynamicFieldService } from '../../../../services/dynamic-field.service';
 import { ButtonActionsRow1Component } from '../../atoms/button-actions-row1/button-actions-row1.component';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
@@ -29,6 +29,7 @@ export class Grid1Component implements OnInit {
   @Input() displayFields: DynamicField[] = [];              // Campos para mostrar
 
   @Input() showDefaultGrid: boolean = true;                 // Mostrar grid por defecto
+  @Input() canUpdate: boolean = true;
 
   // Propiedades del paginador
   @Input() rows: number = 10;                               // Filas por página

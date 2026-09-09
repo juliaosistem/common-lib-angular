@@ -148,32 +148,52 @@ export class DynamicFieldService {
    * Obtiene la URL de imagen para un campo
    */
   getImageUrl(field: DynamicField, value: unknown): string {
-    if (!value) return '/assets/images/placeholder.png';
-    
-    const strValue = String(value);
-    
-    // Si ya es una URL completa (http/https), devolverla
-    if (strValue.startsWith('http://') || strValue.startsWith('https://')) {
-      return strValue;
+    const placeholder = '/assets/images/placeholder.png';
+    const imageSource = this.extractImageSource(value);
+
+    if (!imageSource) {
+      return placeholder;
     }
-    
-    // Si es una ruta local que empieza con /, devolverla (assets, etc.)
-    if (strValue.startsWith('/')) {
-      return strValue;
+
+    if (this.isAbsoluteOrDataUrl(imageSource) || imageSource.startsWith('/')) {
+      return imageSource;
     }
-    
-    // Si es un blob URL (archivo subido), devolverlo
-    if (strValue.startsWith('blob:')) {
-      return strValue;
+
+    if (imageSource.includes('.')) {
+      return `/assets/images/${imageSource}`;
     }
-    
-    // Si es solo nombre de archivo, asumir que está en assets/images
-    if (strValue.includes('.')) {
-      return `/assets/images/${strValue}`;
+
+    return imageSource || placeholder;
+  }
+
+  private extractImageSource(value: unknown): string | null {
+    if (value == null) {
+      return null;
     }
-    
-    // Fallback: devolver valor como está
-    return strValue;
+
+    if (typeof value === 'string') {
+      const trimmed = value.trim();
+      return trimmed.length > 0 ? trimmed : null;
+    }
+
+    if (Array.isArray(value)) {
+      return value.length > 0 ? this.extractImageSource(value[0]) : null;
+    }
+
+    if (typeof value === 'object') {
+      const urlValue = (value as { url?: unknown }).url;
+      return this.extractImageSource(urlValue ?? null);
+    }
+
+    return String(value);
+  }
+
+  private isAbsoluteOrDataUrl(value: string): boolean {
+    return value.startsWith('http://')
+      || value.startsWith('https://')
+      || value.startsWith('blob:')
+      || value.startsWith('data:')
+      || value.startsWith('//');
   }
 
   /**

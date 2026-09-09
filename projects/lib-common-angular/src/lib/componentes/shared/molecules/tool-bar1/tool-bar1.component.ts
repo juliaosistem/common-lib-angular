@@ -24,7 +24,9 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
 })
 export class ToolBar1Component {
   @Input() currentView: 'table' | 'grid' = 'table';
+  @Input() testIdPrefix: string = 'crud';
   @Input() showAddButton: boolean = true;
+  @Input() canDelete: boolean = true;
   @Input() selectedItems: Record<string, unknown>[] = [];
   @Input() showDropdownAddButton: boolean = true;
   @Input() showDropdownDeleteButton: boolean = false;
@@ -42,7 +44,7 @@ export class ToolBar1Component {
 
   // ✅ Getter para determinar si mostrar el botón delete
   get shouldShowDeleteButton(): boolean {
-    return this.selectedItems.length > 0;
+    return this.canDelete && this.selectedItems.length > 0;
   }
 
   onViewChange(newView: 'table' | 'grid'): void {

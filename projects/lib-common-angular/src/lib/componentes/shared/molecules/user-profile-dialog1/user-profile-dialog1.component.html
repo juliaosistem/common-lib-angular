@@ -1,0 +1,167 @@
+<p-dialog
+  [visible]="visible"
+  header="Editar perfil"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [breakpoints]="{ '960px': '75vw', '640px': '95vw' }"
+  [style]="{ width: '34rem', maxWidth: '95vw' }"
+  styleClass="user-profile-dialog"
+  (onHide)="onDialogHide()"
+  (visibleChange)="visibleChange.emit($event)"
+>
+  <form class="profile-form" [formGroup]="profileForm">
+    <section class="profile-section">
+      <h4>Cuenta</h4>
+      <div class="profile-grid">
+        <div class="field">
+          <label for="profile-email">Email</label>
+          <input id="profile-email" type="email" pInputText formControlName="email" />
+          @if (showError('email')) {
+            <small class="field-error">{{ getErrorMessage('email', 'Email') }}</small>
+          }
+        </div>
+
+        <div class="field field--full">
+          <label for="profile-password">Password</label>
+          <input id="profile-password" type="password" pInputText formControlName="password" />
+          @if (showError('password')) {
+            <small class="field-error">{{ getErrorMessage('password', 'Password') }}</small>
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section">
+      <h4>Datos Personales</h4>
+      <div class="profile-grid">
+       
+
+        <div class="field">
+          <label for="profile-id-url">ID Documento</label>
+          <input id="profile-id-url" type="text" pInputText formControlName="idUrl" />
+          @if (showError('idUrl')) {
+            <small class="field-error">{{ getErrorMessage('idUrl', 'ID Documento') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="profile-first-name">Primer Nombre</label>
+          <input id="profile-first-name" type="text" pInputText formControlName="firstName" />
+          @if (showError('firstName')) {
+            <small class="field-error">{{ getErrorMessage('firstName', 'Primer Nombre') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="profile-second-name">Segundo Nombre</label>
+          <input id="profile-second-name" type="text" pInputText formControlName="secondName" />
+          @if (showError('secondName')) {
+            <small class="field-error">{{ getErrorMessage('secondName', 'Segundo Nombre') }}</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="profile-estado">Estado</label>
+          <input id="profile-estado" type="text" pInputText formControlName="estado" />
+          @if (showError('estado')) {
+            <small class="field-error">{{ getErrorMessage('estado', 'Estado') }}</small>
+          }
+        </div>
+
+        <div class="field field--full">
+          <label for="profile-roles">Roles</label>
+          <p-multiSelect
+            id="profile-roles"
+            formControlName="roles"
+            [options]="availableRoles"
+            optionLabel="nameRol"
+            dataKey="idRol"
+            display="chip"
+            [maxSelectedLabels]="20"
+            placeholder="Selecciona roles"
+            appendTo="body"
+          />
+          @if (showError('roles')) {
+            <small class="field-error">{{ getErrorMessage('roles', 'Roles') }}</small>
+          }
+        </div>
+
+        <div class="field field--full">
+          <label for="profile-permisos">Permisos</label>
+          <textarea
+            id="profile-permisos"
+            class="permisos-readonly"
+            rows="3"
+            readonly
+            [value]="permisosPreviewText"
+          ></textarea>
+          <small class="field-hint">Permisos que tiene el usuario segun sus roles. Para modificarlos edita el rol correspondiente.</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section">
+      <h4>Telefono</h4>
+      <div class="profile-grid">
+        <div class="field field--full">
+          <label for="profile-phone">Numero</label>
+          <input id="profile-phone" type="tel" pInputText formControlName="phoneNumber" />
+          @if (showError('phoneNumber')) {
+            <small class="field-error">{{ getErrorMessage('phoneNumber', 'Numero telefonico') }}</small>
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="profile-section">
+      <h4>Direccion</h4>
+      <div class="profile-grid">
+        <div class="field">
+          <label for="profile-country">Pais</label>
+          <app-country-dropdown
+            [selectedCountryCode]="selectedCountryCode"
+            [placeholderText]="'Buscar pais o codigo'"
+            (onCountryChange)="onCountrySelected($event)"
+          ></app-country-dropdown>
+       
+          @if (showError('country')) {
+            <small class="field-error">{{ getErrorMessage('country', 'Pais') }}</small>
+          }
+        </div>
+
+        @if (selectedCountryCode) {
+          <div class="field">
+            <label for="profile-city-field">Ciudad</label>
+            <select id="profile-city-field" class="p-inputtext p-component" formControlName="city" (change)="onCitySelected(profileForm.controls.city.value)">
+              <option value="">Selecciona una ciudad</option>
+              @for (cityOption of cityOptions; track cityOption.value) {
+                <option [value]="cityOption.value">{{ cityOption.label }}</option>
+              }
+            </select>
+            @if (showError('city')) {
+              <small class="field-error">{{ getErrorMessage('city', 'Ciudad') }}</small>
+            }
+          </div>
+        }
+
+        <div class="field field--full">
+          <label for="profile-address">Direccion</label>
+          <input id="profile-address" type="text" pInputText formControlName="address" />
+          @if (showError('address')) {
+            <small class="field-error">{{ getErrorMessage('address', 'Direccion') }}</small>
+          }
+        </div>
+      </div>
+    </section>
+  </form>
+
+  <ng-template #footer>
+    <div class="dialog-actions">
+      <p-button label="Cerrar" icon="pi pi-times" severity="secondary" [text]="true" (click)="onClose()" />
+      <p-button label="Guardar" icon="pi pi-check" (click)="onSave()" />
+    </div>
+  </ng-template>
+</p-dialog>

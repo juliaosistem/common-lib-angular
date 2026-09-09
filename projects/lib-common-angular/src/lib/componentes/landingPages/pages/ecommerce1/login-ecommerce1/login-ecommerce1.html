@@ -1,10 +1,13 @@
 <div class="auth-page">
     <section class="auth-section">
         <lib-section-header-forms-login-ecomerce1 [titulo]="'Iniciar Sesión'" [subtitulo]="'Bienvenido de nuevo'"></lib-section-header-forms-login-ecomerce1>
-        <lib-form-auth-eccomerce1 [isRegistering]="false" [isLogout]="false"></lib-form-auth-eccomerce1>
+        <lib-form-auth-eccomerce1 [isRegistering]="false" [isLogout]="false" (login)="login($event)"></lib-form-auth-eccomerce1>
+        @if(errorMsg) {
+                <div class="text-red-500 text-center">{{ errorMsg }}</div>
+        }
         <div class="auth-footer">
             <p>¿No tienes una cuenta?
-                <button pButton type="button" label="Regístrate" class="p-button-text" [routerLink]="['register']"></button>
+                <button pButton type="button" label="Regístrate" class="p-button-text" [routerLink]="['/home/register']"></button>
             </p>
         </div>
     </section>

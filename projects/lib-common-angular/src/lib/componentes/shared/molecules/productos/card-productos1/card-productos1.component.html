@@ -1,9 +1,9 @@
-<div class="surface-card shadow-3 border-round-xl overflow-visible relative transition-all transition-duration-300 hover:shadow-6 flex flex-column h-full hover-effect"
+<div aria-label="tarjetas de productos inflables" class="surface-card shadow-3 border-round-xl overflow-visible relative transition-all transition-duration-300 hover:shadow-6 flex flex-column h-full hover-effect"
     style="min-height: 520px; max-width: 400px; margin: 0 auto">
     @if (product) {
     <div class="relative surface-ground flex align-items-center justify-content-center overflow-hidden p-3 image-hover-container"
         style="height: 280px">
-        <img [src]="currentImageUrl || product.imagen[0]?.url" [alt]="product.name"
+        <img [src]="currentImageUrl || product.imagen[0]?.url" [alt]="product.imagen[0]?.alt" itemprop="image"
             loading="lazy" width="400" height="280"
             class="max-w-full max-h-full object-contain cursor-pointer transition-transform transition-duration-300 hover-zoom"
             (click)="navigateToProductDetail()" />
@@ -11,12 +11,13 @@
         <!-- Overlay con icono de ojo al hover -->
         <div class="image-overlay">
             <button pButton type="button" class="p-button-rounded p-button-info p-button-lg shadow-4"
-                    (click)="navigateToProductDetail()" pTooltip="Ver detalles" tooltipPosition="top">
+                    (click)="navigateToProductDetail()" [attr.aria-label]="'Ver detalle de ' + product.name" pTooltip="Ver detalles" tooltipPosition="top">
                 <i class="pi pi-eye text-xl"></i>
             </button>
         </div>
 
-        <button (click)="shareProductOnWhatsapp()"
+        <button (click)="contactWhatsapp()"
+            aria-label="Contactar por WhatsApp"
             class="absolute bottom-0 right-0 m-3 bg-green-500 border-none text-white w-3rem h-3rem border-circle shadow-4 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600 z-2">
             <i class="pi pi-whatsapp text-2xl"></i>
         </button>
@@ -25,7 +26,7 @@
     <div class="p-3 flex flex-column flex-grow-1">
         <div class="flex gap-2 overflow-x-auto pb-2 mb-3 z-1">
             @for (image of product.imagen; track $index) {
-            <img [src]="image.url" (click)="selectImage($index)"
+            <img [src]="image.url" [alt]="image.alt" (click)="selectImage($index)"
                 loading="lazy" width="48" height="48"
                 class="w-3rem h-3rem border-round border-2 cursor-pointer flex-shrink-0 transition-all transition-duration-200 object-cover"
                 [class.border-900]="isActiveThumbnail($index)" [class.border-transparent]="!isActiveThumbnail($index)"
@@ -51,15 +52,16 @@
                                 <!-- Menú flotante de redes estilo PrimeNG -->
                                 <div class="relative" style="position: absolute; right: -0.75rem; top: -0.75rem; z-index: 10;">
                                     <button (click)="toggleShareMenu()"
+                                        aria-label="Compartir en redes sociales"
                                         class="bg-green-500 border-none text-white w-2rem h-2rem border-circle shadow-2 flex align-items-center justify-content-center cursor-pointer transition-colors transition-duration-200 hover:bg-green-600">
                                         <i class="pi" [ngClass]="{'pi-times': shareMenuOpen, 'pi-share-alt': !shareMenuOpen}"></i>
                                     </button>
                                     @if (shareMenuOpen) {
                                         <div class="flex gap-2 absolute" style="right: 0; top: 2.6rem;">
-                                            <button (click)="touchRedes('whatsapp')" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#25D366;color:#fff">
+                                            <button (click)="touchRedes('whatsapp')" aria-label="Compartir en WhatsApp" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#25D366;color:#fff">
                                                 <i class="pi pi-whatsapp"></i>
                                             </button>
-                                            <button (click)="touchRedes('facebook')" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#1877F2;color:#fff">
+                                            <button (click)="touchRedes('facebook')" aria-label="Compartir en Facebook" class="border-none w-2rem h-2rem border-circle flex align-items-center justify-content-center cursor-pointer shadow-1" style="background:#1877F2;color:#fff">
                                                 <i class="pi pi-facebook"></i>
                                             </button>
                                            
@@ -105,7 +107,7 @@
                 } 
             </div>
 
-            <lib-section-add-cards-buttons [product]="product" [isLogin]="isLogin">
+            <lib-section-add-cards-buttons  [product]="product" [isLogin]="isLogin" (addToCart)="onAddToCart($event)">
             </lib-section-add-cards-buttons>
 
         </div>

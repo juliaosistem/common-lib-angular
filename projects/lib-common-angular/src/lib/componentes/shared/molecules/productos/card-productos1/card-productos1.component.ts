@@ -1,9 +1,11 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
-import { CurrencyPipe, CommonModule } from '@angular/common';
+import { GoogleService } from '../../../../../services/google.service';
+import { BusinessDTO } from '@juliaosistem/core-dtos';
+import { CommonModule } from '@angular/common';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { ImagenDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 import { Router } from '@angular/router';
-import { ProductService } from '../../../services/product.service';
+import { ProductService } from '../../../../../services/product.service';
 import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";
 import { IonicModule } from '@ionic/angular';
 
@@ -16,15 +18,16 @@ import { IonicModule } from '@ionic/angular';
   templateUrl: './card-productos1.component.html',
   styleUrls: ['./card-productos1.component.scss'],
   imports: [CommonModule, PrimegModule, SectionAddCardsButtons,IonicModule],
-  providers: [CurrencyPipe]
+  // providers: [CurrencyPipe]
 })
 export class CardProductos1Component implements OnInit, OnDestroy {
 
   @Input() product!: ProductoView;
   @Output() addToCart = new EventEmitter<{ product: ProductoDTO, quantity: number }>();
   @Input() isLogin: boolean = false;
+  @Input() DatosNegocio: BusinessDTO | null = null;
   // Ruta base configurable desde el frontal para navegar al detalle
-  @Input() detailRouteBase: string[] = ['detalle'];
+  @Input() detailRouteBase: string[] = ['productos'];
 
   discount = 0;
   currentImageIndex = 0;
@@ -35,9 +38,10 @@ export class CardProductos1Component implements OnInit, OnDestroy {
   autoSlideInterval: any;
 
   constructor(
-    private currencyPipe: CurrencyPipe,
+    // private currencyPipe: CurrencyPipe,
     private productService: ProductService,
-    private router: Router
+    private router: Router,
+    private googleService: GoogleService
   ) {}
 
   /**
@@ -69,9 +73,9 @@ export class CardProductos1Component implements OnInit, OnDestroy {
 
   /**
    * Devuelve la URL de la imagen actualmente seleccionada.
-   * @returns string URL de la imagen activa
+   * @returns string | undefined URL de la imagen activa
    */
-  get currentImageUrl(): string {
+  get currentImageUrl(): string | undefined {
     return this.currentImage.url;
   }
 
@@ -135,26 +139,22 @@ export class CardProductos1Component implements OnInit, OnDestroy {
    * Navega al detalle del producto construyendo la ruta a partir de `detailRouteBase`.
    * Acepta rutas absolutas (inician con `/`) o relativas y pasa el producto en `history.state`.
    */
-navigateToProductDetail(): void {
-  if (this.product?.id) {
-      const parts = this.detailRouteBase
-        .map(p => (p ? p.split('/') : []))
-        .reduce((acc: string[], cur: string[]) => acc.concat(cur), [])
-        .filter(seg => seg && seg.trim().length > 0);
-      const isAbsolute = this.detailRouteBase[0]?.startsWith('/') || false;
-      let basePrefix = '';
-      if (!isAbsolute) {
-        const currentPath = this.router.url.split('?')[0].split('#')[0];
-        const firstSeg = currentPath.split('/').filter(Boolean)[0] || '';
-        basePrefix = firstSeg ? `/${firstSeg}/` : '/';
-      }
-      const joined = [...parts, String(this.product.id)].join('/');
-      const normalized = (isAbsolute ? '/' : basePrefix) + joined;
-      this.router.navigateByUrl(normalized, {
+
+  /**
+   * Navega al detalle del producto usando la ruta SEO-friendly: /home/productos/:nombre/:idInflable
+   */
+  navigateToProductDetail(): void {
+    if (this.product?.id && this.product?.name) {
+      // Generar slug del nombre
+      const slug = this.product.name.replace(/\s+/g, '-').toLowerCase();
+      const id = this.product.id;
+      // Construir la ruta completa
+      const url = `/home/productos/${slug}-inflable/${id}`;
+      this.router.navigateByUrl(url, {
         state: { product: this.product, isLogin: this.isLogin }
       });
+    }
   }
-}
 
 
   /**
@@ -162,19 +162,37 @@ navigateToProductDetail(): void {
    * basado en si el usuario tiene sesión iniciada.
    */
   shareProductOnWhatsapp(): void {
-    const url = this.shareBaseUrl;
-    let text = '';
-
-    if (this.isLogin) {
-      const precio = this.currencyPipe.transform(this.discount, this.product.precios[0].codigo_iso, 'code');
-      text = `¡Mira esto! ${this.product.name} por solo ${precio}`;
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
+    const text = `Mira este producto: ${this.product?.name ?? ''} - ${this.shareBaseUrl}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
     } else {
-      const id = this.product?.id ?? '';
-      text = `Hola, estoy interesado en el producto Referencia ${id}: ${this.product.name}`;
+      window.open(whatsappUrl, '_blank');
     }
-
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { producto: this.product?.name });
+    }
   }
+
+  /**
+   * Abre WhatsApp para contactar directamente a un número predefinido
+   * con un mensaje basado en si el usuario tiene sesión iniciada.
+   */
+  contactWhatsapp(): void {
+    const whatsappNumber = this.DatosNegocio?.telefono || '+573118025433';
+    const text = `Mira este producto: ${this.product?.name ?? ''} - ${this.shareBaseUrl}`;
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+    if (this.DatosNegocio?.googleAdsConversionId) {
+      this.googleService.reportConversion(this.DatosNegocio.googleAdsConversionId, whatsappUrl);
+    } else {
+      window.open(whatsappUrl, '_blank');
+    }
+    if (this.DatosNegocio?.googleAnalyticsEvent) {
+      this.googleService.reportAnalyticsEvent(this.DatosNegocio.googleAnalyticsEvent, { producto: this.product?.name });
+    }
+  }
+    
   /**
    * Alterna la visibilidad del menú flotante de compartir en redes.
    */
@@ -188,10 +206,8 @@ navigateToProductDetail(): void {
    */
   touchRedes(red: 'whatsapp' | 'facebook' | 'instagram') {
     const url = this.shareBaseUrl;
-    const name = this.product?.name ?? '';
     if (red === 'whatsapp') {
-      const text = `Mira este producto: ${name} - ${url}`;
-      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`,'_blank');
+      this.shareProductOnWhatsapp();
     }
     if (red === 'facebook') {
       const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;

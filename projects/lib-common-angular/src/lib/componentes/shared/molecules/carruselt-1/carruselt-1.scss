@@ -1,0 +1,72 @@
+// Fondo animado tipo gradient
+.carrusel-bg {
+	min-height: 10vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	// Colores Zigma: Morado, Amarillo, Azul
+	background: linear-gradient(-45deg, #6a1b9a, #fbc02d, #0288d1, #6a1b9a);
+	background-size: 400% 400%;
+	animation: gradient 15s ease infinite;
+}
+
+@keyframes gradient {
+	0% { background-position: 0% 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0% 50%; }
+}
+
+.slide {
+	opacity: 0;
+	pointer-events: none;
+	z-index: 1;
+	transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+	transform: translateX(100px) scale(0.95);
+	position: absolute;
+	top: 0; left: 0; width: 100%; height: 100%;
+}
+.slide.active {
+	opacity: 1;
+	pointer-events: all;
+	z-index: 10;
+	transform: translateX(0) scale(1);
+}
+.slide .content-box {
+	transform: translateY(30px);
+	opacity: 0;
+	transition: all 0.6s ease 0.3s;
+}
+.slide.active .content-box {
+	transform: translateY(0);
+	opacity: 1;
+}
+.slide .image-box {
+	transform: scale(1.1);
+	opacity: 0;
+	transition: all 0.8s ease 0.1s;
+}
+.slide.active .image-box {
+	transform: scale(1);
+	opacity: 1;
+}
+.nav-dot {
+	transition: all 0.3s ease;
+	width: 0.75rem;
+	height: 0.75rem;
+	background: rgba(255,255,255,0.5);
+	border: none;
+	outline: none;
+	cursor: pointer;
+}
+.nav-dot.active {
+	width: 2rem;
+	background: #fff;
+}
+
+// Posicionamiento de botones de navegación responsive
+.nav-btn-pos {
+    top: 55% !important; // En móvil, ubicar en la zona de imagen
+    @media (min-width: 768px) {
+        top: 50% !important;
+    }
+}

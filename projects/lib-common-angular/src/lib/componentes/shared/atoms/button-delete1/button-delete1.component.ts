@@ -26,6 +26,7 @@ export class ButtonDelete1Component {
   @Input() severity: 'success' | 'info' | 'warn' | 'danger' | 'help' | 'primary' | 'secondary' | 'contrast' | undefined = 'danger';
   @Input() tooltip: string = 'Delete selected items';
   @Input() loading: boolean = false;
+  @Input() testId: string = 'crud-delete-button';
   
   @Output() delete = new EventEmitter<void>();
 

@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DetalleCarrito1Component } from '../../../../shared/molecules/productos/detalle-carrito-1/detalle-carrito-1.component';
-import { MetaDataService } from '../../../../shared/services/meta-data.service.ts/meta-data.service';
+import { MetaDataService } from '../../../../../services/meta-data.service.ts/meta-data.service';
 import { ProductoDTO,CategoriaDTO } from '@juliaosistem/core-dtos';
 import { ActivatedRoute } from '@angular/router';
-import { ProductService } from '../../../../shared/services/product.service';
+import { ProductService } from '../../../../../services/product.service';
 import { Store } from '@ngxs/store';
 import { ProductosState } from '../../../../../assets/state/productos.state';
 import { CardProductos1Component } from '../../../../shared/molecules/productos/card-productos1/card-productos1.component';
@@ -113,8 +113,14 @@ export class DetalleProductoPageLib implements OnInit {
    * - Último segmento de la URL
    */
   private getProductIdFromRoute(): string | null {
-    let id = this.route.snapshot.paramMap.get('id');
-    if (id) return id;
+
+    // Nueva ruta: /productos/:nombre/:idInflable
+    let id = this.route.snapshot.paramMap.get('idInflable');
+    if (id) {
+      // Extraer solo el número o identificador antes de '-inflable'
+      const match = id.match(/^([0-9a-zA-Z-]+)(?:-inflable)?$/);
+      return match ? match[1] : id;
+    }
     id = this.route.snapshot.paramMap.get('productId');
     if (id) return id;
     id = this.route.snapshot.queryParamMap.get('id');

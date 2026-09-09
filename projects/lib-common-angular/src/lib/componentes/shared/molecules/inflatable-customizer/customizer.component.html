@@ -37,7 +37,9 @@
                (change)="toggleAccessory(acc)"
                id="{{acc.id}}">
         <label for="{{acc.id}}">{{ acc.name }}</label>
-        <span class="ml-2 text-sm text-gray-500" *ngIf="acc.price > 0">+{{acc.price | currency:'COP':'symbol':'1.0-0'}}</span>
+        @if (acc.price > 0) {
+          <span class="ml-2 text-sm text-gray-500">+{{acc.price | currency:'COP':'symbol':'1.0-0'}}</span>
+        }
       </div>
     }
   </div>

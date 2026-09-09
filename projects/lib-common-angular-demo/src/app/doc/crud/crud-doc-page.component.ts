@@ -1,67 +1,372 @@
 import { Component, signal } from '@angular/core';
-import { Crud, CrudDocComponent, PrimegModule } from 'lib-common-angular';
+import { CommonModule } from '@angular/common';
+import { Crud } from 'lib-common-angular';
+import { Terminal } from 'lib-common-angular';
+import { CrudDialog1Component } from 'lib-common-angular';
+import { PrimegModule } from 'lib-common-angular';
+import { FieldType } from '@juliaosistem/core-dtos';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  joinDate: string;
+}
 
 @Component({
   selector: 'app-crud-doc-page',
   standalone: true,
-  imports: [PrimegModule, CrudDocComponent, Crud],
-  templateUrl: './crud-doc-page.component.html'
+  imports: [PrimegModule, CommonModule, Crud, CrudDialog1Component, Terminal],
+  templateUrl: './crud-doc-page.component.html',
+  styleUrl: './crud-doc-page.component.scss'
 })
 export class CrudDocPageComponent {
-  // Componente demo
-  Crud = Crud;
+  Terminal = Terminal;
 
-  // Datos de ejemplo
-  users = signal([
-    { id: 1, name: 'Ana Pérez', email: 'ana@example.com', role: 'Admin' },
-    { id: 2, name: 'Carlos Ruiz', email: 'carlos@example.com', role: 'User' }
+  users = signal<Record<string, unknown>[]>([
+    {
+      id: 1,
+      name: 'Ana Pérez García',
+      email: 'ana.perez@example.com',
+      role: 'Administrador',
+      status: 'active',
+      joinDate: '2023-01-15'
+    },
+    {
+      id: 2,
+      name: 'Carlos López Martínez',
+      email: 'carlos.lopez@example.com',
+      role: 'Usuario',
+      status: 'inactive',
+      joinDate: '2023-03-20'
+    },
+    {
+      id: 3,
+      name: 'María González Ruiz',
+      email: 'maria.gonzalez@example.com',
+      role: 'Editor',
+      status: 'active',
+      joinDate: '2023-05-10'
+    }
   ]);
 
-  // --- Eventos CRUD ---
+  // ✅ --- CONFIGURACIÓN CRUD ---
+  fieldTypeConfig: Record<string, FieldType> = {
+    id: 'number',
+    name: 'text',
+    email: 'text',
+    role: 'select',
+    status: 'select',
+    joinDate: 'text'
+  };
+
+  fieldLabels: Record<string, string> = {
+    id: 'ID',
+    name: 'Nombre Completo',
+    email: 'Correo Electrónico',
+    role: 'Rol',
+    status: 'Estado',
+    joinDate: 'Fecha de Registro'
+  };
+
+  fieldSelectOptions: Record<string, { label: string; value: string }[]> = {
+    role: [
+      { label: 'Administrador', value: 'admin' },
+      { label: 'Editor', value: 'editor' },
+      { label: 'Usuario', value: 'user' },
+      { label: 'Invitado', value: 'guest' }
+    ],
+    status: [
+      { label: 'Activo', value: 'active' },
+      { label: 'Inactivo', value: 'inactive' },
+      { label: 'Suspendido', value: 'suspended' }
+    ]
+  };
+
+  fieldOrder: string[] = ['name', 'email', 'role', 'status', 'joinDate'];
+  excludeFields: string[] = ['id'];
+  tableType: 'table' | 'grid' = 'table';
+  loaded = true;
+  submitted = false;
+
+  // ✅ --- MODAL STATE ---
+  showDialog: boolean = false;
+  dialogCurrentItem: Record<string, unknown> = {};
+  dialogDisplayFields: any[] = [];
+  dialogFieldSelectOptions: Record<string, any> = {};
+
+  // ✅ --- HANDLERS CRUD ---
   onNewItem() {
+    this.dialogCurrentItem = {};
+    this.dialogDisplayFields = Object.keys(this.fieldTypeConfig).filter(f => f !== 'id');
+    this.dialogFieldSelectOptions = this.fieldSelectOptions;
+    this.showDialog = true;
   }
 
-  onEditItem(item: any) {
+  onEditItem(item: Record<string, unknown>) {
+    this.dialogCurrentItem = { ...item };
+    this.dialogDisplayFields = Object.keys(this.fieldTypeConfig).filter(f => f !== 'id');
+    this.dialogFieldSelectOptions = this.fieldSelectOptions;
+    this.showDialog = true;
   }
 
-  onItemSaved(item: any) {
+  onItemSaved(item: Record<string, unknown>) {
+    console.log('Item guardado:', item);
   }
 
-  onDialogCanceled() {
+  onDialogSave(item: Record<string, unknown>) {
+    const currentUsers = this.users();
+    const index = currentUsers.findIndex(u => u['id'] === item['id']);
+    if (index >= 0) {
+      currentUsers[index] = item;
+    } else {
+      const newId = Math.max(...currentUsers.map(u => u['id'] as number)) + 1;
+      currentUsers.push({ id: newId, ...item });
+    }
+    this.users.set([...currentUsers]);
+    this.showDialog = false;
   }
 
-  // --- Documentación ---
-  exampleCode = `
+  onDialogCancel() {
+    this.showDialog = false;
+  }
+
+  onDataChanged(updatedData: Record<string, unknown>[]) {
+    this.users.set(updatedData);
+  }
+
+  onDeleteItem(item: Record<string, unknown>) {
+    const itemId = item['id'] as number;
+    const currentUsers = this.users().filter(u => u['id'] !== itemId);
+    this.users.set(currentUsers);
+  }
+
+  // ✅ --- DOCUMENTACIÓN CON TERMINAL ---
+  basicUsageCode = `import { Component } from '@angular/core';
+import { Crud, PrimegModule } from 'lib-common-angular';
+
+@Component({
+  selector: 'app-my-crud',
+  standalone: true,
+  imports: [Crud, PrimegModule],
+  template: \`
+    <lib-crud
+      [data]="users"
+      [fieldTypeConfig]="fieldTypeConfig"
+      [fieldLabels]="fieldLabels"
+      [rows]="10"
+      [paginator]="true"
+      (newItemRequest)="onNewItem()"
+      (editItemRequest)="onEditItem($event)"
+      (dataChange)="onDataChanged($event)">
+    </lib-crud>
+  \`
+})
+export class MyComponentComponent {
+  users = [
+    { id: 1, name: 'Ana Pérez', email: 'ana@example.com' }
+  ];
+
+  fieldTypeConfig = {
+    name: 'text',
+    email: 'text'
+  };
+
+  fieldLabels = {
+    name: 'Nombre',
+    email: 'Correo'
+  };
+
+  onNewItem() { }
+  onEditItem(item: any) { }
+  onDataChanged(data: any[]) { }
+}`;
+
+  configurationCode = `// ✅ 1. Configuración de tipos de campo
+fieldTypeConfig: Record<string, FieldType> = {
+  id: 'number',
+  name: 'text',
+  email: 'text',
+  price: 'number',
+  category: 'select',
+  status: 'checkbox',
+  image: 'img',
+  joinDate: 'text'
+};
+
+// ✅ 2. Etiquetas personalizadas  
+fieldLabels: Record<string, string> = {
+  id: 'ID',
+  name: 'Nombre Completo',
+  email: 'Correo Electrónico',
+  price: 'Precio',
+  category: 'Categoría',
+  status: 'Activo',
+  image: 'Foto',
+  joinDate: 'Fecha Registro'
+};
+
+// ✅ 3. Opciones para select
+fieldSelectOptions: Record<string, { label: string; value: string }[]> = {
+  category: [
+    { label: 'Electrónica', value: 'electronics' },
+    { label: 'Ropa', value: 'clothing' }
+  ],
+  status: [
+    { label: 'Activo', value: 'active' },
+    { label: 'Inactivo', value: 'inactive' }
+  ]
+};
+
+// ✅ 4. Orden y exclusión
+fieldOrder: string[] = ['name', 'email', 'price', 'category', 'status'];
+excludeFields: string[] = ['id', 'createdAt'];`;
+
+  numberCurrencyCode = `// ✅ Formato de moneda dinámico en CrudDialog1 (p-inputNumber)
+dialogDisplayFields = [
+  {
+    key: 'precio',
+    label: 'Precio',
+    type: 'number',
+    required: true,
+    min: 0.01,
+    mode: 'currency',
+    currencyFieldKey: 'moneda',
+    currencyDisplay: 'code',
+    locale: 'es-CO'
+  },
+  {
+    key: 'moneda',
+    label: 'Moneda',
+    type: 'select',
+    required: true
+  }
+];
+
+dialogFieldSelectOptions = {
+  moneda: [
+    { label: 'Peso colombiano', value: 'COP' },
+    { label: 'Dólar americano', value: 'USD' },
+    { label: 'Euro', value: 'EUR' }
+  ]
+};
+
+// ✅ Save se desactiva automáticamente cuando itemForm es inválido
+// [disabled]="!body && itemForm.invalid"`;
+
+  modalIntegrationCode = `// ✅ Integración con Modal (CrudDialog1)
+export class MyComponent {
+  showDialog: boolean = false;
+  dialogCurrentItem: Record<string, unknown> = {};
+  dialogDisplayFields: unknown[] = [];
+  dialogFieldSelectOptions: Record<string, any> = {};
+
+  onNewItem() {
+    this.dialogCurrentItem = { };
+    this.dialogDisplayFields = Object.keys(this.fieldTypeConfig)
+      .filter(f => f !== 'id');
+    this.dialogFieldSelectOptions = this.fieldSelectOptions;
+    this.showDialog = true;
+  }
+
+  onEditItem(item: Record<string, unknown>) {
+    this.dialogCurrentItem = { ...item };
+    this.dialogDisplayFields = Object.keys(this.fieldTypeConfig)
+      .filter(f => f !== 'id');
+    this.dialogFieldSelectOptions = this.fieldSelectOptions;
+    this.showDialog = true;
+  }
+
+  onDialogSave(item: Record<string, unknown>) {
+    const index = this.users.findIndex(u => u['id'] === item['id']);
+    if (index >= 0) {
+      this.users[index] = item;
+    } else {
+      this.users.push(item);
+    }
+    this.showDialog = false;
+  }
+
+  onDialogCancel() {
+    this.showDialog = false;
+  }
+}`;
+
+  htmlTemplateCode = `<!-- ✅ Componente CRUD con Modal -->
 <lib-crud
   [data]="users"
-  [rows]="5"
+  [fieldTypeConfig]="fieldTypeConfig"
+  [fieldLabels]="fieldLabels"
+  [fieldOrder]="fieldOrder"
+  [excludeFields]="excludeFields"
+  [fieldSelectOptions]="fieldSelectOptions"
+  [tableType]="tableType"
+  [rows]="10"
   [paginator]="true"
   (newItemRequest)="onNewItem()"
   (editItemRequest)="onEditItem($event)"
-  (itemSaved)="onItemSaved($event)"
-  (dialogCanceled)="onDialogCanceled()">
+  (dataChange)="onDataChanged($event)"
+  (deleteItemRequest)="onDeleteItem($event)">
 </lib-crud>
-`;
 
-  // Documentación de Inputs
+<!-- ✅ Dialog Modal CRUD -->
+<lib-crud-dialog1
+  [(visible)]="showDialog"
+  [displayFields]="dialogDisplayFields"
+  [currentItem]="dialogCurrentItem"
+  [fieldSelectOptions]="dialogFieldSelectOptions"
+  (save)="onDialogSave($event)"
+  (cancel)="onDialogCancel()">
+</lib-crud-dialog1>`;
+
+  // ✅ --- DOCUMENTACIÓN DE INPUTS ---
   inputsDocs = [
-    { name: 'data', type: 'any[]', description: 'Datos que se muestran en la tabla o grid.' },
-    { name: 'rows', type: 'number', description: 'Número de filas por página.' },
-    { name: 'paginator', type: 'boolean', description: 'Habilita paginación.' },
-    { name: 'tableType', type: `'table' | 'grid'`, description: 'Tipo de vista (tabla o grid).' },
-    { name: 'fieldTypeConfig', type: 'Record<string, FieldType>', description: 'Configuración de tipo de cada campo.' },
-    { name: 'fieldLabels', type: 'Record<string, string>', description: 'Etiquetas personalizadas para cada campo.' },
-    { name: 'fieldOrder', type: 'string[]', description: 'Orden de las columnas.' },
-    { name: 'excludeFields', type: 'string[]', description: 'Campos a excluir de la vista.' },
-    { name: 'fieldSelectOptions', type: 'Record<string,string[]>', description: 'Opciones para campos select dinámicos.' },
+    { name: 'showDialog', type: 'boolean', description: 'Controla visibilidad del diálogo interno.' },
+    { name: 'submitted', type: 'boolean', description: 'Indica si el formulario fue enviado.' },
+    { name: 'loaded', type: 'boolean', description: 'Indica si los datos iniciales ya fueron cargados.' },
+    { name: 'displayFields', type: 'DynamicField[]', description: 'Campos dinámicos a renderizar en tabla/grid.' },
+    { name: 'data', type: 'any[]', description: 'Array de objetos que se muestran en la tabla.' },
+    { name: 'rows', type: 'number', description: 'Número de filas por página (default: 10).' },
+    { name: 'paginator', type: 'boolean', description: 'Habilita paginación (default: true).' },
+    { name: 'rowsPerPageOptions', type: 'number[]', description: 'Opciones de tamaño de página para el paginador.' },
+    { name: 'showCurrentPageReport', type: 'boolean', description: 'Muestra el reporte de página actual del paginador.' },
+    { name: 'tableType', type: "'table' | 'grid'", description: "Tipo de vista: 'table' o 'grid' (default: 'table')." },
+    { name: 'fieldTypeConfig', type: 'Record<string, FieldType>', description: 'Define el tipo de dato de cada campo.' },
+    { name: 'fieldLabels', type: 'Record<string, string>', description: 'Etiquetas personalizadas para los headers.' },
+    { name: 'fieldOrder', type: 'string[]', description: 'Define el orden en que se muestran las columnas.' },
+    { name: 'excludeFields', type: 'string[]', description: 'Campos que NO se muestran en la tabla.' },
+    { name: 'fieldSelectOptions', type: 'Record<string, any[]>', description: 'Opciones para campos de tipo select.' }
   ];
 
-  // Documentación de Outputs
+  numberFieldOptionsDocs = [
+    { name: 'min', type: 'number', description: 'Valor mínimo permitido para campos type: number.' },
+    { name: 'mode', type: "'decimal' | 'currency'", description: 'Modo de p-inputNumber. Permite usar formato de moneda.' },
+    { name: 'currencyFieldKey', type: 'string', description: 'Campo del formulario que define el código ISO de moneda (ej. moneda).' },
+    { name: 'currency', type: 'string', description: 'Moneda fija (fallback) cuando no se usa currencyFieldKey.' },
+    { name: 'currencyDisplay', type: "'symbol' | 'code'", description: 'Cómo se muestra la moneda en el input numérico.' },
+    { name: 'locale', type: 'string', description: 'Locale para separadores y formato numérico (ej. es-CO).' },
+  ];
+
+  // ✅ --- DOCUMENTACIÓN DE OUTPUTS ---
   outputsDocs = [
-    { name: 'newItemRequest', type: 'EventEmitter<void>', description: 'Se dispara al solicitar un nuevo item.' },
-    { name: 'editItemRequest', type: 'EventEmitter<any>', description: 'Se dispara al solicitar editar un item existente.' },
-    { name: 'itemSaved', type: 'EventEmitter<any>', description: 'Se dispara cuando un item se guarda.' },
-    { name: 'dialogCanceled', type: 'EventEmitter<void>', description: 'Se dispara al cancelar el diálogo de edición.' },
-    { name: 'dataChange', type: 'EventEmitter<any[]>', description: 'Se dispara cuando los datos cambian (p. ej., al eliminar).' }
+    { name: 'newItemRequest', type: 'EventEmitter<void>', description: 'Se dispara al hacer clic en "Nuevo".' },
+    { name: 'editItemRequest', type: 'EventEmitter<Record<string, unknown>>', description: 'Se dispara al editar.' },
+    { name: 'deleteItemRequest', type: 'EventEmitter<Record<string, unknown>>', description: 'Se dispara al eliminar.' },
+    { name: 'dataChange', type: 'EventEmitter<Record<string, unknown>[]>', description: 'Se dispara cuando los datos cambian.' },
+    { name: 'itemSaved', type: 'EventEmitter<Record<string, unknown>>', description: 'Se dispara cuando se guarda un item.' },
+    { name: 'dialogCanceled', type: 'EventEmitter<void>', description: 'Se dispara al cancelar la edición en el modal.' }
+  ];
+
+  // ✅ --- DOCUMENTACIÓN DE TIPOS DE CAMPO ---
+  fieldTypesDocs = [
+    { type: 'text', description: 'Input de texto simple.' },
+    { type: 'number', description: 'Input numérico con soporte decimal/currency y validación por min.' },
+    { type: 'checkbox', description: 'Checkbox para valores true/false.' },
+    { type: 'textarea', description: 'Área de texto para contenido largo.' },
+    { type: 'select', description: 'Dropdown con opciones predefinidas.' },
+    { type: 'img', description: 'Visualización de imágenes en la tabla.' },
+    { type: 'file', description: 'Upload de archivos.' }
   ];
 }

@@ -1,63 +1,85 @@
 <p-table
   #dt
+  [attr.data-testid]="testIdPrefix + '-table'"
   [value]="data"
   [rows]="rows"
   [paginator]="paginator"
   [globalFilterFields]="['name']"
-  [tableStyle]="{ 'min-width': '75rem' }"
+  [tableStyle]="{ width: '100%' }"
   [selection]="selectedItems"
   (selectionChange)="onSelectionChange($event)"
   [rowHover]="true"
-  dataKey="id"
+  [dataKey]="dataKey"
+  responsiveLayout="stack"
+  breakpoint="991px"
+  styleClass="tabla1-table"
   currentPageReportTemplate="Showing {first} to {last} of {totalRecords} items"
   [showCurrentPageReport]="showCurrentPageReport"
   [rowsPerPageOptions]="rowsPerPageOptions"
 >
   <ng-template #header>
-    <tr *ngIf="showDefaultHeader">
-      <th style="width: 3rem"><p-tableHeaderCheckbox /></th>
-      <th style="width: 8rem">Actions</th>
-      <th *ngFor="let field of displayFields" style="min-width: 12rem">
-        {{ field.label }}
-      </th>
-    </tr>
+    @if (showDefaultHeader) {
+      <tr>
+        <th class="tabla1-col-select"><p-tableHeaderCheckbox /></th>
+        <th class="tabla1-col-actions">Actions</th>
+        <th *ngFor="let field of displayFields" class="tabla1-col-data">
+          {{ field.label }}
+        </th>
+      </tr>
+    }
   </ng-template>
 
   <ng-template #body let-item>
-    <tr *ngIf="showDefaultBody">
-      <td style="width: 3rem"><p-tableCheckbox [value]="item" /></td>
-      <td style="width: 8rem">
-        <div class="flex gap-2 items-center">
-          <lib-button-actions-row1 [item]="item" (edit)="onEditItem($event)">
-          </lib-button-actions-row1>
-        </div>
-      </td>
-      <td *ngFor="let field of displayFields">
-        <ng-container [ngSwitch]="field.type">
-          <img
-            *ngSwitchCase="'img'"
-            [src]="getImageUrl(field, getValue(item, field))"
-            [alt]="getImageAltText(field, item)"
-            style="width: 64px"
-            class="rounded"
-          />
-
-          <span *ngSwitchCase="'checkbox'" class="flex items-center gap-2">
-            <i
-              [class]="
-                getValue(item, field)
-                  ? 'pi pi-check-circle text-green-500'
-                  : 'pi pi-times-circle text-red-500'
-              "
-            ></i>
-            <span>{{ getValue(item, field) ? 'Yes' : 'No' }}</span>
-          </span>
-
-          <span *ngSwitchDefault>
-            {{ formatDynamicFieldValue(field, getValue(item, field)) }}
-          </span>
-        </ng-container>
-      </td>
-    </tr>
+    @if (showDefaultBody) {
+      <tr>
+        <td class="tabla1-cell-select" data-label="Select" [attr.data-testid]="testIdPrefix + '-row-checkbox-' + getRowId(item)">
+          <p-tableCheckbox [value]="item" />
+        </td>
+        <td class="tabla1-cell-actions" data-label="Actions" [attr.data-testid]="testIdPrefix + '-row-actions-cell-' + getRowId(item)">
+          <div class="flex gap-2 items-center">
+            <lib-button-actions-row1 [item]="item" [testIdPrefix]="testIdPrefix" (edit)="onEditItem($event)">
+            </lib-button-actions-row1>
+          </div>
+        </td>
+        <td
+          *ngFor="let field of displayFields"
+          class="tabla1-cell-data"
+          [attr.data-label]="field.label"
+        >
+<!-- <span class="p-column-title">{{ field.label }}</span> -->
+          @switch (field.type) {
+            @case ('img') {
+              <img
+                [src]="getImageUrl(field, getValue(item, field))"
+                [alt]="getImageAltText(field, item)"
+                class="tabla1-image rounded"
+              />
+            }
+            @case ('checkbox') {
+              <span class="flex items-center gap-2">
+                <i
+                  [class]="
+                    getValue(item, field)
+                      ? 'pi pi-check-circle text-green-500'
+                      : 'pi pi-times-circle text-red-500'
+                  "
+                ></i>
+                <span>{{ getValue(item, field) ? 'Yes' : 'No' }}</span>
+              </span>
+            }
+            @case ('textarea') {
+              <div class="text-wrap text-break text-sm whitespace-pre-wrap break-words max-h-24 overflow-y-auto">
+                {{ getValue(item, field) }}
+              </div>
+            }
+            @default {
+              <span class="tabla1-cell-text">
+                {{ formatDynamicFieldValue(field, getValue(item, field)) }}
+              </span>
+            }
+          }
+        </td>
+      </tr>
+    }
   </ng-template>
 </p-table>

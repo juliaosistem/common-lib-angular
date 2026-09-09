@@ -3,11 +3,8 @@ import { State, Action, StateContext } from '@ngxs/store';
 import { BusinessDTO } from '@juliaosistem/core-dtos';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { createGenericCrudActions } from './state-generic/generic-crud.actions';
-import { GenericCrudState } from './state-generic/generic-crud.state';
+import { GenericCrudState, LazyGenericCrudHttpService } from './state-generic/generic-crud.state';
 import { GenericCrudHttpService } from '../../componentes/shared/services/generic-crud.service/generic-crud.service';
-import { HttpClient } from '@angular/common/http';
-import { LibConfigService } from '../../config/lib-config.service';
-import { MetaDataService } from '../../componentes/shared/services/meta-data.service.ts/meta-data.service';
 
 // 🔹 Crear acciones genéricas para Business
 const businessActions = createGenericCrudActions<BusinessDTO>('Business');
@@ -23,17 +20,8 @@ const businessActions = createGenericCrudActions<BusinessDTO>('Business');
 })
 @Injectable()
 export class BusinessState extends GenericCrudState<BusinessDTO, BusinessDTO> {
-  constructor(
-    http: HttpClient,
-    config: LibConfigService,
-    meta: MetaDataService
-  ) {
-    const genericService = new GenericCrudHttpService<BusinessDTO>(
-      http,
-      config,
-      meta,
-      'baseUrlBusiness' // Key del endpoint en LibConfigService
-    );
+  constructor() {
+    const genericService = new LazyGenericCrudHttpService<BusinessDTO>('baseUrlBusiness') as unknown as GenericCrudHttpService<BusinessDTO>;
     super(genericService, businessActions);
   }
 
@@ -52,6 +40,7 @@ export class BusinessState extends GenericCrudState<BusinessDTO, BusinessDTO> {
         rta: mockData.length > 0,
       });
     } catch (error) {
+      console.log("desde state",error)
       ctx.patchState({
         data: undefined,
         dataList: [],

@@ -1,5 +1,5 @@
 // En crud.ts - Agregar las propiedades para el sistema dinámico
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -12,8 +12,8 @@ import { ToolBar1Component } from '../../molecules/tool-bar1/tool-bar1.component
 
 // ✅ Importar los tipos del sistema dinámico
 import { FieldType, DynamicField } from '@juliaosistem/core-dtos';
-import { DynamicFieldService } from '../../services/dynamic-field.service';
-import { ExcelExportService } from '../../services/excel-export.service';
+import { DynamicFieldService } from '../../../../services/dynamic-field.service';
+import { ExcelExportService } from '../../../../services/excel-export.service';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
 
 @Component({
@@ -31,12 +31,13 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
     templateUrl: './crud.component.html',
     providers: [MessageService, ConfirmationService]
 })
-export class Crud implements OnInit {
+export class Crud implements OnInit, OnChanges {
     @Input() showDialog: boolean = false;
     @Input() submitted: boolean = false;
     @Input() loaded: boolean = false;
     @Input() tableType: 'table' | 'grid' = 'table';
     @Input() data: Record<string, unknown>[] = [];
+    @Input() dataKey: string = 'id';
     @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Configuración de tipos de campo
     @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personal
     @Input() fieldOrder: string[] = [];                       // Orden de columnas
@@ -57,6 +58,11 @@ export class Crud implements OnInit {
     @Output() dialogCanceled = new EventEmitter<void>();
     @Input() displayFields: DynamicField[] = [];            
 @Output() deleteItemRequest = new EventEmitter<Record<string, unknown>>();
+    @Input() testIdPrefix: string = 'crud';
+    @Input() canCreate: boolean = true;
+    @Input() canUpdate: boolean = true;
+    @Input() canDelete: boolean = true;
+    @Output() actionDenied = new EventEmitter<{ action: 'create' | 'update' | 'delete'; item?: Record<string, unknown> }>();
 
     // ✅ Propiedades para el manejo del CRUD
     currentItem: Record<string, unknown> = {};
@@ -79,9 +85,16 @@ export class Crud implements OnInit {
     ngOnInit() {
         this.initFields();
     }
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes['data'] && this.data?.length > 0) {
+            this.fields = [];
+            this.initFields();
+        }
+    }
 initFields() {
-    // Inicializar campos dinámicos si no se han generado
-    if (this.fields.length === 0) {
+    // Inicializar campos dinámicos solo cuando no se proporcionan desde el padre
+    if (this.fields.length === 0 && this.displayFields.length === 0) {
         this.fields = this.dynamicFieldService.generateFieldsFromData({
             data: this.data,
             fieldTypeConfig: this.fieldTypeConfig,
@@ -102,11 +115,19 @@ initFields() {
 
     // ✅ Método para abrir el diálogo de edición
     editItem(item: Record<string, unknown>) {
+        if (!this.canUpdate) {
+            this.actionDenied.emit({ action: 'update', item });
+            return;
+        }
         this.editItemRequest.emit(item);
     }
 
     // ✅ Método para crear un nuevo item
     openNew() {
+        if (!this.canCreate) {
+            this.actionDenied.emit({ action: 'create' });
+            return;
+        }
         this.newItemRequest.emit();
     }
 
@@ -131,6 +152,10 @@ initFields() {
 
     // ✅ Eliminar item con confirmación
 deleteItem(item: Record<string, unknown>) {
+    if (!this.canDelete) {
+        this.actionDenied.emit({ action: 'delete', item });
+        return;
+    }
     const itemName = String(item['name'] || 'this item');
     this.confirmationService.confirm({
         message: 'Are you sure you want to delete ' + itemName + '?',
@@ -145,6 +170,10 @@ deleteItem(item: Record<string, unknown>) {
 
     // ✅ Eliminar elementos seleccionados con confirmación
 deleteSelectedItems() {
+    if (!this.canDelete) {
+        this.actionDenied.emit({ action: 'delete' });
+        return;
+    }
     if (!this.selectedItems || this.selectedItems.length === 0) {
         this.messageService.add({
             severity: 'warn',
@@ -171,15 +200,15 @@ deleteSelectedItems() {
 
 
     private executeItemsDeletion(itemsToDelete: Record<string, unknown>[], count: number) {
-        const idsToDelete = itemsToDelete.map(item => item['id']);
-        this.data = this.data.filter(item => !idsToDelete.includes(item['id']));
+        const idsToDelete = itemsToDelete.map(item => item[this.dataKey]);
+        this.data = this.data.filter(item => !idsToDelete.includes(item[this.dataKey]));
         this.selectedItems = [];
         this.dataChange.emit([...this.data]);
         this.messageService.add({
             severity: 'success',
             summary: 'Successful',
             detail: `${count} item${count > 1 ? 's' : ''} deleted`,
-            life: 3000,
+            life: 6000,
         });
     }
 

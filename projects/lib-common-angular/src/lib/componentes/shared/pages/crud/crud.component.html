@@ -1,21 +1,26 @@
 <!-- En crud.component.html -->
-<div class="card">
+<div class="card" [attr.data-testid]="testIdPrefix + '-container'">
     <!-- Toolbar para cambiar vista -->
     <lib-tool-bar1 
         (viewChange)="onViewChange($event)"
         [currentView]="tableType"
         [selectedItems]="selectedItems"
+        [showAddButton]="canCreate"
+        [canDelete]="canDelete"
+        [testIdPrefix]="testIdPrefix"
         (newItem)="openNew()"
         (deleteSelected)="deleteSelectedItems()"
         (exportToExcel)="exportToExcel()">
     </lib-tool-bar1>
 
     <!-- Vista de tabla con sistema dinámico -->
-    <lib-tabla1 
-        *ngIf="tableType === 'table'"
+     @if (tableType === 'table') {
+    <lib-tabla1    
         [data]="data"
+        [dataKey]="dataKey"
         [selectedItems]="selectedItems"
         (selectedItemsChange)="onSelectedItemsChange($event)"
+        [testIdPrefix]="testIdPrefix"
         [fieldTypeConfig]="fieldTypeConfig"
         [fieldLabels]="fieldLabels"
         [fieldOrder]="fieldOrder"
@@ -26,15 +31,17 @@
         [paginator]="paginator"
         [rowsPerPageOptions]="rowsPerPageOptions"
         [showCurrentPageReport]="showCurrentPageReport"
+        [canUpdate]="canUpdate"
         (editItem)="editItem($event)">
     </lib-tabla1>
-
+     }
     <!-- Vista de grid -->
+     @if(tableType === 'grid') {
     <lib-grid1 
-        *ngIf="tableType === 'grid'"
         [data]="data"
         [selectedItems]="selectedItems"
         (selectedItemsChange)="onSelectedItemsChange($event)"
+        [attr.data-testid]="testIdPrefix + '-grid'"
         [fieldTypeConfig]="fieldTypeConfig"
         [fieldLabels]="fieldLabels"
         [fieldOrder]="fieldOrder"
@@ -45,9 +52,10 @@
         [paginator]="paginator"
         [rowsPerPageOptions]="rowsPerPageOptions"
         [showCurrentPageReport]="showCurrentPageReport"
+        [canUpdate]="canUpdate"
         (editItem)="editItem($event)">
     </lib-grid1>
-
+     }
     <!-- Diálogo de confirmación -->
     <p-confirmDialog></p-confirmDialog>
 </div>

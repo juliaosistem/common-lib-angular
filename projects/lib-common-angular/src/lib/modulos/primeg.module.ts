@@ -16,6 +16,7 @@ import { RatingModule } from 'primeng/rating';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
 import { SelectModule } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { DialogModule } from 'primeng/dialog';
@@ -31,6 +32,8 @@ import { ImageModule } from 'primeng/image';
 import { StepperModule } from 'primeng/stepper';
 import { MessageService } from 'primeng/api';
 import { DrawerModule } from 'primeng/drawer';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MessageModule } from 'primeng/message';
 @NgModule({
   declarations: [],
   providers: [MessageService],
@@ -54,6 +57,7 @@ import { DrawerModule } from 'primeng/drawer';
    RatingModule,
    TextareaModule,
    SelectModule,
+   MultiSelectModule,
    RadioButtonModule,
    InputNumberModule,
    DialogModule,
@@ -66,6 +70,8 @@ import { DrawerModule } from 'primeng/drawer';
    DataViewModule,
    StepperModule,
    DrawerModule,
+    ProgressSpinnerModule,
+    MessageModule,
   ],
   exports:[
     ButtonModule,
@@ -85,6 +91,7 @@ import { DrawerModule } from 'primeng/drawer';
    RatingModule,
    TextareaModule,
    SelectModule,
+   MultiSelectModule,
    RadioButtonModule,
    InputNumberModule,
    DialogModule,
@@ -98,6 +105,9 @@ import { DrawerModule } from 'primeng/drawer';
   ImageModule,
   StepperModule,
   DrawerModule,
+  ProgressSpinnerModule,
+  MessageModule,
+  
   ]
 })
 export class PrimegModule { }
