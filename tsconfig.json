@@ -2,19 +2,6 @@
   "compileOnSave": false,
   "compilerOptions": {
     "paths": {
-      "@juliaosistem/core-dtos": [
-        "../../../back/lib-core-dtos/node_modules/@juliaosistem/core-dtos/index.ts",
-      ],
-      "@juliaosistem/core-dtos/*": [
-        "../../../back/lib-core-dtos/node_modules/@juliaosistem/core-dtos/*",
-      ],
-      "juliaositembackenexpress": [
-        "../../../back/lib/juliaositemBackenNest/dist/index.js",
-        "../../../back/lib/juliaositemBackenNest/dist/index.d.ts"
-      ],
-      "juliaositembackenexpress/dist/*": [
-        "../../../back/lib/juliaositemBackenNest/dist/*"
-      ],
       "lib-common-angular": [
         "./dist/lib-common-angular"
       ]
