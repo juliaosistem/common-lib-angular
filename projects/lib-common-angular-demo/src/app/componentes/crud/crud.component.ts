@@ -3,9 +3,8 @@ import { Crud, CrudDialog1Component, ProductDialog1Component } from 'lib-common-
 import { FieldType } from '@juliaosistem/core-dtos';
 import { Product } from '../../core/services/product.service';
 import { Table } from 'primeng/table';
-
 import { Menu } from 'primeng/menu';
-import { TablaDataSharedDTO } from './tablaDataSharedDTO';
+import { TablaDataSharedDTO } from '../../../../../lib-common-angular/src/lib/componentes/shared/interfaces/tablaDataSharedDTO';
 
 @Component({
   selector: 'app-crud',

@@ -3,8 +3,8 @@ import { PrimegModule } from '../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
 import { MenuItem } from 'primeng/api';
 import { Menu } from 'primeng/menu';
-import { TablaDataSharedDTO } from 'juliaositembackenexpress/dist/api/dtos/componentes-common-lib-angular/tablaDataSharedDTO';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
+import { TablaDataSharedDTO } from '../../interfaces/tablaDataSharedDTO';
 
 @Component({
   selector: 'lib-button-options-table',

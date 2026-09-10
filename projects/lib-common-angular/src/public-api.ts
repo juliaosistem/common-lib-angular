@@ -79,6 +79,10 @@ export * from './lib/componentes/shared/molecules/productos/detalle-carrito-1/de
 export * from './lib/componentes/shared/molecules/productos/card-productos1/card-productos1.component';
 export * from './lib/componentes/shared/molecules/section-add-cards-buttons/section-add-cards-buttons';
 
+//interfaces
+export * from './lib/componentes/shared/interfaces/tablaDataSharedDTO';
+
+
 // Landing Pages
 export * from './lib/componentes/landingPages/pages/ecommerce1/ecommerce1';
      // Ecommerce 1
