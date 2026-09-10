@@ -1,5 +1,11 @@
 {
   "$schema": "https://openship.io/openship.schema.json",
-  "runtime": "docker",
-  "port": 8080
+  "services": [
+    {
+      "name": "lib-common-angular-demo",
+      "dockerfile": "Dockerfile",
+      "ports": ["3006:8080"],
+      "restart": "unless-stopped"
+    }
+  ]
 }
