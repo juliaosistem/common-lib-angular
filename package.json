@@ -41,7 +41,7 @@
     "jquery": "^3.7.1",
     "juliaositembackenexpress": "^0.0.1",
     "libphonenumber-js": "^1.11.19",
-    "ngx-countries-dropdown": "^5.0.0",
+    "ngx-countries-dropdown": "^6.0.0",
     "popper.js": "^1.16.1",
     "primeclt": "^0.1.5",
     "primeflex": "^4.0.0",
