@@ -1,0 +1,13 @@
+.git
+**/.git
+node_modules
+**/node_modules
+dist
+.angular
+.env
+.env.*
+.npmrc
+**/.npmrc
+**/*.pem
+**/*.key
+coverage

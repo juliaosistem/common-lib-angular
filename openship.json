@@ -1,0 +1,15 @@
+{
+  "$schema": "https://openship.io/openship.schema.json",
+  "services": [
+    {
+      "name": "demos-dev",
+      "build": ".",
+      "dockerfile": "deploy/Dockerfile",
+      "ports": ["8080"],
+      "exposed": true,
+      "exposedPort": "8080",
+      "domain": "demos-dev.twincode.site",
+      "restart": "unless-stopped"
+    }
+  ]
+}
