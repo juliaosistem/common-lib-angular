@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { PlantillaDTO } from '@juliaosistem/core-dtos';
+import { BusinessDTO } from '@juliaosistem/core-dtos';
 
 
 @Component({
@@ -12,9 +12,8 @@ import { PlantillaDTO } from '@juliaosistem/core-dtos';
 export class ButtonCall1Component {
 
   @Input()
-  negocio : PlantillaDTO  = {
-    id: '',
-    bussinesDTO: undefined,
-    menu: undefined
-  }  
+  negocio: BusinessDTO = {
+    businessModule: [],
+    telefono: '',
+  };
 }

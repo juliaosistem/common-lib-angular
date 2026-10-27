@@ -28,10 +28,10 @@
       <lib-inputs-login-ecommerce1 [parentForm]="loginForm"></lib-inputs-login-ecommerce1>
    }
 
-   <button pButton type="submit"
+   <p-button type="submit"
       [disabled]="loading || (isRegistering ? registerForm.invalid : loginForm.invalid)"
       [loading]="loading"
       [label]="isRegistering ? 'Registrarse' : 'Iniciar sesión'"
-      class="w-full p-button-warning font-bold py-3 px-4 border-round-xl shadow-3">
-   </button>
+      styleClass="w-full p-button-warning font-bold py-3 px-4 border-round-xl shadow-3">
+   </p-button>
 </form>

@@ -7,7 +7,6 @@ import { ImagenDTO, ProductoDTO } from '@juliaosistem/core-dtos';
 import { Router } from '@angular/router';
 import { ProductService } from '../../../../../services/product.service';
 import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-add-cards-buttons";
-import { IonicModule } from '@ionic/angular';
 
  type ProductoView = ProductoDTO & { nombreCategoria?: string };
 
@@ -17,7 +16,7 @@ import { IonicModule } from '@ionic/angular';
   standalone: true,
   templateUrl: './card-productos1.component.html',
   styleUrls: ['./card-productos1.component.scss'],
-  imports: [CommonModule, PrimegModule, SectionAddCardsButtons,IonicModule],
+  imports: [CommonModule, PrimegModule, SectionAddCardsButtons],
   // providers: [CurrencyPipe]
 })
 export class CardProductos1Component implements OnInit, OnDestroy {

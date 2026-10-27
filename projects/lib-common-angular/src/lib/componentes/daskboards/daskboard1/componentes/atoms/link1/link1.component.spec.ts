@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
+import { provideRouter } from '@angular/router';
+import { provideTranslateService } from '@ngx-translate/core';
 
 import { Link1Component } from './link1.component';
 
@@ -9,8 +10,8 @@ describe('Link1Component', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ Link1Component ],
-      imports: [IonicModule.forRoot()]
+      imports: [Link1Component],
+      providers: [provideRouter([]), ...provideTranslateService()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(Link1Component);

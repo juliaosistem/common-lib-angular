@@ -31,7 +31,7 @@ import { SessionExpiryService } from '../../../../services/session-expiry.servic
           <strong>{{ secondsLeft }}</strong> segundos.
           ¿Deseas continuar trabajando?
         </p>
-        <p-progressBar [value]="progress" [showValue]="false" styleClass="h-1rem"></p-progressBar>
+        <p-progressbar [value]="progress" [showValue]="false" styleClass="h-1rem"></p-progressbar>
         @if (errorMessage) {
           <small class="text-red-500">{{ errorMessage }}</small>
         }

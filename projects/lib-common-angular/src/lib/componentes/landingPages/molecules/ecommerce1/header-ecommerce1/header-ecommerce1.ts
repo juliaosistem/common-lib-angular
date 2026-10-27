@@ -7,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { BusinessDTO, ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
-import { IonicModule, MenuController } from '@ionic/angular';
+import { MenuController } from '@ionic/angular';
 import { HeaderTopEcommerce1 } from "../../../atoms/ecommerce1/header-top-ecommerce1/header-top-ecommerce1";
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from '../../../../../services/cart.service';
@@ -15,7 +15,7 @@ import { CartComponent } from '../cart/cart.component';
 
 @Component({
   selector: 'lib-header-ecommerce1',
-  imports: [CommonModule, RouterModule, FormsModule, PrimegModule, IonicModule, HeaderTopEcommerce1, CartComponent],
+  imports: [CommonModule, RouterModule, FormsModule, PrimegModule, HeaderTopEcommerce1, CartComponent],
   templateUrl: './header-ecommerce1.html',
   styleUrls: ['./header-ecommerce1.scss'],
   encapsulation: ViewEncapsulation.None 

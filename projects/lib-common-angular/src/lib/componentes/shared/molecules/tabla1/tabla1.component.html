@@ -20,7 +20,7 @@
   <ng-template #header>
     @if (showDefaultHeader) {
       <tr>
-        <th class="tabla1-col-select"><p-tableHeaderCheckbox /></th>
+        <th class="tabla1-col-select"><p-table-header-checkbox /></th>
         <th class="tabla1-col-actions">Actions</th>
         <th *ngFor="let field of displayFields" class="tabla1-col-data">
           {{ field.label }}
@@ -33,7 +33,7 @@
     @if (showDefaultBody) {
       <tr>
         <td class="tabla1-cell-select" data-label="Select" [attr.data-testid]="testIdPrefix + '-row-checkbox-' + getRowId(item)">
-          <p-tableCheckbox [value]="item" />
+          <p-table-checkbox [value]="item" />
         </td>
         <td class="tabla1-cell-actions" data-label="Actions" [attr.data-testid]="testIdPrefix + '-row-actions-cell-' + getRowId(item)">
           <div class="flex gap-2 items-center">

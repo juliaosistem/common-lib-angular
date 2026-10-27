@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { IonicModule } from '@ionic/angular';
+import { IonSelect, IonSelectOption } from '@ionic/angular';
 import { CoreModuleLib } from '../../../../modulos/core.lib.module';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +9,7 @@ import { ComponentesDTO } from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-select-input1',
   standalone: true,
-  imports: [CoreModuleLib,IonicModule,FormsModule,CommonModule],
+  imports: [CoreModuleLib, IonSelect, IonSelectOption, FormsModule, CommonModule],
   templateUrl: './select-input1.component.html',
   styleUrl: './select-input1.component.css'
 })
