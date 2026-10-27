@@ -1,5 +1,6 @@
 // En crud.ts - Agregar las propiedades para el sistema dinámico
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges } from '@angular/core';
+import type { SimpleChanges } from '@angular/core';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { CommonModule } from '@angular/common';
@@ -37,6 +38,7 @@ export class Crud implements OnInit, OnChanges {
     @Input() loaded: boolean = false;
     @Input() tableType: 'table' | 'grid' = 'table';
     @Input() data: Record<string, unknown>[] = [];
+    @Input() dataKey: string = 'id';
     @Input() fieldTypeConfig: Record<string, FieldType> = {}; // Configuración de tipos de campo
     @Input() fieldLabels: Record<string, string> = {};        // Etiquetas personal
     @Input() fieldOrder: string[] = [];                       // Orden de columnas
@@ -57,6 +59,13 @@ export class Crud implements OnInit, OnChanges {
     @Output() dialogCanceled = new EventEmitter<void>();
     @Input() displayFields: DynamicField[] = [];            
 @Output() deleteItemRequest = new EventEmitter<Record<string, unknown>>();
+    @Input() testIdPrefix: string = 'crud';
+    @Input() canCreate: boolean = true;
+    @Input() canUpdate: boolean = true;
+    @Input() canDelete: boolean = true;
+    @Input() controlledDelete: boolean = false;
+    @Output() deleteItemsRequest = new EventEmitter<Record<string, unknown>[]>();
+    @Output() actionDenied = new EventEmitter<{ action: 'create' | 'update' | 'delete'; item?: Record<string, unknown> }>();
 
     // ✅ Propiedades para el manejo del CRUD
     currentItem: Record<string, unknown> = {};
@@ -87,8 +96,8 @@ export class Crud implements OnInit, OnChanges {
         }
     }
 initFields() {
-    // Inicializar campos dinámicos si no se han generado
-    if (this.fields.length === 0) {
+    // Inicializar campos dinámicos solo cuando no se proporcionan desde el padre
+    if (this.fields.length === 0 && this.displayFields.length === 0) {
         this.fields = this.dynamicFieldService.generateFieldsFromData({
             data: this.data,
             fieldTypeConfig: this.fieldTypeConfig,
@@ -109,11 +118,19 @@ initFields() {
 
     // ✅ Método para abrir el diálogo de edición
     editItem(item: Record<string, unknown>) {
+        if (!this.canUpdate) {
+            this.actionDenied.emit({ action: 'update', item });
+            return;
+        }
         this.editItemRequest.emit(item);
     }
 
     // ✅ Método para crear un nuevo item
     openNew() {
+        if (!this.canCreate) {
+            this.actionDenied.emit({ action: 'create' });
+            return;
+        }
         this.newItemRequest.emit();
     }
 
@@ -138,20 +155,38 @@ initFields() {
 
     // ✅ Eliminar item con confirmación
 deleteItem(item: Record<string, unknown>) {
+    if (!this.canDelete) {
+        this.actionDenied.emit({ action: 'delete', item });
+        return;
+    }
     const itemName = String(item['name'] || 'this item');
     this.confirmationService.confirm({
         message: 'Are you sure you want to delete ' + itemName + '?',
         header: 'Confirm',
         icon: 'pi pi-exclamation-triangle',
         accept: () => {
-            this.executeItemsDeletion([item], 1);
-            this.deleteItemRequest.emit(item); // ✅ ahora sí llega al padre
+            this.requestItemsDeletion([item]);
         },
     });
 }
 
     // ✅ Eliminar elementos seleccionados con confirmación
 deleteSelectedItems() {
+    if (!this.canDeleteSelection()) return;
+    const itemsToDelete = [...this.selectedItems];
+    this.confirmationService.confirm({
+        message: `Are you sure you want to delete ${itemsToDelete.length} selected item${itemsToDelete.length > 1 ? 's' : ''}?`,
+        header: 'Confirm Deletion',
+        icon: 'pi pi-exclamation-triangle',
+        accept: () => this.requestItemsDeletion(itemsToDelete),
+    });
+}
+
+private canDeleteSelection(): boolean {
+    if (!this.canDelete) {
+        this.actionDenied.emit({ action: 'delete' });
+        return false;
+    }
     if (!this.selectedItems || this.selectedItems.length === 0) {
         this.messageService.add({
             severity: 'warn',
@@ -159,34 +194,32 @@ deleteSelectedItems() {
             detail: 'No items selected',
             life: 3000,
         });
-        return;
+        return false;
     }
-
-    const selectedCount = this.selectedItems.length;
-    const itemsToDelete = [...this.selectedItems]; // Copia para emitir
-    this.confirmationService.confirm({
-        message: `Are you sure you want to delete ${selectedCount} selected item${selectedCount > 1 ? 's' : ''}?`,
-        header: 'Confirm Deletion',
-        icon: 'pi pi-exclamation-triangle',
-        accept: () => {
-            this.executeItemsDeletion(itemsToDelete, selectedCount);
-            // Emitir al componente padre
-            itemsToDelete.forEach(item => this.deleteItemRequest.emit(item));
-        },
-    });
+    return true;
 }
 
+    /** @param items Filas confirmadas; el modo controlado espera la respuesta del consumidor. */
+    private requestItemsDeletion(items: Record<string, unknown>[]): void {
+        if (this.controlledDelete) {
+            this.selectedItems = [];
+            this.deleteItemsRequest.emit(items);
+            return;
+        }
+        this.executeItemsDeletion(items, items.length);
+        items.forEach(item => this.deleteItemRequest.emit(item));
+    }
 
     private executeItemsDeletion(itemsToDelete: Record<string, unknown>[], count: number) {
-        const idsToDelete = itemsToDelete.map(item => item['id']);
-        this.data = this.data.filter(item => !idsToDelete.includes(item['id']));
+        const idsToDelete = itemsToDelete.map(item => item[this.dataKey]);
+        this.data = this.data.filter(item => !idsToDelete.includes(item[this.dataKey]));
         this.selectedItems = [];
         this.dataChange.emit([...this.data]);
         this.messageService.add({
             severity: 'success',
             summary: 'Successful',
             detail: `${count} item${count > 1 ? 's' : ''} deleted`,
-            life: 3000,
+            life: 6000,
         });
     }
 

@@ -11,7 +11,7 @@ export class MetaDataService {
    * @param proceso Operación: 'listar' | 'guardar' | 'eliminar'
    */
   get(topic: string, proceso: 'listar' | 'guardar' | 'eliminar' = 'listar') {
-    const idBusiness = this.getIdBusinessFromSession();
+    const idbusiness = this.getIdBusinessFromSession();
     const idDatosUsuario = this.getIdDatosUsuarioFromSession();
     const usuario = this.getUsuarioFromSession();
     const ip = this.getIpFromSession();
@@ -21,7 +21,7 @@ export class MetaDataService {
       ip,
       dominio,
       usuario,
-      idBusiness,
+      idbusiness,
       idDatosUsuario,
       topic,
       proceso,
@@ -30,12 +30,12 @@ export class MetaDataService {
 
   public getIdBusinessFromSession(): string | number {
     // Busca primero en localStorage, luego en sessionStorage, luego en JWT (si existe)
-    let idBusiness: string | number | null = localStorage.getItem('idBusiness') || sessionStorage.getItem('idBusiness');
-    if (!idBusiness) {
+    let idbusiness: string | number | null = localStorage.getItem('idbusiness') || sessionStorage.getItem('idbusiness');
+    if (!idbusiness) {
       const payload = this.getSessionPayload();
-      idBusiness = (payload?.idBusiness as string | number | undefined) || null;
+      idbusiness = (payload?.['idBusiness'] as string | number | undefined) || null;
     }
-    return idBusiness || '1';
+    return idbusiness || '1';
   }
 
   public getIdDatosUsuarioFromSession(): string {

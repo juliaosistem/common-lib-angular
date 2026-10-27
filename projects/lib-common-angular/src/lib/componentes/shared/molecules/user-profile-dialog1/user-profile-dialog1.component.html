@@ -13,7 +13,7 @@
   (visibleChange)="visibleChange.emit($event)"
 >
   <form class="profile-form" [formGroup]="profileForm">
-    <section class="profile-section">
+    <!-- <section class="profile-section">
       <h4>Cuenta</h4>
       <div class="profile-grid">
         <div class="field">
@@ -37,10 +37,7 @@
     <section class="profile-section">
       <h4>Datos Personales</h4>
       <div class="profile-grid">
-        <div class="field">
-          <label for="profile-dates-id">ID DatesUser</label>
-          <input id="profile-dates-id" type="text" pInputText formControlName="datesUserId" />
-        </div>
+       
 
         <div class="field">
           <label for="profile-id-url">ID Documento</label>
@@ -74,12 +71,34 @@
           }
         </div>
 
-        <div class="field">
-          <label for="profile-rol">Rol</label>
-          <input id="profile-rol" type="text" pInputText formControlName="nombreRol" />
-          @if (showError('nombreRol')) {
-            <small class="field-error">{{ getErrorMessage('nombreRol', 'Rol') }}</small>
+        <div class="field field--full">
+          <label for="profile-roles">Roles</label>
+          <p-multiselect
+            id="profile-roles"
+            formControlName="roles"
+            [options]="availableRoles"
+            optionLabel="nameRol"
+            dataKey="idRol"
+            display="chip"
+            [maxSelectedLabels]="20"
+            placeholder="Selecciona roles"
+            appendTo="body"
+          />
+          @if (showError('roles')) {
+            <small class="field-error">{{ getErrorMessage('roles', 'Roles') }}</small>
           }
+        </div>
+
+        <div class="field field--full">
+          <label for="profile-permisos">Permisos</label>
+          <textarea
+            id="profile-permisos"
+            class="permisos-readonly"
+            rows="3"
+            readonly
+            [value]="permisosPreviewText"
+          ></textarea>
+          <small class="field-hint">Permisos que tiene el usuario segun sus roles. Para modificarlos edita el rol correspondiente.</small>
         </div>
       </div>
     </section>
@@ -94,44 +113,40 @@
             <small class="field-error">{{ getErrorMessage('phoneNumber', 'Numero telefonico') }}</small>
           }
         </div>
-
-        <div class="field">
-          <label for="profile-country-code">Codigo Pais</label>
-          <input id="profile-country-code" type="number" pInputText formControlName="phoneCountryCode" />
-          @if (showError('phoneCountryCode')) {
-            <small class="field-error">{{ getErrorMessage('phoneCountryCode', 'Codigo Pais') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-city-code">Codigo Ciudad</label>
-          <input id="profile-city-code" type="number" pInputText formControlName="phoneCityCode" />
-          @if (showError('phoneCityCode')) {
-            <small class="field-error">{{ getErrorMessage('phoneCityCode', 'Codigo Ciudad') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-city-name">Nombre Ciudad Telefono</label>
-          <input id="profile-city-name" type="text" pInputText formControlName="phoneNameCity" />
-          @if (showError('phoneNameCity')) {
-            <small class="field-error">{{ getErrorMessage('phoneNameCity', 'Nombre Ciudad') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-country-name">Nombre Pais Telefono</label>
-          <input id="profile-country-name" type="text" pInputText formControlName="phoneNameCountry" />
-          @if (showError('phoneNameCountry')) {
-            <small class="field-error">{{ getErrorMessage('phoneNameCountry', 'Nombre Pais') }}</small>
-          }
-        </div>
       </div>
     </section>
 
     <section class="profile-section">
       <h4>Direccion</h4>
       <div class="profile-grid">
+        <div class="field">
+          <label for="profile-country">Pais</label>
+          <app-country-dropdown
+            [selectedCountryCode]="selectedCountryCode"
+            [placeholderText]="'Buscar pais o codigo'"
+            (onCountryChange)="onCountrySelected($event)"
+          ></app-country-dropdown>
+       
+          @if (showError('country')) {
+            <small class="field-error">{{ getErrorMessage('country', 'Pais') }}</small>
+          }
+        </div>
+
+        @if (selectedCountryCode) {
+          <div class="field">
+            <label for="profile-city-field">Ciudad</label>
+            <select id="profile-city-field" class="p-inputtext p-component" formControlName="city" (change)="onCitySelected(profileForm.controls.city.value)">
+              <option value="">Selecciona una ciudad</option>
+              @for (cityOption of cityOptions; track cityOption.value) {
+                <option [value]="cityOption.value">{{ cityOption.label }}</option>
+              }
+            </select>
+            @if (showError('city')) {
+              <small class="field-error">{{ getErrorMessage('city', 'Ciudad') }}</small>
+            }
+          </div>
+        }
+
         <div class="field field--full">
           <label for="profile-address">Direccion</label>
           <input id="profile-address" type="text" pInputText formControlName="address" />
@@ -139,40 +154,318 @@
             <small class="field-error">{{ getErrorMessage('address', 'Direccion') }}</small>
           }
         </div>
-
-        <div class="field">
-          <label for="profile-city-field">Ciudad</label>
-          <input id="profile-city-field" type="text" pInputText formControlName="city" />
-          @if (showError('city')) {
-            <small class="field-error">{{ getErrorMessage('city', 'Ciudad') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-department">Departamento</label>
-          <input id="profile-department" type="text" pInputText formControlName="department" />
-          @if (showError('department')) {
-            <small class="field-error">{{ getErrorMessage('department', 'Departamento') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-country">Pais</label>
-          <input id="profile-country" type="text" pInputText formControlName="country" />
-          @if (showError('country')) {
-            <small class="field-error">{{ getErrorMessage('country', 'Pais') }}</small>
-          }
-        </div>
-
-        <div class="field">
-          <label for="profile-postal">Codigo Postal</label>
-          <input id="profile-postal" type="text" pInputText formControlName="postalCode" />
-          @if (showError('postalCode')) {
-            <small class="field-error">{{ getErrorMessage('postalCode', 'Codigo Postal') }}</small>
-          }
-        </div>
       </div>
-    </section>
+    </section> -->
+
+    <!-- Demo original de PrimeNG dejado como referencia; no usa profileForm, por eso nunca guardaba nada. -->
+    <!--
+    <p-stepper [(activeStep)]="active">
+    <p-stepperPanel>
+        <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+            <button class="bg-transparent border-none inline-flex flex-column gap-2" (click)="onClick.emit()">
+                <span
+                    class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
+                    [ngClass]="{
+                        'bg-primary border-primary': index <= active,
+                        'surface-border': index > active
+                    }"
+                >
+                    <i class="pi pi-user"></i>
+                </span>
+            </button>
+        </ng-template>
+        <ng-template pTemplate="content" let-nextCallback="nextCallback">
+            <div class="flex flex-column gap-2 mx-auto" style="min-height: 16rem; max-width: 20rem">
+                <div class="text-center mt-3 mb-3 text-xl font-semibold">Create your account</div>
+                <div class="field p-fluid">
+                    <p-iconField>
+                        <p-inputIcon>
+                            <i class="pi pi-user"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="name" pInputText id="input" type="text" placeholder="Name" />
+                    </p-iconField>
+                </div>
+                <div class="field p-fluid">
+                    <p-iconField>
+                        <p-inputIcon>
+                            <i class="pi pi-envelope"></i>
+                        </p-inputIcon>
+                        <input [(ngModel)]="email" pInputText id="email" type="email" placeholder="Email" />
+                    </p-iconField>
+                </div>
+                <div class="field p-fluid">
+                    <p-password [(ngModel)]="password" [toggleMask]="true" placeholder="Password" />
+                </div>
+            </div>
+            <div class="flex pt-4 justify-content-end">
+                <p-button (onClick)="nextCallback.emit()" label="Next" icon="pi pi-arrow-right" iconPos="right" />
+            </div>
+        </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel>
+        <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+            <button class="bg-transparent border-none inline-flex flex-column gap-2" (click)="onClick.emit()">
+                <span
+                    class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
+                    [ngClass]="{
+                        'bg-primary border-primary': index <= active,
+                        'surface-border': index > active
+                    }"
+                >
+                    <i class="pi pi-star"></i>
+                </span>
+            </button>
+        </ng-template>
+        <ng-template pTemplate="content" let-prevCallback="prevCallback" let-nextCallback="nextCallback">
+            <div class="flex flex-column gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+                <div class="text-center mt-3 mb-3 text-xl font-semibold">Choose your interests</div>
+                <div class="flex flex-wrap justify-content-center gap-3">
+                    <p-toggleButton [(ngModel)]="option1" onLabel="Nature" offLabel="Nature" />
+                    <p-toggleButton [(ngModel)]="option2" onLabel="Art" offLabel="Art" />
+                    <p-toggleButton [(ngModel)]="option3" onLabel="Music" offLabel="Music" />
+                    <p-toggleButton [(ngModel)]="option4" onLabel="Design" offLabel="Design" />
+                    <p-toggleButton [(ngModel)]="option5" onLabel="Photography" offLabel="Photography" />
+                    <p-toggleButton [(ngModel)]="option6" onLabel="Movies" offLabel="Movies" />
+                    <p-toggleButton [(ngModel)]="option7" onLabel="Sports" offLabel="Sports" />
+                    <p-toggleButton [(ngModel)]="option8" onLabel="Gaming" offLabel="Gaming" />
+                    <p-toggleButton [(ngModel)]="option9" onLabel="Traveling" offLabel="Traveling" />
+                    <p-toggleButton [(ngModel)]="option10" onLabel="Dancing" offLabel="Dancing" />
+                </div>
+            </div>
+            <div class="flex pt-4 justify-content-between">
+                <p-button (onClick)="prevCallback.emit()" label="Back" severity="secondary" icon="pi pi-arrow-left" />
+                <p-button (onClick)="nextCallback.emit()" label="Next" icon="pi pi-arrow-right" iconPos="right" />
+            </div>
+        </ng-template>
+    </p-stepperPanel>
+    <p-stepperPanel>
+        <ng-template pTemplate="header" let-onClick="onClick" let-index="index">
+            <button class="bg-transparent border-none inline-flex flex-column gap-2" (click)="onClick.emit()">
+                <span
+                    class="border-round border-2 w-3rem h-3rem inline-flex align-items-center justify-content-center"
+                    [ngClass]="{
+                        'bg-primary border-primary': index <= active,
+                        'surface-border': index > active
+                    }"
+                >
+                    <i class="pi pi-id-card"></i>
+                </span>
+            </button>
+        </ng-template>
+        <ng-template pTemplate="content" let-prevCallback="prevCallback">
+            <div class="flex flex-column gap-2 mx-auto" style="min-height: 16rem; max-width: 24rem">
+                <div class="text-center mt-3 mb-3 text-xl font-semibold">Account created successfully</div>
+                <div class="text-center">
+                    <img alt="logo" src="https://primefaces.org/cdn/primeng/images/stepper/content.svg" />
+                </div>
+            </div>
+            <div class="flex pt-4 justify-content-start">
+                <p-button (onClick)="prevCallback.emit()" label="Back" severity="secondary" icon="pi pi-arrow-left" />
+            </div>
+        </ng-template>
+    </p-stepperPanel>
+    </p-stepper>
+    -->
+
+    <!--
+      Wizard real conectado a profileForm (unico responsable de llamar a onSave() -> emite profileSave ->
+      SaveUsersDashboardProfile -> add/update-profile). No se usa p-stepper/p-stepperPanel porque en
+      PrimeNG v21 esa API fue reemplazada por p-step-list/p-step-item/p-step-panel (breaking change);
+      se implementa un wizard simple con *ngIf por paso para evitar acoplarse a esa migracion.
+    -->
+    <div class="profile-wizard">
+      <div class="wizard-steps">
+        @for (step of wizardSteps; track step.icon) {
+          <button
+            type="button"
+            class="wizard-step-btn"
+            [class.wizard-step-btn--active]="active === $index"
+            [class.wizard-step-btn--done]="active > $index"
+            (click)="active = $index"
+          >
+            <i [class]="step.icon"></i>
+            <span>{{ step.label }}</span>
+          </button>
+        }
+      </div>
+
+      @if (active === 0) {
+        <div class="flex flex-column gap-3 mx-auto" style="max-width: 26rem">
+          <div class="text-center mt-2 mb-1 text-xl font-semibold">Cuenta</div>
+          <div class="field">
+            <label for="profile-email">Email</label>
+            <input id="profile-email" type="email" pInputText formControlName="email" />
+            @if (showError('email')) {
+              <small class="field-error">{{ getErrorMessage('email', 'Email') }}</small>
+            }
+          </div>
+          <div class="field">
+            <label for="profile-password">Password</label>
+            <input id="profile-password" type="password" pInputText formControlName="password" />
+            @if (showError('password')) {
+              <small class="field-error">{{ getErrorMessage('password', 'Password') }}</small>
+            }
+          </div>
+          <div class="field">
+            <label for="profile-estado">Estado</label>
+            <select id="profile-estado" class="p-inputtext p-component" formControlName="estado">
+              <option value="ACTIVO">Activo</option>
+              <option value="INACTIVO">Inactivo</option>
+            </select>
+            @if (showError('estado')) {
+              <small class="field-error">{{ getErrorMessage('estado', 'Estado') }}</small>
+            }
+          </div>
+        </div>
+        <div class="flex pt-4 justify-content-end">
+          <p-button type="button" (onClick)="active = 1" label="Siguiente" icon="pi pi-arrow-right" iconPos="right" />
+        </div>
+      }
+
+      @if (active === 1) {
+        <div class="flex flex-column gap-3 mx-auto" style="max-width: 26rem">
+          <div class="text-center mt-2 mb-1 text-xl font-semibold">Datos Personales</div>
+          <div class="field">
+            <label for="profile-id-url">ID Documento</label>
+            <input id="profile-id-url" type="text" pInputText formControlName="idUrl" />
+            @if (showError('idUrl')) {
+              <small class="field-error">{{ getErrorMessage('idUrl', 'ID Documento') }}</small>
+            }
+          </div>
+          <div class="field">
+            <label for="profile-first-name">Primer Nombre</label>
+            <input id="profile-first-name" type="text" pInputText formControlName="firstName" />
+            @if (showError('firstName')) {
+              <small class="field-error">{{ getErrorMessage('firstName', 'Primer Nombre') }}</small>
+            }
+          </div>
+          <div class="field">
+            <label for="profile-second-name">Segundo Nombre</label>
+            <input id="profile-second-name" type="text" pInputText formControlName="secondName" />
+            @if (showError('secondName')) {
+              <small class="field-error">{{ getErrorMessage('secondName', 'Segundo Nombre') }}</small>
+            }
+          </div>
+          <div class="field">
+            <label for="profile-roles">Roles</label>
+            <p-multiselect
+              id="profile-roles"
+              formControlName="roles"
+              [options]="availableRoles"
+              optionLabel="nameRol"
+              dataKey="idRol"
+              display="chip"
+              [maxSelectedLabels]="20"
+              placeholder="Selecciona roles"
+              appendTo="body"
+            />
+            @if (showError('roles')) {
+              <small class="field-error">{{ getErrorMessage('roles', 'Roles') }}</small>
+            }
+          </div>
+          <div class="field">
+            <label for="profile-permisos">Permisos</label>
+            <textarea
+              id="profile-permisos"
+              class="permisos-readonly"
+              rows="3"
+              readonly
+              [value]="permisosPreviewText"
+            ></textarea>
+            <small class="field-hint">Permisos que tiene el usuario segun sus roles. Para modificarlos edita el rol correspondiente.</small>
+          </div>
+        </div>
+        <div class="flex pt-4 justify-content-between">
+          <p-button type="button" (onClick)="active = 0" label="Atras" severity="secondary" icon="pi pi-arrow-left" />
+          <p-button type="button" (onClick)="active = 2" label="Siguiente" icon="pi pi-arrow-right" iconPos="right" />
+        </div>
+      }
+
+      @if (active === 2) {
+        <div class="flex flex-column gap-3 mx-auto" style="max-width: 26rem">
+          <div class="text-center mt-2 mb-1 text-xl font-semibold">Telefono</div>
+          <div class="field">
+            <label for="profile-phone">Numero</label>
+            <input id="profile-phone" type="tel" pInputText formControlName="phoneNumber" />
+            @if (showError('phoneNumber')) {
+              <small class="field-error">{{ getErrorMessage('phoneNumber', 'Numero telefonico') }}</small>
+            }
+            <small class="field-hint">El indicativo de pais/ciudad se completa automaticamente al elegir la direccion.</small>
+          </div>
+        </div>
+        <div class="flex pt-4 justify-content-between">
+          <p-button type="button" (onClick)="active = 1" label="Atras" severity="secondary" icon="pi pi-arrow-left" />
+          <p-button type="button" (onClick)="active = 3" label="Siguiente" icon="pi pi-arrow-right" iconPos="right" />
+        </div>
+      }
+
+      @if (active === 3) {
+        <div class="flex flex-column gap-3 mx-auto" style="max-width: 26rem">
+          <div class="text-center mt-2 mb-1 text-xl font-semibold">Direccion</div>
+          <div class="field">
+            <label for="profile-country">Pais</label>
+            <app-country-dropdown
+              [selectedCountryCode]="selectedCountryCode"
+              [placeholderText]="'Buscar pais o codigo'"
+              (onCountryChange)="onCountrySelected($event)"
+            ></app-country-dropdown>
+            @if (showError('country')) {
+              <small class="field-error">{{ getErrorMessage('country', 'Pais') }}</small>
+            }
+          </div>
+
+          @if (selectedCountryCode) {
+            <div class="field">
+              <label for="profile-city-field">Ciudad</label>
+              <select
+                id="profile-city-field"
+                class="p-inputtext p-component"
+                formControlName="city"
+                (change)="onCitySelected(profileForm.controls.city.value)"
+              >
+                <option value="">Selecciona una ciudad</option>
+                @for (cityOption of cityOptions; track cityOption.value) {
+                  <option [value]="cityOption.value">{{ cityOption.label }}</option>
+                }
+              </select>
+              @if (showError('city')) {
+                <small class="field-error">{{ getErrorMessage('city', 'Ciudad') }}</small>
+              }
+            </div>
+          }
+
+          <div class="field">
+            <label for="profile-address">Direccion</label>
+            <input id="profile-address" type="text" pInputText formControlName="address" [disabled]="!profileForm.controls.city.value" />
+            @if (showError('address')) {
+              <small class="field-error">{{ getErrorMessage('address', 'Direccion') }}</small>
+            }
+            @if (!profileForm.controls.city.value) {
+              <small class="field-hint">Selecciona primero pais y ciudad para habilitar la direccion.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="profile-department">Departamento</label>
+            <input id="profile-department" type="text" pInputText formControlName="department" />
+            @if (showError('department')) {
+              <small class="field-error">{{ getErrorMessage('department', 'Departamento') }}</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="profile-postal-code">Codigo Postal</label>
+            <input id="profile-postal-code" type="text" pInputText formControlName="postalCode" />
+            @if (showError('postalCode')) {
+              <small class="field-error">{{ getErrorMessage('postalCode', 'Codigo Postal') }}</small>
+            }
+          </div>
+        </div>
+        <div class="flex pt-4 justify-content-start">
+          <p-button type="button" (onClick)="active = 2" label="Atras" severity="secondary" icon="pi pi-arrow-left" />
+        </div>
+      }
+    </div>
   </form>
 
   <ng-template #footer>

@@ -1,4 +1,3 @@
-import { IonicModule } from '@ionic/angular';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -10,7 +9,7 @@ import { MenuDTO } from '@juliaosistem/core-dtos';
   templateUrl: './link1.component.html',
   styleUrls: ['./link1.component.scss'],
   standalone:true,
-  imports:[IonicModule ,RouterLink]
+  imports:[RouterLink]
 })
 export class Link1Component  implements OnInit {
 
@@ -75,5 +74,4 @@ export class Link1Component  implements OnInit {
 
 
 }
-
 

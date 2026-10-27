@@ -1,7 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-
-import { IonicModule } from '@ionic/angular';
-import { TranslateModule } from '@ngx-translate/core';
 import {BusinessDTO, ComponentesDTO} from '@juliaosistem/core-dtos'
 
 @Component({
@@ -9,7 +6,7 @@ import {BusinessDTO, ComponentesDTO} from '@juliaosistem/core-dtos'
   templateUrl: './contenido-nav.component.html',
   styleUrls: ['./contenido-nav.component.scss'],
   standalone: true,
-  imports:[IonicModule,TranslateModule]
+  imports:[]
 })
 export class ContenidoNavComponent  implements OnInit {
 

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +18,7 @@ import { SectionAddCardsButtons } from "../../section-add-cards-buttons/section-
   styleUrls: ['./detalle-carrito-1.component.scss'],
   standalone: true
 })
-export class DetalleCarrito1Component implements OnInit {
+export class DetalleCarrito1Component implements OnInit, OnChanges {
 
     @Output() addToCart = new EventEmitter<{ product: ProductoDTO; quantity: number }>();
 
@@ -44,9 +44,7 @@ export class DetalleCarrito1Component implements OnInit {
   // Variable que determina la cantidad actual del producto
   currentQuantity: number = 1;
   // Variable que almacena la URL de la imagen seleccionada
-  selectedImageUrl: string = '';
-  // Variable que controla la visibilidad del mensaje de agregado al carrito
-  showCartMessage: boolean = false;
+  selectedImageUrl: string | undefined = '';
   // Variable que indica si el producto es favorito
   isFavorite: boolean = false;
 
@@ -73,16 +71,18 @@ export class DetalleCarrito1Component implements OnInit {
    
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['product']) this.checkIsProductExists();
+  }
+
 /**
  * Método para verificar si el producto existe y tiene imágenes
  * Si el producto tiene imágenes, se selecciona la primera imagen por defecto
  * y se calcula el descuento utilizando el servicio de productos.
  */
   checkIsProductExists(){
-    if(this.product && this.product?.imagen.length > 0) {
-      this.selectedImageUrl = this.product?.imagen[0].url
-      this.discount = this.productService.calculateDiscount(this.product);
-    }
+    this.selectedImageUrl = this.product?.imagen?.[0]?.url;
+    this.discount = this.product?.precios?.length ? this.productService.calculateDiscount(this.product) : 0;
   }
 
   /**
@@ -90,9 +90,11 @@ export class DetalleCarrito1Component implements OnInit {
    * @param imageUrl URL de la imagen seleccionada
    * Método para actualizar la imagen principal cuando se selecciona una miniatura
    */
-  updateMainImage(imageUrl: string): void {
-    console.log('Imagen seleccionada:', imageUrl);
-    this.selectedImageUrl = imageUrl;
+  updateMainImage(imageUrl: string | undefined): void {
+    if (imageUrl) {
+      console.log('Imagen seleccionada:', imageUrl);
+      this.selectedImageUrl = imageUrl;
+    }
   }
 
   
@@ -141,13 +143,12 @@ export class DetalleCarrito1Component implements OnInit {
  * Método para verificar si una miniatura es la imagen activa
  * @returns 
  */
-  isActiveThumbnail(imageUrl: string): boolean {
+  isActiveThumbnail(imageUrl: string | undefined): boolean {
     return this.selectedImageUrl === imageUrl;
   }
 
   onChildAddToCart(event: { product: ProductoDTO; quantity: number }) {
     this.addToCart.emit(event);
-    this.showCartMessage = event.quantity > 0;
   }
 
   navigateToProductDetail(): void {

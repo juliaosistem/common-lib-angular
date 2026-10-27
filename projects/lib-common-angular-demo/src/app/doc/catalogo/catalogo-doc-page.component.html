@@ -1,0 +1,94 @@
+<div class="catalog-doc">
+  <div class="doc-header">
+    <h1>Catálogo Completo de Componentes</h1>
+    <p>Inventario generado desde la carpeta de componentes de common-lib-angular.</p>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card">
+      <span class="label">Total Ítems</span>
+      <strong>{{ totalItems }}</strong>
+    </article>
+    <article class="stat-card">
+      <span class="label">Componentes Visuales</span>
+      <strong>{{ totalComponents }}</strong>
+    </article>
+    <article class="stat-card">
+      <span class="label">Servicios</span>
+      <strong>{{ totalServices }}</strong>
+    </article>
+    <article class="stat-card">
+      <span class="label">Interfaces</span>
+      <strong>{{ totalInterfaces }}</strong>
+    </article>
+  </div>
+
+  <div class="filters section">
+    <h2>Filtros</h2>
+    <div class="filters-row">
+      <input
+        pInputText
+        type="text"
+        [ngModel]="searchTerm"
+        (ngModelChange)="onSearchChange($event)"
+        placeholder="Buscar por clase, selector o ruta"
+      />
+      <div class="scope-buttons">
+        <button pButton type="button" label="Todo" [outlined]="scope !== 'all'" size="small" (click)="setScope('all')"></button>
+        <button pButton type="button" label="Shared" [outlined]="scope !== 'shared'" size="small" (click)="setScope('shared')"></button>
+        <button pButton type="button" label="Landing" [outlined]="scope !== 'landingPages'" size="small" (click)="setScope('landingPages')"></button>
+        <button pButton type="button" label="Dashboards" [outlined]="scope !== 'daskboards'" size="small" (click)="setScope('daskboards')"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div class="section catalog-list">
+      <h2>Componentes Disponibles</h2>
+
+      <ng-container *ngFor="let section of sections">
+        <h3>{{ section.title }} <span>({{ section.items.length }})</span></h3>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Clase</th>
+                <th>Selector</th>
+                <th>Ruta</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of section.items; trackBy: trackByPath">
+                <td data-label="Clase"><code>{{ item.className }}</code></td>
+                <td data-label="Selector">
+                  @if (item.selector) {
+                    <code>{{ item.selector }}</code>
+                  } @else {
+                    <span>N/A</span>
+                  }
+                </td>
+                <td data-label="Ruta"><small>{{ item.path }}</small></td>
+                <td data-label="Acción" class="action-cell">
+                  <button pButton type="button" label="Ver Snippet" size="small" (click)="selectItem(item)"></button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </ng-container>
+
+      @if (sections.length === 0) {
+        <p class="empty-state">No se encontraron componentes con los filtros aplicados.</p>
+      }
+    </div>
+
+    <div class="section snippet-panel">
+      <h2>Snippet Copiable</h2>
+      <p>
+        Selecciona un componente de la tabla para ver el bloque de importación y uso rápido.
+      </p>
+      <lib-terminal [code]="selectedSnippet" language="typescript"></lib-terminal>
+    </div>
+  </div>
+</div>

@@ -1,10 +1,25 @@
 import { Injectable, InjectionToken, Inject, Optional } from '@angular/core';
 
+export type LibAppEnvironment = 'local' | 'development' | 'production';
+
 export interface LibCommonConfig {
+  idBusiness?: number;
+  idBussines?: number;
+  environment?: LibAppEnvironment;
+  apiGateway?: string;
   baseUrlProducts?: string;
   baseUrlAuth?: string;
   baseUrlUsers?: string;
+  baseUrlRoles?: string;
+  baseUrlPermisos?: string;
   baseUrlCarrito?: string;
+  baseUrlMediosPagos?: string;
+  baseUrlBusiness?: string;
+  baseUrlCurrency?: string;
+  baseUrlCategoryProduct?: string;
+  baseUrlTipoCategoria?: string;
+  baseUrlImagenes?: string;
+  baseUrlCrmWhats?: string;
   apiVersion?: string;
   timeout?: number;
   [key: string]: unknown;
@@ -12,30 +27,34 @@ export interface LibCommonConfig {
 
 export const LIB_COMMON_CONFIG = new InjectionToken<LibCommonConfig>('LIB_COMMON_CONFIG');
 
+const DEFAULT_LOCAL_CONFIG: LibCommonConfig = {
+  environment: 'local',
+  apiGateway: 'http://localhost:3000',
+  baseUrlProducts: 'http://localhost:3000/products',
+  baseUrlAuth: 'http://localhost:3000/auth',
+  baseUrlUsers: 'http://localhost:1212/user',
+  baseUrlRoles: 'http://localhost:1212/roles',
+  baseUrlPermisos: 'http://localhost:1212/permisos',
+  baseUrlCarrito: 'http://localhost:3000/carrito',
+  baseUrlMediosPagos: 'http://localhost:3000/MedioDepago',
+  baseUrlBusiness: 'http://localhost:3000/Business',
+  baseUrlCurrency: 'http://localhost:3000/Currency',
+  baseUrlCategoryProduct: 'http://localhost:3000/category-products',
+  baseUrlTipoCategoria: 'http://localhost:3000/tipo-categoria',
+  baseUrlImagenes: 'http://localhost:3000/imagenes',
+  baseUrlCrmWhats: 'http://localhost:8090',
+  apiVersion: 'v1',
+  timeout: 30000
+};
+
 @Injectable({
   providedIn: 'root'
 })
 export class LibConfigService {
-  private config: LibCommonConfig = {
-    baseUrlProducts: 'http://localhost:3000/products',
-    baseUrlAuth: 'http://localhost:3000/auth',
-    baseUrlUsers: 'http://localhost:1212/user',
-    baseUrlCarrito: 'http://localhost:3000/carrito',
-    baseUrlBusiness: 'http://localhost:3000/Business',
-    baseUrlCurrency: 'http://localhost:3000/Currency',
-    baseUrlCategoryProduct: 'http://localhost:3000/category-products',
-    apiVersion: 'v1',
-    timeout: 30000
-  };
-///// esto va en envoroment 
-
-
-
+  public config: LibCommonConfig = DEFAULT_LOCAL_CONFIG;
 
   constructor(@Optional() @Inject(LIB_COMMON_CONFIG) private injectedConfig: LibCommonConfig) {
-    if (injectedConfig) {
-      this.config = { ...this.config, ...injectedConfig };
-    }
+    this.config = this.resolveConfig(injectedConfig);
   }
 
   get<T = unknown>(key: string): T {
@@ -46,7 +65,42 @@ export class LibConfigService {
     return { ...this.config };
   }
 
+  /** Returns the explicitly configured authentication tenant; missing configuration preserves legacy login. */
+  getAuthTenantId(): number | undefined {
+    const value = this.config.idBussines ?? this.config.idBusiness;
+    if (value === undefined) return undefined;
+    if (!Number.isSafeInteger(value) || value < 1) throw new Error('ID de negocio no valido');
+    return value;
+  }
+
   updateConfig(newConfig: Partial<LibCommonConfig>): void {
     this.config = { ...this.config, ...newConfig };
+  }
+
+  private resolveConfig(injectedConfig?: LibCommonConfig): LibCommonConfig {
+    const mergedConfig = { ...DEFAULT_LOCAL_CONFIG, ...injectedConfig };
+
+    if (mergedConfig.environment === 'local' || !mergedConfig.apiGateway) {
+      return mergedConfig;
+    }
+
+    const apiGateway = mergedConfig.apiGateway.replace(/\/$/, '');
+
+    return {
+      ...mergedConfig,
+      baseUrlProducts: mergedConfig.baseUrlProducts ?? `${apiGateway}/products`,
+      baseUrlAuth: mergedConfig.baseUrlAuth ?? `${apiGateway}/auth`,
+      baseUrlUsers: mergedConfig.baseUrlUsers ?? `${apiGateway}/user`,
+      baseUrlRoles: mergedConfig.baseUrlRoles ?? `${apiGateway}/roles`,
+      baseUrlPermisos: mergedConfig.baseUrlPermisos ?? `${apiGateway}/permisos`,
+      baseUrlCarrito: mergedConfig.baseUrlCarrito ?? `${apiGateway}/carrito`,
+      baseUrlMediosPagos: mergedConfig.baseUrlMediosPagos ?? `${apiGateway}/MedioDepago`,
+      baseUrlBusiness: mergedConfig.baseUrlBusiness ?? apiGateway,
+      baseUrlCurrency: mergedConfig.baseUrlCurrency ?? `${apiGateway}/Currency`,
+      baseUrlCategoryProduct: mergedConfig.baseUrlCategoryProduct ?? `${apiGateway}/category-products`,
+      baseUrlTipoCategoria: mergedConfig.baseUrlTipoCategoria ?? `${apiGateway}/tipo-categoria`,
+      baseUrlImagenes: mergedConfig.baseUrlImagenes ?? `${apiGateway}/imagenes`,
+      baseUrlCrmWhats: mergedConfig.baseUrlCrmWhats ?? `${apiGateway}/whats`
+    };
   }
 }

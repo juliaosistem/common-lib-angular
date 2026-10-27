@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { grid, apps } from 'ionicons/icons';
 import { ComponentesDTO } from '@juliaosistem/core-dtos';
 @Component({
   selector: 'lib-button-card-view1',
   standalone: true,
-  imports: [IonicModule],
+  imports: [],
   templateUrl: './button-card-view1.component.html',
   styleUrl: './button-card-view1.component.scss'
 })

@@ -1,6 +1,6 @@
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Component, Input } from '@angular/core';
-import { IonicModule, Platform } from '@ionic/angular';
+import { Platform } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 
 import { Nav1Component } from '../../molecules/nav1/nav1.component';
@@ -15,7 +15,6 @@ import { BusinessDTO } from '@juliaosistem/core-dtos';
   selector: 'lib-index1',
   standalone: true,
   imports: [
-    IonicModule,
     Nav1Component,
     Slider1Component,
     Footer1Component, 

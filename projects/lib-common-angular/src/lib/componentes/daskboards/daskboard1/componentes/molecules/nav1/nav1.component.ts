@@ -1,5 +1,13 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IonicModule, Platform } from '@ionic/angular';
+import {
+  IonButtons,
+  IonContent,
+  IonHeader,
+  IonMenu,
+  IonMenuButton,
+  IonToolbar,
+  Platform,
+} from '@ionic/angular';
 import { ContenidoNavComponent } from '../contenido-nav/contenido-nav.component';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { BusinessDTO, ComponentesDTO } from '@juliaosistem/core-dtos';
@@ -8,7 +16,16 @@ import { StyleClassModule } from 'primeng/styleclass';
 @Component({
   selector: 'lib-nav1',
   standalone: true,
-  imports: [IonicModule, ContenidoNavComponent,StyleClassModule],
+  imports: [
+    IonMenu,
+    IonContent,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonMenuButton,
+    ContenidoNavComponent,
+    StyleClassModule,
+  ],
   templateUrl: './nav1.component.html',
   styleUrl: './nav1.component.css'
 })

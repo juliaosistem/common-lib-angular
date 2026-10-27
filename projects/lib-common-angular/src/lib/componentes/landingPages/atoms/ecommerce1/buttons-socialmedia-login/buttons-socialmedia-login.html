@@ -8,7 +8,8 @@
         }
     </button>
 
-    <button pButton type="button" class="social-btn social-facebook" aria-label="Facebook">
+    <button pButton type="button" class="social-btn social-facebook" aria-label="Facebook"
+        [disabled]="disabled" (click)="facebookLogin.emit()">
         <i class="fab fa-facebook-f social-icon"></i>
         @if (isRegistering && isLogout) {
             <span>Registrarse con Facebook</span>

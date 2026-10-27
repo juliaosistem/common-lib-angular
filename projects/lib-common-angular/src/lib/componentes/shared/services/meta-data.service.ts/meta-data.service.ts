@@ -11,14 +11,14 @@ export class MetaDataService {
    */
   get(topic: string, proceso: 'listar' | 'guardar' | 'eliminar' = 'listar') {
     // Aquí puedes reemplazar con lógica real para obtener ID del negocio y usuario
-    const idBusiness = this.getIdBusinessFromSession();
+    const idbusiness = this.getIdBusinessFromSession();
     const idDatosUsuario = this.getIdDatosUsuarioFromSession();
 
     return {
       ip: '127.0.0.1', // opcional: luego dinámico
       dominio: 'app',
       usuario: 'admin',
-      idBusiness,
+      idbusiness,
       idDatosUsuario,
       topic,
       proceso,

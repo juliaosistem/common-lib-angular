@@ -9,6 +9,7 @@ import {
 } from './menu-configs';
 
 export const routes: Routes = [
+  // Sección por defecto — DaskBoard3 es el layout raíz, los hijos son contenido
   {
     path: '',
     component: DaskBoard3,
@@ -17,70 +18,72 @@ export const routes: Routes = [
       userPermissions: permissionConfigs.user
     },
     children: [
-      { 
-        path: '', 
-        component: DaskBoard3,
-        data: {
-          menuConfig: defaultMenuConfig,
-          userPermissions: permissionConfigs.user
-        }
-      },
-      { 
-        path: 'admin', 
-        component: DaskBoard3,
-        data: {
-          menuConfig: adminMenuConfig,
-          userPermissions: permissionConfigs.admin
-        }
-      },
-      { 
-        path: 'minimal', 
-        component: DaskBoard3,
-        data: {
-          menuConfig: minimalMenuConfig,
-          userPermissions: permissionConfigs.guest
-        }
-      },
-      { 
-        path: 'user', 
-        component: DaskBoard3,
-        data: {
-          menuConfig: userMenuConfig,
-          userPermissions: permissionConfigs.user
-        }
-      },
-      { 
-        path: 'navigation', 
-        component: DaskBoard3,
-        data: {
-          menuConfig: defaultMenuConfig,
-          userPermissions: permissionConfigs.user
-        }
-      },
+      { path: '', redirectTo: 'documentation/catalogo', pathMatch: 'full' },
       { 
         path: 'pages', 
-        loadChildren: () => import('./pages.routes'),
-        data: {
-          menuConfig: defaultMenuConfig,
-          userPermissions: permissionConfigs.user
-        }
+        loadChildren: () => import('./pages.routes')
       },
-        { 
+      { 
         path: 'documentation', 
-        loadChildren: () => import('./doc.routes'),
-        data: {
-          menuConfig: defaultMenuConfig,
-          userPermissions: permissionConfigs.user
-        }
+        loadChildren: () => import('./doc.routes')
       },
       { 
         path: 'componentes', 
-        loadChildren: () => import('./componentes.routes'),
-        data: {
-          menuConfig: defaultMenuConfig,
-          userPermissions: permissionConfigs.user
-        }
+        loadChildren: () => import('./componentes.routes')
       }
+    ]
+  },
+  // Sección admin — layout propio con menú admin (no anidado)
+  {
+    path: 'admin',
+    component: DaskBoard3,
+    data: {
+      menuConfig: adminMenuConfig,
+      userPermissions: permissionConfigs.admin
+    },
+    children: [
+      { path: '', redirectTo: 'pages', pathMatch: 'full' },
+      { path: 'pages', loadChildren: () => import('./pages.routes') },
+      { path: 'componentes', loadChildren: () => import('./componentes.routes') }
+    ]
+  },
+  // Sección minimal
+  {
+    path: 'minimal',
+    component: DaskBoard3,
+    data: {
+      menuConfig: minimalMenuConfig,
+      userPermissions: permissionConfigs.guest
+    },
+    children: [
+      { path: '', redirectTo: 'pages', pathMatch: 'full' },
+      { path: 'pages', loadChildren: () => import('./pages.routes') }
+    ]
+  },
+  // Sección user
+  {
+    path: 'user',
+    component: DaskBoard3,
+    data: {
+      menuConfig: userMenuConfig,
+      userPermissions: permissionConfigs.user
+    },
+    children: [
+      { path: '', redirectTo: 'pages', pathMatch: 'full' },
+      { path: 'pages', loadChildren: () => import('./pages.routes') }
+    ]
+  },
+  // Sección navigation
+  {
+    path: 'navigation',
+    component: DaskBoard3,
+    data: {
+      menuConfig: defaultMenuConfig,
+      userPermissions: permissionConfigs.user
+    },
+    children: [
+      { path: '', redirectTo: 'pages', pathMatch: 'full' },
+      { path: 'pages', loadChildren: () => import('./pages.routes') }
     ]
   }
 ];

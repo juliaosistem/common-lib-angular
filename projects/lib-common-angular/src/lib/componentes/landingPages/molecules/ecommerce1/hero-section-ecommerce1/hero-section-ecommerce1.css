@@ -35,25 +35,6 @@
 .card-title{ font-size:1.5rem; font-weight:700; margin:0 0 .5rem 0; }
 .card-subtitle{ font-weight:600; }
 
-/* Invertir estilos de botones en tarjetas: Blanco sólido por defecto, transparente al hover */
-.category-card .p-button {
-    background-color: #ffffff !important;
-    color: #495057 !important; /* Texto oscuro */
-    border: 2px solid #ffffff !important;
-    transition: all 0.3s ease !important;
-}
-
-.category-card .p-button:hover {
-    background-color: transparent !important;
-    color: #ffffff !important;
-}
-
-/* Excepción para tarjeta amarilla: Hover con texto oscuro para contraste */
-.category-card-yellow .p-button:hover {
-    color: #1f2937 !important;
-    border-color: #1f2937 !important;
-}
-
 @media (max-width: 768px){
     .hero-container{ grid-template-columns: 1fr; }
     .category-image{ width:35%; }

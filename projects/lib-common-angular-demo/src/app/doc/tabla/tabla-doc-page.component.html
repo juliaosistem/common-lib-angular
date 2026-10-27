@@ -1,0 +1,132 @@
+<div class="tabla-documentation">
+  <!-- ✅ Título y Descripción -->
+  <div class="doc-header">
+    <h1>Componente Tabla1 - Documentación</h1>
+    <p class="subtitle">Componente de tabla avanzado con paginación, selección y ordenamiento</p>
+  </div>
+
+  <!-- ✅ 1. DEMO EN VIVO -->
+  <div class="section">
+    <h2>1. Demo en Vivo</h2>
+    <p>Tabla con datos de ejemplo mostrando las funcionalidades principales:</p>
+    
+    <div class="demo-container">
+      <table class="demo-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of sampleData" class="demo-row">
+            <td>{{ item.id }}</td>
+            <td>{{ item.nombre }}</td>
+            <td>${{ item.precio }}</td>
+            <td>{{ item.stock }}</td>
+            <td>
+              <span [class.badge-success]="item.estado === 'Activo'" [class.badge-danger]="item.estado === 'Agotado'">
+                {{ item.estado }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 2. USO BÁSICO -->
+  <div class="section">
+    <h2>2. Uso Básico</h2>
+    <p>Forma simple de usar Tabla1:</p>
+    
+    <lib-terminal [code]="basicUsageCode" language="typescript"></lib-terminal>
+  </div>
+
+  <!-- ✅ 3. CONFIGURACIÓN AVANZADA -->
+  <div class="section">
+    <h2>3. Configuración Avanzada</h2>
+    <p>Tabla con todas las opciones disponibles:</p>
+    
+    <lib-terminal [code]="advancedConfigCode" language="typescript"></lib-terminal>
+  </div>
+
+  <!-- ✅ 4. INPUTS DOCUMENTADOS -->
+  <div class="section">
+    <h2>4. Inputs (@Input)</h2>
+    <p>Las propiedades de entrada del componente Tabla1:</p>
+    
+    <div class="documentation-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Propiedad</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let input of inputsDocs">
+            <td><code>{{ input.name }}</code></td>
+            <td><code>{{ input.type }}</code></td>
+            <td>{{ input.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 5. OUTPUTS DOCUMENTADOS -->
+  <div class="section">
+    <h2>5. Outputs (@Output)</h2>
+    <p>Los eventos que emite Tabla1:</p>
+    
+    <div class="documentation-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Evento</th>
+            <th>Tipo</th>
+            <th>Descripción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let output of outputsDocs">
+            <td><code>{{ output.name }}</code></td>
+            <td><code>{{ output.type }}</code></td>
+            <td>{{ output.description }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ✅ 6. CARACTERÍSTICAS -->
+  <div class="section">
+    <h2>6. Características Principales</h2>
+    <p>Lo que ofrece el componente Tabla1:</p>
+    
+    <div class="features-grid">
+      <div class="feature-card" *ngFor="let feature of featuresDocs">
+        <div class="feature-icon">📊</div>
+        <h3>{{ feature.name }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ 7. CASOS DE USO -->
+  <div class="section tips">
+    <h2>7. Casos de Uso</h2>
+    <ul>
+      <li><strong>Listados de Productos:</strong> Mostrar catálogos con información detallada.</li>
+      <li><strong>Administración de Usuarios:</strong> Gestión de permisos y datos de usuarios.</li>
+      <li><strong>Reportes Dinámicos:</strong> Mostrar datos estadísticos y análisis.</li>
+      <li><strong>Inventario:</strong> Control de stock y movimientos.</li>
+      <li><strong>Órdenes y Transacciones:</strong> Historial de operaciones.</li>
+    </ul>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 <div class="actions-dropdown">
     <p-button 
         icon="pi pi-ellipsis-v" 
+        [attr.data-testid]="getActionButtonTestId()"
         [text]="true"
         [rounded]="true"
         [disabled]="disabled"

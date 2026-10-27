@@ -12,4 +12,17 @@
 /* Adjust PrimeNG password/input internals if needed */
 :host ::ng-deep .p-password{ width:100%; }
 :host ::ng-deep .p-inputtext{ width:100%; }
-
+:host ::ng-deep .login-password {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+}
+:host ::ng-deep .login-password .p-password-input { padding-inline-end: 3rem; }
+:host ::ng-deep .login-password .p-password-toggle-mask-icon {
+  position: absolute;
+  inset-inline-end: 1rem;
+  top: 50%;
+  margin-top: 0;
+  transform: translateY(-50%);
+}

@@ -63,6 +63,7 @@
               <div class="action-group">
                 <lib-button-actions-row1 
                   [item]="item" 
+                  [disabled]="!canUpdate"
                   (edit)="onEditItem($event)"
                   (click)="$event.stopPropagation()">
                 </lib-button-actions-row1>

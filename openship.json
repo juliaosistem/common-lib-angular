@@ -2,13 +2,9 @@
   "$schema": "https://openship.io/openship.schema.json",
   "services": [
     {
-      "name": "demos-dev",
-      "build": ".",
-      "dockerfile": "deploy/Dockerfile",
-      "ports": ["8080"],
-      "exposed": true,
-      "exposedPort": "8080",
-      "domain": "demos-dev.twincode.site",
+      "name": "lib-common-angular-demo",
+      "dockerfile": "Dockerfile",
+      "ports": ["3006:8080"],
       "restart": "unless-stopped"
     }
   ]

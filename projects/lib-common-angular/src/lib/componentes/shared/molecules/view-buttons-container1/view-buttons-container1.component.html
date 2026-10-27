@@ -6,11 +6,14 @@
   [allowEmpty]="false"
 >
   <ng-template pTemplate="item" let-item>
-    <span *ngIf="item.value === 'table'">
-      <lib-button-table-view1></lib-button-table-view1>
-    </span>
-    <span *ngIf="item.value === 'grid'">
-      <lib-button-card-view1></lib-button-card-view1>
-    </span>
+    @if (item.value === 'table') {
+      <span>
+        <lib-button-table-view1></lib-button-table-view1>
+      </span>
+    } @else if (item.value === 'grid') {
+      <span>
+        <lib-button-card-view1></lib-button-card-view1>
+      </span>
+    }
   </ng-template>
 </p-selectbutton>

@@ -15,35 +15,27 @@ import { MatListModule } from '@angular/material/list';
 
 import { MatCardModule } from '@angular/material/card';
 import { NgxsModule } from '@ngxs/store';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {
+  provideTranslateLoader,
+  provideTranslateService,
+  TranslateDirective,
+  TranslatePipe,
+} from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxsReduxDevtoolsPluginModule } from '@ngxs/devtools-plugin';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
-import { HttpClient } from "@angular/common/http";
-
-
-export function createTranslateLoader() {
-  return new TranslateHttpLoader();
-}
 
 
 @NgModule({
   declarations: [],
   imports: [
     CommonModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: createTranslateLoader,
-        deps: [HttpClient]
-      }
-    }),
+    TranslateDirective,
+    TranslatePipe,
   ],exports:[
-    
-    //FormsModule,
-  //  CommonModule,
     ReactiveFormsModule,
-    TranslateModule,
+    TranslateDirective,
+    TranslatePipe,
     NgxsModule,
     NgxsReduxDevtoolsPluginModule,
     NgxsLoggerPluginModule,
@@ -60,7 +52,12 @@ export function createTranslateLoader() {
     MatListModule,
     MatCardModule,
   //  BrowserAnimationsModule,
-  ]
+  ],
+  providers: [
+    ...provideTranslateService({
+      loader: provideTranslateLoader(TranslateHttpLoader),
+    }),
+  ],
  
 })
 export class CoreModuleLib { }

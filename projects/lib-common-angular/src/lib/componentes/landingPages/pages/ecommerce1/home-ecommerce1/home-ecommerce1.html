@@ -19,7 +19,7 @@
 <section aria-label="Listado de productos inflables" role="main">
     <ng-template #cards let-items>
             <div class="grid align-items-center justify-content-center">
-                    @for (product of items; track $index) {
+                    @for (product of (items ?? []); track $index) {
                     <div class="col-12 md:col-6 p-5 lg:p-3 lg:col-4 product-card-animation"
                             [style.transition-delay]="($index * 30) + 'ms'">
                             <lib-card-productos1 [DatosNegocio]="bussinesDTO" [product]="product" [isLogin]="isLogin" [detailRouteBase]="detailRouteBase" (addToCart)="onAddToCart($event)">
