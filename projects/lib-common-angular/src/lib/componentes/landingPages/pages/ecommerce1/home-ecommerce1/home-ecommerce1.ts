@@ -13,6 +13,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'lib-home-ecommerce1',
+  standalone: true,
   imports: [
     CommonModule,
     ButtonModule,
@@ -49,6 +50,7 @@ export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges, OnDestr
   @Output() productClicked = new EventEmitter<ProductoDTO>();
   @Output() categorySelected = new EventEmitter<string>();
   private readonly destroy$ = new Subject<void>();
+  private readonly cartRequests$ = new Subject<{ product: ProductoDTO; quantity: number }>();
 
   constructor(
     private readonly el: ElementRef,
@@ -57,6 +59,7 @@ export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges, OnDestr
 
   ngOnInit(): void {
     this.filteredProducts = this.getAllProducts();
+    this.cartService.connectProductRequests(this.cartRequests$).pipe(takeUntil(this.destroy$)).subscribe();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -146,9 +149,7 @@ export class HomeEcommerce1 implements OnInit, AfterViewInit, OnChanges, OnDestr
   }
 
   onAddToCart(event: { product: ProductoDTO; quantity: number }): void {
-    this.cartService.addOrUpdateProduct(event.product, event.quantity)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
+    this.cartRequests$.next(event);
   }
   onCategoryFilter(category: string): void {
     this.applyCategoryFilter(category);

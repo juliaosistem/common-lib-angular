@@ -25,6 +25,7 @@ export class ButtonAdd1Component {
   @Input() severity: 'success' | 'info' | 'warn' | 'danger' | 'help' | 'primary' | 'secondary' | 'contrast' | undefined = 'success';
   @Input() tooltip: string = 'Add new item';
   @Input() loading: boolean = false;
+  @Input() testId: string = 'crud-add-button';
   
   @Output() add = new EventEmitter<void>();
 

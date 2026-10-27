@@ -126,8 +126,9 @@
                             [dismissible]="true"
                             [blockScroll]="true"
                             [autoZIndex]="true"
-                            (onHide)="isCartOpen = false"
-                            styleClass="w-22rem cart-sidebar">
+                            (onHide)="closeCart()"
+                            styleClass="cart-sidebar"
+                            [style]="{ width: 'min(100vw, 48rem)' }">
 
             <ng-template  pTemplate="header">
                 <div class="cart-header">
@@ -136,49 +137,7 @@
                 </div>
             </ng-template>
             <ng-template pTemplate="content">
-                <div class="cart-items">
-                    @if (cartLoading) {
-                        <div class="cart-status">
-                            <p-progressSpinner strokeWidth="4" [style]="{ width: '2.5rem', height: '2.5rem' }"></p-progressSpinner>
-                            <span>Cargando carrito...</span>
-                        </div>
-                    } @else if (cartError) {
-                        <div class="cart-empty">{{ cartError }}</div>
-                    } @else if (cartItems.length === 0) {
-                        <div class="cart-empty">Tu carrito está vacío.</div>
-                    } @else {
-                        @for (ci of cartItems; track ci.productId) {
-                            <div class="cart-item">
-                                <div class="cart-item-media">
-                                    @if (ci.imageUrl) {
-                                        <img [src]="ci.imageUrl" [alt]="ci.imageAlt || ci.name" />
-                                    } @else {
-                                        <div class="cart-item-placeholder">{{ ci.name.charAt(0) }}</div>
-                                    }
-                                </div>
-                                <div class="cart-item-info">
-                                    <span class="name">{{ ci.name }}</span>
-                                    <small class="meta">{{ ci.quantity }} x {{ ci.unitPrice | currency:ci.currencyCode:'code' }}</small>
-                                </div>
-                                <div class="cart-item-actions">
-                                    <span class="price">{{ ci.subtotal | currency:ci.currencyCode:'code' }}</span>
-                                    <button class="remove-cart-item" (click)="removeCartItem(ci.productId)" aria-label="Quitar producto del carrito">
-                                        <i class="pi pi-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                    }
-                </div>
-                <div class="cart-footer">
-                    <div class="total-row">
-                        <span>Total</span>
-                        <strong>{{ getCartTotal() | currency:(cartItems[0]?.currencyCode || 'COP'):'code' }}</strong>
-                    </div>
-                    <div class="actions">
-                        <button class="btn btn-primary" (click)="goToCheckout()">Pagar</button>
-                    </div>
-                </div>
+                <lib-cart></lib-cart>
             </ng-template>
         </p-drawer>
          }

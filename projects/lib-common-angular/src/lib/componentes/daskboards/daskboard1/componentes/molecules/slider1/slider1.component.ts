@@ -39,7 +39,7 @@ export class Slider1Component implements OnInit {
 
   validarComponente() {
     if (this.negocio != undefined) {
-      this.negocio.businessModule.forEach(modulo => {
+      this.negocio.businessModule?.forEach(modulo => {
         modulo.modulosComponentes.forEach(componente => {
           if (componente.componente.sliderDTO && componente.id === this.componente.id) {
             this.slides =componente.componente.sliderDTO;

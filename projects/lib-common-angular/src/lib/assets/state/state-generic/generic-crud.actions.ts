@@ -10,7 +10,7 @@ export function createGenericCrudActions<RQ>(entityName: string) {
 
   class Add {
     static readonly type = `[${entityName}] ADD`;
-    constructor(public payload: RQ, public queryParams: QueryParams) {}
+    constructor(public payload: RQ, public queryParams: Partial<QueryParams>) {}
   }
 
   class Update {

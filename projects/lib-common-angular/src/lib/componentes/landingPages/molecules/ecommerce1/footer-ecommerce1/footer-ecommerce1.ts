@@ -6,7 +6,8 @@ import { BusinessDTO, ComponentesDTO } from '@juliaosistem/core-dtos';
   imports: [],
   templateUrl: './footer-ecommerce1.html',
   styleUrl: './footer-ecommerce1.scss',
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: true
 })
 export class FooterEcommerce1 {
 

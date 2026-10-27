@@ -44,15 +44,14 @@ export class LazyGenericCrudHttpService<RES> {
     return this.realService!.update(payload, queryParams);
   }
 
-  delete(queryParams: any) {
+  delete(id: string, queryParams?: any) {
     this.ensureReal();
-    return this.realService!.delete(queryParams);
+    return this.realService!.delete(id, queryParams);
   }
 
-  getMockData?() {
+  getMockData() {
     this.ensureReal();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.realService as any).getMockData?.();
+    return this.realService!.getMockData();
   }
 }
 import { tap } from 'rxjs';
@@ -68,7 +67,7 @@ export interface GenericCrudActions<RQ> {
 @Injectable()
 export abstract class GenericCrudState<RES, RQ> {
   protected constructor(
-    protected readonly service: GenericCrudHttpService<RES>,
+    protected readonly service: Pick<GenericCrudHttpService<RES>, 'all' | 'add' | 'update' | 'delete' | 'getMockData'>,
     protected readonly actions: GenericCrudActions<RQ>
   ) {}
 
@@ -100,18 +99,89 @@ export abstract class GenericCrudState<RES, RQ> {
 
  @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.Add; } as any)
 add(ctx: StateContext<PlantillaResponse<RES>>, action: any) {
-  return this.service.add(action.payload, action.queryParams);
+  return this.service.add(action.payload, action.queryParams).pipe(
+    tap((res) => {
+      const state = ctx.getState();
+      const newItem = res.data;
+      const status = Number(res?.httpStatus ?? 0);
+      const isSuccess = (status >= 200 && status < 300) || res?.rta === true;
+      const nextDataList = newItem && state.dataList ? [...state.dataList, newItem] : state.dataList;
+      ctx.setState({
+        ...state,
+        httpStatus: res?.httpStatus ?? state.httpStatus,
+        dataList: nextDataList,
+        data: newItem ?? state.data,
+        message: res?.message ?? state.message,
+        rta: isSuccess,
+      });
+    })
+  );
 }
 
 @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.Update; } as any)
 update(ctx: StateContext<PlantillaResponse<RES>>, action: any) {
-  return this.service.update(action.payload, action.queryParams);
+  return this.service.update(action.payload, action.queryParams).pipe(
+      tap((res) => {
+
+        const state = ctx.getState();
+        const updatedItem = res.data;
+        const updatedId = this.resolveEntityId(updatedItem, action);
+        const nextDataList = this.replaceInList(state.dataList, updatedId, updatedItem);
+        const status = Number(res?.httpStatus ?? 0);
+        const isSuccess = (status >= 200 && status < 300) || res?.rta === true;
+        ctx.setState({
+          ...state,
+          httpStatus: res?.httpStatus ?? state.httpStatus,
+          dataList: nextDataList,
+          data: updatedItem ?? state.data,
+          message: res?.message ?? state.message,
+          rta: isSuccess,
+        });
+      })
+    );
 }
 
 @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.Delete; } as any)
 delete(ctx: StateContext<PlantillaResponse<RES>>, action: any) {
-  return this.service.delete(action.queryParams);
+  return this.service.delete(action.queryParams?.id, action.queryParams).pipe(
+    tap((res) => {
+      const state = ctx.getState();
+      const deletedId = this.resolveEntityId(res?.data, action);
+      const nextDataList = this.removeFromList(state.dataList, deletedId);
+      const status = Number(res?.httpStatus ?? 0);
+      const isSuccess = (status >= 200 && status < 300) || res?.rta === true;
+      ctx.setState({
+        ...state,
+        httpStatus: res?.httpStatus ?? state.httpStatus,
+        dataList: nextDataList,
+        data: res?.data ?? state.data,
+        message: res?.message ?? state.message,
+        rta: isSuccess,
+      });
+    })
+  );
 }
+
+  private resolveEntityId(item: any, action: any): string {
+    const responseId = item?.id;
+    const payloadId = action?.payload?.id;
+    const queryId = action?.queryParams?.id;
+    return String(responseId ?? payloadId ?? queryId ?? '');
+  }
+
+  private replaceInList(dataList: RES[] | undefined, id: string, updatedItem: RES | undefined): RES[] | undefined {
+    if (!Array.isArray(dataList) || !updatedItem || !id) {
+      return dataList;
+    }
+    return dataList.map((item: any) => String(item?.id ?? '') === id ? updatedItem : item);
+  }
+
+  private removeFromList(dataList: RES[] | undefined, id: string): RES[] | undefined {
+    if (!Array.isArray(dataList) || !id) {
+      return dataList;
+    }
+    return dataList.filter((item: any) => String(item?.id ?? '') !== id);
+  }
 
   @Action(function (this: GenericCrudState<RES, RQ>) { return this.actions.LoadMock; } as any)
   loadMock(ctx: StateContext<PlantillaResponse<RES>>) {

@@ -74,6 +74,9 @@ export class MenuManager {
     if (!item.permissions || item.permissions.length === 0) {
       return true;
     }
+    if (userPermissions.includes('TODOS')) {
+      return true;
+    }
     return item.permissions.some(permission => userPermissions.includes(permission));
   }
 

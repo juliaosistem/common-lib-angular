@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
 import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
+import { MetaDataService } from '../services/meta-data.service.ts/meta-data.service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,6 +11,7 @@ import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
 export class JuliaoSystemCrudHttpService<RES, RQ> {
     protected http: HttpClient;
     basePathUrl: string = "";
+    private readonly metaDataService = inject(MetaDataService, { optional: true });
 
     constructor(http: HttpClient) {
         this.http = http;
@@ -97,25 +99,48 @@ export class JuliaoSystemCrudHttpService<RES, RQ> {
     /**
      * Construye los headers HTTP a partir de los QueryParams
      * @param queryParams Parámetros de consulta
-     * @private
+     * @protected
      */
-    private buildHeaders(queryParams: QueryParams): HttpHeaders {
+    protected buildHeaders(queryParams: QueryParams): HttpHeaders {
+        const merged = this.mergeWithDefaults(queryParams);
         let headers = new HttpHeaders();
         
-        if (queryParams.ip)   headers = headers.append('ip', queryParams.ip);
-        if (queryParams.dominio) headers = headers.append('dominio', queryParams.dominio) ;
-        if (queryParams.usuario)   headers = headers.append('usuario', queryParams.usuario);
+        if (merged.ip) headers = headers.append('ip', merged.ip);
+        if (merged.dominio) headers = headers.append('dominio', merged.dominio);
+        if (merged.usuario) headers = headers.append('usuario', merged.usuario);
         
-        if (queryParams.idBusiness) headers = headers.append('idBusiness', queryParams.idBusiness.toString());
+        if (merged.idbusiness) {
+            const value = merged.idbusiness.toString();
+            headers = headers.append('idBusiness', value);
+            headers = headers.append('idbusiness', value);
+        }
     
-        if (queryParams.proceso) headers = headers.append('proceso', queryParams.proceso);
+        if (merged.proceso) headers = headers.append('proceso', merged.proceso);
         
-        if (queryParams.topic) headers = headers.append('topic', queryParams.topic);
+        if (merged.topic) headers = headers.append('topic', merged.topic);
 
-        if (queryParams.token) headers = headers.append('Authorization', `Bearer ${queryParams.token}`);
+        if (merged.token) {
+            headers = headers.append('token', merged.token);
+            headers = headers.append('Authorization', `Bearer ${merged.token}`);
+        }
         
-        if (queryParams.id)    headers = headers.append('id', queryParams.id.toString());
+        if (merged.id) headers = headers.append('id', merged.id.toString());
     
         return headers;
+    }
+
+    private mergeWithDefaults(queryParams: QueryParams): QueryParams {
+        const meta = this.metaDataService;
+        if (!meta) {
+            return queryParams;
+        }
+
+        return {
+            ...queryParams,
+            ip: queryParams?.ip ?? meta.getIpFromSession(),
+            dominio: queryParams?.dominio ?? meta.getDominioFromSession(),
+            usuario: queryParams?.usuario ?? meta.getUsuarioFromSession(),
+            idbusiness: queryParams?.idbusiness ?? meta.getIdBusinessFromSession(),
+        } as QueryParams;
     }
 }

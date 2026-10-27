@@ -1,5 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles and imports */
 @use '../public/assets/layout/layout.scss';
 @use '../public/assets/demo/demo.scss';
 @use 'primeicons/primeicons.css';
 @use "primeflex/primeflex.css";
+#p-license-host {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* You can add global styles to this file, and also import other style files */

@@ -9,6 +9,7 @@ import { LoginDTO, RegisterUserDTO } from '@juliaosistem/core-dtos';
 
 @Component({
   selector: 'lib-form-auth-eccomerce1',
+  standalone: true,
   imports: [PrimegModule, SectionLoginRegistroEcomerce1, InputsLoginEcommerce1, ButtonsSocialmediaLogin, ReactiveFormsModule, CommonModule],
   templateUrl: './form-auth-eccomerce1.html',
   styleUrl: './form-auth-eccomerce1.css'
@@ -17,6 +18,8 @@ export class FormAuthEccomerce1 {
   
   @Input() isRegistering = true;
   @Input() isLogout = false;
+  @Input() loading = false;
+  @Output() facebookLogin = new EventEmitter<void>();
   @Output() login = new EventEmitter<LoginDTO>();
   @Output() register = new EventEmitter<RegisterUserDTO>();
 

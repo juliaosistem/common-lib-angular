@@ -33,7 +33,7 @@ export interface BusinessTokenDatesUserClaim {
 }
 
 export interface BusinessTokenClaims {
-  idBusiness?: number | string;
+  idbusiness?: number | string;
   id?: string;
   sub?: string;
   email?: string;

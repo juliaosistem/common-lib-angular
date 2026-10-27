@@ -1,4 +1,7 @@
 export * from './lib/services/google.service';
+export * from './lib/assets/state/carrito.actions';
+export * from './lib/assets/state/carrito.state';
+export * from './lib/services/country-ymoneda.utilities';
 /*
  * Public API Surface of common-lib
  */
@@ -25,6 +28,8 @@ export * from './lib/componentes/shared/atoms/button-add1/button-add1.component'
 export * from './lib/componentes/daskboards/daskboard2/index2/index2.component';
 export * from './lib/componentes/shared/molecules/tabla1/tabla1.component';
 export * from './lib/componentes/shared/molecules/crud-dialog1/crud-dialog1.component';
+export * from './lib/componentes/shared/molecules/crud-feedback-toast1/crud-feedback-toast1.component';
+export * from './lib/componentes/shared/molecules/session-expiry-dialog/session-expiry-dialog.component';
 export * from './lib/componentes/shared/interfaces/dynamic-field.interface';
 export * from './lib/services/dynamic-field.service';
 export * from './lib/componentes/shared/molecules/product-dialog1/product-dialog1.component';
@@ -63,6 +68,7 @@ export * from './lib/componentes/shared/atoms/select-input1/select-input1.compon
 export * from './lib/componentes/shared/atoms/paginator-pg/paginator-pg.component';
 export * from './lib/componentes/shared/atoms/sh-wats-button-card/sh-wats-button-card';
 export * from './lib/componentes/shared/atoms/button-add-to-card1/button-add-to-card1';
+export * from './lib/componentes/shared/atoms/country-dropdown/country-dropdown.component';
 // shared pages
 export * from './lib/componentes/shared/pages/notfound/notfound';
 
@@ -75,6 +81,10 @@ export * from './lib/componentes/shared/molecules/section-filters-categories-pro
 export * from './lib/componentes/shared/molecules/productos/detalle-carrito-1/detalle-carrito-1.component';
 export * from './lib/componentes/shared/molecules/productos/card-productos1/card-productos1.component';
 export * from './lib/componentes/shared/molecules/section-add-cards-buttons/section-add-cards-buttons';
+
+//interfaces
+export * from './lib/componentes/shared/interfaces/tablaDataSharedDTO';
+
 
 // Landing Pages
 export * from './lib/componentes/landingPages/pages/ecommerce1/ecommerce1';
@@ -108,9 +118,15 @@ export * from './lib/modulos/core.lib.module';
 //servicios
 export * from './lib/services/product.service';
 export * from './lib/services/auth-service';
+export * from './lib/services/session-expiry.service';
+export * from './lib/services/facebook-sdk.service';
 export * from './lib/services/cart.service';
 export * from './lib/services/categorias-productos.service';
 export * from './lib/services/meta-data.service.ts/meta-data.service';
+export * from './lib/services/roles.service';
+export * from './lib/services/permisos.service';
+export * from './lib/services/store-action-feedback.service';
+export * from './lib/services/imagenes.service';
 
 // library injector helper (set by host app)
 export * from './lib/utils/library-injector';
@@ -119,12 +135,23 @@ export * from './lib/utils/business-token.util';
 
 // Estados y acciones
 export * from './lib/assets/state/state-generic/generic-crud.state';
+export * from './lib/assets/state/state-generic/generic-crud.actions';
 export * from './lib/assets/state/productos.state';
 export * from './lib/assets/state/moneda.state';
 export * from './lib/assets/state/business.state';
 export * from './lib/assets/state/usuarios.actions';
 export * from './lib/assets/state/usuarios.state';
+export * from './lib/assets/state/roles.state';
+export * from './lib/assets/state/permisos.state';
+export * from './lib/assets/state/users-dashboard/users-dashboard.actions';
+export * from './lib/assets/state/users-dashboard/users-dashboard.models';
+export * from './lib/assets/state/users-dashboard/users-dashboard-api.service';
+export * from './lib/assets/state/users-dashboard/users-dashboard.state';
+export * from './lib/assets/state/users-dashboard/roles.action';
+export * from './lib/assets/state/users-dashboard/permisos.action';
 export * from './lib/assets/state/categorias-productos.state'
+export * from './lib/assets/state/tipo-categorias.state'
+export * from './lib/assets/state/imagenes.state'
 
 //routes
 export * from './lib/componentes/shared/routes/ecomerce1.routes';

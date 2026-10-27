@@ -7,10 +7,10 @@
       @for (part of [].constructor(project.product.parts); track $index; let i = $index) {
         <button type="button"
                 pButton
-                label="Parte {{i + 1}}"
                 class="w-full"
                 [class.p-button-info]="selectedPart === i"
                 (click)="selectPart(i)">
+          Parte {{i + 1}}
         </button>
       }
     </div>
@@ -24,7 +24,7 @@
         <option [value]="c.hex">{{ c.name }}</option>
       }
     </select>
-    <button pButton type="button" label="Aplicar color" icon="pi pi-check" class="mt-2" (click)="applyColor()"></button>
+    <p-button type="button" label="Aplicar color" icon="pi pi-check" styleClass="mt-2" (onClick)="applyColor()"></p-button>
   </div>
 
   <!-- Accesorios (usando checkbox nativo) -->
@@ -37,7 +37,9 @@
                (change)="toggleAccessory(acc)"
                id="{{acc.id}}">
         <label for="{{acc.id}}">{{ acc.name }}</label>
-        <span class="ml-2 text-sm text-gray-500" *ngIf="acc.price > 0">+{{acc.price | currency:'COP':'symbol':'1.0-0'}}</span>
+        @if (acc.price > 0) {
+          <span class="ml-2 text-sm text-gray-500">+{{acc.price | currency:'COP':'symbol':'1.0-0'}}</span>
+        }
       </div>
     }
   </div>
@@ -49,5 +51,5 @@
   </div>
 
   <!-- Guardar -->
-  <button pButton type="button" label="Guardar Personalización" class="w-full p-button-success" (click)="saveProject()"></button>
+  <p-button type="button" label="Guardar Personalización" styleClass="w-full p-button-success" (onClick)="saveProject()"></p-button>
 </div>

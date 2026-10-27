@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { IonicModule } from '@ionic/angular';
 
 import { ContenidoNavComponent } from './contenido-nav.component';
 
@@ -9,8 +8,7 @@ describe('ContenidoNavComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContenidoNavComponent ],
-      imports: [IonicModule.forRoot()]
+      imports: [ContenidoNavComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ContenidoNavComponent);
