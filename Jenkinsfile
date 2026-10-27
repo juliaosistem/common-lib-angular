@@ -14,7 +14,7 @@ pipeline {
                 runAsUser: 0
               containers:
               - name: nodejs
-                image: node:20-alpine
+                image: node:26.12.1-alpine
                 command: ['cat']
                 tty: true
                 volumeMounts:

@@ -4,28 +4,18 @@ import { Component, HostListener, Input, OnChanges, OnDestroy, OnInit, SimpleCha
 import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 
-import { BusinessDTO, CarritoDTO, ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
+import { BusinessDTO, ComponentesDTO, MenuConfig, MenuItem } from '@juliaosistem/core-dtos';
 import { TranslateService } from '@ngx-translate/core';
 import { PrimegModule } from '../../../../../modulos/primeg.module';
 import { IonicModule, MenuController } from '@ionic/angular';
 import { HeaderTopEcommerce1 } from "../../../atoms/ecommerce1/header-top-ecommerce1/header-top-ecommerce1";
 import { Subject, takeUntil } from 'rxjs';
 import { CartService } from '../../../../../services/cart.service';
-
-interface CartDisplayItem {
-  productId: string;
-  name: string;
-  quantity: number;
-  unitPrice: number;
-  subtotal: number;
-  currencyCode: string;
-  imageUrl?: string;
-  imageAlt?: string;
-}
+import { CartComponent } from '../cart/cart.component';
 
 @Component({
   selector: 'lib-header-ecommerce1',
-  imports: [CommonModule, RouterModule, FormsModule, PrimegModule, IonicModule, HeaderTopEcommerce1],
+  imports: [CommonModule, RouterModule, FormsModule, PrimegModule, IonicModule, HeaderTopEcommerce1, CartComponent],
   templateUrl: './header-ecommerce1.html',
   styleUrls: ['./header-ecommerce1.scss'],
   encapsulation: ViewEncapsulation.None 
@@ -146,9 +136,6 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
   currentMenu: MenuConfig = this.defaultMenuConfig;
   isMobileMenuOpen: boolean = false;
   isCartOpen: boolean = false;
-  cartItems: CartDisplayItem[] = [];
-  cartLoading: boolean = false;
-  cartError: string | null = null;
   private readonly destroy$ = new Subject<void>();
 
   ngOnInit(): void {
@@ -315,26 +302,6 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
     /** Cierra el `Drawer` del carrito. */
     this.cartService.closeDrawer();
   }
-  /**
-   * Calcula el total del carrito sumando `price * qty`.
-   * @returns Total acumulado.
-   */
-  getCartTotal(): number {
-    return this.cartItems.reduce((acc, it) => acc + it.subtotal, 0);
-  }
-
-  removeCartItem(productId: string): void {
-    this.cartService.removeProduct(productId)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe();
-  }
-
-  goToCheckout() {
-    /** Acción placeholder para ir al checkout; cierra el carrito. */
-    // Navegación simple: ajusta a tu ruta real de checkout
-    console.log('Ir a checkout');
-    this.cartService.closeDrawer();
-  }
   
 
  toggleMobileMenu() {
@@ -456,18 +423,6 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
   }
 
   private bindCartState(): void {
-    this.cartService.cart$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((cart) => this.cartItems = this.mapCartItems(cart));
-
-    this.cartService.loading$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((loading) => this.cartLoading = loading);
-
-    this.cartService.error$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((error) => this.cartError = error);
-
     this.cartService.drawerOpen$
       .pipe(takeUntil(this.destroy$))
       .subscribe((isOpen) => this.isCartOpen = isOpen);
@@ -482,24 +437,6 @@ export class HeaderEcommerce1Component implements OnInit, OnChanges, OnDestroy {
     }
 
     this.cartService.clearState();
-    this.cartItems = [];
-  }
-
-  private mapCartItems(cart: CarritoDTO | null): CartDisplayItem[] {
-    if (!cart?.items?.length) {
-      return [];
-    }
-
-    return cart.items.map((item) => ({
-      productId: item.producto.id || '',
-      name: item.producto.name,
-      quantity: Number(item.cantidad || 0),
-      unitPrice: Number(item.moneda?.precio || item.producto.precios?.[0]?.precio || 0),
-      subtotal: Number(item.subtotal || 0),
-      currencyCode: item.moneda?.codigo_iso || item.producto.precios?.[0]?.codigo_iso || 'COP',
-      imageUrl: item.producto.imagen?.[0]?.url,
-      imageAlt: item.producto.imagen?.[0]?.alt || item.producto.name,
-    }));
   }
 
   

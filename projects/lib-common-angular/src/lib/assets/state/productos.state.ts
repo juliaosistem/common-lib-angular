@@ -35,6 +35,11 @@ export class ProductosState extends GenericCrudState<ProductoDTO, ProductoDTO> {
     return state.dataList;
   }
 
+  @Selector()
+  static getProductosResponse(state: PlantillaResponse<ProductoDTO>): PlantillaResponse<ProductoDTO> {
+    return state;
+  }
+
   /**
    * Selector factory para obtener productos por id de categoría.
    * @param idCategoria 

@@ -14,6 +14,22 @@ const BRANCH_ENV_KEYS = [
   'GITHUB_REF_NAME'
 ];
 
+const COMMIT_ENV_KEYS = [
+  'OPENSHIP_COMMIT_SHA',
+  'OPENSHIP_GIT_SHA',
+  'OPENSHIP_SHA',
+  'OPENSHIP_COMMIT',
+  'GITHUB_SHA',
+  'CI_COMMIT_SHA',
+  'CI_COMMIT_SHORT_SHA',
+  'GIT_COMMIT',
+  'GIT_COMMIT_SHA',
+  'BITBUCKET_COMMIT',
+  'COMMIT_SHA',
+  'GIT_SHA',
+  'VERCEL_GIT_COMMIT_SHA'
+];
+
 export function normalizeBranchName(raw) {
   return String(raw || '')
     .trim()
@@ -24,9 +40,18 @@ export function normalizeBranchName(raw) {
 }
 
 export function normalizeGitSha(raw) {
-  const value = String(raw || '').trim();
+  let value = String(raw || '').trim();
+  if (!value || value === 'unknown') {
+    return '';
+  }
   const timestampedBuild = value.match(/^(.+-\d{8})[.]\d{6}(?:-\d+)?$/);
-  return timestampedBuild ? timestampedBuild[1] : value;
+  if (timestampedBuild) {
+    value = timestampedBuild[1];
+  }
+  if (/^[0-9a-fA-F]{7,40}$/.test(value)) {
+    return value.slice(0, 7).toLowerCase();
+  }
+  return value.replace(/[^a-zA-Z0-9._-]/g, '').slice(0, 12).toLowerCase();
 }
 
 function commandExists(cmd) {
@@ -112,16 +137,33 @@ export function resolveBranchName({
 }
 
 export function resolveGitSha({ env = process.env } = {}) {
-  const direct = env.OPENSHIP_COMMIT_SHA || env.CI_COMMIT_SHORT_SHA || env.GIT_SHA || '';
-  if (direct && direct !== 'unknown') {
-    return normalizeGitSha(direct);
+  for (const key of COMMIT_ENV_KEYS) {
+    const raw = env[key];
+    if (raw && raw !== 'unknown') {
+      const normalized = normalizeGitSha(raw);
+      if (normalized) {
+        return normalized;
+      }
+    }
   }
 
   if (commandExists('git')) {
     try {
-      return normalizeGitSha(execSync('git rev-parse --short=7 HEAD').toString());
+      const rawSha = execSync('git rev-parse --short=7 HEAD', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+      const normalized = normalizeGitSha(rawSha);
+      if (normalized) {
+        return normalized;
+      }
     } catch {
-      // Continue to timestamp fallback below.
+      try {
+        const rawSha = execSync('git log -1 --format="%h"', { encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim();
+        const normalized = normalizeGitSha(rawSha);
+        if (normalized) {
+          return normalized;
+        }
+      } catch {
+        // Continue to fallback
+      }
     }
   }
 

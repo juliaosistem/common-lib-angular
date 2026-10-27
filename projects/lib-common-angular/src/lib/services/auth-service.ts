@@ -1,10 +1,10 @@
 import { Injectable, Injector } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { LoginDTO, RegisterUserDTO } from '@juliaosistem/core-dtos';
-import { Login, AddUser } from '../assets/state/usuarios.actions';
+import { Login, AddUser, RefreshToken } from '../assets/state/usuarios.actions';
 import { UsuariosState } from '../assets/state/usuarios.state';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, finalize, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { Router } from '@angular/router';
@@ -43,7 +43,7 @@ export class AuthService {
     return this.getStore().dispatch(new Login(login)).pipe(
       map(() => {
         const authResponse = this.getStore().selectSnapshot<PlantillaResponse<AuthResponseDTO>>(UsuariosState.Login);
-        const resolvedToken = this.resolveToken(authResponse?.data);
+        const resolvedToken = this.resolveAuthToken(authResponse);
 
         if (resolvedToken) {
           this.persistSession(authResponse?.data, resolvedToken);
@@ -82,6 +82,107 @@ export class AuthService {
     );
   }
 
+  /**
+   * Autentica con un proveedor social usando el access token emitido por su SDK.
+   *
+   * @param provider identificador del proveedor, por ejemplo FACEBOOK
+   * @param accessToken token entregado por el SDK del proveedor en el navegador
+   * @returns observable con la respuesta estandar de autenticacion
+   */
+  loginSocial(provider: string, accessToken: string): Observable<PlantillaResponse<AuthResponseDTO>> {
+    const injector = getLibraryInjector();
+    const http = injector.get(HttpClient);
+    const config = injector.get(LibConfigService);
+    const baseUrl = String(config.get('baseUrlUsers') ?? '').replace(/\/$/, '');
+    const idBusiness = Number(config.get('idBusiness')) || 1;
+
+    return http.post<PlantillaResponse<AuthResponseDTO>>(`${baseUrl}/login/social`, { provider, accessToken, idBusiness }).pipe(
+      map((response) => this.applySocialSession(response)),
+      catchError(() => of({
+        data: undefined,
+        dataList: undefined,
+        httpStatus: 500,
+        message: 'No fue posible autenticar con el proveedor social',
+        rta: false,
+      } as PlantillaResponse<AuthResponseDTO>))
+    );
+  }
+
+  /**
+   * Persiste la sesion resultante del login social y navega al home cuando es valida.
+   *
+   * @param response respuesta estandar del endpoint de login social
+   * @returns la misma respuesta recibida para encadenar en el consumidor
+   */
+  private applySocialSession(response: PlantillaResponse<AuthResponseDTO>): PlantillaResponse<AuthResponseDTO> {
+    const resolvedToken = this.resolveAuthToken(response);
+    if (!resolvedToken) {
+      this.clearSession();
+      this.loginState$.next(false);
+      return response;
+    }
+    this.persistSession(response?.data, resolvedToken);
+    this.loginState$.next(true);
+    this.router.navigate(['/home']);
+    return response;
+  }
+
+  /**
+   * Renueva la sesion activa usando el refresh token de Keycloak y persiste los nuevos tokens.
+   *
+   * @returns observable que emite true cuando la sesion quedo extendida
+   */
+  refreshSession(): Observable<boolean> {
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      return of(false);
+    }
+
+    return this.getStore().dispatch(new RefreshToken({ refreshToken })).pipe(
+      map(() => {
+        const response = this.getStore().selectSnapshot<PlantillaResponse<AuthResponseDTO>>(UsuariosState.Session);
+        const resolvedToken = this.resolveAuthToken(response);
+        if (!resolvedToken) {
+          return false;
+        }
+        this.persistSession(response?.data, resolvedToken);
+        this.loginState$.next(true);
+        return true;
+      }),
+      catchError(() => of(false))
+    );
+  }
+
+  /**
+   * Obtiene el refresh token persistido en la sesion del navegador.
+   *
+   * @returns refresh token vigente o null cuando no existe
+   */
+  getRefreshToken(): string | null {
+    if (!this.isBrowser()) {
+      return null;
+    }
+    return sessionStorage.getItem('keycloakRefreshToken') || localStorage.getItem('keycloakRefreshToken');
+  }
+
+  /**
+   * Devuelve el instante de expiracion del token activo en milisegundos epoch.
+   *
+   * @returns timestamp de expiracion o null cuando el token no declara exp
+   */
+  getSessionExpiresAt(): number | null {
+    const claims = decodeBusinessToken(getSessionToken());
+    return claims?.exp ? claims.exp * 1000 : null;
+  }
+
+  /**
+   * Limpia la sesion local sin llamar al backend. Usado al vencer el token.
+   */
+  clearLocalSession(): void {
+    this.clearSession();
+    this.loginState$.next(false);
+  }
+
   private logoutRemote(): Observable<unknown> {
     try {
       const injector = getLibraryInjector();
@@ -90,16 +191,17 @@ export class AuthService {
       const baseUrl = String(config.get('baseUrlUsers') ?? '').replace(/\/$/, '');
       const url = `${baseUrl}/logout`;
       return http.post(url, this.buildLogoutPayload(), { headers: this.buildLogoutHeaders() });
-    } catch {
-      return of(null);
+    } catch (error) {
+      console.error('Error preparando cierre de sesion', error);
+      return throwError(() => error);
     }
   }
 
-  private buildLogoutPayload(): { token: string; refreshToken: string } {
-    return {
-      token: sessionStorage.getItem('token') ?? '',
-      refreshToken: sessionStorage.getItem('keycloakRefreshToken') ?? '',
-    };
+  private buildLogoutPayload(): HttpParams {
+    let form = new HttpParams().set('refresh_token', this.getRefreshToken() ?? '');
+    const tenant = getLibraryInjector().get(LibConfigService).getAuthTenantId();
+    if (tenant !== undefined) form = form.set('idBussines', tenant);
+    return form;
   }
 
   private buildLogoutHeaders(): HttpHeaders {
@@ -110,6 +212,12 @@ export class AuthService {
       headers = headers.set('Authorization', `Bearer ${authToken}`);
     }
     return headers;
+  }
+
+  /** @param response Respuesta de autenticacion; rta heredado no sustituye al estado HTTP. */
+  private resolveAuthToken(response?: PlantillaResponse<AuthResponseDTO>): string | null {
+    const status = response?.httpStatus ?? 200;
+    return status >= 200 && status < 300 ? this.resolveToken(response?.data) : null;
   }
 
   private resolveToken(data?: AuthResponseDTO): string | null {
@@ -163,7 +271,8 @@ export class AuthService {
       || ''
     ).trim();
 
-    this.persistSessionValue('idbusiness', claims['idBusiness']);
+    this.persistSessionValue('idbusiness', claims['idBusiness'] ?? claims.idbusiness);
+    this.persistSessionValue('idBusiness', claims['idBusiness'] ?? claims.idbusiness);
     this.persistSessionValue('idDatosUsuario', claims.id || claims.sub || claims['idDatosUsuario']);
     this.persistSessionValue('usuario', resolvedEmail);
     this.persistSessionValue('email', resolvedEmail);
@@ -285,7 +394,7 @@ export class AuthService {
       return;
     }
 
-    const keys = ['token', 'businessToken', 'keycloakAccessToken', 'keycloakRefreshToken', 'idbusiness', 'idDatosUsuario', 'usuario', 'email', 'isLogin', 'userPermissions'];
+    const keys = ['token', 'businessToken', 'keycloakAccessToken', 'keycloakRefreshToken', 'idbusiness', 'idBusiness', 'idDatosUsuario', 'usuario', 'email', 'isLogin', 'userPermissions'];
     keys.forEach((key) => sessionStorage.removeItem(key));
     keys.forEach((key) => localStorage.removeItem(key));
   }

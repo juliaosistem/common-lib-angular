@@ -60,9 +60,10 @@ export class GenericCrudHttpService<T> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  add(payload: T, topic: string, queryParams?: Record<string, any>): Observable<PlantillaResponse<T>> {
+  add(payload: T, topic: string | QueryParams, queryParams?: Record<string, any>): Observable<PlantillaResponse<T>> {
     const metaParams = this.meta.get('guardar');
-    const headers = this.buildHeaders({ ...metaParams, ...queryParams });
+    const params = typeof topic === 'object' ? topic : queryParams;
+    const headers = this.buildHeaders({ ...metaParams, ...params });
     return this.http.post<PlantillaResponse<T>>(
       `${this.basePathUrl}/add`,
       payload,

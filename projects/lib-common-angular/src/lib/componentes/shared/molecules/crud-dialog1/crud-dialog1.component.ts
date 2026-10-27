@@ -5,12 +5,12 @@ import {
   Output,
   EventEmitter,
   OnChanges,
-  SimpleChanges,
   TemplateRef,
   ViewChild,
   ViewContainerRef,
   ComponentRef,
 } from '@angular/core';
+import type { SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, ValidatorFn } from '@angular/forms';
 import { PrimegModule } from '../../../../modulos/primeg.module';

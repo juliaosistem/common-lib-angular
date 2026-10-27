@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, OnInit, Input, CUSTOM_ELEMENTS_SCHEMA, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DetalleCarrito1Component } from '../../../../shared/molecules/productos/detalle-carrito-1/detalle-carrito-1.component';
 import { MetaDataService } from '../../../../../services/meta-data.service.ts/meta-data.service';
@@ -6,9 +6,14 @@ import { ProductoDTO,CategoriaDTO } from '@juliaosistem/core-dtos';
 import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../../../../services/product.service';
 import { Store } from '@ngxs/store';
-import { ProductosState } from '../../../../../assets/state/productos.state';
+import { ProductosActions, ProductosState } from '../../../../../assets/state/productos.state';
 import { CardProductos1Component } from '../../../../shared/molecules/productos/card-productos1/card-productos1.component';
 import { register } from 'swiper/element/bundle';
+import { Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../../../../services/auth-service';
+import { CartService } from '../../../../../services/cart.service';
+import { AbstractLogger } from '../../../../../services/abstract-logger.service';
 
 @Component({
   selector: 'lib-product-detail-lib',
@@ -29,6 +34,13 @@ export class DetalleProductoPageLib implements OnInit {
    * Indica si el usuario está autenticado para habilitar acciones/visualizaciones para agregar al carrito.
    */
   @Input() isLogin = false;
+  productError = '';
+  private readonly cart = inject(CartService);
+  private readonly auth = inject(AuthService);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly logger = inject(AbstractLogger);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly cartRequests$ = new Subject<{ product: ProductoDTO; quantity: number }>();
 
   /**
    * Lista de categorías disponibles. Se usa para enriquecer los productos
@@ -70,6 +82,11 @@ export class DetalleProductoPageLib implements OnInit {
   ngOnInit(): void {
     try { register(); } catch { /* ya registrado */ }
     this.getData();
+    this.auth.isLoggedIn$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(loggedIn => {
+      this.isLogin = loggedIn;
+      this.cdr.markForCheck();
+    });
+    this.cart.connectProductRequests(this.cartRequests$).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
   }
 
   /**
@@ -77,33 +94,24 @@ export class DetalleProductoPageLib implements OnInit {
    * 1. Prioriza `history.state` (navegación con estado).
    * 2. Si no está, intenta resolver por `id` en la URL:
    *    - Busca en el store NGXS
-   *    - Si no existe, usa un mock de productos.
+   *    - Si no existe, consulta el catalogo real.
    * Finalmente, carga los productos relacionados.
    */
   getData(): void{
-    if (!this.product) {
-      const nav = history.state as { product?: ProductoDTO; isLogin?: boolean };
-      if (nav?.product) {
-        this.product = nav.product;
-        this.isLogin = !!nav.isLogin;
-        this.loadRelatedProducts();
-        return;
-      }
-    }
-
-    const id = this.getProductIdFromRoute();
-    if (id) {
-      const productoFromStore = this.getFromStoreById(id);
-      if (productoFromStore) {
-        this.product = productoFromStore;
-        this.loadRelatedProducts();
-        return;
-      }
-
-      const mock = this.productSvc.mockProductosInflablesDTO();
-      this.product = mock.find(p => String(p.id) === String(id));
+    const nav = history.state as { product?: ProductoDTO };
+    this.product ??= nav.product;
+    if (this.product) {
       this.loadRelatedProducts();
+      return;
     }
+    const id = this.getProductIdFromRoute();
+    if (!id) {
+      this.productError = 'No se indicó un producto.';
+      return;
+    }
+    this.product = this.getFromStoreById(id);
+    if (this.product) this.loadRelatedProducts();
+    else this.loadProduct(id);
   }
 
   /**
@@ -138,16 +146,37 @@ export class DetalleProductoPageLib implements OnInit {
    * @returns Producto si existe, `undefined` en caso contrario
    */
   private getFromStoreById(id: string): ProductoDTO | undefined {
-    try {
-      return this.store.selectSnapshot(ProductosState.selectById<ProductoDTO>(id));
-    } catch {
-      return undefined;
-    }
+    return (this.store.selectSnapshot(ProductosState.getProductos) ?? []).find(product => product.id === id);
+  }
+
+  /** @param id Identificador real; no sustituye errores o ausencias por productos ficticios. */
+  private loadProduct(id: string): void {
+    const params = this.meta.get('listar');
+    this.store.dispatch(new ProductosActions.All({ ...params, idbusiness: Number(params.idbusiness) })).pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+      next: () => {
+        const response = this.store.selectSnapshot(ProductosState.getProductosResponse);
+        this.product = this.getFromStoreById(id);
+        this.productError = response.rta === false ? response.message || 'No se pudo cargar el producto.'
+          : this.product ? '' : 'El producto no está disponible.';
+        if (this.product) this.loadRelatedProducts();
+        this.cdr.markForCheck();
+      },
+      error: (error: unknown) => {
+        this.logger.logError(error, 'DetalleProductoPageLib.loadProduct');
+        this.productError = 'No fue posible contactar el catálogo de productos.';
+        this.cdr.markForCheck();
+      },
+    });
+  }
+
+  /** @param event Producto y cantidad seleccionados en el detalle o sus relacionados. */
+  onAddToCart(event: { product: ProductoDTO; quantity: number }): void {
+    this.cartRequests$.next(event);
   }
 
   /**
    * Construye la lista de productos relacionados por categoría.
-   * - Obtiene todos los productos desde el store o mock si está vacío.
+   * - Obtiene los productos del catalogo cargado en el store.
    * - Filtra por `idCategoria` y excluye el producto actual.
    * - Enriquece los productos con `nombreCategoria` si es necesario.
    */
@@ -156,13 +185,7 @@ export class DetalleProductoPageLib implements OnInit {
       this.products = [];
       return;
     }
-    let allProducts = this.store.selectSnapshot(
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (state: any) => (state?.producto?.dataList as ProductoDTO[]) || []
-    );
-    if (!allProducts || allProducts.length === 0) {
-      allProducts = this.productSvc.mockProductosInflablesDTO();
-    }
+    const allProducts = this.store.selectSnapshot(ProductosState.getProductos) ?? [];
     const idCat = String(this.product.idCategoria);
     this.products = allProducts
       .filter(p => String(p.idCategoria) === idCat)

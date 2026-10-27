@@ -1,362 +1,187 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { CarritoDTO, CarritoItemDTO, MonedaDTO, ProductoDTO } from '@juliaosistem/core-dtos';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { catchError, finalize, map, switchMap, tap } from 'rxjs/operators';
-import { PlantillaResponse } from 'juliaositembackenexpress/dist/utils/PlantillaResponse';
-import { LibConfigService } from '../config/lib-config.service';
+import { Injectable, inject } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { CarritoDTO, CarritoItemDTO, ProductoDTO } from '@juliaosistem/core-dtos';
+import { Observable, catchError, concatMap, defer, distinctUntilChanged, map, of, switchMap } from 'rxjs';
+import { QueryParams } from 'juliaositembackenexpress/dist/utils/queryParams';
+import { CarritoState, CarritoViewState } from '../assets/state/carrito.state';
+import { CarritoActions, CarritoUi, ConfirmarCarrito, LoadMediosPagos, ResetCarrito } from '../assets/state/carrito.actions';
+import { getSessionBusinessClaims } from '../utils/business-token.util';
+import { AbstractLogger } from './abstract-logger.service';
+import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { AuthService } from './auth-service';
+import { ProductService } from './product.service';
 
-type RawCartResponse = PlantillaResponse<unknown> & {
-  data?: unknown;
-  dataList?: unknown[];
-};
-
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class CartService {
-  private readonly cartState = new BehaviorSubject<CarritoDTO | null>(null);
-  private readonly loadingState = new BehaviorSubject<boolean>(false);
-  private readonly errorState = new BehaviorSubject<string | null>(null);
-  private readonly drawerState = new BehaviorSubject<boolean>(false);
+  private readonly store = inject(Store);
+  private readonly router = inject(Router);
+  private readonly logger = inject(AbstractLogger);
+  private readonly auth = inject(AuthService);
+  private readonly products = inject(ProductService);
+  readonly state$ = this.store.select(CarritoState.getCarritoView);
+  readonly cart$ = this.state$.pipe(map(state => state.data ?? null), distinctUntilChanged());
+  readonly loading$ = this.state$.pipe(map(state => state.loading), distinctUntilChanged());
+  readonly error$ = this.state$.pipe(map(state => state.rta ? null : state.message), distinctUntilChanged());
+  readonly drawerOpen$ = this.state$.pipe(map(state => state.drawerOpen), distinctUntilChanged());
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly config: LibConfigService,
-  ) {}
-
-  get cart$(): Observable<CarritoDTO | null> {
-    return this.cartState.asObservable();
-  }
-
-  get loading$(): Observable<boolean> {
-    return this.loadingState.asObservable();
-  }
-
-  get error$(): Observable<string | null> {
-    return this.errorState.asObservable();
-  }
-
-  get drawerOpen$(): Observable<boolean> {
-    return this.drawerState.asObservable();
+  constructor() {
+    this.auth.isLoggedIn$.pipe(map(loggedIn => {
+      const claims = getSessionBusinessClaims();
+      return loggedIn ? `${claims?.['idBusiness'] ?? claims?.idbusiness}:${claims?.id}` : null;
+    }), distinctUntilChanged(), takeUntilDestroyed()).subscribe(() => this.clearState());
   }
 
   openDrawer(): void {
-    this.drawerState.next(true);
+    this.store.dispatch(new CarritoUi({ drawerOpen: true }));
+    if (!this.snapshot().loading) this.loadCart().subscribe();
   }
 
   closeDrawer(): void {
-    this.drawerState.next(false);
+    this.store.dispatch(new CarritoUi({ drawerOpen: false }));
   }
 
   clearState(): void {
-    this.cartState.next(null);
-    this.errorState.next(null);
-    this.drawerState.next(false);
+    this.store.dispatch(new ResetCarrito());
   }
 
   loadCart(): Observable<CarritoDTO | null> {
-    const userId = this.getUserId();
-    if (!userId) {
-      this.clearState();
-      return of(null);
-    }
-
-    this.loadingState.next(true);
-    this.errorState.next(null);
-    return this.fetchCart(userId).pipe(
-      tap((cart) => this.cartState.next(cart)),
-      catchError((error) => {
-        this.errorState.next(this.resolveErrorMessage(error, 'No se pudo cargar el carrito.'));
-        this.cartState.next(null);
-        return of(null);
-      }),
-      finalize(() => this.loadingState.next(false)),
-    );
+    return this.result(this.store.dispatch(new CarritoActions.All(this.params())));
   }
 
+  /** @param requests Cambios de cantidad del catalogo, aplicados en orden sin perder clics rapidos. */
+  connectProductRequests(requests: Observable<{ product: ProductoDTO; quantity: number }>): Observable<CarritoDTO | null> {
+    return requests.pipe(concatMap(request => this.addOrUpdateProduct(request.product, request.quantity)));
+  }
+
+  /** @param product Producto de catalogo. @param quantity Cantidad absoluta deseada. */
   addOrUpdateProduct(product: ProductoDTO, quantity: number): Observable<CarritoDTO | null> {
-    const userId = this.getUserId();
-    if (!userId) {
-      this.errorState.next('Debes iniciar sesión para usar el carrito.');
-      return of(null);
-    }
-
-    const nextCart = this.buildCartSnapshot(product, quantity, userId);
-    if (!nextCart) {
-      return of(null);
-    }
-
-    return this.persistCart(nextCart, userId);
+    return this.result(defer(() => {
+      this.requireSession();
+      this.requireIdle();
+      return this.store.dispatch(new CarritoActions.All(this.params())).pipe(
+        switchMap(() => this.persistProduct(product, quantity)),
+      );
+    }));
   }
 
+  /** @param productId Identificador de la linea a retirar; el ultimo item elimina el carrito. */
   removeProduct(productId: string): Observable<CarritoDTO | null> {
-    const currentCart = this.cartState.value;
-    const userId = this.getUserId();
-    if (!currentCart?.id || !userId) {
+    return this.removeProducts([productId]);
+  }
+
+  /** @param productIds Lineas seleccionadas; se persisten en una sola operacion. */
+  removeProducts(productIds: string[]): Observable<CarritoDTO | null> {
+    return this.result(defer(() => {
+      this.requireSession();
+      this.requireIdle();
+      const cart = this.snapshot().data;
+      if (!cart?.id) throw new Error('No hay un carrito cargado para modificar.');
+      return this.saveItems(cart, cart.items.filter(item => !productIds.includes(item.producto.id ?? '')));
+    }));
+  }
+
+  /** @param item Linea existente. @param quantity Cantidad nueva sin cambiar el precio persistido. */
+  updateQuantity(item: CarritoItemDTO, quantity: number): Observable<CarritoDTO | null> {
+    const product = { ...item.producto, descuento: 0, precios: [{ ...item.moneda, precio: item.subtotal / item.cantidad }] };
+    return this.addOrUpdateProduct(product, quantity);
+  }
+
+  loadPaymentMethods(): Observable<CarritoDTO | null> {
+    return this.result(this.store.dispatch(new LoadMediosPagos()));
+  }
+
+  getItem(productId: string): CarritoItemDTO | undefined {
+    return this.snapshot().data?.items.find(item => item.producto.id === productId);
+  }
+
+  /** @param medioPagoId Medio seleccionado. No registra un pago aprobado ni vacia el carrito. */
+  confirm(medioPagoId: string): Observable<CarritoDTO | null> {
+    return this.result(defer(() => {
+      this.requireSession();
+      this.requireIdle();
+      return this.store.dispatch(new ConfirmarCarrito(medioPagoId));
+    }));
+  }
+
+  private persistProduct(product: ProductoDTO, quantity: number) {
+    const cart = this.snapshot().data;
+    this.validateProduct(product, quantity);
+    const items = (cart?.items ?? []).filter(item => item.producto.id !== product.id);
+    if (quantity > 0) items.push(this.buildItem(product, quantity));
+    if (cart) return this.saveItems(cart, items);
+    if (!items.length) return of(null);
+    const total = items.reduce((sum, item) => sum + item.subtotal, 0);
+    const payload: CarritoDTO = {
+      idUsuario: String(getSessionBusinessClaims()?.id), items, total,
+      monedaTotal: { ...items[0].moneda, precio: total },
+    };
+    return this.store.dispatch(new CarritoActions.Add(payload, this.params()));
+  }
+
+  private saveItems(cart: CarritoDTO, items: CarritoItemDTO[]) {
+    if (!items.length) return this.store.dispatch(new CarritoActions.Delete({ ...this.params(), id: cart.id }));
+    const total = items.reduce((sum, item) => sum + item.subtotal, 0);
+    const payload = { ...cart, items, total, monedaTotal: { ...cart.monedaTotal, precio: total } };
+    return this.store.dispatch(new CarritoActions.Update(payload, this.params()));
+  }
+
+  private buildItem(product: ProductoDTO, quantity: number): CarritoItemDTO {
+    const currencyCode = this.snapshot().data?.monedaTotal.codigo_iso;
+    const moneda = product.precios.find(price => !currencyCode || price.codigo_iso === currencyCode);
+    if (!moneda) throw new Error('No se pueden mezclar monedas en el mismo carrito.');
+    const unitPrice = Number(this.products.calculateDiscount({ ...product, precios: [moneda] }));
+    return { producto: product, cantidad: quantity, subtotal: unitPrice * quantity, moneda: { ...moneda, precio: unitPrice } };
+  }
+
+  private validateProduct(product: ProductoDTO, quantity: number): void {
+    if (!product.id || !Number.isInteger(quantity) || quantity < 0) {
+      throw new Error('El producto y la cantidad deben ser válidos.');
+    }
+    if (quantity === 0) return;
+    const discount = Number(product.descuento ?? 0);
+    if (!Number.isFinite(discount) || discount < 0 || discount > 100) throw new Error('El descuento del producto no es válido.');
+    const currencyCode = this.snapshot().data?.monedaTotal.codigo_iso;
+    const price = product.precios?.find(value => !currencyCode || value.codigo_iso === currencyCode);
+    if (!price?.id || !price.codigo_iso || !Number.isFinite(Number(price.precio)) || Number(price.precio) <= 0) {
+      throw new Error('El producto no tiene un precio y una moneda válidos para este carrito.');
+    }
+    if (Number.isFinite(Number(product.cantidad)) && quantity > Number(product.cantidad)) {
+      throw new Error('La cantidad solicitada supera las existencias disponibles.');
+    }
+  }
+
+  private result(request: Observable<unknown>): Observable<CarritoDTO | null> {
+    return request.pipe(map(() => this.snapshot().data ?? null), catchError((error: unknown) => {
+      const message = error instanceof Error ? error.message : 'No fue posible actualizar el carrito.';
+      this.logger.logError(new Error(message), 'CartService');
+      this.store.dispatch(new CarritoUi({ message, rta: false, drawerOpen: true }));
       return of(null);
+    }));
+  }
+
+  private snapshot(): CarritoViewState {
+    return this.store.selectSnapshot(CarritoState.getCarritoView);
+  }
+
+  private requireIdle(): void {
+    if (this.snapshot().loading) throw new Error('Espera a que termine la operación actual del carrito.');
+  }
+
+  private requireSession(): void {
+    const claims = getSessionBusinessClaims();
+    if (!claims?.id || !claims.exp || claims.exp * 1000 <= Date.now()) {
+      this.router.navigate(['/home/login']);
+      throw new Error('Debes iniciar sesión para usar el carrito.');
     }
-
-    const nextItems = currentCart.items.filter((item) => item.producto.id !== productId);
-    if (!nextItems.length) {
-      return this.deleteCart(currentCart.id);
+    if (!Number(claims['idBusiness'] ?? claims.idbusiness)) {
+      throw new Error('La sesión no contiene un negocio válido.');
     }
-
-    const total = this.calculateTotal(nextItems);
-    const nextCart: CarritoDTO = {
-      ...currentCart,
-      items: nextItems,
-      total,
-      monedaTotal: {
-        ...currentCart.monedaTotal,
-        precio: total,
-      },
-    };
-
-    return this.persistCart(nextCart, userId);
   }
 
-  private persistCart(cart: CarritoDTO, userId: string): Observable<CarritoDTO | null> {
-    this.loadingState.next(true);
-    this.errorState.next(null);
-
-    const request = cart.id
-      ? this.http.put<PlantillaResponse<unknown>>(`${this.getBaseUrl()}/${cart.id}`, cart)
-      : this.http.post<PlantillaResponse<unknown>>(`${this.getBaseUrl()}/add`, cart);
-
-    return request.pipe(
-      switchMap(() => this.fetchCart(userId)),
-      tap((savedCart) => {
-        this.cartState.next(savedCart);
-        this.drawerState.next(true);
-      }),
-      catchError((error) => {
-        this.errorState.next(this.resolveErrorMessage(error, 'No se pudo actualizar el carrito.'));
-        return of(null);
-      }),
-      finalize(() => this.loadingState.next(false)),
-    );
-  }
-
-  private deleteCart(cartId: string): Observable<CarritoDTO | null> {
-    this.loadingState.next(true);
-    this.errorState.next(null);
-
-    return this.http.delete<PlantillaResponse<unknown>>(`${this.getBaseUrl()}/${cartId}`).pipe(
-      map(() => null),
-      tap(() => this.cartState.next(null)),
-      catchError((error) => {
-        this.errorState.next(this.resolveErrorMessage(error, 'No se pudo limpiar el carrito.'));
-        return of(null);
-      }),
-      finalize(() => this.loadingState.next(false)),
-    );
-  }
-
-  private fetchCart(userId: string): Observable<CarritoDTO | null> {
-    return this.http.get<RawCartResponse>(`${this.getBaseUrl()}/all`, {
-      params: { idUsuario: userId },
-    }).pipe(
-      map((response) => this.normalizeCartResponse(response)),
-    );
-  }
-
-  private buildCartSnapshot(product: ProductoDTO, quantity: number, userId: string): CarritoDTO | null {
-    const currentCart = this.cartState.value;
-    const nextItems = [...(currentCart?.items ?? [])];
-    const productId = product?.id;
-
-    if (!productId) {
-      this.errorState.next('El producto seleccionado no tiene identificador válido.');
-      return null;
-    }
-
-    const currency = this.resolveCurrency(product, currentCart?.monedaTotal);
-    const productIndex = nextItems.findIndex((item) => item.producto.id === productId);
-    if (quantity <= 0) {
-      if (productIndex >= 0) {
-        nextItems.splice(productIndex, 1);
-      }
-    } else {
-      const nextItem: CarritoItemDTO = {
-        producto: this.cloneProduct(product),
-        cantidad: quantity,
-        subtotal: Number(currency.precio ?? 0) * quantity,
-        moneda: currency,
-      };
-
-      if (productIndex >= 0) {
-        nextItems.splice(productIndex, 1, nextItem);
-      } else {
-        nextItems.push(nextItem);
-      }
-    }
-
-    if (!nextItems.length && !currentCart?.id) {
-      this.cartState.next(null);
-      return null;
-    }
-
-    const total = this.calculateTotal(nextItems);
-    return {
-      id: currentCart?.id,
-      idUsuario: userId,
-      items: nextItems,
-      total,
-      monedaTotal: {
-        ...currency,
-        precio: total,
-      },
-      fechaCreacion: currentCart?.fechaCreacion,
-      fechaActualizacion: currentCart?.fechaActualizacion,
-    };
-  }
-
-  private normalizeCartResponse(response: RawCartResponse): CarritoDTO | null {
-    const carts = this.extractCarts(response);
-    if (!carts.length) {
-      return null;
-    }
-
-    const selectedCart = [...carts].sort((left, right) => {
-      const leftDate = new Date(left?.fechaActualizacion ?? left?.fechaCreacion ?? 0).getTime();
-      const rightDate = new Date(right?.fechaActualizacion ?? right?.fechaCreacion ?? 0).getTime();
-      return rightDate - leftDate;
-    })[0];
-
-    return this.normalizeCart(selectedCart);
-  }
-
-  private extractCarts(response: RawCartResponse): any[] {
-    if (Array.isArray(response?.dataList)) {
-      return response.dataList;
-    }
-    if (Array.isArray(response?.data)) {
-      return response.data;
-    }
-    if (response?.data) {
-      return [response.data];
-    }
-    return [];
-  }
-
-  private normalizeCart(rawCart: any): CarritoDTO {
-    const items = Array.isArray(rawCart?.items)
-      ? rawCart.items.map((item: any) => this.normalizeCartItem(item))
-      : [];
-    const total = Number(rawCart?.total ?? this.calculateTotal(items));
-    const fallbackCurrency = items[0]?.moneda ?? this.emptyCurrency();
-
-    return {
-      id: rawCart?.id,
-      idUsuario: String(rawCart?.idUsuario ?? ''),
-      items,
-      total,
-      monedaTotal: this.normalizeCurrency(rawCart?.monedaTotal, fallbackCurrency, total),
-      fechaCreacion: rawCart?.fechaCreacion,
-      fechaActualizacion: rawCart?.fechaActualizacion,
-    };
-  }
-
-  private normalizeCartItem(rawItem: any): CarritoItemDTO {
-    const product = this.normalizeProduct(rawItem?.producto);
-    const subtotal = Number(rawItem?.subtotal ?? 0);
-
-    return {
-      producto: product,
-      cantidad: Number(rawItem?.cantidad ?? 0),
-      subtotal,
-      moneda: this.normalizeCurrency(rawItem?.moneda, product.precios[0], subtotal),
-    };
-  }
-
-  private normalizeProduct(rawProduct: any): ProductoDTO {
-    return {
-      id: rawProduct?.id,
-      name: rawProduct?.name ?? '',
-      precios: this.normalizePrices(rawProduct?.precios),
-      descuento: Number(rawProduct?.descuento ?? 0),
-      cantidad: Number(rawProduct?.cantidad ?? 0),
-      idBusiness: rawProduct?.idBusiness ?? rawProduct?.business?.id,
-      idCategoria: String(rawProduct?.idCategoria ?? ''),
-      nombreCategoria: rawProduct?.nombreCategoria,
-      imagen: Array.isArray(rawProduct?.imagen) ? rawProduct.imagen : [],
-      estado: rawProduct?.estado ?? 'ACTIVO',
-      descripcion: rawProduct?.descripcion ?? '',
-      comision: Number(rawProduct?.comision ?? 0),
-      fechaCreacion: rawProduct?.fechaCreacion,
-      fechaActualizacion: rawProduct?.fechaActualizacion,
-      idDatosUsuario: rawProduct?.idDatosUsuario ?? '',
-    };
-  }
-
-  private normalizePrices(rawPrices: any): MonedaDTO[] {
-    if (!Array.isArray(rawPrices)) {
-      return [];
-    }
-
-    return rawPrices.map((price) => this.normalizeCurrency(price?.moneda ? price.moneda : price, price, price?.precio));
-  }
-
-  private normalizeCurrency(rawCurrency: any, fallback?: Partial<MonedaDTO>, amount?: number): MonedaDTO {
-    if (rawCurrency?.moneda) {
-      return {
-        id: rawCurrency.moneda?.id,
-        codigo_iso: rawCurrency.moneda?.codigo_iso ?? fallback?.codigo_iso ?? 'COP',
-        nombreMoneda: rawCurrency.moneda?.nombreMoneda ?? fallback?.nombreMoneda ?? 'Peso colombiano',
-        precio: Number(rawCurrency?.precio ?? amount ?? fallback?.precio ?? 0),
-      };
-    }
-
-    return {
-      id: rawCurrency?.id ?? fallback?.id,
-      codigo_iso: rawCurrency?.codigo_iso ?? fallback?.codigo_iso ?? 'COP',
-      nombreMoneda: rawCurrency?.nombreMoneda ?? fallback?.nombreMoneda ?? 'Peso colombiano',
-      precio: Number(rawCurrency?.precio ?? amount ?? fallback?.precio ?? 0),
-    };
-  }
-
-  private resolveCurrency(product: ProductoDTO, fallback?: MonedaDTO): MonedaDTO {
-    return this.normalizeCurrency(product?.precios?.[0], fallback, product?.precios?.[0]?.precio);
-  }
-
-  private calculateTotal(items: CarritoItemDTO[]): number {
-    return items.reduce((accumulator, item) => accumulator + Number(item.subtotal ?? 0), 0);
-  }
-
-  private cloneProduct(product: ProductoDTO): ProductoDTO {
-    return {
-      ...product,
-      precios: [...(product?.precios ?? [])],
-      imagen: [...(product?.imagen ?? [])],
-    };
-  }
-
-  private emptyCurrency(): MonedaDTO {
-    return {
-      codigo_iso: 'COP',
-      nombreMoneda: 'Peso colombiano',
-      precio: 0,
-    };
-  }
-
-  private getBaseUrl(): string {
-    return this.config.get<string>('baseUrlCarrito') || 'http://localhost:3000/carrito';
-  }
-
-  private getUserId(): string | null {
-    if (!this.isBrowser()) {
-      return null;
-    }
-
-    return sessionStorage.getItem('idDatosUsuario');
-  }
-
-  private isBrowser(): boolean {
-    return typeof window !== 'undefined' && typeof sessionStorage !== 'undefined';
-  }
-
-  private resolveErrorMessage(error: any, fallback: string): string {
-    return error?.error?.message || error?.message || fallback;
+  private params(): QueryParams {
+    const claims = getSessionBusinessClaims();
+    return { ip: '', dominio: 'ecommerce', usuario: String(claims?.usuario ?? claims?.id ?? ''),
+      idbusiness: Number(claims?.['idBusiness'] ?? claims?.idbusiness), proceso: 'guardar', topic: 'carrito' };
   }
 }

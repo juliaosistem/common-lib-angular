@@ -1,5 +1,5 @@
 # Multi-stage: 1) compila y publica lib-common-angular en Nexus 2) build de la demo/docs 3) sirve con nginx
-FROM node:22-bookworm AS builder
+FROM node:26.12.1-bookworm AS builder
 WORKDIR /workspace
 
 # OpenShip inyecta estos build-args con metadata de CI y credenciales.

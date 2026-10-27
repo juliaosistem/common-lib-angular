@@ -7,12 +7,13 @@ import { AppFooter } from './moleculas/app.footer';
 import { LayoutService } from '../../../services/layout.service';
 import { MenuConfig } from '@juliaosistem/core-dtos';
 import { MenuComponent } from "./moleculas/menu/menu.component";
+import { SessionExpiryDialogComponent } from '../../shared/molecules/session-expiry-dialog/session-expiry-dialog.component';
 import { decodeBusinessToken } from '../../../utils/business-token.util';
 
 @Component({
     selector: 'lib-daskboard3',
     standalone: true,
-    imports: [CommonModule, AppTopbar, RouterModule, AppFooter,  MenuComponent],
+    imports: [CommonModule, AppTopbar, RouterModule, AppFooter,  MenuComponent, SessionExpiryDialogComponent],
     template: `<div class="db3-wrapper layout-wrapper" [ngClass]="containerClass">
         <lib-topbar3></lib-topbar3>
                 <lib-menu
@@ -28,6 +29,7 @@ import { decodeBusinessToken } from '../../../utils/business-token.util';
             <lib-footer3></lib-footer3>
         </div>
         <div class="db3-mask layout-mask animate-fadein" [ngClass]="{'db3-mask--active': isMaskVisible}" (click)="hideMenu()"></div>
+        <lib-session-expiry-dialog></lib-session-expiry-dialog>
     </div> `,
     styles: [`
         :host {

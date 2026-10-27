@@ -1,5 +1,9 @@
 <div class="py-4 background-page mx-auto px-3">
-        <lib-detalle-carrito-1 [product]="product!" [isLogin]="isLogin"></lib-detalle-carrito-1>
+        @if (productError) {
+                <p role="alert">{{ productError }}</p>
+        } @else {
+                <lib-detalle-carrito-1 [product]="product!" [isLogin]="isLogin" (addToCart)="onAddToCart($event)"></lib-detalle-carrito-1>
+        }
 
         @if (products && products.length > 0) {
                 <section class="mt-4 related-products">
@@ -11,7 +15,7 @@
                                                 style="--swiper-navigation-color:#FFD600; --swiper-theme-color:#FFD600; --swiper-pagination-color:#FFD600; --swiper-pagination-bullet-inactive-color:#FFFFFF; --swiper-pagination-bullet-inactive-opacity:0.6; --swiper-pagination-bullet-size:8px; --swiper-pagination-bullet-horizontal-gap:6px;">
                                 @for (p of products; track p.id) {
                                         <swiper-slide>
-                                                <lib-card-productos1 [product]="p" [isLogin]="isLogin"></lib-card-productos1>
+                                                <lib-card-productos1 [product]="p" [isLogin]="isLogin" (addToCart)="onAddToCart($event)"></lib-card-productos1>
                                         </swiper-slide>
                                 }
                         </swiper-container>

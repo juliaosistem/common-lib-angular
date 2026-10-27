@@ -1,4 +1,4 @@
-import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, Injector, importProvidersFrom, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
 // import Aura from '@primeng/themes/aura';
 // import { providePrimeNG } from 'primeng/config';
 import { provideAnimations } from '@angular/platform-browser/animations';
@@ -11,10 +11,11 @@ import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { provideRouter } from '@angular/router';
-import { ProductosState } from 'lib-common-angular';
+import { CarritoState, ProductosState, UsuariosState, setLibraryInjector } from 'lib-common-angular';
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    provideAppInitializer(() => setLibraryInjector(inject(Injector))),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
     provideAnimations(),
@@ -25,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     ConfirmationService,
     importProvidersFrom(
       NgxsModule.forRoot([
-        ProductosState
+        ProductosState, UsuariosState, CarritoState
       ], {
         developmentMode: true,
         selectorOptions: {
@@ -34,7 +35,7 @@ export const appConfig: ApplicationConfig = {
         }
       }),
       NgxsLoggerPluginModule.forRoot({
-        disabled: false
+        disabled: true
       }),
       NgxsReduxDevtoolsPluginModule.forRoot({
         disabled: false

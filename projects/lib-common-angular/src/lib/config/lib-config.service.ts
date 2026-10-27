@@ -3,6 +3,8 @@ import { Injectable, InjectionToken, Inject, Optional } from '@angular/core';
 export type LibAppEnvironment = 'local' | 'development' | 'production';
 
 export interface LibCommonConfig {
+  idBusiness?: number;
+  idBussines?: number;
   environment?: LibAppEnvironment;
   apiGateway?: string;
   baseUrlProducts?: string;
@@ -11,6 +13,7 @@ export interface LibCommonConfig {
   baseUrlRoles?: string;
   baseUrlPermisos?: string;
   baseUrlCarrito?: string;
+  baseUrlMediosPagos?: string;
   baseUrlBusiness?: string;
   baseUrlCurrency?: string;
   baseUrlCategoryProduct?: string;
@@ -33,6 +36,7 @@ const DEFAULT_LOCAL_CONFIG: LibCommonConfig = {
   baseUrlRoles: 'http://localhost:1212/roles',
   baseUrlPermisos: 'http://localhost:1212/permisos',
   baseUrlCarrito: 'http://localhost:3000/carrito',
+  baseUrlMediosPagos: 'http://localhost:3000/MedioDepago',
   baseUrlBusiness: 'http://localhost:3000/Business',
   baseUrlCurrency: 'http://localhost:3000/Currency',
   baseUrlCategoryProduct: 'http://localhost:3000/category-products',
@@ -61,6 +65,14 @@ export class LibConfigService {
     return { ...this.config };
   }
 
+  /** Returns the explicitly configured authentication tenant; missing configuration preserves legacy login. */
+  getAuthTenantId(): number | undefined {
+    const value = this.config.idBussines ?? this.config.idBusiness;
+    if (value === undefined) return undefined;
+    if (!Number.isSafeInteger(value) || value < 1) throw new Error('ID de negocio no valido');
+    return value;
+  }
+
   updateConfig(newConfig: Partial<LibCommonConfig>): void {
     this.config = { ...this.config, ...newConfig };
   }
@@ -82,6 +94,7 @@ export class LibConfigService {
       baseUrlRoles: mergedConfig.baseUrlRoles ?? `${apiGateway}/roles`,
       baseUrlPermisos: mergedConfig.baseUrlPermisos ?? `${apiGateway}/permisos`,
       baseUrlCarrito: mergedConfig.baseUrlCarrito ?? `${apiGateway}/carrito`,
+      baseUrlMediosPagos: mergedConfig.baseUrlMediosPagos ?? `${apiGateway}/MedioDepago`,
       baseUrlBusiness: mergedConfig.baseUrlBusiness ?? apiGateway,
       baseUrlCurrency: mergedConfig.baseUrlCurrency ?? `${apiGateway}/Currency`,
       baseUrlCategoryProduct: mergedConfig.baseUrlCategoryProduct ?? `${apiGateway}/category-products`,

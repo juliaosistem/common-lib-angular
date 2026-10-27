@@ -36,7 +36,7 @@ export class LazyGenericCrudHttpService<RES> {
 
   add(payload: any, queryParams: any) {
     this.ensureReal();
-    return this.realService!.add(payload, undefined as any, queryParams);
+    return this.realService!.add(payload, queryParams);
   }
 
   update(payload: any, queryParams: any) {
@@ -49,10 +49,9 @@ export class LazyGenericCrudHttpService<RES> {
     return this.realService!.delete(id, queryParams);
   }
 
-  getMockData?() {
+  getMockData() {
     this.ensureReal();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (this.realService as any).getMockData?.();
+    return this.realService!.getMockData();
   }
 }
 import { tap } from 'rxjs';
@@ -68,7 +67,7 @@ export interface GenericCrudActions<RQ> {
 @Injectable()
 export abstract class GenericCrudState<RES, RQ> {
   protected constructor(
-    protected readonly service: GenericCrudHttpService<RES>,
+    protected readonly service: Pick<GenericCrudHttpService<RES>, 'all' | 'add' | 'update' | 'delete' | 'getMockData'>,
     protected readonly actions: GenericCrudActions<RQ>
   ) {}
 

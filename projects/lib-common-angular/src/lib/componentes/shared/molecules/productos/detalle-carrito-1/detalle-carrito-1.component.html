@@ -5,11 +5,15 @@
             <!-- Bloque de imagen principal -->
             <div class="flex flex-column  col-12 lg:col-6">
                 <div class="main-image-frame bg-gray-100 border-round-xl flex justify-content-center align-items-center">
+                    @if (selectedImageUrl) {
                     <img
                         [src]="selectedImageUrl"
-                        [alt]="product.imagen[0].alt || product.name"
+                        [alt]="product.imagen?.[0]?.alt || product.name"
                         loading="lazy" width="1024" height="520"
                         class="main-image border-round-xl" />
+                    } @else {
+                        <span>Imagen no disponible</span>
+                    }
                 </div>
 
                 <!-- Miniaturas debajo en móvil y tablet -->
@@ -51,11 +55,15 @@
 
                     <div class="flex align-items-center gap-3">
                         @if(isLogin){
+                            @if (product.precios?.length) {
                             @if(product.descuento != undefined && product.descuento > 0) {
                                 <span class="old-price">{{ product.precios[0].precio | currency:product.precios[0].codigo_iso :'code' }}</span>
                                 <span class="discount-label">{{ product.descuento}}% OFF</span>
                             }
                             <span class="current-price">{{ discount | currency:product.precios[0].codigo_iso :'code'}}</span>
+                            } @else {
+                                <span>Precio no disponible</span>
+                            }
                         } @else {
                             <a
                                 class="contact-btn"
@@ -130,14 +138,9 @@
 
                     <lib-section-add-cards-buttons 
                         [product]="product" 
-                        [isLogin]="isLogin">
+                        [isLogin]="isLogin" (addToCart)="onChildAddToCart($event)">
                     </lib-section-add-cards-buttons>
 
-                    @if (showCartMessage) {
-                        <div class="mt-3 text-center text-sm font-semibold text-green-600">
-                            Producto añadido al carrito.
-                        </div>
-                    }
                 </div>
             </div>
         </div>

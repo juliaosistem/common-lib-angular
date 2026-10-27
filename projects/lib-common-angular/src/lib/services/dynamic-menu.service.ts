@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 // import { HttpClient } from '@angular/common/http';
 // import { Observable, of, throwError } from 'rxjs';
 // import { catchError, map, tap } from 'rxjs/operators';
-import { MenuConfig, MenuItem, MenuService } from '../componentes/shared/interfaces/menu.interface';
+import type { MenuConfig, MenuItem, MenuService } from '../componentes/shared/interfaces/menu.interface';
 
 @Injectable({
   providedIn: 'root'

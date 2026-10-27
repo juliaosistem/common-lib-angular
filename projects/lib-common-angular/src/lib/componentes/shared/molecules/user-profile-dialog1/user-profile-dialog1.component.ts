@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import type { SimpleChanges } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RegisterUserDTO, RolesDTO ,UpdateProfileDTO} from '@juliaosistem/core-dtos';
 import { City, ICity } from 'country-state-city';
@@ -59,6 +60,17 @@ export class UserProfileDialog1Component implements OnChanges {
   selectedCountry: ICountry | null = null;
   selectedCountryCode = '';
 
+  /** Paso activo del wizard de registro/edicion (0=Cuenta, 1=Datos, 2=Telefono, 3=Direccion). */
+  active = 0;
+
+  /** Metadatos de cada paso del wizard, usados para pintar los botones de navegacion. */
+  readonly wizardSteps = [
+    { icon: 'pi pi-user', label: 'Cuenta' },
+    { icon: 'pi pi-id-card', label: 'Datos' },
+    { icon: 'pi pi-phone', label: 'Telefono' },
+    { icon: 'pi pi-map-marker', label: 'Direccion' },
+  ];
+
   /**
    * Texto plano con los permisos heredados de los roles actualmente seleccionados.
    *
@@ -81,7 +93,9 @@ export class UserProfileDialog1Component implements OnChanges {
     nombreRol: new FormControl('USUARIO', { nonNullable: true, validators: [Validators.required] }),
     roles: new FormControl<RolesDTO[]>([], { nonNullable: true, validators: [Validators.required] }),
     phoneNumber: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.pattern(/^[+]?[0-9\s()-]{7,20}$/)] }),
-    phoneCityCode: new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(1)] }),
+    // phoneCityCode no tiene selector propio en el UI (solo existe codigo de ciudad para telefonia interna);
+    // se deja opcional para no bloquear el guardado de nuevos usuarios.
+    phoneCityCode: new FormControl<number | null>(null),
     phoneCountryCode: new FormControl<number | null>(null, { validators: [Validators.required, Validators.min(1)] }),
     phoneNameCity: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(2)] }),
     phoneNameCountry: new FormControl('', { nonNullable: true, validators: [Validators.required, Validators.minLength(2)] }),
@@ -189,6 +203,7 @@ export class UserProfileDialog1Component implements OnChanges {
     this.profileForm.patchValue(this.buildFormPatchValue());
     this.syncCountrySelection();
     this.resetFormState();
+    this.active = 0;
   }
 
   private buildFormPatchValue() {
